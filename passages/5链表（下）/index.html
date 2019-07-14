@@ -6,16 +6,16 @@
   <meta name="author" content="Li Duo">
   
   
-  <title>关于 | LiDuo&#39;s Blog</title>
+  <title>5.链表（下） | LiDuo&#39;s Blog</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="Li Duo&#39;s Blog">
+    <meta name="keywords" content="后端,数据结构,">
   
 
   
-  <meta name="description" content="沐晨的博客">
+  <meta name="description" content="为什么链表代码这么难写？究竟怎样才能比较轻松地写出正确的链表代码呢？">
 
   
 
@@ -42,12 +42,12 @@
     welcome: {"enable":true,"interval":30},
     start_time: "2019-07-12",
     passwords: ["0e31be4bd24c14e65633d11633fe616ee3d93b4f31d07726fdbe113fa98a391a", ],
-    is_post: false,
+    is_post: true,
     lock: false,
     author: "Li Duo",
     share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
     mathjax: true,
-    page_type: "about",
+    page_type: "",
     root: "/muchen.github.io/"
   };
 </script>
@@ -161,14 +161,115 @@
 <div id="site-process"></div>
     <main>
       
-  <div class="about">
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2019-07-14
+    </span>
+    
+      <span>
+        | <a href="/muchen.github.io/categories/后端/"><i class="fa fa-bookmark"></i>后端</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
   <h1 class="passage-title">
-    
-      about
-    
+    5.链表（下）
   </h1>
+  
   <article class="passage-article">
-    
+    <h2 id="一、理解指针或引用的含义"><a href="#一、理解指针或引用的含义" class="headerlink" title="一、理解指针或引用的含义"></a>一、理解指针或引用的含义</h2><blockquote>
+<ul>
+<li>含义：将某个变量（对象）赋值给指针（引用），实际上就是就是将这个变量（对象）的地址赋值给指针（引用）。</li>
+<li>示例：<blockquote>
+<ul>
+<li><code>p —&gt; next = q;</code> 表示<code>p</code>节点的后继指针存储了<code>q</code>节点的内存地址。</li>
+<li><code>p —&gt; next = p —&gt; next —&gt; next;</code> 表示<code>p</code>节点的后继指针存储了<code>p</code>节点的下下个节点的内存地址。</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+</blockquote>
+<h2 id="二、警惕指针丢失和内存泄漏（单链表）"><a href="#二、警惕指针丢失和内存泄漏（单链表）" class="headerlink" title="二、警惕指针丢失和内存泄漏（单链表）"></a>二、警惕指针丢失和内存泄漏（单链表）</h2><blockquote>
+<ul>
+<li>插入节点<blockquote>
+<ul>
+<li>在节点<code>a</code>和节点<code>b</code>之间插入节点<code>x</code>，<code>b</code>是<code>a</code>的下一节点，<code>p</code>指针指向节点<code>a</code>，<br>则造成指针丢失和内存泄漏的代码：<code>p—&gt;next = x; x—&gt;next = p—&gt;next;</code> 显然这会导致<code>x</code>节点的后继指针指向自身。<br>正确的写法是<code>2</code>句代码交换顺序，即：<code>x—&gt;next = p—&gt;next; p—&gt;next = x;</code></li>
+</ul>
+</blockquote>
+</li>
+<li>删除节点<blockquote>
+<ul>
+<li>在节点<code>a</code>和节点<code>b</code>之间删除节点<code>b</code>，<code>b</code>是<code>a</code>的下一节点，<br><code>p</code>指针指向节点<code>a</code>：<code>p—&gt;next = p—&gt;next—&gt;next;</code></li>
+</ul>
+</blockquote>
+</li>
+</ul>
+</blockquote>
+<h2 id="三、利用“哨兵”简化实现难度"><a href="#三、利用“哨兵”简化实现难度" class="headerlink" title="三、利用“哨兵”简化实现难度"></a>三、利用“哨兵”简化实现难度</h2><blockquote>
+<ul>
+<li>什么是“哨兵”？<blockquote>
+<ul>
+<li>链表中的“哨兵”节点是解决边界问题的，不参与业务逻辑。<br>如果我们引入“哨兵”节点，则不管链表是否为空，<code>head</code>指针都会指向这个“哨兵”节点。<br>我们把这种有“哨兵”节点的链表称为带头链表，相反，没有“哨兵”节点的链表就称为不带头链表。</li>
+</ul>
+</blockquote>
+</li>
+<li>未引入“哨兵”的情况<blockquote>
+<ul>
+<li>如果在<code>p</code>节点后插入一个节点，只需2行代码即可搞定：<br><code>new_node—&gt;next = p—&gt;next;
+p—&gt;next = new_node;</code>   </li>
+<li>但是，若向空链表中插入一个节点，则代码如下：</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(head == <span class="keyword">null</span>)&#123;</span><br><span class="line">    head = new_node;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<blockquote>
+<ul>
+<li>如果要删除节点p的后继节点，只需1行代码即可搞定：<br><code>p—&gt;next = p—&gt;next—&gt;next;</code>    </li>
+<li>但是，若是删除链表的最有一个节点（链表中只剩下这个节点），则代码如下：</li>
+</ul>
+</blockquote>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(head—&gt;next == <span class="keyword">null</span>)&#123;</span><br><span class="line">    head = <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<blockquote>
+<ul>
+<li>从上面的情况可以看出，针对链表的插入、删除操作，需要对插入第一个节点和删除最后一个节点的情况进行特殊处理。这样代码就会显得很繁琐，所以引入“哨兵”节点来解决这个问题。</li>
+<li>引入“哨兵”的情况</li>
+<li>“哨兵”节点不存储数据，无论链表是否为空，<code>head</code>指针都会指向它，作为链表的头结点始终存在。<br> 这样，插入第一个节点和插入其他节点，删除最后一个节点和删除其他节点都可以统一为相同的代码实现逻辑了。</li>
+<li>“哨兵”还有哪些应用场景？</li>
+<li>哨兵最大的作用就是简化边界条件的处理。</li>
+</ul>
+</blockquote>
+</blockquote>
+<h2 id="四、重点留意边界条件处理"><a href="#四、重点留意边界条件处理" class="headerlink" title="四、重点留意边界条件处理"></a>四、重点留意边界条件处理</h2><blockquote>
+<p>经常用来检查链表是否正确的边界4个边界条件：</p>
+<ul>
+<li>如果链表为空时，代码是否能正常工作？</li>
+<li>如果链表只包含一个节点时，代码是否能正常工作？</li>
+<li>如果链表只包含两个节点时，代码是否能正常工作？</li>
+<li>代码逻辑在处理头尾节点时是否能正常工作？</li>
+</ul>
+</blockquote>
+<h2 id="五、多写多练，没有捷径"><a href="#五、多写多练，没有捷径" class="headerlink" title="五、多写多练，没有捷径"></a>五、多写多练，没有捷径</h2><blockquote>
+<p>5个常见的链表操作：</p>
+<ul>
+<li>单链表反转</li>
+<li>链表中环的检测</li>
+<li>两个有序链表合并</li>
+<li>删除链表倒数第<code>n</code>个节点</li>
+<li>求链表的中间节点</li>
+</ul>
+</blockquote>
   </article>
   <aside class="table-content" id="site-toc">
   <div class="table-content-title">
@@ -176,9 +277,30 @@
     <span>目录</span>
   </div>
   <div class="table-content-main">
-    
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、理解指针或引用的含义"><span class="toc-text">一、理解指针或引用的含义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、警惕指针丢失和内存泄漏（单链表）"><span class="toc-text">二、警惕指针丢失和内存泄漏（单链表）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三、利用“哨兵”简化实现难度"><span class="toc-text">三、利用“哨兵”简化实现难度</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四、重点留意边界条件处理"><span class="toc-text">四、重点留意边界条件处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#五、多写多练，没有捷径"><span class="toc-text">五、多写多练，没有捷径</span></a></li></ol>
   </div>
 </aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: 沐晨</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://fanciercoder.github.io/muchen.github.io/passages/5链表（下）/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/muchen.github.io/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
+    
+    </div>
+  
 </div>
 
     </main>
@@ -272,7 +394,7 @@
     <a href="javascript:void(0);" data-enable="false">
       <i class="fa fa-arrow-left"></i>
     </a>
-    <a href="javascript:void(0);" data-enable="false">
+    <a href="/muchen.github.io/passages/4链表（上）/" data-enable="true">
       <i class="fa fa-arrow-right"></i>
     </a>
   </div>
