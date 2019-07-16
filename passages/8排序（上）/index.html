@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html>
+  
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta name="author" content="MuChen">
+  
+  
+  <title>8排序（上） | MuChen&#39;s Blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="后端,算法,数据结构,">
+  
+
+  
+  <meta name="description" content="当我们向固定大小的线程池中请求一个线程时，如果线程池中没有空闲资源了，这个时候线程池如何处理这个请求？是拒绝请求还是排队请求？各种处理策略又是怎么实现的呢？">
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.14.0/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"js4SiJ6prwCfvUwpG6UKP1T5-gzGzoHsz","appkey":"GsFF0HPExEnfzq4Jkw3X8AFd","comment":true,"count":true},
+    welcome: {"enable":true,"interval":30},
+    start_time: "2019-07-12",
+    passwords: ["0e31be4bd24c14e65633d11633fe616ee3d93b4f31d07726fdbe113fa98a391a", ],
+    is_post: true,
+    lock: false,
+    author: "MuChen",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/muchen/"
+  };
+</script>
+
+  <script src="/muchen/vendor/sha256.min.js"></script>
+<script src="/muchen/js/auth.js"></script>
+<script src="/muchen/js/index.js"></script>
+<script src="/muchen/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/muchen/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/muchen/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/muchen/css/index.css">
+<link rel="stylesheet" href="/muchen/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/muchen/">沐晨</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | Learn To Learn</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/muchen/" target="_self">首页</a>
+      
+        <a href="/muchen/archives/" target="_self">归档</a>
+      
+        <a href="/muchen/tags/" target="_self">标签</a>
+      
+        <a href="/muchen/categories/" target="_self">分类</a>
+      
+        <a href="/muchen/friends/" target="_self">友链</a>
+      
+        <a href="/muchen/about/" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/FancierCoder" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/muchen/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/muchen/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/muchen/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/muchen/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/muchen/friends/" target="_self">
+            友链
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/muchen/about/" target="_self">
+            关于
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2019-07-16
+    </span>
+    
+      <span>
+        | <a href="/muchen/categories/后端/"><i class="fa fa-bookmark"></i>后端</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    8排序（上）
+  </h1>
+  
+  <article class="passage-article">
+    <!-- more -->
+
+<h2 id="一、排序方法与复杂度归类"><a href="#一、排序方法与复杂度归类" class="headerlink" title="一、排序方法与复杂度归类"></a>一、排序方法与复杂度归类</h2><blockquote>
+<p>几种最经典、最常用的排序方法：冒泡排序、插入排序、选择排序、快速排序、归并排序、计数排序、基数排序、桶排序。</p>
+</blockquote>
+<blockquote>
+<p>复杂度归类</p>
+<ul>
+<li>冒泡排序、插入排序、选择排序$O(n^2)$</li>
+<li>快速排序、归并排序$O(nlogn)$</li>
+<li>计数排序、基数排序、桶排序$O(n)$</li>
+</ul>
+</blockquote>
+<h2 id="二、如何分析一个“排序算法”"><a href="#二、如何分析一个“排序算法”" class="headerlink" title="二、如何分析一个“排序算法”"></a>二、如何分析一个“排序算法”</h2><h5 id="1-算法的执行效率"><a href="#1-算法的执行效率" class="headerlink" title="1. 算法的执行效率"></a>1. 算法的执行效率</h5><blockquote>
+<ul>
+<li>最好、最坏、平均情况时间复杂度。</li>
+<li>时间复杂度的系数、常数和低阶。</li>
+<li>比较次数，交换（或移动）次数。</li>
+</ul>
+</blockquote>
+<h5 id="2-排序算法的稳定性"><a href="#2-排序算法的稳定性" class="headerlink" title="2. 排序算法的稳定性"></a>2. 排序算法的稳定性</h5><blockquote>
+<ul>
+<li>稳定性概念：如果待排序的序列中存在值相等的元素，经过排序之后，相等元素之间原有的先后顺序不变。</li>
+<li>稳定性重要性：可针对对象的多种属性进行有优先级的排序。</li>
+<li>举例：给电商交易系统中的“订单”排序，按照金额大小对订单数据排序，对于相同金额的订单以下单时间早晚排序。<br> 用稳定排序算法可简洁地解决。先按照下单时间给订单排序，排序完成后用稳定排序算法按照订单金额重新排序。</li>
+</ul>
+</blockquote>
+<h5 id="3-排序算法的内存损耗"><a href="#3-排序算法的内存损耗" class="headerlink" title="3.排序算法的内存损耗"></a>3.排序算法的内存损耗</h5><blockquote>
+<p><strong>原地排序算法：特指空间复杂度是$O(1)$的排序算法。</strong></p>
+</blockquote>
+<h2 id="三、冒泡排序"><a href="#三、冒泡排序" class="headerlink" title="三、冒泡排序"></a>三、冒泡排序</h2><blockquote>
+<p>冒泡排序只会操作相邻的两个数据。<br>  每次冒泡操作都会对相邻的两个元素进行比较，看是否满足大小关系要求，如果不满足就让它俩互换。</p>
+</blockquote>
+<blockquote>
+<p>稳定性：冒泡排序是稳定的排序算法。</p>
+</blockquote>
+<blockquote>
+<p>空间复杂度：冒泡排序是原地排序算法。</p>
+</blockquote>
+<blockquote>
+<p>时间复杂度：</p>
+<ul>
+<li>最好情况（满有序度）：$O(n)$。</li>
+<li>最坏情况（满逆序度）：$O(n^2)$。</li>
+<li>平均情况：<br> “有序度”和“逆序度”：对于一个不完全有序的数组，如<code>4，5，6，3，2，1</code>，有序元素对为<code>3</code>个<code>（4，5），（4，6），（5，6）</code>，有序度为<code>3</code>，逆序度为<code>12</code>；<br> 对于一个完全有序的数组，如<code>1，2，3，4，5，6</code>，有序度就是<code>n*(n-1)/2</code>，也就是<code>15</code>，称作<strong>满有序度</strong>；<br> <code>逆序度=满有序度-有序度</code>；<br> 冒泡排序、插入排序交换（或移动）次数=逆序度。<br> 最好情况下初始有序度为<code>n*(n-1)/2</code>，最坏情况下初始有序度为<code>0</code>，则平均初始有序度为<code>n*(n-1)/4</code>，即交换次数为<code>n*(n-1)/4</code>，因交换次数<code>&lt;</code>比较次数<code>&lt;</code>最坏情况时间复杂度，所以平均时间复杂度为$O(n^2)$。<br> <img src="/muchen/images/b0f4f83a.png" alt></li>
+</ul>
+</blockquote>
+<blockquote>
+<p>代码实现</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 冒泡排序</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> a 待排序数组</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> n 数组长度</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">bubbleSort</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (n &lt;= <span class="number">0</span>) <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        <span class="comment">//标记一次冒泡是否存在数据交换，若存在，则改为true</span></span><br><span class="line">        <span class="keyword">boolean</span> tag = <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n - <span class="number">1</span> - i; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (a[j] &gt; a[j + <span class="number">1</span>]) &#123;</span><br><span class="line">                <span class="keyword">int</span> temp = a[j];</span><br><span class="line">                a[j] = a[j + <span class="number">1</span>];</span><br><span class="line">                a[j + <span class="number">1</span>] = temp;</span><br><span class="line">                tag = <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//若本次冒泡操作未发生数据交换，则终止冒泡操作</span></span><br><span class="line">        <span class="keyword">if</span> (!tag) <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、插入排序"><a href="#四、插入排序" class="headerlink" title="四、插入排序"></a>四、插入排序</h2><blockquote>
+<p>插入排序将数组数据分成已排序区间和未排序区间。<br>  初始已排序区间只有一个元素，即数组第一个元素。在未排序区间取出一个元素插入到已排序区间的合适位置，直到未排序区间为空。</p>
+</blockquote>
+<blockquote>
+<p>稳定性：插入排序是稳定的排序算法。</p>
+</blockquote>
+<blockquote>
+<p>空间复杂度：插入排序是原地排序算法。</p>
+</blockquote>
+<blockquote>
+<p>时间复杂度：</p>
+<ul>
+<li>最好情况：$O(n)$</li>
+<li>最坏情况：$O(n^2)$</li>
+<li>平均情况：$O(n^2)$（往数组中插入一个数的平均时间复杂度是$O(n)$，一共重复<code>n</code>次）。<br> <img src="/muchen/images/b4d027e6.png" alt></li>
+</ul>
+</blockquote>
+<blockquote>
+<p>代码实现</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 插入排序</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> a 待排序数组</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> n 表示数组大小</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">insertSort</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (n &lt;= <span class="number">1</span>) <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; n; i++) &#123;</span><br><span class="line">        <span class="keyword">int</span> value = a[i];</span><br><span class="line">        <span class="keyword">int</span> j = i - <span class="number">1</span>;</span><br><span class="line">        <span class="comment">//找到插入位置</span></span><br><span class="line">        <span class="keyword">for</span> (; j &gt; <span class="number">0</span>; j--) &#123;</span><br><span class="line">            <span class="keyword">if</span> (a[j] &gt; value) &#123;</span><br><span class="line">                a[j + <span class="number">1</span>] = a[j];<span class="comment">//移动数据</span></span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        a[j + <span class="number">1</span>] = value;<span class="comment">//插入数据</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="五、选择排序"><a href="#五、选择排序" class="headerlink" title="五、选择排序"></a>五、选择排序</h2><blockquote>
+<p>选择排序将数组分成已排序区间和未排序区间。<br>  初始已排序区间为空。<br>  每次从未排序区间中选出最小的元素插入已排序区间的末尾，直到未排序区间为空。</p>
+</blockquote>
+<blockquote>
+<p>稳定性：选择排序不是稳定的排序算法。</p>
+</blockquote>
+<blockquote>
+<p>空间复杂度：选择排序是原地排序算法。</p>
+</blockquote>
+<blockquote>
+<p>时间复杂度：（都是$O(n^2)$）</p>
+<ul>
+<li>最好情况：$O(n^2)$</li>
+<li>最坏情况：$O(n^2)$</li>
+<li>平均情况：$O(n^2)$<br> <img src="/muchen/images/dafdff62.png" alt></li>
+</ul>
+</blockquote>
+<blockquote>
+<p>代码实现</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 选择排序</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> a 待排序数组</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> n 数组长度</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">selectSort</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (n &lt;= <span class="number">0</span>) <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        <span class="keyword">int</span> min = i;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = i; j &lt; n; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (a[j] &lt; a[min]) min = j;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (min != i) &#123;</span><br><span class="line">            <span class="keyword">int</span> temp = a[i];</span><br><span class="line">            a[i] = a[min];</span><br><span class="line">            a[min] = temp;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/muchen/images/948eb886.png" alt></p>
+<h2 id="六、思考"><a href="#六、思考" class="headerlink" title="六、思考"></a>六、思考</h2><blockquote>
+<p>选择排序和插入排序的时间复杂度相同，都是$O(n^2)$，在实际的软件开发中，为什么我们更倾向于使用插入排序而不是冒泡排序算法呢？</p>
+<ul>
+<li>答：从代码实现上来看，冒泡排序的数据交换要比插入排序的数据移动要复杂，冒泡排序需要<code>3</code>个赋值操作，而插入排序只需要<code>1</code>个，所以在对相同数组进行排序时，冒泡排序的运行时间理论上要长于插入排序。</li>
+</ul>
+</blockquote>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、排序方法与复杂度归类"><span class="toc-text">一、排序方法与复杂度归类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、如何分析一个“排序算法”"><span class="toc-text">二、如何分析一个“排序算法”</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-算法的执行效率"><span class="toc-text">1. 算法的执行效率</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-排序算法的稳定性"><span class="toc-text">2. 排序算法的稳定性</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-排序算法的内存损耗"><span class="toc-text">3.排序算法的内存损耗</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三、冒泡排序"><span class="toc-text">三、冒泡排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四、插入排序"><span class="toc-text">四、插入排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#五、选择排序"><span class="toc-text">五、选择排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#六、思考"><span class="toc-text">六、思考</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: 沐晨</div>
+      
+        <div>
+          原文链接: 
+          <a style="word-break: break-word;" href="" target="_blank">https://fanciercoder.github.io/muchen/passages/8排序（上）/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a style="word-break: break-word;" href="/muchen/tags/算法-数据结构/"><i class="fa fa-tags"></i>算法,数据结构</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      
+        <div class="site-footer-col">
+          <h5 class="site-footer-title">博客推荐</h5>
+          
+            <span class="site-footer-item">
+              <a href="https://fanciercoder.github.io/muchen/" target="_blank">沐晨</a>
+            </span>
+          
+        </div>
+      
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: lcoder@qq.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://fanciercoder.github.io/" target="_blank">沐晨</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+        <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+          
+            <div>
+              <img src="/muchen/images/wechat.png" alt="WeChat">
+              
+                <p>WeChat</p>
+              
+            </div>
+          
+            <div>
+              <img src="/muchen/images/alipay.png" alt="AliPay">
+              
+                <p>AliPay</p>
+              
+            </div>
+          
+            <div>
+              <img src="/muchen/images/BitCoin.jpg" alt="BitCoin">
+              
+                <p>BitCoin</p>
+              
+            </div>
+          
+        </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="javascript:void(0);" data-enable="false">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/muchen/passages/7队列/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+      <a href="javascript:void(0);" id="site-reward">
+        <i class="fa fa-thumbs-up"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+
+
+  <script async>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+
+
+
+
+    
+  </body>
+</html>
