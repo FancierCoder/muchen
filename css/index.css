@@ -1,5 +1,6 @@
 @charset "UTF-8";
 /* 调色盘: https://codepen.io/cmegown/pen/VaMzQq */
+
 * {
   box-sizing: border-box;
   /* boostrap已经在通配符选择器这么做了 */
@@ -903,5 +904,12 @@ main {
         color: #2196F3; }
 .friend article {
   margin-bottom: 30px; }
+
+@media (prefers-color-scheme: dark) {
+    body {
+        color: white;
+        background-color: black;
+    }
+}
 
 /*# sourceMappingURL=index.css.map */
