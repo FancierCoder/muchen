@@ -6,16 +6,16 @@
   <meta name="author" content="MuChen">
   
   
-  <title>归档: 2019/7 | MuChen&#39;s Blog</title>
+  <title>11.排序优化 | MuChen&#39;s Blog</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="MuChen&#39;s Blog">
+    <meta name="keywords" content="后端,算法,数据结构,">
   
 
   
-  <meta name="description" content="沐晨的博客">
+  <meta name="description" content="如何实现一个通用的、高性能的排序函数？">
 
   
 
@@ -42,7 +42,7 @@
     welcome: {"enable":true,"interval":30},
     start_time: "2019-07-12",
     passwords: ["0e31be4bd24c14e65633d11633fe616ee3d93b4f31d07726fdbe113fa98a391a", ],
-    is_post: false,
+    is_post: true,
     lock: false,
     author: "MuChen",
     share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
@@ -160,73 +160,130 @@
 </nav>
 <div id="site-process"></div>
     <main>
-      <div class="timeline">
-  <h2 class="timeline-title">归档: 12篇</h2>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2019-07-19
+    </span>
+    
+      <span>
+        | <a href="/muchen/categories/后端/"><i class="fa fa-bookmark"></i>后端</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    11.排序优化
+  </h1>
   
-    
-      <h3 class="timeline-subtitle">2019</h3>
-    
-    <div class="timeline-item">
-      <time>2019-07-19</time>
-      <a target="_self" href="/muchen/passages/11如何实现一个通用的高性能的排序函数/">11.排序优化</a>
-    </div>
+  <article class="passage-article">
+    <h2 id="一、如何选择合适的排序算法"><a href="#一、如何选择合适的排序算法" class="headerlink" title="一、如何选择合适的排序算法"></a>一、如何选择合适的排序算法</h2><blockquote>
+<p>排序算法一览表<br><img src="./217ce432.png" alt></p>
+</blockquote>
+<blockquote>
+<p>为什选择快速排序?</p>
+<ul>
+<li>线性排序时间复杂度很低但使用场景特殊，如果要写一个通用排序函数，不能选择线性排序。</li>
+<li>为了兼顾任意规模数据的排序，一般会首选时间复杂度为$O(nlogn)$的排序算法来实现排序函数。</li>
+<li>同为$O(nlogn)$的快排和归并排序相比，归并排序不是原地排序算法，所以最优的选择是快排。</li>
+</ul>
+</blockquote>
+<h2 id="二、如何优化快速排序"><a href="#二、如何优化快速排序" class="headerlink" title="二、如何优化快速排序"></a>二、如何优化快速排序</h2><blockquote>
+<p>导致快排时间复杂度降为$O(n^2)$的原因是分区点选择不合理，最理想的分区点是：<br>    被分区点分开的两个分区中，数据的数量差不多。<br>    如何优化分区点的选择？有2种常用方法，如下：</p>
+<ul>
+<li>三数取中法:<br>  ①从区间的首、中、尾分别取一个数，然后比较大小，取中间值作为分区点。<br>  ②如果要排序的数组比较大，那“三数取中”可能就不够用了，可能要“<code>5</code>数取中”或者“<code>10</code>数取中”。</li>
+<li>随机法：每次从要排序的区间中，随机选择一个元素作为分区点。</li>
+<li>警惕快排的递归发生堆栈溢出，有<code>2</code>中解决方法，如下：<br> ①限制递归深度，一旦递归超过了设置的阈值就停止递归。<br> ②在堆上模拟实现一个函数调用栈，手动模拟递归压栈、出栈过程，这样就没有系统栈大小的限制。</li>
+</ul>
+</blockquote>
+<h2 id="三、通用排序函数实现技巧"><a href="#三、通用排序函数实现技巧" class="headerlink" title="三、通用排序函数实现技巧"></a>三、通用排序函数实现技巧</h2><blockquote>
+<ul>
+<li>数据量不大时，可以采取用时间换空间的思路</li>
+<li>数据量大时，优化快排分区点的选择</li>
+<li>防止堆栈溢出，可以选择在堆上手动模拟调用栈解决</li>
+<li>在排序区间中，当元素个数小于某个常数是，可以考虑使用$O(n^2)$级别的插入排序</li>
+<li>用哨兵简化代码，每次排序都减少一次判断，尽可能把性能优化到极致</li>
+</ul>
+</blockquote>
+<h2 id="四、思考"><a href="#四、思考" class="headerlink" title="四、思考"></a>四、思考</h2><blockquote>
+<p><code>Java</code>中的排序函数都是用什么排序算法实现的？有有哪些技巧？</p>
+<ul>
+<li>主要采用<code>TimSort</code>算法, 大致思路是这样的： <blockquote>
+<ul>
+<li>元素个数 &lt; <code>32</code>, 采用二分查找插入排序(<code>Binary Sort</code>)</li>
+<li>元素个数 &gt;= <code>32</code>, 采用归并排序，归并的核心是分区(<code>Run</code>)</li>
+<li>找连续升或降的序列作为分区，分区最终被调整为升序后压入栈</li>
+<li>如果分区长度太小，通过二分插入排序扩充分区长度到分区最小阙值</li>
+<li>每次压入栈，都要检查栈内已存在的分区是否满足合并条件，满足则进行合并</li>
+<li>最终栈内的分区被全部合并，得到一个排序好的数组  </li>
+</ul>
+</blockquote>
+</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li><code>TimSort</code>的合并算法非常巧妙：   <blockquote>
+<ul>
+<li>找出左分区最后一个元素(最大)及在右分区的位置</li>
+<li>找出右分区第一个元素(最小)及在左分区的位置</li>
+<li>仅对这两个位置之间的元素进行合并，之外的元素本身就是有序的</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+</blockquote>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、如何选择合适的排序算法"><span class="toc-text">一、如何选择合适的排序算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、如何优化快速排序"><span class="toc-text">二、如何优化快速排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三、通用排序函数实现技巧"><span class="toc-text">三、通用排序函数实现技巧</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四、思考"><span class="toc-text">四、思考</span></a></li></ol>
+  </div>
+</aside>
   
-    
-    <div class="timeline-item">
-      <time>2019-07-18</time>
-      <a target="_self" href="/muchen/passages/10线性排序/">10.线性排序</a>
-    </div>
+    <aside class="passage-copyright">
+      <div>本文作者: 沐晨</div>
+      
+        <div>
+          原文链接: 
+          <a style="word-break: break-word;" href="" target="_blank">https://fanciercoder.github.io/muchen/passages/11如何实现一个通用的高性能的排序函数/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
   
-    
-    <div class="timeline-item">
-      <time>2019-07-17</time>
-      <a target="_self" href="/muchen/passages/9排序（下）/">9.排序（下）</a>
-    </div>
   
+    <div class="passage-tags">
+     
+      <a style="word-break: break-word;" href="/muchen/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+     
+      <a style="word-break: break-word;" href="/muchen/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
     
-    <div class="timeline-item">
-      <time>2019-07-16</time>
-      <a target="_self" href="/muchen/passages/8排序（上）/">8.排序（上）</a>
-    </div>
-  
-    
-    <div class="timeline-item">
-      <time>2019-07-16</time>
-      <a target="_self" href="/muchen/passages/7队列/">7.队列</a>
-    </div>
-  
-    
-    <div class="timeline-item">
-      <time>2019-07-15</time>
-      <a target="_self" href="/muchen/passages/Kafka的配置/">SpringBoot Kafka的配置</a>
-    </div>
-  
-    
-    <div class="timeline-item">
-      <time>2019-07-15</time>
-      <a target="_self" href="/muchen/passages/6栈/">6.栈</a>
-    </div>
-  
-    
-    <div class="timeline-item">
-      <time>2019-07-14</time>
-      <a target="_self" href="/muchen/passages/5链表（下）/">5.链表（下）</a>
-    </div>
-  
-    
-    <div class="timeline-item">
-      <time>2019-07-13</time>
-      <a target="_self" href="/muchen/passages/4链表（上）/">4.链表（上）</a>
-    </div>
-  
-    
-    <div class="timeline-item">
-      <time>2019-07-13</time>
-      <a target="_self" href="/muchen/passages/3数组/">3.数组</a>
     </div>
   
 </div>
+
     </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
     
     <div class="site-footer-wrapper">
   <footer class="site-footer">
@@ -314,16 +371,16 @@
     <a href="javascript:void(0);" data-enable="false">
       <i class="fa fa-arrow-left"></i>
     </a>
-    <a href="/muchen/archives/2019/07/page/2/" data-enable="true">
+    <a href="/muchen/passages/10线性排序/" data-enable="true">
       <i class="fa fa-arrow-right"></i>
     </a>
   </div>
   <div class="bottom-bar-right">
-    <a href="javascript:void(0);" data-enable="false" id="site-toc-show-btn">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
       <i class="fa fa-bars"></i>
     </a>
     
-      <a href="javascript:void(0);" data-enable="false">
+      <a href="#site-comment" data-enable="true">
         <i class="fa fa-commenting"></i>
       </a>
     
