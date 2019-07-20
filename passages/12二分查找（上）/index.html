@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html>
+  
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta name="author" content="MuChen">
+  
+  
+  <title>12.二分查找（上） | MuChen&#39;s Blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="后端,算法,数据结构,">
+  
+
+  
+  <meta name="description" content="如何用最省内存的方式实现快速查找功能？">
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.14.0/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"js4SiJ6prwCfvUwpG6UKP1T5-gzGzoHsz","appkey":"GsFF0HPExEnfzq4Jkw3X8AFd","comment":true,"count":true},
+    welcome: {"enable":true,"interval":30},
+    start_time: "2019-07-12",
+    passwords: ["0e31be4bd24c14e65633d11633fe616ee3d93b4f31d07726fdbe113fa98a391a", ],
+    is_post: true,
+    lock: false,
+    author: "MuChen",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/muchen/"
+  };
+</script>
+
+  <script src="/muchen/vendor/sha256.min.js"></script>
+<script src="/muchen/js/auth.js"></script>
+<script src="/muchen/js/index.js"></script>
+<script src="/muchen/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/muchen/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/muchen/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/muchen/css/index.css">
+<link rel="stylesheet" href="/muchen/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/muchen/">沐晨</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | Learn To Learn</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/muchen/" target="_self">首页</a>
+      
+        <a href="/muchen/archives/" target="_self">归档</a>
+      
+        <a href="/muchen/tags/" target="_self">标签</a>
+      
+        <a href="/muchen/categories/" target="_self">分类</a>
+      
+        <a href="/muchen/friends/" target="_self">友链</a>
+      
+        <a href="/muchen/about/" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/FancierCoder" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/muchen/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/muchen/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/muchen/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/muchen/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/muchen/friends/" target="_self">
+            友链
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/muchen/about/" target="_self">
+            关于
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2019-07-20
+    </span>
+    
+      <span>
+        | <a href="/muchen/categories/后端/"><i class="fa fa-bookmark"></i>后端</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    12.二分查找（上）
+  </h1>
+  
+  <article class="passage-article">
+    <h2 id="一、什么是二分查找"><a href="#一、什么是二分查找" class="headerlink" title="一、什么是二分查找"></a>一、什么是二分查找</h2><blockquote>
+<p>二分查找针对的是一个有序的数据集合，每次通过跟区间中间的元素对比，将待查找的区间缩小为之前的一半，直到找到要查找的元素，或者区间缩小为<code>0</code>。<br><img src="./70b10f93.png" alt></p>
+</blockquote>
+<h2 id="二、时间复杂度分析"><a href="#二、时间复杂度分析" class="headerlink" title="二、时间复杂度分析"></a>二、时间复杂度分析</h2><blockquote>
+<p>时间复杂度</p>
+<ul>
+<li>假设数据大小是<code>n</code>，每次查找后数据都会缩小为原来的一半，最坏的情况下，直到查找区间被缩小为空，才停止。<br>  所以，每次查找的数据大小是：$n，n/2，n/4，…，n/(2^k)，…，$这是一个等比数列。<br>  当$n/(2^k)=1$时，<code>k</code>的值就是总共缩小的次数，也是查找的总次数。<br>  而每次缩小操作只涉及两个数据的大小比较，所以，经过<code>k</code>次区间缩小操作，时间复杂度就是$O(k)$。<br>  通过$n/(2^k)=1$，可求得$k=log2n$，所以时间复杂度是$O(logn)$。</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>认识$O(logn)$</p>
+<ul>
+<li>①这是一种极其高效的时间复杂度，有时甚至比$O(1)$的算法还要高效。为什么？    </li>
+<li>②因为$logn$是一个非常“恐怖“的数量级，即便$n$非常大，对应的$logn$也很小。<br>  比如$n$等于<code>2</code>的<code>32</code>次方，也就是<code>42</code>亿，而$logn$才<code>32</code>。</li>
+<li>③由此可见，$O(logn)$有时就是比$O(1000)$，$O(10000)$快很多。</li>
+</ul>
+</blockquote>
+<h2 id="三、如何实现二分查找"><a href="#三、如何实现二分查找" class="headerlink" title="三、如何实现二分查找"></a>三、如何实现二分查找</h2><blockquote>
+<p>循环实现<br>  代码实现：</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">bsearch</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> n, <span class="keyword">int</span> value)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> low = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">int</span> high = n - <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">while</span> (low &lt;= high) &#123;</span><br><span class="line">    <span class="keyword">int</span> mid = (low + high) / <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">if</span> (a[mid] == value) &#123;</span><br><span class="line">      <span class="keyword">return</span> mid;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (a[mid] &lt; value) &#123;</span><br><span class="line">      low = mid + <span class="number">1</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      high = mid - <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意事项：</p>
+<ul>
+<li>①循环退出条件是：<code>start&lt;=end</code>，而不是<code>start&lt;end</code>。<br> ②<code>mid</code>的取值，使用<code>mid=start + (end - start) / 2</code>，而不用<code>mid=(start + end)/2</code>，因为如果<code>start</code>和<code>end</code>比较大的话，求和可能会发生<code>int</code>类型的值超出最大范围。<br> 为了把性能优化到极致，可以将除以<code>2</code>转换成位运算，即<code>start + ((end - start) &gt;&gt; 1)</code>，因为相比除法运算来说，计算机处理位运算要快得多。<br> ③<code>start</code>和<code>end</code>的更新：<code>start = mid - 1</code>，<code>end = mid + 1</code>，若直接写成<code>start = mid</code>，<code>end=mid</code>，就可能会发生死循环。</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>递归实现</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 二分查找的递归实现</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">bsearch</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> n, <span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> bsearchInternally(a, <span class="number">0</span>, n - <span class="number">1</span>, val);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">bsearchInternally</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> low, <span class="keyword">int</span> high, <span class="keyword">int</span> value)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (low &gt; high) <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">int</span> mid =  low + ((high - low) &gt;&gt; <span class="number">1</span>);</span><br><span class="line">  <span class="keyword">if</span> (a[mid] == value) &#123;</span><br><span class="line">    <span class="keyword">return</span> mid;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (a[mid] &lt; value) &#123;</span><br><span class="line">    <span class="keyword">return</span> bsearchInternally(a, mid+<span class="number">1</span>, high, value);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> bsearchInternally(a, low, mid-<span class="number">1</span>, value);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、使用条件（应用场景的局限性）"><a href="#四、使用条件（应用场景的局限性）" class="headerlink" title="四、使用条件（应用场景的局限性）"></a>四、使用条件（应用场景的局限性）</h2><blockquote>
+<ul>
+<li>二分查找依赖的是顺序表结构，即数组。</li>
+<li>二分查找针对的是有序数据，因此只能用在插入、删除操作不频繁，一次排序多次查找的场景中。</li>
+<li>数据量太小不适合二分查找，与直接遍历相比效率提升不明显。<br>  但有一个例外，就是数据之间的比较操作非常费时，比如数组中存储的都是长度超过<code>300</code>的字符串，那这是还是尽量减少比较操作使用二分查找吧。</li>
+<li>数据量太大也不是适合用二分查找，因为数组需要连续的空间，若数据量太大，往往找不到存储如此大规模数据的连续内存空间。</li>
+</ul>
+</blockquote>
+<h2 id="五、思考"><a href="#五、思考" class="headerlink" title="五、思考"></a>五、思考</h2><blockquote>
+<p>如何在<code>1000</code>万个整数中快速查找某个整数？</p>
+<ul>
+<li>①<code>1000</code>万个整数占用存储空间为<code>40MB</code>，占用空间不大，所以可以全部加载到内存中进行处理；</li>
+<li>②用一个<code>1000</code>万个元素的数组存储，然后使用快排进行升序排序，时间复杂度为$O(nlogn)$</li>
+<li>③在有序数组中使用二分查找算法进行查找，时间复杂度为$O(logn)$</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>如何编程实现“求一个数的平方根”？要求精确到小数点后<code>6</code>位？</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">def <span class="title">sqrt</span><span class="params">(x)</span>:</span></span><br><span class="line"><span class="function">    '''</span></span><br><span class="line"><span class="function">    求平方根，精确到小数点后6位</span></span><br><span class="line"><span class="function">    '''</span></span><br><span class="line"><span class="function">    low </span>= <span class="number">0</span></span><br><span class="line">    mid = x / <span class="number">2</span></span><br><span class="line">    high = x</span><br><span class="line">    <span class="function"><span class="keyword">while</span> <span class="title">abs</span><span class="params">(mid ** <span class="number">2</span> - x)</span> &gt; 0.000001:</span></span><br><span class="line"><span class="function">        <span class="keyword">if</span> mid ** 2 &lt; x:</span></span><br><span class="line"><span class="function">            low </span>= mid</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            high = mid</span><br><span class="line">        mid = (low + high) / <span class="number">2</span></span><br><span class="line">    <span class="keyword">return</span> mid</span><br><span class="line"></span><br><span class="line">二分法求根号<span class="number">5</span></span><br><span class="line">a:折半：<span class="number">5</span>/<span class="number">2</span>=<span class="number">2.5</span></span><br><span class="line"></span><br><span class="line">b:平方校验: <span class="number">2.5</span>*<span class="number">2.5</span>=<span class="number">6.25</span>&gt;<span class="number">5</span>，并且得到当前上限<span class="number">2.5</span></span><br><span class="line"></span><br><span class="line">c:再次向下折半: <span class="number">2.5</span>/<span class="number">2</span>=<span class="number">1.25</span></span><br><span class="line"></span><br><span class="line">d:平方校验：<span class="number">1.25</span>*<span class="number">1.25</span>=<span class="number">1.5625</span>&lt;<span class="number">5</span>,得到当前下限<span class="number">1.25</span></span><br><span class="line"></span><br><span class="line">e:再次折半: <span class="number">2.5</span>-(<span class="number">2.5</span>-<span class="number">1.25</span>)/<span class="number">2</span>=<span class="number">1.875</span></span><br><span class="line"></span><br><span class="line">f:平方校验：<span class="number">1.875</span>*<span class="number">1.875</span>=<span class="number">3.515625</span>&lt;<span class="number">5</span>,得到当前下限<span class="number">1.875</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>如果数据使用链表存储，二分查找的时间复杂就会变得很高，那查找的时间复杂度究竟是多少呢？</p>
+<blockquote>
+<p>假设链表长度为<code>n</code>，二分查找每次都要找到中间点(计算中忽略奇偶数差异):<br>   第一次查找中间点，需要移动指针<code>n/2</code>次；<br>   第二次，需要移动指针<code>n/4</code>次；<br>   第三次需要移动指针<code>n/8</code>次；<br>   ……<br>   以此类推，一直到<code>1</code>次为值<br>   总共指针移动次数(查找次数) = <code>n/2 + n/4 + n/8 + ...+ 1</code>，这显然是个等比数列，根据等比数列求和公式：<code>Sum = n - 1</code>.<br>   最后算法时间复杂度是：$O(n-1)$，忽略常数，记为$O(n)$，时间复杂度和顺序查找时间复杂度相同<br>   但是稍微思考下，在二分查找的时候，由于要进行多余的运算，严格来说，会比顺序查找时间慢</p>
+</blockquote>
+</blockquote>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、什么是二分查找"><span class="toc-text">一、什么是二分查找</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、时间复杂度分析"><span class="toc-text">二、时间复杂度分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三、如何实现二分查找"><span class="toc-text">三、如何实现二分查找</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四、使用条件（应用场景的局限性）"><span class="toc-text">四、使用条件（应用场景的局限性）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#五、思考"><span class="toc-text">五、思考</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: 沐晨</div>
+      
+        <div>
+          原文链接: 
+          <a style="word-break: break-word;" href="" target="_blank">https://fanciercoder.github.io/muchen/passages/12二分查找（上）/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a style="word-break: break-word;" href="/muchen/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+     
+      <a style="word-break: break-word;" href="/muchen/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      
+        <div class="site-footer-col">
+          <h5 class="site-footer-title">博客推荐</h5>
+          
+            <span class="site-footer-item">
+              <a href="https://fanciercoder.github.io/muchen/" target="_blank">沐晨</a>
+            </span>
+          
+        </div>
+      
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: lcoder@qq.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://fanciercoder.github.io/" target="_blank">沐晨</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+        <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+          
+            <div>
+              <img src="/muchen/images/wechat.png" alt="WeChat">
+              
+                <p>WeChat</p>
+              
+            </div>
+          
+            <div>
+              <img src="/muchen/images/alipay.png" alt="AliPay">
+              
+                <p>AliPay</p>
+              
+            </div>
+          
+            <div>
+              <img src="/muchen/images/BitCoin.jpg" alt="BitCoin">
+              
+                <p>BitCoin</p>
+              
+            </div>
+          
+        </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="javascript:void(0);" data-enable="false">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/muchen/passages/11如何实现一个通用的高性能的排序函数/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+      <a href="javascript:void(0);" id="site-reward">
+        <i class="fa fa-thumbs-up"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+
+
+  <script async>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+
+
+
+
+    
+  </body>
+</html>
