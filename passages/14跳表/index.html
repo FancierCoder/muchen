@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+  
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta name="author" content="MuChen">
+  
+  
+  <title>14.跳表 | MuChen&#39;s Blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="后端,算法,数据结构,">
+  
+
+  
+  <meta name="description" content="为什么`Redis`一定要用跳表来实现有序集合？">
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.14.0/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"js4SiJ6prwCfvUwpG6UKP1T5-gzGzoHsz","appkey":"GsFF0HPExEnfzq4Jkw3X8AFd","comment":true,"count":true},
+    welcome: {"enable":true,"interval":30},
+    start_time: "2019-07-12",
+    passwords: ["0e31be4bd24c14e65633d11633fe616ee3d93b4f31d07726fdbe113fa98a391a", ],
+    is_post: true,
+    lock: false,
+    author: "MuChen",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">沐晨</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | Learn To Learn</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+        <a href="/friends/" target="_self">友链</a>
+      
+        <a href="/about/" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/FancierCoder" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/friends/" target="_self">
+            友链
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/about/" target="_self">
+            关于
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2019-07-22
+    </span>
+    
+      <span>
+        | <a href="/categories/后端/"><i class="fa fa-bookmark"></i>后端</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    14.跳表
+  </h1>
+  
+  <article class="passage-article">
+    <h2 id="一、什么是跳表？"><a href="#一、什么是跳表？" class="headerlink" title="一、什么是跳表？"></a>一、什么是<a href="跳表">跳表</a>？</h2><blockquote>
+<p>为一个值有序的链表建立多级索引，比如每<code>2</code>个节点提取一个节点到上一级，我们把抽出来的那一级叫做索引或索引层。<br>如下图所示，其中<code>down</code>表示<code>down</code>指针，指向下一级节点。以此类推，对于节点数为<code>n</code>的链表，大约可以建立$log2n-1$级索引。<br>像这种为链表建立多级索引的数据结构就称为跳表。<br><img src="./99eb2aad.png" alt="image.png"></p>
+</blockquote>
+<h2 id="二、跳表的时间复杂度？"><a href="#二、跳表的时间复杂度？" class="headerlink" title="二、跳表的时间复杂度？"></a>二、跳表的时间复杂度？</h2><blockquote>
+<ol>
+<li>计算跳表的高度<br>如果链表有<code>n</code>个节点，每<code>2</code>个节点抽取抽出一个节点作为上一级索引的节点，那第<code>1</code>级索引的节点个数大约是<code>n/2</code>，第<code>2</code>级索引的节点个数大约是<code>n/4</code>，依次类推，第<code>k</code>级索引的节点个数就是<code>n/(2^k)</code>。<br>假设索引有<code>h</code>级别，最高级的索引有<code>2</code>个节点，则有<code>n/(2^h)=2</code>，得出$h=log2n-1$，包含原始链表这一层，整个跳表的高度就是$log2n$。</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="2">
+<li>计算跳表的时间复杂度<br>假设我们在跳表中查询某个数据的时候，如果每一层都遍历<code>m</code>个节点，那在跳表中查询一个数据的时间复杂度就是$O(m*logn)$。那这个<code>m</code>是多少呢？<br>如下图所示，假设我们要查找的数据是<code>x</code>，在第<code>k</code>级索引中，我们遍历到<code>y</code>节点之后，发现<code>x</code>大于<code>y</code>，小于后面的节点<code>z</code>，所以我们通过<code>y</code>的<code>down</code>指针，从第<code>k</code>级下降到第<code>k-1</code>级索引。<br>在第<code>k-1</code>级索引中，<code>y</code>和<code>z</code>之间只有<code>3</code>个节点（包含<code>y</code>和<code>z</code>），所以，我们在<code>k-1</code>级索引中最多只需要遍历<code>3</code>个节点，以此类推，每一级索引都最多只需要遍历<code>3</code>个节点。所以<code>m=3</code>。<br>因此在跳表中查询某个数据的时间复杂度就是$O(logn)$。<br><img src="./567d6a30.png" alt="image.png"></li>
+</ol>
+</blockquote>
+<h2 id="三、跳表的空间复杂度及如何优化？"><a href="#三、跳表的空间复杂度及如何优化？" class="headerlink" title="三、跳表的空间复杂度及如何优化？"></a>三、跳表的空间复杂度及如何优化？</h2><blockquote>
+<ol>
+<li>计算索引的节点总数<br>如果链表有<code>n</code>个节点，每<code>2</code>个节点抽取抽出一个节点作为上一级索引的节点，那每一级索引的节点数分别为：<code>n/2，n/4，n/8，…，8，4，2，</code>等比数列求和<code>n-1</code>，所以跳表的空间复杂度为$O(n)$。</li>
+<li>如何优化时间复杂度<br>如果链表有<code>n</code>个节点，每<code>3</code>或<code>5</code>个节点抽取抽出一个节点作为上一级索引的节点，那每一级索引的节点数分别为（以<code>3</code>为例）：<code>n/3，n/9，n/27，…，27，9，3，1，</code>等比数列求和<code>n/2</code>，所以跳表的空间复杂度为$O(n)$，和每<code>2</code>个节点抽取一次相比，时间复杂度要低不少。</li>
+</ol>
+</blockquote>
+<h2 id="四、高效的动态插入和删除"><a href="#四、高效的动态插入和删除" class="headerlink" title="四、高效的动态插入和删除"></a>四、高效的动态插入和删除</h2><blockquote>
+<p>跳表本质上就是链表，所以仅插作，插入和删除操时间复杂度就为$O(1)$，但在实际情况中，要插入或删除某个节点，需要先查找到指定位置，而这个查找操作比较费时，但在跳表中这个查找操作的时间复杂度是$O(logn)$，所以，跳表的插入和删除操作的是时间复杂度也是$O(logn)$。<br><img src="./3bd93331.png" alt="image.png"></p>
+</blockquote>
+<h2 id="五、跳表索引动态更新"><a href="#五、跳表索引动态更新" class="headerlink" title="五、跳表索引动态更新"></a>五、跳表索引动态更新</h2><blockquote>
+<p>当往跳表中插入数据的时候，可以选择同时将这个数据插入到部分索引层中，那么如何选择这个索引层呢？<br>可以通过随机函数来决定将这个节点插入到哪几级索引中，比如随机函数生成了值<code>K</code>，那就可以把这个节点添加到第<code>1</code>级到第<code>K</code>级索引中。</p>
+</blockquote>
+<h2 id="六、思考"><a href="#六、思考" class="headerlink" title="六、思考"></a>六、思考</h2><blockquote>
+<p>为什么 <code>Redis</code> 要用跳表来实现有序集合，而不是红黑树？</p>
+<blockquote>
+<p><code>Redis</code> 中的有序集合是通过跳表来实现的，严格点讲，其实还用到了散列表。<br>如果你去查看 <code>Redis</code> 的开发手册，就会发现，<code>Redis</code> 中的有序集合支持的核心操作主要有下面这几个：<br>插入一个数据；<br>删除一个数据；<br>查找一个数据；<br>按照区间查找数据（比如查找值在 <code>[100, 356]</code> 之间的数据）；<br>迭代输出有序序列。<br>其中，插入、删除、查找以及迭代输出有序序列这几个操作，红黑树也可以完成，时间复杂度跟跳表是一样的。但是，按照区间来查找数据这个操作，红黑树的效率没有跳表高。<br>对于按照区间查找数据这个操作，跳表可以做到 $O(logn)$ 的时间复杂度定位区间的起点，然后在原始链表中顺序往后遍历就可以了。这样做非常高效。<br>当然，<code>Redis</code> 之所以用跳表来实现有序集合，还有其他原因，比如，跳表更容易代码实现。<br>虽然跳表的实现也不简单，但比起红黑树来说还是好懂、好写多了，而简单就意味着可读性好，不容易出错。<br>还有，跳表更加灵活，它可以通过改变索引构建策略，有效平衡执行效率和内存消耗。<br>不过，跳表也不能完全替代红黑树。<br>因为红黑树比跳表的出现要早一些，很多编程语言中的 <code>Map</code> 类型都是通过红黑树来实现的。<br>我们做业务开发的时候，直接拿来用就可以了，不用费劲自己去实现一个红黑树，但是跳表并没有一个现成的实现，所以在开发中，如果你想使用跳表，必须要自己实现。</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p>如果每三个或者五个结点提取一个结点作为上级索引，对应的在跳表中查询数据的时间复杂度是多少呢？</p>
+<blockquote>
+<p>如果每三个或者五个节点提取一个节点作为上级索引，那么对应的查询数据时间复杂度，也还是$O(logn)$。<br>假设每 <code>5</code> 个节点提取，那么最高一层有 <code>5</code> 个节点，而跳表高度为 $log5n$，每层最多需要查找 <code>5</code> 个节点，即 $O(mlogn)$ 中的 <code>m = 5</code>，最终，时间复杂度为 $O(logn)$。<br>空间复杂度也还是 $O(logn)$，虽然省去了一部分索引节点，但是似乎意义不大。</p>
+</blockquote>
+</blockquote>
+<h2 id="跳表代码实现"><a href="#跳表代码实现" class="headerlink" title="跳表代码实现"></a>跳表代码实现</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> skiplist;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Random;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 跳表的一种实现方法。</span></span><br><span class="line"><span class="comment"> * 跳表中存储的是正整数，并且存储的是不重复的。</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SkipList</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAX_LEVEL = <span class="number">16</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span> levelCount = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> Node head = <span class="keyword">new</span> Node();  <span class="comment">// 带头链表</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> Random r = <span class="keyword">new</span> Random();</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> Node <span class="title">find</span><span class="params">(<span class="keyword">int</span> value)</span> </span>&#123;</span><br><span class="line">    Node p = head;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = levelCount - <span class="number">1</span>; i &gt;= <span class="number">0</span>; --i) &#123;</span><br><span class="line">      <span class="keyword">while</span> (p.forwards[i] != <span class="keyword">null</span> &amp;&amp; p.forwards[i].data &lt; value) &#123;</span><br><span class="line">        p = p.forwards[i];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (p.forwards[<span class="number">0</span>] != <span class="keyword">null</span> &amp;&amp; p.forwards[<span class="number">0</span>].data == value) &#123;</span><br><span class="line">      <span class="keyword">return</span> p.forwards[<span class="number">0</span>];</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insert</span><span class="params">(<span class="keyword">int</span> value)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> level = randomLevel();</span><br><span class="line">    Node newNode = <span class="keyword">new</span> Node();</span><br><span class="line">    newNode.data = value;</span><br><span class="line">    newNode.maxLevel = level;</span><br><span class="line">    Node update[] = <span class="keyword">new</span> Node[level];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; level; ++i) &#123;</span><br><span class="line">      update[i] = head;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// record every level largest value which smaller than insert value in update[]</span></span><br><span class="line">    Node p = head;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = level - <span class="number">1</span>; i &gt;= <span class="number">0</span>; --i) &#123;</span><br><span class="line">      <span class="keyword">while</span> (p.forwards[i] != <span class="keyword">null</span> &amp;&amp; p.forwards[i].data &lt; value) &#123;</span><br><span class="line">        p = p.forwards[i];</span><br><span class="line">      &#125;</span><br><span class="line">      update[i] = p;<span class="comment">// use update save node in search path</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// in search path node next node become new node forwords(next)</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; level; ++i) &#123;</span><br><span class="line">      newNode.forwards[i] = update[i].forwards[i];</span><br><span class="line">      update[i].forwards[i] = newNode;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// update node hight</span></span><br><span class="line">    <span class="keyword">if</span> (levelCount &lt; level) levelCount = level;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delete</span><span class="params">(<span class="keyword">int</span> value)</span> </span>&#123;</span><br><span class="line">    Node[] update = <span class="keyword">new</span> Node[levelCount];</span><br><span class="line">    Node p = head;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = levelCount - <span class="number">1</span>; i &gt;= <span class="number">0</span>; --i) &#123;</span><br><span class="line">      <span class="keyword">while</span> (p.forwards[i] != <span class="keyword">null</span> &amp;&amp; p.forwards[i].data &lt; value) &#123;</span><br><span class="line">        p = p.forwards[i];</span><br><span class="line">      &#125;</span><br><span class="line">      update[i] = p;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (p.forwards[<span class="number">0</span>] != <span class="keyword">null</span> &amp;&amp; p.forwards[<span class="number">0</span>].data == value) &#123;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i = levelCount - <span class="number">1</span>; i &gt;= <span class="number">0</span>; --i) &#123;</span><br><span class="line">        <span class="keyword">if</span> (update[i].forwards[i] != <span class="keyword">null</span> &amp;&amp; update[i].forwards[i].data == value) &#123;</span><br><span class="line">          update[i].forwards[i] = update[i].forwards[i].forwards[i];</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 随机 level 次，如果是奇数层数 +1，防止伪随机</span></span><br><span class="line"> <span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">randomLevel</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> level = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; MAX_LEVEL; ++i) &#123;</span><br><span class="line">      <span class="keyword">if</span> (r.nextInt() % <span class="number">2</span> == <span class="number">1</span>) &#123;</span><br><span class="line">        level++;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> level;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printAll</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Node p = head;</span><br><span class="line">    <span class="keyword">while</span> (p.forwards[<span class="number">0</span>] != <span class="keyword">null</span>) &#123;</span><br><span class="line">      System.out.print(p.forwards[<span class="number">0</span>] + <span class="string">" "</span>);</span><br><span class="line">      p = p.forwards[<span class="number">0</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> data = -<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">private</span> Node forwards[] = <span class="keyword">new</span> Node[MAX_LEVEL];</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> maxLevel = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      StringBuilder builder = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">      builder.append(<span class="string">"&#123; data: "</span>);</span><br><span class="line">      builder.append(data);</span><br><span class="line">      builder.append(<span class="string">"; levels: "</span>);</span><br><span class="line">      builder.append(maxLevel);</span><br><span class="line">      builder.append(<span class="string">" &#125;"</span>);</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> builder.toString();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、什么是跳表？"><span class="toc-text">一、什么是跳表？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、跳表的时间复杂度？"><span class="toc-text">二、跳表的时间复杂度？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三、跳表的空间复杂度及如何优化？"><span class="toc-text">三、跳表的空间复杂度及如何优化？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四、高效的动态插入和删除"><span class="toc-text">四、高效的动态插入和删除</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#五、跳表索引动态更新"><span class="toc-text">五、跳表索引动态更新</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#六、思考"><span class="toc-text">六、思考</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#跳表代码实现"><span class="toc-text">跳表代码实现</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: 沐晨</div>
+      
+        <div>
+          原文链接: 
+          <a style="word-break: break-word;" href="" target="_blank">https://muchen.fun/passages/14跳表/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+     
+      <a style="word-break: break-word;" href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      
+        <div class="site-footer-col">
+          <h5 class="site-footer-title">博客推荐</h5>
+          
+            <span class="site-footer-item">
+              <a href="https://muchen.fun/" target="_blank">沐晨</a>
+            </span>
+          
+        </div>
+      
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: lcoder@qq.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://fanciercoder.github.io/" target="_blank">沐晨</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+        <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+          
+            <div>
+              <img src="/images/wechat.png" alt="WeChat">
+              
+                <p>WeChat</p>
+              
+            </div>
+          
+            <div>
+              <img src="/images/alipay.png" alt="AliPay">
+              
+                <p>AliPay</p>
+              
+            </div>
+          
+            <div>
+              <img src="/images/BitCoin.jpg" alt="BitCoin">
+              
+                <p>BitCoin</p>
+              
+            </div>
+          
+        </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="javascript:void(0);" data-enable="false">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/13二分查找（下）/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+      <a href="javascript:void(0);" id="site-reward">
+        <i class="fa fa-thumbs-up"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+
+
+  <script async>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+
+
+
+
+    
+  </body>
+</html>
