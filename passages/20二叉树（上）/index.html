@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html>
+  
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta name="author" content="MuChen">
+  
+  
+  <title>20.二叉树（上） | MuChen&#39;s Blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="后端,算法,数据结构,">
+  
+
+  
+  <meta name="description" content="二叉树有哪几种存储方式？什么样的二叉树适合用数组来存储？">
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.14.0/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"js4SiJ6prwCfvUwpG6UKP1T5-gzGzoHsz","appkey":"GsFF0HPExEnfzq4Jkw3X8AFd","comment":true,"count":true},
+    welcome: {"enable":true,"interval":30},
+    start_time: "2019-07-12",
+    passwords: ["0e31be4bd24c14e65633d11633fe616ee3d93b4f31d07726fdbe113fa98a391a", ],
+    is_post: true,
+    lock: false,
+    author: "MuChen",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">沐晨</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | Learn To Learn</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+        <a href="/friends/" target="_self">友链</a>
+      
+        <a href="/about/" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/FancierCoder" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/friends/" target="_self">
+            友链
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/about/" target="_self">
+            关于
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2019-07-27
+    </span>
+    
+      <span>
+        | <a href="/categories/后端/"><i class="fa fa-bookmark"></i>后端</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    20.二叉树（上）
+  </h1>
+  
+  <article class="passage-article">
+    <h2 id="一、树"><a href="#一、树" class="headerlink" title="一、树"></a>一、树</h2><h3 id="树的常用概念"><a href="#树的常用概念" class="headerlink" title="树的常用概念"></a>树的常用概念</h3><blockquote>
+<p>根节点、叶子节点、父节点、子节点、兄弟节点，还有节点的高度、深度以及层数，树的高度。</p>
+</blockquote>
+<h3 id="概念解释"><a href="#概念解释" class="headerlink" title="概念解释"></a>概念解释</h3><blockquote>
+<p>节点：树中的每个元素称为节点<br>父子关系：相邻两节点的连线，称为父子关系<br>根节点：没有父节点的节点<br>叶子节点：没有子节点的节点<br>父节点：指向子节点的节点<br>子节点：被父节点指向的节点<br>兄弟节点：具有相同父节点的多个节点称为兄弟节点关系<br>节点的高度：节点到叶子节点的最长路径所包含的边数<br>节点的深度：根节点到节点的路径所包含的边数<br>节点的层数：节点的深度<code>+ 1</code>（根节点的层数是<code>1</code>）<br>树的高度：等于根节点的高度<br><img src="./4a5568e6.png" alt="image"><br><img src="./a3ab3e3e.png" alt="image"></p>
+</blockquote>
+<h2 id="二、二叉树"><a href="#二、二叉树" class="headerlink" title="二、二叉树"></a>二、二叉树</h2><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><h4 id="什么是二叉树？"><a href="#什么是二叉树？" class="headerlink" title="什么是二叉树？"></a>什么是二叉树？</h4><blockquote>
+<p>每个节点最多只有<code>2</code>个子节点的树，这两个节点分别是左子节点和右子节点。</p>
+</blockquote>
+<h4 id="什么是满二叉树？"><a href="#什么是满二叉树？" class="headerlink" title="什么是满二叉树？"></a>什么是满二叉树？</h4><blockquote>
+<p>有一种二叉树，除了叶子节点外，每个节点都有左右两个子节点，这种二叉树叫做满二叉树。</p>
+</blockquote>
+<h4 id="什么是完全二叉树？"><a href="#什么是完全二叉树？" class="headerlink" title="什么是完全二叉树？"></a>什么是完全二叉树？</h4><blockquote>
+<p>有一种二叉树，叶子节点都在最底下两层，最后一层叶子节都靠左排列，并且除了最后一层，其他层的节点个数都要达到最大，这种二叉树叫做完全二叉树。</p>
+</blockquote>
+<h3 id="完全二叉树的存储"><a href="#完全二叉树的存储" class="headerlink" title="完全二叉树的存储"></a>完全二叉树的存储</h3><h4 id="链式存储"><a href="#链式存储" class="headerlink" title="链式存储"></a>链式存储</h4><blockquote>
+<p>每个节点由<code>3</code>个字段，其中一个存储数据，另外两个是指向左右子节点的指针。我们只要拎住根节点，就可以通过左右子节点的指针，把整棵树都串起来。这种存储方式比较常用，大部分二叉树代码都是通过这种方式实现的。<br><img src="./2acd5b9d.png" alt="image"></p>
+</blockquote>
+<h4 id="顺序存储"><a href="#顺序存储" class="headerlink" title="顺序存储"></a>顺序存储</h4><blockquote>
+<p>用数组来存储，对于完全二叉树，如果节点<code>X</code>存储在数组中的下标为<code>i</code>，那么它的左子节点的存储下标为<code>2*i</code>，右子节点的下标为<code>2*i+1</code>，反过来，下标<code>i/2</code>位置存储的就是该节点的父节点。注意，根节点存储在下标为<code>1</code>的位置。完全二叉树用数组来存储时最省内存的方式。<br><img src="./5ce934c2.png" alt="image"></p>
+</blockquote>
+<h3 id="二叉树的遍历"><a href="#二叉树的遍历" class="headerlink" title="二叉树的遍历"></a>二叉树的遍历</h3><p><img src="./7871f61d.png" alt="image"></p>
+<h4 id="前序遍历："><a href="#前序遍历：" class="headerlink" title="前序遍历："></a>前序遍历：</h4><blockquote>
+<p>对于树中的任意节点来说，先打印这个节点，然后再打印它的左子树，最后打印它的右子树。</p>
+</blockquote>
+<h4 id="中序遍历："><a href="#中序遍历：" class="headerlink" title="中序遍历："></a>中序遍历：</h4><blockquote>
+<p>对于树中的任意节点来说，先打印它的左子树，然后再打印它的本身，最后打印它的右子树。</p>
+</blockquote>
+<h4 id="后序遍历："><a href="#后序遍历：" class="headerlink" title="后序遍历："></a>后序遍历：</h4><blockquote>
+<p>对于树中的任意节点来说，先打印它的左子树，然后再打印它的右子树，最后打印它本身。</p>
+</blockquote>
+<p>写递归代码的关键，就是看能不能写出递推公式，而写递推公式的关键就是，如果要解决问题 <code>A</code>，就假设子问题 <code>B</code>、<code>C</code> 已经解决，然后再来看如何利用 <code>B</code>、<code>C</code> 来解决 <code>A</code>。<br>所以，我们可以把前、中、后序遍历的递推公式都写出来。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">前序遍历的递推公式：</span><br><span class="line">preOrder(r) = print r-&gt;preOrder(r-&gt;left)-&gt;preOrder(r-&gt;right)</span><br><span class="line"></span><br><span class="line">中序遍历的递推公式：</span><br><span class="line">inOrder(r) = inOrder(r-&gt;left)-&gt;print r-&gt;inOrder(r-&gt;right)</span><br><span class="line"></span><br><span class="line">后序遍历的递推公式：</span><br><span class="line">postOrder(r) = postOrder(r-&gt;left)-&gt;postOrder(r-&gt;right)-&gt;print r</span><br></pre></td></tr></table></figure>
+
+<p>有了递推公式，代码写起来就简单多了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">preOrder</span><span class="params">(Node* root)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (root == <span class="keyword">null</span>) <span class="keyword">return</span>;</span><br><span class="line">  print root <span class="comment">// 此处为伪代码，表示打印 root 节点</span></span><br><span class="line">  preOrder(root-&gt;left);</span><br><span class="line">  preOrder(root-&gt;right);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">inOrder</span><span class="params">(Node* root)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (root == <span class="keyword">null</span>) <span class="keyword">return</span>;</span><br><span class="line">  inOrder(root-&gt;left);</span><br><span class="line">  print root <span class="comment">// 此处为伪代码，表示打印 root 节点</span></span><br><span class="line">  inOrder(root-&gt;right);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">postOrder</span><span class="params">(Node* root)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (root == <span class="keyword">null</span>) <span class="keyword">return</span>;</span><br><span class="line">  postOrder(root-&gt;left);</span><br><span class="line">  postOrder(root-&gt;right);</span><br><span class="line">  print root <span class="comment">// 此处为伪代码，表示打印 root 节点</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>时间复杂度：<code>3</code>种遍历方式中，每个节点最多会被访问<code>2</code>次，所以时间复杂度是$O(n)$。</p>
+<h2 id="三、思考"><a href="#三、思考" class="headerlink" title="三、思考"></a>三、思考</h2><blockquote>
+<ol>
+<li>给定一组数据，比如<code>1，3，5，6，9，10</code>.你来算算，可以构建出多少种不同的二叉树？<blockquote>
+<p>确定两点：<br>1）<code>n</code>个数，即<code>n</code>个节点，能构造出多少种不同形态的树？<br>2）<code>n</code>个数，有多少种不同的排列？<br>当确定以上两点，将【1)的结果】乘以 【2)的结果】，即为最终的结果。<br>但是有一个注意的点： 如果<code>n</code>中有相等的数，产生的总排列数就不是$n!$了<br>具体可参考<a href="https://en.wikipedia.org/wiki/Catalan_number" target="_blank" rel="noopener">卡塔兰数</a></p>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="2">
+<li>上面讲了三种二叉树的遍历方式，前、中、后序。实际上，还有另一种遍历方式，也就是按层遍历，你知道如何实现吗？<blockquote>
+<p>层序遍历，借用队列辅助即可，根节点先入队列，然后循环从队列中<code>pop</code>节点，将<code>pop</code>出来的节点的左子节点先入队列，右节点后入队列，依次循环，直到队列为空，遍历结束。<br><code>leetcode</code>上有个类似的题目，<a href="https://leetcode-cn.com/problems/binary-tree-level-order-traversal/" target="_blank" rel="noopener">点我链接</a></p>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、树"><span class="toc-text">一、树</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#树的常用概念"><span class="toc-text">树的常用概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#概念解释"><span class="toc-text">概念解释</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、二叉树"><span class="toc-text">二、二叉树</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#概念"><span class="toc-text">概念</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#什么是二叉树？"><span class="toc-text">什么是二叉树？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#什么是满二叉树？"><span class="toc-text">什么是满二叉树？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#什么是完全二叉树？"><span class="toc-text">什么是完全二叉树？</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#完全二叉树的存储"><span class="toc-text">完全二叉树的存储</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#链式存储"><span class="toc-text">链式存储</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#顺序存储"><span class="toc-text">顺序存储</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二叉树的遍历"><span class="toc-text">二叉树的遍历</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#前序遍历："><span class="toc-text">前序遍历：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#中序遍历："><span class="toc-text">中序遍历：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#后序遍历："><span class="toc-text">后序遍历：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三、思考"><span class="toc-text">三、思考</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: 沐晨</div>
+      
+        <div>
+          原文链接: 
+          <a style="word-break: break-word;" href="" target="_blank">https://muchen.fun/passages/20二叉树（上）/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+     
+      <a style="word-break: break-word;" href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      
+        <div class="site-footer-col">
+          <h5 class="site-footer-title">博客推荐</h5>
+          
+            <span class="site-footer-item">
+              <a href="https://muchen.fun/" target="_blank">沐晨</a>
+            </span>
+          
+        </div>
+      
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: lcoder@qq.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://fanciercoder.github.io/" target="_blank">沐晨</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+        <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+          
+            <div>
+              <img src="/images/wechat.png" alt="WeChat">
+              
+                <p>WeChat</p>
+              
+            </div>
+          
+            <div>
+              <img src="/images/alipay.png" alt="AliPay">
+              
+                <p>AliPay</p>
+              
+            </div>
+          
+            <div>
+              <img src="/images/BitCoin.jpg" alt="BitCoin">
+              
+                <p>BitCoin</p>
+              
+            </div>
+          
+        </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="javascript:void(0);" data-enable="false">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/19哈希算法（下）/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+      <a href="javascript:void(0);" id="site-reward">
+        <i class="fa fa-thumbs-up"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+
+
+  <script async>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+
+
+
+
+    
+  </body>
+</html>
