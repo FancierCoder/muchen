@@ -205,8 +205,8 @@
 <p>前面讲的二叉查找树的操作，针对的都是不存在键值相同的情况。那如果存储的两个对象键值相同，这种情况该怎么处理呢？我这里有两种解决方法。</p>
 <p>第一种方法比较容易。二叉查找树中每一个节点不仅会存储一个数据，因此我们通过链表和支持动态扩容的数组等数据结构，把值相同的数据都存储在同一个节点上。</p>
 <p>第二种方法比较不好理解，不过更加优雅。<br>每个节点仍然只存储一个数据。在查找插入位置的过程中，如果碰到一个节点的值，与要插入数据的值相同，我们就将这个要插入的数据放到这个节点的右子树，也就是说，把这个新插入的数据当作大于这个节点的值来处理。<br><img src="./ae6c323d.png" alt><br>当要查找数据的时候，遇到值相同的节点，我们并不停止查找操作，而是继续在右子树中查找，直到遇到叶子节点，才停止。这样就可以把键值等于要查找值的所有节点都找出来。<br><img src="./9168d5ac.png" alt><br>对于删除操作，我们也需要先查找到每个要删除的节点，然后再按前面讲的删除操作的方法，依次删除。<br><img src="./8be7cbac.png" alt></p>
-<h4 id="二叉查找树的时间复杂度分析"><a href="#二叉查找树的时间复杂度分析" class="headerlink" title="二叉查找树的时间复杂度分析"></a>二叉查找树的时间复杂度分析</h4><p>实际上，二叉查找树的形态各式各样。比如这个图中，对于同一组数据，我们构造了三种二叉查找树。它们的查找、插入、删除操作的执行效率都是不一样的。图中第一种二叉查找树，根节点的左右子树极度不平衡，已经退化成了链表，所以查找的时间复杂度就变成了 $O(n)$。<br><img src="./2451a5c1.png" alt><br>刚刚其实分析了一种最糟糕的情况，我们现在来分析一个最理想的情况，二叉查找树是一棵完全二叉树（或满二叉树）。这个时候，插入、删除、查找的时间复杂度是多少呢？<br>树的高度就等于最大层数减一，为了方便计算，我们转换成层来表示。从图中可以看出，包含 <code>n</code> 个节点的完全二叉树中，第一层包含 <code>1</code> 个节点，第二层包含 <code>2</code> 个节点，第三层包含 <code>4</code> 个节点，依次类推，下面一层节点个数是上一层的 <code>2</code> 倍，第 <code>K</code> 层包含的节点个数就是 2^(K-1)^。</p>
-<p>不过，对于完全二叉树来说，最后一层的节点个数有点儿不遵守上面的规律了。它包含的节点个数在 <code>1</code> 个到 2^(L-1)^ 个之间（我们假设最大层数是 <code>L</code>）。如果我们把每一层的节点个数加起来就是总的节点个数 <code>n</code>。也就是说，如果节点的个数是 <code>n</code>，那么 <code>n</code> 满足这样一个关系：</p>
+<h4 id="二叉查找树的时间复杂度分析"><a href="#二叉查找树的时间复杂度分析" class="headerlink" title="二叉查找树的时间复杂度分析"></a>二叉查找树的时间复杂度分析</h4><p>实际上，二叉查找树的形态各式各样。比如这个图中，对于同一组数据，我们构造了三种二叉查找树。它们的查找、插入、删除操作的执行效率都是不一样的。图中第一种二叉查找树，根节点的左右子树极度不平衡，已经退化成了链表，所以查找的时间复杂度就变成了 $O(n)$。<br><img src="./2451a5c1.png" alt><br>刚刚其实分析了一种最糟糕的情况，我们现在来分析一个最理想的情况，二叉查找树是一棵完全二叉树（或满二叉树）。这个时候，插入、删除、查找的时间复杂度是多少呢？<br>树的高度就等于最大层数减一，为了方便计算，我们转换成层来表示。从图中可以看出，包含 <code>n</code> 个节点的完全二叉树中，第一层包含 <code>1</code> 个节点，第二层包含 <code>2</code> 个节点，第三层包含 <code>4</code> 个节点，依次类推，下面一层节点个数是上一层的 <code>2</code> 倍，第 <code>K</code> 层包含的节点个数就是 <code>2^(K-1)</code>。</p>
+<p>不过，对于完全二叉树来说，最后一层的节点个数有点儿不遵守上面的规律了。它包含的节点个数在 <code>1</code> 个到 <code>2^(L-1)</code> 个之间（我们假设最大层数是 <code>L</code>）。如果我们把每一层的节点个数加起来就是总的节点个数 <code>n</code>。也就是说，如果节点的个数是 <code>n</code>，那么 <code>n</code> 满足这样一个关系：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">n &gt;= <span class="number">1</span>+<span class="number">2</span>+<span class="number">4</span>+<span class="number">8</span>+...+<span class="number">2</span>^(L-<span class="number">2</span>)+<span class="number">1</span></span><br><span class="line">n &lt;= <span class="number">1</span>+<span class="number">2</span>+<span class="number">4</span>+<span class="number">8</span>+...+<span class="number">2</span>^(L-<span class="number">2</span>)+<span class="number">2</span>^(L-<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
 
 <p>借助等比数列的求和公式，我们可以计算出，<code>L</code> 的范围是 <code>[log2(n+1), log2n+1]</code>。完全二叉树的层数小于等于 <code>log2n +1</code>，也就是说，完全二叉树的高度小于等于 <code>log2n</code>。</p>
@@ -223,7 +223,6 @@
 </blockquote>
 </li>
 </ol>
-
   </article>
   <aside class="table-content" id="site-toc">
   <div class="table-content-title">
