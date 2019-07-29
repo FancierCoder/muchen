@@ -1,6 +1,8 @@
 User-agent: *
 Allow: /
 Allow: /archives/
+Allow: /passages/
+Allow: /page/
 Allow: /categories/
 Allow: /tags/
 Disallow: /vendors/
