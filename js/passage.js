@@ -1,6 +1,19 @@
 (() => {
   function handleImgClick(event) {
-    window.open(event.target.getAttribute('src'), '_blank');
+    // window.open(event.target.getAttribute('src'), '_blank');
+    let wid = event.target.width;
+    let fire = {
+      imageUrl: event.target.getAttribute('src'),
+      // imageHeight: 800,
+      width: wid,
+      padding: '0',
+      imageAlt: 'A image',
+      showConfirmButton: false,
+      allowOutsideClick: true
+    };
+    Swal.fire(fire);
+    // $('.swal2-actions').hide()
+    $('.swal2-image').css('margin', '0')
   }
 
   const { is_post, page_type } = window.AD_CONFIG;
