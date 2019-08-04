@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html>
+  
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta name="author" content="MuChen">
+  
+  
+  <title>9.排序（下） | MuChen&#39;s Blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="后端,数据结构,算法,">
+  
+
+  
+  <meta name="description" content="归并排序和快速排序都用到了分治思想，非常巧妙。我们可以借鉴这个思想，来解决非排序的问题，比如：如何在$O(n)$的时间复杂度内查找一个无序数组中的第`K`大元素？">
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.14.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"js4SiJ6prwCfvUwpG6UKP1T5-gzGzoHsz","appkey":"GsFF0HPExEnfzq4Jkw3X8AFd","comment":true,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2019-07-12",
+    passwords: ["0e31be4bd24c14e65633d11633fe616ee3d93b4f31d07726fdbe113fa98a391a", ],
+    is_post: true,
+    lock: false,
+    author: "MuChen",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">沐晨</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | Learn To Learn</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+        <a href="/friends/" target="_self">友链</a>
+      
+        <a href="/about/" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/FancierCoder" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/friends/" target="_self">
+            友链
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/about/" target="_self">
+            关于
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2019-07-17 11:35:56
+    </span>
+    
+      <span>
+        | <a href="/categories/后端/"><i class="fa fa-bookmark"></i>后端</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    9.排序（下）
+  </h1>
+  
+  <article class="passage-article">
+    <h2 id="一、分治思想"><a href="#一、分治思想" class="headerlink" title="一、分治思想"></a>一、分治思想</h2><blockquote>
+<ol>
+<li>分治思想：分治，顾明思意，就是分而治之，将一个大问题分解成小的子问题来解决，小的子问题解决了，大问题也就解决了。</li>
+<li>分治与递归的区别：分治算法一般都用递归来实现的。分治是一种解决问题的处理思想，递归是一种编程技巧。</li>
+</ol>
+</blockquote>
+<h2 id="二、归并排序"><a href="#二、归并排序" class="headerlink" title="二、归并排序"></a>二、归并排序</h2><blockquote>
+<p>算法原理</p>
+<ul>
+<li>先把数组从中间分成前后两部分，然后对前后两部分分别进行排序，再将排序好的两部分合并到一起，这样整个数组就有序了。<br> 这就是归并排序的核心思想。<br> 如何用递归实现归并排序呢？写递归代码的技巧就是分写得出递推公式，然后找到终止条件，最后将递推公式翻译成递归代码。递推公式怎么写？如下<blockquote>
+<ul>
+<li>递推公式：<code>merge_sort(p…r) = merge(merge_sort(p…q), merge_sort(q+1…r))</code></li>
+<li>终止条件：<code>p &gt;= r</code> 不用再继续分解</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>代码实现</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 归并排序算法, A 是数组，n 表示数组大小</span></span><br><span class="line">merge_sort(A, n) &#123;</span><br><span class="line">  merge_sort_c(A, <span class="number">0</span>, n-<span class="number">1</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 递归调用函数</span></span><br><span class="line">merge_sort_c(A, p, r) &#123;</span><br><span class="line">  <span class="comment">// 递归终止条件</span></span><br><span class="line">  <span class="keyword">if</span> p &gt;= r  then <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 取 p 到 r 之间的中间位置 q</span></span><br><span class="line">  q = (p+r) / <span class="number">2</span></span><br><span class="line">  <span class="comment">// 分治递归</span></span><br><span class="line">  merge_sort_c(A, p, q)</span><br><span class="line">  merge_sort_c(A, q+<span class="number">1</span>, r)</span><br><span class="line">  <span class="comment">// 将 A[p...q] 和 A[q+1...r] 合并为 A[p...r]</span></span><br><span class="line">  merge(A[p...r], A[p...q], A[q+<span class="number">1</span>...r])</span><br></pre></td></tr></table></figure>
+
+<p><img src="./3fed8241.png" alt></p>
+<blockquote>
+<p>性能分析</p>
+<ul>
+<li>算法稳定性<br> 归并排序稳不稳定关键要看<code>merge()</code>函数，也就是两个子数组合并成一个有序数组的那部分代码。<br> 在合并的过程中，如果 <code>A[p…q]</code> 和 <code>A[q+1…r]</code> 之间有值相同的元素，那我们就可以像伪代码中那样，先把 <code>A[p…q]</code> 中的元素放入<code>tmp</code>数组，这样就保证了值相同的元素，在合并前后的先后顺序不变。<br> 所以，归并排序是一种稳定排序算法。</li>
+<li>时间复杂度：分析归并排序的时间复杂度就是分析递归代码的时间复杂度<br> 如何分析递归代码的时间复杂度？<br> 递归的适用场景是一个问题<code>a</code>可以分解为多个子问题<code>b</code>、<code>c</code>，那求解问题<code>a</code>就可以分解为求解问题<code>b</code>、<code>c</code>。<br> 问题<code>b</code>、<code>c</code>解决之后，我们再把<code>b</code>、<code>c</code>的结果合并成<code>a</code>的结果。若定义求解问题<code>a</code>的时间是<code>T(a)</code>，则求解问题<code>b</code>、<code>c</code>的时间分别是<code>T(b)</code>和<code>T(c)</code>，那就可以得到这样的递推公式：<code>T(a) = T(b) + T(c) + K</code>，其中<code>K</code>等于将两个子问题<code>b</code>、<code>c</code>的结果合并成问题<code>a</code>的结果所消耗的时间。<br> 这里有一个重要的结论：<br> <strong>不仅递归求解的问题可以写成递推公式，递归代码的时间复杂度也可以写成递推公式。</strong><br> 套用这个公式，那么归并排序的时间复杂度就可以表示为：</li>
+</ul>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">T(<span class="number">1</span>) = C； n=<span class="number">1</span> 时，只需要常量级的执行时间，所以表示为 C。</span><br><span class="line">T(n) = <span class="number">2</span>*T(n/<span class="number">2</span>) + n； n&gt;<span class="number">1</span>，其中n就是merge()函数合并两个子数组的的时间复杂度$O(n)$。</span><br><span class="line"></span><br><span class="line">T(n) = <span class="number">2</span>*T(n/<span class="number">2</span>) + n</span><br><span class="line">    = <span class="number">2</span>*(<span class="number">2</span>*T(n/<span class="number">4</span>) + n/<span class="number">2</span>) + n = <span class="number">4</span>*T(n/<span class="number">4</span>) + <span class="number">2</span>*n</span><br><span class="line">    = <span class="number">4</span>*(<span class="number">2</span>*T(n/<span class="number">8</span>) + n/<span class="number">4</span>) + <span class="number">2</span>*n = <span class="number">8</span>*T(n/<span class="number">8</span>) + <span class="number">3</span>*n</span><br><span class="line">    = <span class="number">8</span>*(<span class="number">2</span>*T(n/<span class="number">16</span>) + n/<span class="number">8</span>) + <span class="number">3</span>*n = <span class="number">16</span>*T(n/<span class="number">16</span>) + <span class="number">4</span>*n</span><br><span class="line">    ......</span><br><span class="line">    = <span class="number">2</span>^k * T(n/<span class="number">2</span>^k) + k * n</span><br><span class="line">    ......</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>当$T(n/2^k)=T(1)$时，也就是 $n/2^k=1$，我们得到$k=log2n$。<br>  将k带入上面的公式就得到$T(n)=Cn+nlog2n$。<br>  如用大O表示法，$T(n)$就等于$O(nlogn)$。<br>  所以，归并排序的是复杂度时间复杂度就是$O(nlogn)$。</p>
+</blockquote>
+<blockquote>
+<ul>
+<li>空间复杂度<br> 归并排序算法不是原地排序算法，空间复杂度是$O(n)$<br> 因为归并排序的合并函数，在合并两个数组为一个有序数组时，需要借助额外的存储空间。<br> 为什么空间复杂度是$O(n)$而不是$O(nlogn)$呢？<br> 如果我们按照分析递归的时间复杂度的方法，通过递推公式来求解，那整个归并过程需要的空间复杂度就是$O(nlogn)$，但这种分析思路是有问题的！<br> 因为，在实际上，递归代码的空间复杂度并不是像时间复杂度那样累加，而是这样的过程，<br> 即在每次合并过程中都需要申请额外的内存空间，但是合并完成后，临时开辟的内存空间就被释放掉了，在任意时刻，<code>CPU</code>只会有一个函数在执行，也就只会有一个临时的内存空间在使用。<br> 临时空间再大也不会超过<code>n</code>个数据的大小，所以空间复杂度是$O(n)$。</li>
+</ul>
+</blockquote>
+<h2 id="三、快速排序"><a href="#三、快速排序" class="headerlink" title="三、快速排序"></a>三、快速排序</h2><blockquote>
+<p>算法原理</p>
+<ul>
+<li>快排的思想是这样的：如果要排序数组中下标从<code>p</code>到<code>r</code>之间的一组数据，我们选择<code>p</code>到<code>r</code>之间的任意一个数据作为<code>pivot</code>（分区点）。<br> 然后遍历<code>p</code>到<code>r</code>之间的数据，将小于<code>pivot</code>的放到左边，将大于<code>pivot</code>的放到右边，将<code>piovt</code>放到中间。<br> 经过这一步之后，数组<code>p</code>到<code>r</code>之间的数据就分成了<code>3</code>部分，前面<code>p</code>到<code>q-1</code>之间都是小于<code>pivot</code>的，中间是<code>pivot</code>，后面的<code>q+1</code>到<code>r</code>之间是大于<code>pivot</code>的。<br> 根据分治、递归的处理思想，我们可以用递归排序下标从<code>p</code>到<code>q-1</code>之间的数据和下标从<code>q+1</code>到<code>r</code>之间的数据，直到区间缩小为<code>1</code>，就说明所有的数据都有序了。<blockquote>
+<ul>
+<li>递推公式：<code>quick_sort(p…r) = quick_sort(p…q-1) + quick_sort(q+1, r)</code></li>
+<li>终止条件：<code>p &gt;= r</code></li>
+</ul>
+</blockquote>
+</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>代码实现</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 快速排序，A 是数组，n 表示数组的大小</span></span><br><span class="line">quick_sort(A, n) &#123;</span><br><span class="line">  quick_sort_c(A, <span class="number">0</span>, n-<span class="number">1</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 快速排序递归函数，p,r 为下标</span></span><br><span class="line">quick_sort_c(A, p, r) &#123;</span><br><span class="line">  <span class="keyword">if</span> p &gt;= r then <span class="keyword">return</span></span><br><span class="line">  </span><br><span class="line">  q = partition(A, p, r) <span class="comment">// 获取分区点</span></span><br><span class="line">  quick_sort_c(A, p, q-<span class="number">1</span>)</span><br><span class="line">  quick_sort_c(A, q+<span class="number">1</span>, r)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="./509fa91c.png" alt></p>
+<blockquote>
+<p>性能分析</p>
+<ul>
+<li>算法稳定性<br> 因为分区过程中涉及交换操作，如果数组中有两个<code>8</code>，其中一个是<code>pivot</code>，经过分区处理后，后面的<code>8</code>就有可能放到了另一个8的前面，先后顺序就颠倒了，<br> 所以快速排序是不稳定的排序算法。<br> 比如数组<code>[1,2,3,9,8,11,8]</code>，取后面的<code>8</code>作为<code>pivot</code>，那么分区后就会将后面的<code>8</code>与<code>9</code>进行交换。</li>
+<li>时间复杂度：最好、最坏、平均情况<br> 快排也是用递归实现的，所以时间复杂度也可以用递推公式表示。<br> 如果每次分区操作都能正好把数组分成大小接近相等的两个小区间，那快排的时间复杂度递推求解公式跟归并的相同。</li>
+</ul>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">T(<span class="number">1</span>) = C； n=<span class="number">1</span> 时，只需要常量级的执行时间，所以表示为 C。</span><br><span class="line">T(n) = <span class="number">2</span>*T(n/<span class="number">2</span>) + n； n&gt;<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>所以，快排的时间复杂度也是$O(nlogn)$<br>  如果数组中的元素原来已经有序了，比如<code>1，3，5，6，8</code>，若每次选择最后一个元素作为<code>pivot</code>，那每次分区得到的两个区间都是不均等的，需要进行大约<code>n</code>次的分区，才能完成整个快排过程，而每次分区我们平均要扫描大约<code>n/2</code>个元素，这种情况下，快排的时间复杂度就是$O(n^2)$。<br>  前面两种情况，一个是分区及其均衡，一个是分区极不均衡，它们分别对应了快排的最好情况时间复杂度和最坏情况时间复杂度。<br>  那快排的平均时间复杂度是多少呢？<br>  T(n)大部分情况下是$O(nlogn)$，只有在极端情况下才是退化到$O(n^2)$，而且我们也有很多方法将这个概率降低。</p>
+</blockquote>
+<h2 id="四、归并排序与快速排序的区别"><a href="#四、归并排序与快速排序的区别" class="headerlink" title="四、归并排序与快速排序的区别"></a>四、归并排序与快速排序的区别</h2><blockquote>
+<p>归并和快排用的都是分治思想，递推公式和递归代码也非常相似，那它们的区别在哪里呢？<br><img src="./f02e10d6.png" alt></p>
+<ul>
+<li>归并排序，是先递归调用，再进行合并，合并的时候进行数据的交换。<br> 所以它是自下而上的排序方式。<br> 何为自下而上？就是先解决子问题，再解决父问题。</li>
+<li>快速排序，是先分区，在递归调用，分区的时候进行数据的交换。<br> 所以它是自上而下的排序方式。<br> 何为自上而下？就是先解决父问题，再解决子问题。</li>
+</ul>
+</blockquote>
+<h2 id="五、思考"><a href="#五、思考" class="headerlink" title="五、思考"></a>五、思考</h2><blockquote>
+<ul>
+<li><strong>$O(n)$时间复杂度内求无序数组中第<code>K</code>大元素?</strong><br>比如<code>4，2，5，12，3</code>这样一组数据，第<code>3</code>大元素是<code>4</code>。<blockquote>
+<p>我们选择数组区间<code>A[0...n-1]</code>的最后一个元素作为<code>pivot</code>，对数组<code>A[0...n-1]</code>进行原地分区，这样数组就分成了<code>3</code>部分，<code>A[0...p-1]</code>、<code>A[p]</code>、<code>A[p+1...n-1]</code>。<br>如果如果<code>p+1=K</code>，那<code>A[p]</code>就是要求解的元素；如果<code>K &gt; p+1</code>，说明第<code>K</code>大元素出现在<code>A[p+1...n-1]</code>区间，我们按照上面的思路递归地在<code>A[p+1...n-1]</code>这个区间查找。<br>同理，如果<code>K &lt; p+1</code>，那我们就在<code>A[0...p-1]</code>区间查找。<br>时间复杂度分析<br>第一次分区查找，我们需要对大小为<code>n</code>的数组进行分区操作，需要遍历<code>n</code>个元素。<br>第二次分区查找，我们需要对大小为<code>n/2</code>的数组执行分区操作，需要遍历<code>n/2</code>个元素。<br>依次类推，分区遍历元素的个数分别为<code>n</code>、<code>n/2</code>、<code>n/4</code>、<code>n/8</code>、<code>n/16......</code>直到区间缩小为<code>1</code>。<br>如果把每次分区遍历的元素个数累加起来，就是等比数列求和，结果为<code>2n-1</code>。<br>所以，上述解决问题的思路为$O(n)$。</p>
+</blockquote>
+</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>有<code>10</code>个访问日志文件，每个日志文件大小约为<code>300MB</code>，每个文件里的日志都是按照时间戳从小到大排序的。现在需要将这<code>10</code>个较小的日志文件合并为<code>1</code>个日志文件，合并之后的日志仍然按照时间戳从小到大排列。如果处理上述任务的机器内存只有<code>1GB</code>，你有什么好的解决思路能快速地将这<code>10</code>个日志文件合并？<blockquote>
+<p>  每次从各个文件中取一条数据，在内存中根据数据时间戳构建一个最小堆，然后每次把最小值给写入新文件，同时将最小值来自的那个文件再出来一个数据，加入到最小堆中。<br>  这个空间复杂度为常数，但没能很好利用<code>1G</code>内存，而且磁盘单个读取比较慢，所以考虑每次读取一批数据，没了再从磁盘中取，时间复杂度还是一样$O(n)$。</p>
+</blockquote>
+</li>
+</ul>
+</blockquote>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、分治思想"><span class="toc-text">一、分治思想</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、归并排序"><span class="toc-text">二、归并排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三、快速排序"><span class="toc-text">三、快速排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四、归并排序与快速排序的区别"><span class="toc-text">四、归并排序与快速排序的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#五、思考"><span class="toc-text">五、思考</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: 沐晨</div>
+      
+        <div>
+          原文链接: 
+          <a style="word-break: break-word;" href="" target="_blank">https://muchen.fun/passages/9/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a style="word-break: break-word;" href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
+     
+      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      
+        <div class="site-footer-col">
+          <h5 class="site-footer-title">博客推荐</h5>
+          
+            <span class="site-footer-item">
+              <a href="https://muchen.fun/" target="_blank">沐晨</a>
+            </span>
+          
+            <span class="site-footer-item">
+              <a href="http://www.wangdabo.com" target="_blank">王大博</a>
+            </span>
+          
+        </div>
+      
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: lcoder@qq.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://fanciercoder.github.io/" target="_blank">沐晨</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+        <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+          
+            <div>
+              <img src="/images/wechat.png" alt="WeChat">
+              
+                <p>WeChat</p>
+              
+            </div>
+          
+            <div>
+              <img src="/images/alipay.png" alt="AliPay">
+              
+                <p>AliPay</p>
+              
+            </div>
+          
+            <div>
+              <img src="/images/BitCoin.jpg" alt="BitCoin">
+              
+                <p>BitCoin</p>
+              
+            </div>
+          
+        </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/passages/10/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/8/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+      <a href="javascript:void(0);" id="site-reward">
+        <i class="fa fa-thumbs-up"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-144841374-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-144841374-1');
+  </script>
+
+  <script async>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-PCDVW3T');</script>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PCDVW3T"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+
+
+  <script async>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+
+
+
+
+    
+  </body>
+</html>

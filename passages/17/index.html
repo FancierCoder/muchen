@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html>
+  
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta name="author" content="MuChen">
+  
+  
+  <title>17.散列表（下） | MuChen&#39;s Blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="后端,数据结构,">
+  
+
+  
+  <meta name="description" content="为什么散列表和链表经常会一起使用？">
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.14.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"js4SiJ6prwCfvUwpG6UKP1T5-gzGzoHsz","appkey":"GsFF0HPExEnfzq4Jkw3X8AFd","comment":true,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2019-07-12",
+    passwords: ["0e31be4bd24c14e65633d11633fe616ee3d93b4f31d07726fdbe113fa98a391a", ],
+    is_post: true,
+    lock: false,
+    author: "MuChen",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">沐晨</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | Learn To Learn</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+        <a href="/friends/" target="_self">友链</a>
+      
+        <a href="/about/" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/FancierCoder" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/friends/" target="_self">
+            友链
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/about/" target="_self">
+            关于
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2019-07-24 15:55:38
+    </span>
+    
+      <span>
+        | <a href="/categories/后端/"><i class="fa fa-bookmark"></i>后端</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    17.散列表（下）
+  </h1>
+  
+  <article class="passage-article">
+    <h2 id="一、为什么散列表和链表经常放在一起使用"><a href="#一、为什么散列表和链表经常放在一起使用" class="headerlink" title="一、为什么散列表和链表经常放在一起使用?"></a>一、为什么散列表和链表经常放在一起使用?</h2><blockquote>
+<ol>
+<li>散列表的优点：支持高效的数据插入、删除和查找操作</li>
+<li>散列表的缺点：不支持快速顺序遍历散列表中的数据</li>
+<li>如何按照顺序快速遍历散列表的数据？<br>只能将数据转移到数组，然后排序，最后再遍历数据。</li>
+<li>我们知道散列表是动态的数据结构，需要频繁的插入和删除数据，那么每次顺序遍历之前都需要先排序，这势必会造成效率非常低下。</li>
+<li>如何解决上面的问题呢？<br>就是将散列表和链表（或跳表）结合起来使用。</li>
+</ol>
+</blockquote>
+<h2 id="二、散列表和链表如何组合起来使用"><a href="#二、散列表和链表如何组合起来使用" class="headerlink" title="二、散列表和链表如何组合起来使用?"></a>二、散列表和链表如何组合起来使用?</h2><h3 id="LRU-（Least-Recently-Used）缓存淘汰算法"><a href="#LRU-（Least-Recently-Used）缓存淘汰算法" class="headerlink" title="LRU （Least Recently Used）缓存淘汰算法"></a>LRU （Least Recently Used）缓存淘汰算法</h3><blockquote>
+<ol>
+<li>LRU缓存淘汰算法主要操作有哪些？主要包含3个操作:<br>① 往缓存中添加一个数据；<br>② 从缓存中删除一个数据；<br>③ 在缓存中查找一个数据；<br>总结：上面<code>3</code>个都涉及到查找。</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="2">
+<li>如何用链表实现<code>LRU</code>缓存淘汰算法？<br>① 需要维护一个按照访问时间从大到小的有序排列的链表结构。<br>② 缓冲空间有限，当空间不足需要淘汰一个数据时直接删除链表头部的节点。<br>③ 当要缓存某个数据时，先在链表中查找这个数据。若未找到，则直接将数据放到链表的尾部。若找 到，就把它移动到链表尾部。<br>④ 前面讲到，<code>LRU</code>缓存的<code>3</code>个主要操作都涉及到查找，若单纯由链表实现，查找的时间复杂度很高为$O(n)$。若将链表和散列表结合使用，查找的时间复杂度会降低到$O(1)$。</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="3">
+<li>如何使用散列表和链表实现<code>LRU</code>缓存淘汰算法？<br><img src="./8bfecf4a.png" alt="image"><br>① 使用双向链表存储数据，链表中每个节点存储数据（<code>data</code>）、前驱指针（<code>prev</code>）、后继指针（<code>next</code>）和<code>hnext</code>指针（解决散列冲突的链表指针）。<br>② 散列表通过链表法解决散列冲突，所以每个节点都会在两条链中。一条链是双向链表，另一条链是散列表中的拉链。前驱和后继指针是为了将节点串在双向链表中，<code>hnext</code>指针是为了将节点串在散列表的拉链中。</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="4">
+<li><code>LRU</code>缓存淘汰算法的<code>3</code>个主要操作如何做到时间复杂度为$O(1)$呢？<br>首先，我们明确一点就是链表本身插入和删除一个节点的时间复杂度为$O(1)$，因为只需更改几个指针指向即可。<br>接着，来分析查找操作的时间复杂度。当要查找一个数据时，通过散列表可实现在$O(1)$时间复杂度找到该数据，再加上前面说的插入或删除的时间复杂度是$O(1)$，所以我们总操作的时间复杂度就是$O(1)$。</li>
+</ol>
+</blockquote>
+<h3 id="Redis有序集合"><a href="#Redis有序集合" class="headerlink" title="Redis有序集合"></a>Redis有序集合</h3><blockquote>
+<ol>
+<li>什么是有序集合？<br>① 在有序集合中，每个成员对象有<code>2</code>个重要的属性，即<code>key</code>（键值）和<code>score</code>（分值）。<br>② 不仅会通过<code>score</code>来查找数据，还会通过<code>key</code>来查找数据。</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="2">
+<li>有序集合的操作有哪些？<br>举个例子，比如用户积分排行榜有这样一个功能：可以通过用户<code>ID</code>来查找积分信息，也可以通过积分区间来查找用户<code>ID</code>。<br>这里用户<code>ID</code>就是<code>key</code>，积分就是<code>score</code>。所以，有序集合的操作如下：<br>① 添加一个对象；<br>② 根据键值删除一个对象；<br>③ 根据键值查找一个成员对象；<br>④ 根据分值区间查找数据，比如查找积分在<code>[100,356]</code>之间的成员对象；<br>⑤ 按照分值从小到大排序成员变量。<br>这时可以按照分值将成员对象组织成跳表结构，按照键值构建一个散列表。<br>那么上面的所有操作都非常高效。</li>
+</ol>
+</blockquote>
+<h3 id="Java-LinkedHashMap"><a href="#Java-LinkedHashMap" class="headerlink" title="Java LinkedHashMap"></a>Java LinkedHashMap</h3><blockquote>
+<p><code>HashMap</code> 底层是通过散列表这种数据结构实现的。而 <code>LinkedHashMap</code> 前面比 <code>HashMap</code> 多了一个“<code>Linked</code>”，这里的“<code>Linked</code>”是不是说，<code>LinkedHashMap</code> 是一个通过链表法解决散列冲突的散列表呢？<br>实际上，<code>LinkedHashMap</code> 并没有这么简单，其中的“<code>Linked</code>”也并不仅仅代表它是通过链表法解决散列冲突的。关于这一点，在我是初学者的时候，也误解了很久。</p>
+</blockquote>
+<blockquote>
+<p>先来看一段代码。你觉得这段代码会以什么样的顺序打印 <code>3，1，5，2</code> 这几个 <code>key</code> 呢？原因又是什么呢？</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">HashMap&lt;Integer, Integer&gt; m = <span class="keyword">new</span> LinkedHashMap&lt;&gt;();</span><br><span class="line">m.put(<span class="number">3</span>, <span class="number">11</span>);</span><br><span class="line">m.put(<span class="number">1</span>, <span class="number">12</span>);</span><br><span class="line">m.put(<span class="number">5</span>, <span class="number">23</span>);</span><br><span class="line">m.put(<span class="number">2</span>, <span class="number">22</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (Map.Entry e : m.entrySet()) &#123;</span><br><span class="line">  System.out.println(e.getKey());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>先告诉你答案，上面的代码会按照数据插入的顺序依次来打印，也就是说，打印的顺序就是 <code>3，1，5，2</code>。你有没有觉得奇怪？散列表中数据是经过散列函数打乱之后无规律存储的，这里是如何实现按照数据的插入顺序来遍历打印的呢？<br>可能你已经猜到了，<code>LinkedHashMap</code> 也是通过散列表和链表组合在一起实现的。实际上，它不仅支持按照插入顺序遍历数据，还支持按照访问顺序来遍历数据。你可以看下面这段代码：</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 10 是初始大小，0.75 是装载因子，true 是表示按照访问时间排序</span></span><br><span class="line">HashMap&lt;Integer, Integer&gt; m = <span class="keyword">new</span> LinkedHashMap&lt;&gt;(<span class="number">10</span>, <span class="number">0.75f</span>, <span class="keyword">true</span>);</span><br><span class="line">m.put(<span class="number">3</span>, <span class="number">11</span>);</span><br><span class="line">m.put(<span class="number">1</span>, <span class="number">12</span>);</span><br><span class="line">m.put(<span class="number">5</span>, <span class="number">23</span>);</span><br><span class="line">m.put(<span class="number">2</span>, <span class="number">22</span>);</span><br><span class="line"></span><br><span class="line">m.put(<span class="number">3</span>, <span class="number">26</span>);</span><br><span class="line">m.get(<span class="number">5</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (Map.Entry e : m.entrySet()) &#123;</span><br><span class="line">  System.out.println(e.getKey());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这段代码打印的结果是 <code>1，2，3，5</code>。<br>这里分析一下，为什么这段代码会按照这样顺序来打印。<br>每次调用 <code>put()</code> 函数，往 <code>LinkedHashMap</code> 中添加数据的时候，都会将数据添加到链表的尾部，所以，在前四个操作完成之后，链表中的数据是下面这样：<br><img src="./2390a7cd.png" alt><br>在第 <code>8</code> 行代码中，再次将键值为 <code>3</code> 的数据放入到 <code>LinkedHashMap</code> 的时候，会先查找这个键值是否已经有了，然后，再将已经存在的 <code>(3,11)</code> 删除，并且将新的 <code>(3,26)</code> 放到链表的尾部。所以，这个时候链表中的数据就是下面这样：<br><img src="./27059c62.png" alt><br>当第 <code>9</code> 行代码访问到 <code>key</code> 为 <code>5</code> 的数据的时候，我们将被访问到的数据移动到链表的尾部。所以，第 <code>9</code> 行代码之后，链表中的数据是下面这样：<br><img src="./3f2cbd00.png" alt><br>所以，最后打印出来的数据是 <code>1，2，3，5</code>。从上面的分析，你有没有发现，按照访问时间排序的 <code>LinkedHashMap</code> 本身就是一个支持 <code>LRU</code> 缓存淘汰策略的缓存系统？实际上，它们两个的实现原理也是一模一样的。<br>总结一下，实际上，<code>LinkedHashMap</code> 是通过双向链表和散列表这两种数据结构组合实现的。<code>LinkedHashMap</code> 中的“<code>Linked</code>”实际上是指的是双向链表，并非指用链表法解决散列冲突。</p>
+</blockquote>
+<h2 id="三、思考"><a href="#三、思考" class="headerlink" title="三、思考"></a>三、思考</h2><blockquote>
+<ol>
+<li>上面的几个散列表和链表组合的例子里，都是使用双向链表。如果把双向链表改成单链表，还能否正常工作？为什么呢？<blockquote>
+<p>在删除一个元素时，虽然能 $O(1)$ 的找到目标结点，但是要删除该结点需要拿到前一个结点的指针，遍历到前一个结点复杂度会变为 $O(n)$，所以用双链表实现比较合适。<br>（但其实硬要操作的话，单链表也是可以实现 $O(1)$ 时间复杂度删除结点的）。</p>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="2">
+<li>假设猎聘网有<code>10</code>万名猎头，每个猎头可以通过做任务（比如发布职位）来积累积分，然后通过积分来下载简历。假设你是猎聘网的一名工程师，如何在内存中存储这<code>10</code>万个猎头的<code>ID</code>和积分信息，让它能够支持这样几个操作：<br>1） 根据猎头<code>ID</code>查收查找、删除、更新这个猎头的积分信息；<br>2） 查找积分在某个区间的猎头<code>ID</code>列表；<br>3） 查找按照积分从小到大排名在第<code>x</code>位到第<code>y</code>位之间的猎头<code>ID</code>列表。<blockquote>
+<p>以积分排序构建一个跳表，再以猎头 <code>ID</code> 构建一个散列表。<br>1）<code>ID</code> 在散列表中所以可以 $O(1)$ 查找到这个猎头；<br>2）积分以跳表存储，跳表支持区间查询；</p>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><blockquote>
+<p>到目前文章为止，个人感觉其实就两种数据结构，链表和数组。</p>
+<ul>
+<li>数组占据随机访问的优势，却有需要连续内存的缺点。</li>
+<li>链表具有可不连续存储的优势，但访问查找是线性的。</li>
+<li>散列表和链表、跳表的混合使用，是为了结合数组和链表的优势，规避它们的不足。</li>
+<li>我们可以得出数据结构和算法的重要性排行榜：连续空间 &gt; 时间 &gt; 碎片空间。</li>
+</ul>
+</blockquote>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、为什么散列表和链表经常放在一起使用"><span class="toc-text">一、为什么散列表和链表经常放在一起使用?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、散列表和链表如何组合起来使用"><span class="toc-text">二、散列表和链表如何组合起来使用?</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#LRU-（Least-Recently-Used）缓存淘汰算法"><span class="toc-text">LRU （Least Recently Used）缓存淘汰算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis有序集合"><span class="toc-text">Redis有序集合</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java-LinkedHashMap"><span class="toc-text">Java LinkedHashMap</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三、思考"><span class="toc-text">三、思考</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: 沐晨</div>
+      
+        <div>
+          原文链接: 
+          <a style="word-break: break-word;" href="" target="_blank">https://muchen.fun/passages/17/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a style="word-break: break-word;" href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      
+        <div class="site-footer-col">
+          <h5 class="site-footer-title">博客推荐</h5>
+          
+            <span class="site-footer-item">
+              <a href="https://muchen.fun/" target="_blank">沐晨</a>
+            </span>
+          
+            <span class="site-footer-item">
+              <a href="http://www.wangdabo.com" target="_blank">王大博</a>
+            </span>
+          
+        </div>
+      
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: lcoder@qq.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://fanciercoder.github.io/" target="_blank">沐晨</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+        <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+          
+            <div>
+              <img src="/images/wechat.png" alt="WeChat">
+              
+                <p>WeChat</p>
+              
+            </div>
+          
+            <div>
+              <img src="/images/alipay.png" alt="AliPay">
+              
+                <p>AliPay</p>
+              
+            </div>
+          
+            <div>
+              <img src="/images/BitCoin.jpg" alt="BitCoin">
+              
+                <p>BitCoin</p>
+              
+            </div>
+          
+        </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/passages/18/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/16/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+      <a href="javascript:void(0);" id="site-reward">
+        <i class="fa fa-thumbs-up"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-144841374-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-144841374-1');
+  </script>
+
+  <script async>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-PCDVW3T');</script>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PCDVW3T"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+
+
+  <script async>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+
+
+
+
+    
+  </body>
+</html>

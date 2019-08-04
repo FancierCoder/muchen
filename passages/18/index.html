@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+  
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta name="author" content="MuChen">
+  
+  
+  <title>18.哈希算法（上） | MuChen&#39;s Blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="后端,数据结构,算法,">
+  
+
+  
+  <meta name="description" content="在实际的开发中，如何防止数据库中的用户信息被脱库？">
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.14.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"js4SiJ6prwCfvUwpG6UKP1T5-gzGzoHsz","appkey":"GsFF0HPExEnfzq4Jkw3X8AFd","comment":true,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2019-07-12",
+    passwords: ["0e31be4bd24c14e65633d11633fe616ee3d93b4f31d07726fdbe113fa98a391a", ],
+    is_post: true,
+    lock: false,
+    author: "MuChen",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">沐晨</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | Learn To Learn</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+        <a href="/friends/" target="_self">友链</a>
+      
+        <a href="/about/" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/FancierCoder" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/friends/" target="_self">
+            友链
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/about/" target="_self">
+            关于
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2019-07-25 17:34:38
+    </span>
+    
+      <span>
+        | <a href="/categories/后端/"><i class="fa fa-bookmark"></i>后端</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    18.哈希算法（上）
+  </h1>
+  
+  <article class="passage-article">
+    <h2 id="一、什么是哈希算法？"><a href="#一、什么是哈希算法？" class="headerlink" title="一、什么是哈希算法？"></a>一、什么是哈希算法？</h2><blockquote>
+<ol>
+<li>定义<br>将任意长度的二进制值串映射成固定长度的二进制值串，这个映射的规则就是哈希算法，而通过原始数据映射之后得到的二进制值串就是哈希值。</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="2">
+<li>如何设计一个优秀的哈希算法<br>① 单向哈希：<br>从哈希值不能反向推导出哈希值（所以哈希算法也叫单向哈希算法）。<br>② 篡改无效：<br>对输入敏感，哪怕原始数据只修改一个<code>Bit</code>，最后得到的哈希值也大不相同。<br>③ 散列冲突：<br>散列冲突的概率要很小，对于不同的原始数据，哈希值相同的概率非常小。<br>④ 执行效率：<br>哈希算法的执行效率要尽量高效，针对较长的文本，也能快速计算哈希值。</li>
+</ol>
+</blockquote>
+<h2 id="二、哈希算法的常见应用有哪些？"><a href="#二、哈希算法的常见应用有哪些？" class="headerlink" title="二、哈希算法的常见应用有哪些？"></a>二、哈希算法的常见应用有哪些？</h2><blockquote>
+<p><code>7</code>个常见应用：<br><strong>安全加密</strong>、<strong>唯一标识</strong>、<strong>数据校验</strong>、<strong>散列函数</strong>、<strong>负载均衡</strong>、<strong>数据分片</strong>、<strong>分布式存储</strong>。</p>
+</blockquote>
+<h4 id="1-安全加密"><a href="#1-安全加密" class="headerlink" title="1. 安全加密"></a>1. <strong>安全加密</strong></h4><blockquote>
+<blockquote>
+<p>① 常用于加密的哈希算法：<br><code>MD5</code>：<code>MD5 Message-Digest Algorithm</code>，<code>MD5</code>消息摘要算法<br><code>SHA</code>：<code>Secure Hash Algorithm</code>，安全散列算法<br><code>DES</code>：<code>Data Encryption Standard</code>，数据加密标准<br><code>AES</code>：<code>Advanced Encryption Standard</code>，高级加密标准<br>② 对用于加密的哈希算法，有两点格外重要，第一点是很难根据哈希值反向推导出原始数据，第二点是散列冲突的概率要小。<br>实际上，不管是什么哈希算法，我们只能尽量减少碰撞冲突的概率，理论上是没办法做到完全不冲突的。为什么这么说呢？<br>这里就基于组合数学中一个非常基础的理论，鸽巢原理（也叫抽屉原理）。这个原理本身很简单，它是说，如果有 <code>10</code> 个鸽巢，有 <code>11</code> 只鸽子，那肯定有 <code>1</code> 个鸽巢中的鸽子数量多于 <code>1</code> 个，换句话说就是，肯定有 <code>2</code> 只鸽子在 <code>1</code> 个鸽巢内。<br>有了鸽巢原理的铺垫之后，我们再来看，为什么哈希算法无法做到零冲突？<br>我们知道，哈希算法产生的哈希值的长度是固定且有限的。比如前面举的 <code>MD5</code> 的例子，哈希值是固定的 <code>128</code> 位二进制串，能表示的数据是有限的，最多能表示 <code>2^128</code> 个数据，而我们要哈希的数据是无穷的。基于鸽巢原理，如果我们对 <code>2^128+1</code> 个数据求哈希值，就必然会存在哈希值相同的情况。<br>这里你应该能想到，一般情况下，哈希值越长的哈希算法，散列冲突的概率越低。</p>
+</blockquote>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2^128=340282366920938463463374607431768211456</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<blockquote>
+<p>③ 在实际开发中要权衡破解难度和计算时间来决定究竟使用哪种加密算法。</p>
+</blockquote>
+</blockquote>
+<h4 id="2-唯一标识"><a href="#2-唯一标识" class="headerlink" title="2. 唯一标识"></a>2. <strong>唯一标识</strong></h4><blockquote>
+<p>通过哈希算法计算出数据的唯一标识，从而用于高效检索数据。</p>
+</blockquote>
+<h4 id="3-数据校验"><a href="#3-数据校验" class="headerlink" title="3. 数据校验"></a>3. <strong>数据校验</strong></h4><blockquote>
+<p>利用哈希算法对输入数据敏感的特点，可以对数据取哈希值，从而高效校验数据是否被篡改过。</p>
+</blockquote>
+<h4 id="4-散列函数"><a href="#4-散列函数" class="headerlink" title="4. 散列函数"></a>4. <strong>散列函数</strong></h4><blockquote>
+<p>散列函数是设计一个散列表的关键。它直接决定了散列冲突的概率和散列表的性能。不过，相对哈希算法的其他应用，散列函数对于散列算法冲突的要求要低很多。即便出现个别散列冲突，只要不是过于严重，我们都可以通过开放寻址法或者链表法解决。<br>不仅如此，散列函数对于散列算法计算得到的值，是否能反向解密也并不关心。散列函数中用到的散列算法，更加关注散列后的值是否能平均分布，也就是，一组数据是否能均匀地散列在各个槽中。除此之外，散列函数执行的快慢，也会影响散列表的性能，所以，散列函数用的散列算法一般都比较简单，比较追求效率。</p>
+</blockquote>
+<h2 id="三、思考"><a href="#三、思考" class="headerlink" title="三、思考"></a>三、思考</h2><blockquote>
+<ol>
+<li>如何防止数据库中的用户信息被脱库？你会如何存储用户密码这么重要的数据？<blockquote>
+<p>① 使用<code>MD5</code>进行加密<br>② 字典攻击：如果用户信息被“脱库”，黑客虽然拿到的是加密之后的密文，但可以通过“猜”的方式来破解密码，这是因为，有些用户的密码太简单。<br>③ 针对字典攻击，我们可以引入一个盐（<code>salt</code>），跟用户密码组合在一起，增加密码的复杂度。<br>不过我这里想多说一句，我认为安全和攻击是一种博弈关系，不存在绝对的安全。所有的安全措施，只是增加攻击的成本而已。</p>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="2">
+<li>区块链现在是一个很火的领域，它被很多人神秘化，不过其底层的实现原理并不复杂。其中，哈希算法就是它的一个非常重要的理论基础。你知道区块链使用的是哪种哈希算法吗？是为了解决什么问题而使用的呢？<blockquote>
+<p>区块链是一块块区块组成的，每个区块分为两部分：<strong>区块头</strong>和<strong>区块体</strong>。<br>区块头保存着自己区块体和上一个区块头的哈希值。<br>因为这种链式关系和哈希值的唯一性，只要区块链上任意一个区块被修改过，后面所有区块保存的哈希值就不对了。<br>区块链使用的是 <code>SHA256</code> 哈希算法，计算哈希值非常耗时，如果要篡改一个区块，就必须重新计算该区块后面所有的区块的哈希值，短时间内几乎不可能做到。</p>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、什么是哈希算法？"><span class="toc-text">一、什么是哈希算法？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、哈希算法的常见应用有哪些？"><span class="toc-text">二、哈希算法的常见应用有哪些？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-安全加密"><span class="toc-text">1. 安全加密</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-唯一标识"><span class="toc-text">2. 唯一标识</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-数据校验"><span class="toc-text">3. 数据校验</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-散列函数"><span class="toc-text">4. 散列函数</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三、思考"><span class="toc-text">三、思考</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: 沐晨</div>
+      
+        <div>
+          原文链接: 
+          <a style="word-break: break-word;" href="" target="_blank">https://muchen.fun/passages/18/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a style="word-break: break-word;" href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
+     
+      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      
+        <div class="site-footer-col">
+          <h5 class="site-footer-title">博客推荐</h5>
+          
+            <span class="site-footer-item">
+              <a href="https://muchen.fun/" target="_blank">沐晨</a>
+            </span>
+          
+            <span class="site-footer-item">
+              <a href="http://www.wangdabo.com" target="_blank">王大博</a>
+            </span>
+          
+        </div>
+      
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: lcoder@qq.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://fanciercoder.github.io/" target="_blank">沐晨</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+        <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+          
+            <div>
+              <img src="/images/wechat.png" alt="WeChat">
+              
+                <p>WeChat</p>
+              
+            </div>
+          
+            <div>
+              <img src="/images/alipay.png" alt="AliPay">
+              
+                <p>AliPay</p>
+              
+            </div>
+          
+            <div>
+              <img src="/images/BitCoin.jpg" alt="BitCoin">
+              
+                <p>BitCoin</p>
+              
+            </div>
+          
+        </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/passages/19/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/17/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+      <a href="javascript:void(0);" id="site-reward">
+        <i class="fa fa-thumbs-up"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-144841374-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-144841374-1');
+  </script>
+
+  <script async>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-PCDVW3T');</script>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PCDVW3T"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+
+
+  <script async>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+
+
+
+
+    
+  </body>
+</html>

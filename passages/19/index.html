@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+  
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta name="author" content="MuChen">
+  
+  
+  <title>19.哈希算法（下） | MuChen&#39;s Blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="后端,数据结构,算法,">
+  
+
+  
+  <meta name="description" content="哈希算法在分布式系统中有哪些应用？">
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.14.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"js4SiJ6prwCfvUwpG6UKP1T5-gzGzoHsz","appkey":"GsFF0HPExEnfzq4Jkw3X8AFd","comment":true,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2019-07-12",
+    passwords: ["0e31be4bd24c14e65633d11633fe616ee3d93b4f31d07726fdbe113fa98a391a", ],
+    is_post: true,
+    lock: false,
+    author: "MuChen",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">沐晨</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | Learn To Learn</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+        <a href="/friends/" target="_self">友链</a>
+      
+        <a href="/about/" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/FancierCoder" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/friends/" target="_self">
+            友链
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/about/" target="_self">
+            关于
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2019-07-26 18:35:34
+    </span>
+    
+      <span>
+        | <a href="/categories/后端/"><i class="fa fa-bookmark"></i>后端</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    19.哈希算法（下）
+  </h1>
+  
+  <article class="passage-article">
+    <h2 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h2><h3 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h3><blockquote>
+<p>如何实现一个会话粘滞（<code>session sticky</code>）的负载均衡算法？也就是说，在一次会话中的所有请求都路由到同一个服务器上。</p>
+</blockquote>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><blockquote>
+<p>通过哈希算法对客户端<code>IP</code>或会话<code>ID</code>计算哈希值，将取得的哈希值与服务器列表的大小进行取模运算，最终得到的值就是应该被路由到的服务器编号。<br>这样，就可以把同一个<code>IP</code>过来的请求都路由到同一个后端服务器上。</p>
+</blockquote>
+<h2 id="数据分片"><a href="#数据分片" class="headerlink" title="数据分片"></a>数据分片</h2><h3 id="如何统计“搜索关键词”出现的次数？"><a href="#如何统计“搜索关键词”出现的次数？" class="headerlink" title="如何统计“搜索关键词”出现的次数？"></a>如何统计“搜索关键词”出现的次数？</h3><h4 id="需求描述"><a href="#需求描述" class="headerlink" title="需求描述"></a>需求描述</h4><blockquote>
+<p>假如我们有<code>1T</code>的日志文件，这里面记录了用户的搜索关键词，我们想要快速统计出每个关键词被搜索的次数，该怎么做呢？</p>
+</blockquote>
+<h4 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h4><blockquote>
+<p>这个问题有两个难点，第一个是搜索的日子很大，没办法放到一台机器的内存中。第二个是只用一台机器来处理这么巨大的数据，处理时间会很长。</p>
+</blockquote>
+<h4 id="解决方案-1"><a href="#解决方案-1" class="headerlink" title="解决方案"></a>解决方案</h4><blockquote>
+<p>先对数据进行分片，然后采用多台（比如<code>n</code>台）机器进行处理。<br>具体做法：从搜索记录的日志文件中依次读取每个关键词，并通过哈希函数计算该关键词的哈希值，然后跟机器的台数n取模，最终得到值就是该关键词应该被分到的机器编号，这样相同的关键词一定会被分配到同一台机器上，数据分配完成后，由多台机器并行进行统计，最后合并起来就是最终结果。</p>
+</blockquote>
+<p>实际上，这里的处理过程也是 <code>MapReduce</code> 的基本设计思想。</p>
+<h3 id="如何快速判断图片是否存在图库中？"><a href="#如何快速判断图片是否存在图库中？" class="headerlink" title="如何快速判断图片是否存在图库中？"></a>如何快速判断图片是否存在图库中？</h3><h4 id="需求描述-1"><a href="#需求描述-1" class="headerlink" title="需求描述"></a>需求描述</h4><blockquote>
+<p>假设现在我们的图库中有<code>1</code>亿张图片，如何快速判断图片是否在图库中？基本方式是给每个图片去唯一表示（或者信息摘要），然后构建散列表。</p>
+</blockquote>
+<h4 id="问题分析-1"><a href="#问题分析-1" class="headerlink" title="问题分析"></a>问题分析</h4><blockquote>
+<p>很显然，在单台机器上构建散列表示行不通的，因为单台机器的内存有限，而<code>1</code>亿张图片构建散列表远远超过了单台机器的内存上限。</p>
+</blockquote>
+<h4 id="解决方案-2"><a href="#解决方案-2" class="headerlink" title="解决方案"></a>解决方案</h4><blockquote>
+<p>准备<code>n</code>台机器，让每台机器只维护一部分图片对应的散列表。我们每次从图库中读取一个图片，计算唯一标识，然后与机器个数<code>n</code>求余取模，得到的值就对应要分配的机器编号，然后将这个图片的唯一表示和图片路径发往对应的机器构建散列表。<br>当我们要判断一个图片是否在图库中时，我们通过同样的哈希算法，计算这个图片的唯一表示，然后与机器个数<code>n</code>求余取模。<br>假设得到的值是<code>k</code>，那就去编号为<code>k</code>的机器构建的散列表中查找。</p>
+</blockquote>
+<p>如何估算给<code>1</code>亿张图片构建散列表大约需要多少台机器？</p>
+<blockquote>
+<p>散列表中每个数据单元包含两个信息，哈希值和图片文件的路径。假设我们通过 <code>MD5</code> 来计算哈希值，那长度就是 <code>128</code> 比特，也就是 <code>16</code> 字节。文件路径长度的上限是 <code>256</code> 字节，我们可以假设平均长度是 <code>128</code> 字节。如果我们用链表法来解决冲突，那还需要存储指针，指针只占用 <code>8</code> 字节。所以，散列表中每个数据单元就占用 <code>152</code> 字节（这里只是估算，并不准确）。<br>假设一台机器的内存大小为 <code>2GB</code>，散列表的装载因子为 <code>0.75</code>，那一台机器可以给大约 <code>1000</code> 万（<code>2GB*0.75/152</code>）张图片构建散列表。所以，如果要对 <code>1</code> 亿张图片构建索引，需要大约十几台机器。在工程中，这种估算还是很重要的，能让我们事先对需要投入的资源、资金有个大概的了解，能更好地评估解决方案的可行性。<br>实际上，针对这种海量数据的处理问题，我们都可以采用多机分布式处理。借助这种分片的思路，可以突破单机内存、<code>CPU</code> 等资源的限制。</p>
+</blockquote>
+<h2 id="分布式存储"><a href="#分布式存储" class="headerlink" title="分布式存储"></a>分布式存储</h2><h3 id="什么是分布式存储？"><a href="#什么是分布式存储？" class="headerlink" title="什么是分布式存储？"></a>什么是分布式存储？</h3><blockquote>
+<p>分布式存储就是将数据存储在多台机器上并提供高效的读取、写入支持。</p>
+</blockquote>
+<h3 id="那如何决定将哪个数据放到哪个机器上呢？"><a href="#那如何决定将哪个数据放到哪个机器上呢？" class="headerlink" title="那如何决定将哪个数据放到哪个机器上呢？"></a>那如何决定将哪个数据放到哪个机器上呢？</h3><p><img src="./37f734bf.png" alt="image"></p>
+<blockquote>
+<p>可以利用数据分片的思想，即通过哈希算法对数据取哈希值，然后对机器个数取模，这个最终值就是应该存储的缓存机器编号。</p>
+</blockquote>
+<h3 id="遇到的问题是什么？"><a href="#遇到的问题是什么？" class="headerlink" title="遇到的问题是什么？"></a>遇到的问题是什么？</h3><blockquote>
+<p>如果数据持续增多，原来的机器数量已经不能满足需求，就需要增加机器，这时就麻烦了，因为所有的数据都需要重新哈希值进行再次分配。这就相当于，缓存中的数据一下子都失效了，所有的数据请求都会穿透缓存，直接去请求数据库。这样就可能发生雪崩效应，压垮数据库。</p>
+</blockquote>
+<h3 id="解决方案是什么？"><a href="#解决方案是什么？" class="headerlink" title="解决方案是什么？"></a>解决方案是什么？</h3><blockquote>
+<p>这时，需要一种方法，使得新加入一个机器后，并不需要做大量的数据搬移。那就是在分布式系统中应用非常广泛的一致性哈希算法。</p>
+</blockquote>
+<h4 id="一致性哈希算法的基本思想是什么呢？"><a href="#一致性哈希算法的基本思想是什么呢？" class="headerlink" title="一致性哈希算法的基本思想是什么呢？"></a>一致性哈希算法的基本思想是什么呢？</h4><blockquote>
+<p>为了说清楚这个问题，我们假设有<code>k</code>个机器，数据的哈希值范围是<code>[0-MAX]</code>，我们将整个范围划分成<code>m</code>个小区间（<code>m</code>远大于<code>k</code>），每个机器复杂<code>m/k</code>个小区间。当有新机器加入的时候，我们就将某几个小区间的数据，从原来的机器中搬移到新的机器中。这样，既不用全部重新哈希、搬移数据，也保持了各个机器上数据量的均衡。</p>
+</blockquote>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><blockquote>
+<p>哈希算法还有很多其他的应用，比如网络协议中的 <code>CRC</code> 校验、<code>Git commit id</code> 等等。除了这些，你还能想到其他用到哈希算法的地方吗？</p>
+</blockquote>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#负载均衡"><span class="toc-text">负载均衡</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#需求"><span class="toc-text">需求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解决方案"><span class="toc-text">解决方案</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据分片"><span class="toc-text">数据分片</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#如何统计“搜索关键词”出现的次数？"><span class="toc-text">如何统计“搜索关键词”出现的次数？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#需求描述"><span class="toc-text">需求描述</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#问题分析"><span class="toc-text">问题分析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#解决方案-1"><span class="toc-text">解决方案</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如何快速判断图片是否存在图库中？"><span class="toc-text">如何快速判断图片是否存在图库中？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#需求描述-1"><span class="toc-text">需求描述</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#问题分析-1"><span class="toc-text">问题分析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#解决方案-2"><span class="toc-text">解决方案</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分布式存储"><span class="toc-text">分布式存储</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#什么是分布式存储？"><span class="toc-text">什么是分布式存储？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#那如何决定将哪个数据放到哪个机器上呢？"><span class="toc-text">那如何决定将哪个数据放到哪个机器上呢？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#遇到的问题是什么？"><span class="toc-text">遇到的问题是什么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解决方案是什么？"><span class="toc-text">解决方案是什么？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#一致性哈希算法的基本思想是什么呢？"><span class="toc-text">一致性哈希算法的基本思想是什么呢？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#思考"><span class="toc-text">思考</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: 沐晨</div>
+      
+        <div>
+          原文链接: 
+          <a style="word-break: break-word;" href="" target="_blank">https://muchen.fun/passages/19/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a style="word-break: break-word;" href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
+     
+      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      
+        <div class="site-footer-col">
+          <h5 class="site-footer-title">博客推荐</h5>
+          
+            <span class="site-footer-item">
+              <a href="https://muchen.fun/" target="_blank">沐晨</a>
+            </span>
+          
+            <span class="site-footer-item">
+              <a href="http://www.wangdabo.com" target="_blank">王大博</a>
+            </span>
+          
+        </div>
+      
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: lcoder@qq.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://fanciercoder.github.io/" target="_blank">沐晨</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+        <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+          
+            <div>
+              <img src="/images/wechat.png" alt="WeChat">
+              
+                <p>WeChat</p>
+              
+            </div>
+          
+            <div>
+              <img src="/images/alipay.png" alt="AliPay">
+              
+                <p>AliPay</p>
+              
+            </div>
+          
+            <div>
+              <img src="/images/BitCoin.jpg" alt="BitCoin">
+              
+                <p>BitCoin</p>
+              
+            </div>
+          
+        </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/passages/20/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/18/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+      <a href="javascript:void(0);" id="site-reward">
+        <i class="fa fa-thumbs-up"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-144841374-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-144841374-1');
+  </script>
+
+  <script async>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-PCDVW3T');</script>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PCDVW3T"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+
+
+  <script async>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+
+
+
+
+    
+  </body>
+</html>

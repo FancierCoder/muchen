@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html>
+  
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta name="author" content="MuChen">
+  
+  
+  <title>15.散列表（上） | MuChen&#39;s Blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="后端,数据结构,算法,">
+  
+
+  
+  <meta name="description" content="Word 的单词拼写检查功能，虽然很小但却非常实用。你有没有想过，这个功能是如何实现的呢？">
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.14.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"js4SiJ6prwCfvUwpG6UKP1T5-gzGzoHsz","appkey":"GsFF0HPExEnfzq4Jkw3X8AFd","comment":true,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2019-07-12",
+    passwords: ["0e31be4bd24c14e65633d11633fe616ee3d93b4f31d07726fdbe113fa98a391a", ],
+    is_post: true,
+    lock: false,
+    author: "MuChen",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">沐晨</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | Learn To Learn</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+        <a href="/friends/" target="_self">友链</a>
+      
+        <a href="/about/" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/FancierCoder" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/friends/" target="_self">
+            友链
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/about/" target="_self">
+            关于
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2019-07-23 13:42:18
+    </span>
+    
+      <span>
+        | <a href="/categories/后端/"><i class="fa fa-bookmark"></i>后端</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    15.散列表（上）
+  </h1>
+  
+  <article class="passage-article">
+    <h2 id="散列表的由来"><a href="#散列表的由来" class="headerlink" title="散列表的由来"></a>散列表的由来</h2><blockquote>
+<ol>
+<li>散列表来源于数组，它借助散列函数对数组这种数据结构进行扩展，利用的是数组支持按照下标随机访问元素的特性。</li>
+<li>需要存储在散列表中的数据我们称为键，将键转化为数组下标的方法称为散列函数，散列函数的计算结果称为散列值。</li>
+<li>将数据存储在散列值对应的数组下标位置。<br><img src="./439a0d66.png" alt="image"></li>
+</ol>
+</blockquote>
+<h2 id="二、如何设计散列函数"><a href="#二、如何设计散列函数" class="headerlink" title="二、如何设计散列函数"></a>二、如何设计散列函数</h2><blockquote>
+<p>总结<code>3</code>点设计散列函数的基本要求</p>
+<ol>
+<li>散列函数计算得到的散列值是一个非负整数。</li>
+<li>若<code>key1=key2</code>，则<code>hash(key1)=hash(key2)</code></li>
+<li>若<code>key1≠key2</code>，则<code>hash(key1)≠hash(key2)</code><br>正是由于第<code>3</code>点要求，所以产生了几乎无法避免的散列冲突问题。</li>
+</ol>
+</blockquote>
+<h2 id="三、散列冲突的解放方法"><a href="#三、散列冲突的解放方法" class="headerlink" title="三、散列冲突的解放方法"></a>三、散列冲突的解放方法</h2><blockquote>
+<p>常用的散列冲突解决方法有2类：开放寻址法（<code>open addressing</code>）和链表法（<code>chaining</code>）</p>
+<ol>
+<li>开放寻址法</li>
+</ol>
+</blockquote>
+<blockquote>
+<p>① 核心思想：如果出现散列冲突，就重新探测一个空闲位置，将其插入。</p>
+</blockquote>
+<blockquote>
+<p>② 线性探测法（<code>Linear Probing</code>）：</p>
+<blockquote>
+<ul>
+<li>插入数据：当我们往散列表中插入数据时，如果某个数据经过散列函数之后，存储的位置已经被占用了，我们就从当前位置开始，依次往后查找，看是否有空闲位置，直到找到为止。</li>
+<li>查找数据：我们通过散列函数求出要查找元素的键值对应的散列值，然后比较数组中下标为散列值的元素和要查找的元素是否相等，若相等，则说明就是我们要查找的元素；否则，就顺序往后依次查找。如果遍历到数组的空闲位置还未找到，就说明要查找的元素并没有在散列表中。</li>
+<li>删除数据：为了不让查找算法失效，可以将删除的元素特殊标记为<code>deleted</code>，当线性探测查找的时候，遇到标记为<code>deleted</code>的空间，并不是停下来，而是继续往下探测。</li>
+<li>结论：最坏时间复杂度为$O(n)$</li>
+</ul>
+</blockquote>
+</blockquote>
+<blockquote>
+<p>③ 二次探测（<code>Quadratic probing</code>）：线性探测每次探测的步长为<code>1</code>，即在数组中一个一个探测，而二次探测的步长变为原来的平方。</p>
+</blockquote>
+<blockquote>
+<p>④ 双重散列（<code>Double hashing</code>）：使用一组散列函数，直到找到空闲位置为止。</p>
+</blockquote>
+<blockquote>
+<p>⑤ 线性探测法的性能描述：</p>
+<blockquote>
+<p>用“装载因子”来表示空位多少，公式：<code>散列表装载因子=填入表中的个数/散列表的长度</code>。<br>   装载因子越大，说明空闲位置越少，冲突越多，散列表的性能会下降。<br><img src="./772c9ede.png" alt="image"></p>
+</blockquote>
+</blockquote>
+<blockquote>
+<ol start="2">
+<li>链表法（更常用）</li>
+</ol>
+<ul>
+<li>插入数据：当插入的时候，我们需要通过散列函数计算出对应的散列槽位，将其插入到对应的链表中即可，所以插入的时间复杂度为$O(1)$。</li>
+<li>查找或删除数据：当查找、删除一个元素时，通过散列函数计算对应的槽，然后遍历链表查找或删除。对于散列比较均匀的散列函数，链表的节点个数<code>k=n/m</code>，其中<code>n</code>表示散列表中数据的个数，<code>m</code>表示散列表中槽的个数，所以是时间复杂度为$O(k$)。<br><img src="./243592a6.png" alt="image"></li>
+</ul>
+</blockquote>
+<h2 id="四、思考"><a href="#四、思考" class="headerlink" title="四、思考"></a>四、思考</h2><blockquote>
+<ol>
+<li><code>Word</code>文档中单词拼写检查功能是如何实现的？<blockquote>
+<p>字符串占用内存大小为<code>8</code>字节，<code>20</code>万单词占用内存大小不超过<code>20MB</code>，所以用散列表存储<code>20</code>万英文词典单词，然后对每个编辑进文档的单词进行查找，若未找到，则提示拼写错误。</p>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="2">
+<li>假设我们有<code>10</code>万条<code>URL</code>访问日志，如何按照访问次数给<code>URL</code>排序？<blockquote>
+<p>遍历<code>10</code>万条数据，以<code>URL</code>为<code>key</code>，访问次数为<code>value</code>，存入散列表，同时记录下访问次数的最大值<code>K</code>，时间复杂度 $O(n)$。<br>如果 <code>K</code> 不是很大，可以使用桶排序，时间复杂度 $O(n)$。如果 <code>K</code> 非常大（比如大于 <code>10</code> 万），就使用快速排序，复杂度 $O(nlogn)$。</p>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="3">
+<li>有两个字符串数组，每个数组大约有<code>10</code>万条字符串，如何快速找出两个数组中相同的字符串？<blockquote>
+<p>以第一个字符串数组构建散列表，<code>key</code> 为字符串，<code>value</code> 为出现次数。再遍历第二个字符串数组，以字符串为 <code>key</code> 在散列表中查找，如果 <code>value</code> 大于零，说明存在相同字符串。时间复杂度 $O(n)$。</p>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#散列表的由来"><span class="toc-text">散列表的由来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、如何设计散列函数"><span class="toc-text">二、如何设计散列函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三、散列冲突的解放方法"><span class="toc-text">三、散列冲突的解放方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四、思考"><span class="toc-text">四、思考</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: 沐晨</div>
+      
+        <div>
+          原文链接: 
+          <a style="word-break: break-word;" href="" target="_blank">https://muchen.fun/passages/15/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a style="word-break: break-word;" href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
+     
+      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      
+        <div class="site-footer-col">
+          <h5 class="site-footer-title">博客推荐</h5>
+          
+            <span class="site-footer-item">
+              <a href="https://muchen.fun/" target="_blank">沐晨</a>
+            </span>
+          
+            <span class="site-footer-item">
+              <a href="http://www.wangdabo.com" target="_blank">王大博</a>
+            </span>
+          
+        </div>
+      
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: lcoder@qq.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://fanciercoder.github.io/" target="_blank">沐晨</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+        <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+          
+            <div>
+              <img src="/images/wechat.png" alt="WeChat">
+              
+                <p>WeChat</p>
+              
+            </div>
+          
+            <div>
+              <img src="/images/alipay.png" alt="AliPay">
+              
+                <p>AliPay</p>
+              
+            </div>
+          
+            <div>
+              <img src="/images/BitCoin.jpg" alt="BitCoin">
+              
+                <p>BitCoin</p>
+              
+            </div>
+          
+        </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/passages/16/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/14/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+      <a href="javascript:void(0);" id="site-reward">
+        <i class="fa fa-thumbs-up"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-144841374-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-144841374-1');
+  </script>
+
+  <script async>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-PCDVW3T');</script>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PCDVW3T"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+
+
+  <script async>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+
+
+
+
+    
+  </body>
+</html>

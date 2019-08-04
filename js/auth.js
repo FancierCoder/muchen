@@ -32,7 +32,10 @@
     ' 🎉 https://github.com/dongyuanxin/theme-ad 🎉\n' + 
     '\n%c Preview Online %c' + 
     ' 🔍 https://godbmw.com/ 🔍  \n' , 
-    'color: #fadfa3; background: #030307; padding:3px 0;', '', 'color: #fadfa3; background: #030307; padding:3px 0;', ''
+    '\n%c 本站地址 %c' +
+    ' ✨ https://muchen.fun ✨  \n' ,
+    'color: #fadfa3; background: #030307; padding:3px 0;', '', 'color: #fadfa3; background: #030307; padding:3px 0;', '',
+      'color: #fadfa3; background: #030307; padding:3px 0;', ''
   );
 
   // article password auth
