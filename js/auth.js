@@ -31,7 +31,7 @@
     '\n%c Theme-AD v2.6.0 %c' + 
     ' 🎉 https://github.com/dongyuanxin/theme-ad 🎉\n' + 
     '\n%c Preview Online %c' + 
-    ' 🔍 https://godbmw.com/ 🔍  \n' , 
+    ' 🔍 https://godbmw.com/ 🔍  \n' +
     '\n%c 本站地址 %c' +
     ' ✨ https://muchen.fun ✨  \n' ,
     'color: #fadfa3; background: #030307; padding:3px 0;', '', 'color: #fadfa3; background: #030307; padding:3px 0;', '',
