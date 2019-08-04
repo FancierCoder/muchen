@@ -17,6 +17,8 @@
   
   <meta name="description" content="归并排序和快速排序都用到了分治思想，非常巧妙。我们可以借鉴这个思想，来解决非排序的问题，比如：如何在$O(n)$的时间复杂度内查找一个无序数组中的第`K`大元素？">
 
+ <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+
   
 
   
@@ -32,6 +34,8 @@
   
 
   
+
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8" async></script>
 
   <script>
   // theme-ad's config script
@@ -63,6 +67,8 @@
   
 
   <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css" rel="stylesheet">
 
   <link rel="stylesheet" href="/css/index.css">
 <link rel="stylesheet" href="/styles/components/highlight/highlight.css">
@@ -503,6 +509,18 @@
 
 
 
+
+ <script>
+ //const element =  document.querySelector('.home-article-wrapper')
+ //element.classList.add('animated', 'bounceInLeft')
+ function testAnim(x) {
+     $('.home-article-wrapper').removeClass('animate').addClass(x + ' animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+       $(this).removeClass('animate');
+     });
+   };
+
+   testAnim('flipInX');
+ </script>
 
     
   </body>
