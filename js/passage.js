@@ -1,15 +1,18 @@
 (() => {
   function handleImgClick(event) {
     // window.open(event.target.getAttribute('src'), '_blank');
-    let wid = event.target.width;
+    // let wid = event.target.width;
+    let wid = document.body.clientWidth * 0.95;
     let fire = {
       imageUrl: event.target.getAttribute('src'),
       // imageHeight: 800,
       width: wid,
+      imageWidth: wid,
       padding: '0',
       imageAlt: 'A image',
       showConfirmButton: false,
-      allowOutsideClick: true
+      allowOutsideClick: true,
+      showCloseButton: true
     };
     Swal.fire(fire);
     // $('.swal2-actions').hide()

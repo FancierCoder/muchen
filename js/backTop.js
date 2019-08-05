@@ -3,7 +3,7 @@
 
   const backTop = () => {
     const delay = 10, 
-      time = 200;
+      time = 300;
     let running = false;
 
     return () => {
