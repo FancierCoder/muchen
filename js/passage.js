@@ -55,4 +55,7 @@
   });
   
   tocHideBtn && tocHideBtn.addEventListener('click', window.AD_CONFIG.layer.trigger);
+
 })();
+
+$(function(){"use strict";$(".preloader").fadeOut()});

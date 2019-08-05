@@ -41,5 +41,3 @@ var colorPrint = function (r) {
     i()
 };
 colorPrint(document.getElementById('colorPrint'));
-
-$(".preloader").fadeOut()
