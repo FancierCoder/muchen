@@ -927,8 +927,8 @@ main {
   width: 64px;
   height: 64px;
   position: absolute;
-  top: calc(50% - 3.5px);
-  left: calc(50% - 3.5px)
+  top: calc(50% - 32px);
+  left: calc(50% - 32px)
 }
 
 .lds-ripple .lds-pos {
