@@ -554,7 +554,8 @@ main {
 
 .passage {
   max-width: 1024px;
-  margin: 20px auto; }
+  margin: 20px auto;
+  width: 95%; }
   .passage-article {
     font-size: 16px;
     font-family: -apple-system, "PingFang SC", BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
