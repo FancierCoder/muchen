@@ -1,4 +1,4 @@
-var binft = function (r) {
+var colorPrint = function (r) {
     function t() {
         return b[Math.floor(Math.random() * b.length)]
     }
@@ -34,10 +34,10 @@ var binft = function (r) {
             prefixP: -s,
             skillI: 0,
             skillP: 0,
-            direction: "backward",
+            direction: "forward",
             delay: a,
             step: g
         };
     i()
 };
-binft(document.getElementById('colorPrint'));
+colorPrint(document.getElementById('colorPrint'));
