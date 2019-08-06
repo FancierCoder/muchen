@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html>
+  
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta name="author" content="MuChen">
+  
+  
+  <title>30.字符串匹配基础（中） | MuChen&#39;s Blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="后端,算法,">
+  
+
+  
+  <meta name="description" content="对于查找功能是重要功能的软件来说，比如一些文本编辑器，它们的查找功能都是用哪种算法来实现的呢？有没有比 `BF` 算法和 `RK` 算法更加高效的字符串匹配算法呢？">
+
+  <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.14.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  
+
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8" async></script>
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"js4SiJ6prwCfvUwpG6UKP1T5-gzGzoHsz","appkey":"GsFF0HPExEnfzq4Jkw3X8AFd","comment":true,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2019-07-12",
+    passwords: ["0e31be4bd24c14e65633d11633fe616ee3d93b4f31d07726fdbe113fa98a391a", ],
+    is_post: true,
+    lock: false,
+    author: "MuChen",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">沐晨</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | Learn To Learn</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+        <a href="/friends/" target="_self">友链</a>
+      
+        <a href="/about/" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/FancierCoder" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/friends/" target="_self">
+            友链
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/about/" target="_self">
+            关于
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>19-08-06 15:01
+    </span>
+    
+      <span>
+        | <a href="/categories/后端/"><i class="fa fa-bookmark"></i>后端</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+      <span id="article-visit-info">
+        | <i class="fa fa-eye"></i>0
+      </span>
+  </div>
+  <h1 class="passage-title">
+    30.字符串匹配基础（中）
+  </h1>
+  
+  <article class="passage-article">
+    <p><code>BM</code>（<code>Boyer-Moore</code>）算法。它是一种非常高效的字符串匹配算法，有实验统计，它的性能是著名的 <code>KMP</code> 算法的 <code>3</code> 到 <code>4</code> 倍。</p>
+<h2 id="BM-算法的核心思想"><a href="#BM-算法的核心思想" class="headerlink" title="BM 算法的核心思想"></a>BM 算法的核心思想</h2><p>把模式串和主串的匹配过程，看作模式串在主串中不停地往后滑动。当遇到不匹配的字符时，<code>BF</code> 算法和 <code>RK</code> 算法的做法是，模式串往后滑动一位，然后从模式串的第一个字符开始重新匹配。可以看下面的这幅图。<br><img src="./c5b9faa2.jpeg" alt="image"><br>在这个例子里，主串中的 <code>c</code>，在模式串中是不存在的，所以，模式串向后滑动的时候，只要 <code>c</code> 与模式串有重合，肯定无法匹配。所以，可以一次性把模式串往后多滑动几位，把模式串移动到 <code>c</code> 的后面。<br><img src="./008347c5.jpeg" alt="image"><br>由现象找规律，思考一下，当遇到不匹配的字符时，有什么固定的规律，可以将模式串往后多滑动几位呢？这样一次性往后滑动好几位，那匹配的效率岂不是就提高了？</p>
+<p><code>BM</code> 算法，本质上其实就是在寻找这种规律。借助这种规律，在模式串与主串匹配的过程中，当模式串和主串某个字符不匹配的时候，能够跳过一些肯定不会匹配的情况，将模式串往后多滑动几位。</p>
+<h2 id="BM-算法原理分析"><a href="#BM-算法原理分析" class="headerlink" title="BM 算法原理分析"></a>BM 算法原理分析</h2><p><code>BM</code> 算法包含两部分，分别是坏字符规则（<code>bad character rule</code>）和好后缀规则（<code>good suffix shift</code>）。下面依次来看，这两个规则分别都是怎么工作的。</p>
+<h3 id="1-坏字符规则"><a href="#1-坏字符规则" class="headerlink" title="1. 坏字符规则"></a>1. 坏字符规则</h3><p>在匹配的过程中，都是按模式串的下标从小到大的顺序，依次与主串中的字符进行匹配的。这种匹配顺序比较符合我们的思维习惯，而 <code>BM</code> 算法的匹配顺序比较特别，它是按照模式串下标从大到小的顺序，倒着匹配的。下面有一张图，你可以看下。<br><img src="./04290ff5.jpeg" alt="image"><br><img src="./fda9e9e8.jpeg" alt="image"><br>从模式串的末尾往前倒着匹配，当发现某个字符没法匹配的时候。把这个没有匹配的字符叫作<strong>坏字符</strong>（主串中的字符）。<br><img src="./8d0ae5ab.jpeg" alt="image"><br>拿坏字符 <code>c</code> 在模式串中查找，发现模式串中并不存在这个字符，也就是说，字符 <code>c</code> 与模式串中的任何字符都不可能匹配。这个时候，可以将模式串直接往后滑动三位，将模式串滑动到 <code>c</code> 后面的位置，再从模式串的末尾字符开始比较。<br><img src="./ad866b59.jpeg" alt="image"><br>这个时候，模式串中最后一个字符 <code>d</code>，还是无法跟主串中的 <code>a</code> 匹配，这个时候，还能将模式串往后滑动三位吗？答案是不行的。因为这个时候，坏字符 <code>a</code> 在模式串中是存在的，模式串中下标是 <code>0</code> 的位置也是字符 <code>a</code>。这种情况下，可以将模式串往后滑动两位，让两个 <code>a</code> 上下对齐，然后再从模式串的末尾字符开始，重新匹配。<br><img src="./37c394df.jpeg" alt="image"><br>第一次不匹配的时候，滑动了三位，第二次不匹配的时候，将模式串后移两位，那具体滑动多少位，到底有没有规律呢？</p>
+<p>当发生不匹配的时候，把坏字符对应的模式串中的字符下标记作 <code>si</code>。如果坏字符在模式串中存在，把这个坏字符在模式串中的下标记作 <code>xi</code>。如果不存在，把 <code>xi</code> 记作 <code>-1</code>。那模式串往后移动的位数就等于 <code>si-xi</code>。（注意，这里说的下标，都是字符在模式串的下标）。<br><img src="./201d9b2a.jpeg" alt="image"><br>这里要特别说明一点，如果坏字符在模式串里多处出现，那在计算 <code>xi</code> 的时候，选择最靠后的那个，因为这样不会让模式串滑动过多，导致本来可能匹配的情况被滑动略过。</p>
+<p>利用坏字符规则，<code>BM</code> 算法在最好情况下的时间复杂度非常低，是 $O(n/m)$。比如，主串是 <code>aaabaaabaaabaaab</code>，模式串是 <code>aaaa</code>。每次比对，模式串都可以直接后移四位，所以，匹配具有类似特点的模式串和主串的时候，<code>BM</code> 算法非常高效。</p>
+<p>不过，单纯使用坏字符规则还是不够的。因为根据 <code>si-xi</code> 计算出来的移动位数，有可能是负数，比如主串是 <code>aaaaaaaaaaaaaaaa</code>，模式串是 <code>baaa</code>。不但不会向后滑动模式串，还有可能倒退。所以，<code>BM</code> 算法还需要用到“好后缀规则”。</p>
+<h3 id="2-好后缀规则"><a href="#2-好后缀规则" class="headerlink" title="2. 好后缀规则"></a>2. 好后缀规则</h3><p>好后缀规则实际上跟坏字符规则的思路很类似。可以看下面这幅图。当模式串滑动到图中的位置的时候，模式串和主串有 <code>2</code> 个字符是匹配的，倒数第 <code>3</code> 个字符发生了不匹配的情况。<br><img src="./a25bda4b.jpeg" alt="image"><br>这个时候该如何滑动模式串呢？当然，还可以利用坏字符规则来计算模式串的滑动位数，不过，也可以使用好后缀处理规则。两种规则到底如何选择，下面会说明。抛开这个问题，现在来看，好后缀规则是怎么工作的？</p>
+<p>把已经匹配的 <code>bc</code> 叫作好后缀，记作<code>{u}</code>。拿它在模式串中查找，如果找到了另一个跟<code>{u}</code>相匹配的子串<code>{u*}</code>，那就将模式串滑动到子串<code>{u*}</code>与主串中<code>{u}</code>对齐的位置。<br><img src="./b2af1786.jpeg" alt="image"><br>如果在模式串中找不到另一个等于<code>{u}</code>的子串，就直接将模式串，滑动到主串中<code>{u}</code>的后面，因为之前的任何一次往后滑动，都没有匹配主串中<code>{u}</code>的情况。<br><img src="./d17e696f.jpeg" alt="image"><br>不过，当模式串中不存在等于<code>{u}</code>的子串时，直接将模式串滑动到主串<code>{u}</code>的后面。这样做是否有点太过头呢？来看下面这个例子。这里面 <code>bc</code> 是好后缀，尽管在模式串中没有另外一个相匹配的子串<code>{u*}</code>，但是如果将模式串移动到好后缀的后面，如图所示，那就会错过模式串和主串可以匹配的情况。<br><img src="./a0afd368.jpeg" alt="image"><br>如果好后缀在模式串中不存在可匹配的子串，那在一步一步往后滑动模式串的过程中，只要主串中的<code>{u}</code>与模式串有重合，那肯定就无法完全匹配。但是当模式串滑动到前缀与主串中<code>{u}</code>的后缀有部分重合的时候，并且重合的部分相等的时候，就有可能会存在完全匹配的情况。<br><img src="./81109319.jpeg" alt="image"><br>所以，针对这种情况，不仅要看好后缀在模式串中，是否有另一个匹配的子串，还要检查好后缀的后缀子串，是否存在跟模式串的前缀子串匹配的。</p>
+<p>所谓某个字符串 <code>s</code> 的后缀子串，就是最后一个字符跟 <code>s</code> 对齐的子串，比如 <code>abc</code> 的后缀子串就包括 <code>c</code>, <code>bc</code>。所谓前缀子串，就是起始字符跟 <code>s</code> 对齐的子串，比如 <code>abc</code> 的前缀子串有 <code>a</code>，<code>ab</code>。从好后缀的后缀子串中，找一个最长的并且能跟模式串的前缀子串匹配的，假设是<code>{v}</code>，然后将模式串滑动到如图所示的位置。<br><img src="./949540c3.jpeg" alt="image"><br>当模式串和主串中的某个字符不匹配的时候，如何选择用好后缀规则还是坏字符规则，来计算模式串往后滑动的位数？</p>
+<p>可以分别计算好后缀和坏字符往后滑动的位数，然后取两个数中最大的，作为模式串往后滑动的位数。这种处理方法还可以避免前面提到的，根据坏字符规则，计算得到的往后滑动的位数，有可能是负数的情况。</p>
+<h2 id="BM-算法代码实现"><a href="#BM-算法代码实现" class="headerlink" title="BM 算法代码实现"></a>BM 算法代码实现</h2><p>“坏字符规则”本身不难理解。当遇到坏字符时，要计算往后移动的位数 <code>si-xi</code>，其中 <code>xi</code> 的计算是重点，如何求得 <code>xi</code> 呢？或者说，如何查找坏字符在模式串中出现的位置呢？</p>
+<p>如果拿坏字符，在模式串中顺序遍历查找，这样就会比较低效，势必影响这个算法的性能。有没有更加高效的方式呢？之前讲的散列表，这里就可以派上用场了。可以将模式串中的每个字符及其下标都存到散列表中。这样就可以快速找到坏字符在模式串的位置下标了。</p>
+<p>关于这个散列表，只实现一种最简单的情况，假设字符串的字符集不是很大，每个字符长度是 <code>1</code> 字节，用大小为 <code>256</code> 的数组，来记录每个字符在模式串中出现的位置。数组的下标对应字符的 <code>ASCII</code> 码值，数组中存储这个字符在模式串中出现的位置。<br><img src="./b9c04959.jpeg" alt="image"><br>如果将上面的过程翻译成代码，就是下面这个样子。其中，变量 <code>b</code> 是模式串，<code>m</code> 是模式串的长度，<code>bc</code> 表示刚刚讲的散列表。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SIZE = <span class="number">256</span>; <span class="comment">// 全局变量或成员变量</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">generateBC</span><span class="params">(<span class="keyword">char</span>[] b, <span class="keyword">int</span> m, <span class="keyword">int</span>[] bc)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; SIZE; ++i) &#123;</span><br><span class="line">    bc[i] = -<span class="number">1</span>; <span class="comment">// 初始化 bc</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m; ++i) &#123;</span><br><span class="line">    <span class="keyword">int</span> ascii = (<span class="keyword">int</span>)b[i]; <span class="comment">// 计算 b[i] 的 ASCII 值</span></span><br><span class="line">    bc[ascii] = i;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>掌握了坏字符规则之后，先把 <code>BM</code> 算法代码的大框架写好，先不考虑好后缀规则，仅用坏字符规则，并且不考虑 <code>si-xi</code> 计算得到的移动位数可能会出现负数的情况。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">bm</span><span class="params">(<span class="keyword">char</span>[] a, <span class="keyword">int</span> n, <span class="keyword">char</span>[] b, <span class="keyword">int</span> m)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span>[] bc = <span class="keyword">new</span> <span class="keyword">int</span>[SIZE]; <span class="comment">// 记录模式串中每个字符最后出现的位置</span></span><br><span class="line">  generateBC(b, m, bc); <span class="comment">// 构建坏字符哈希表</span></span><br><span class="line">  <span class="keyword">int</span> i = <span class="number">0</span>; <span class="comment">// i 表示主串与模式串对齐的第一个字符</span></span><br><span class="line">  <span class="keyword">while</span> (i &lt;= n - m) &#123;</span><br><span class="line">    <span class="keyword">int</span> j;</span><br><span class="line">    <span class="keyword">for</span> (j = m - <span class="number">1</span>; j &gt;= <span class="number">0</span>; --j) &#123; <span class="comment">// 模式串从后往前匹配</span></span><br><span class="line">      <span class="keyword">if</span> (a[i+j] != b[j]) <span class="keyword">break</span>; <span class="comment">// 坏字符对应模式串中的下标是 j</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (j &lt; <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> i; <span class="comment">// 匹配成功，返回主串与模式串第一个匹配的字符的位置</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 这里等同于将模式串往后滑动 j-bc[(int)a[i+j]] 位</span></span><br><span class="line">    i = i + (j - bc[(<span class="keyword">int</span>)a[i+j]]); </span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>为了方便理解，下面有一张图，将其中的一些关键变量标注在上面了，结合着图，代码应该更好理解。<br><img src="./02f1d9a1.jpeg" alt="image"><br>至此，已经实现了包含坏字符规则的框架代码，只剩下往框架代码中填充好后缀规则了。现在，就来看看，如何实现好后缀规则。它的实现要比坏字符规则复杂一些。</p>
+<p>先简单回顾一下，前面讲过好后缀的处理规则中最核心的内容：</p>
+<ul>
+<li><p>在模式串中，查找跟好后缀匹配的另一个子串；</p>
+</li>
+<li><p>在好后缀的后缀子串中，查找最长的、能跟模式串前缀子串匹配的后缀子串；</p>
+</li>
+</ul>
+<p>在不考虑效率的情况下，这两个操作都可以用很“暴力”的匹配查找方式解决。但是，如果想要 <code>BM</code> 算法的效率很高，这部分就不能太低效。如何来做呢？</p>
+<p>因为好后缀也是模式串本身的后缀子串，所以，可以在模式串和主串正式匹配之前，通过预处理模式串，预先计算好模式串的每个后缀子串，对应的另一个可匹配子串的位置。这个预处理过程比较有技巧，很不好懂，应该是这篇文章最难懂的内容了，要认真多读几遍。</p>
+<p>先来看看，<strong>如何表示模式串中不同的后缀子串呢</strong>？因为后缀子串的最后一个字符的位置是固定的，下标为 <code>m-1</code>，只需要记录长度就可以了。通过长度，可以确定一个唯一的后缀子串。<br><img src="./47c1ca78.jpeg" alt="image"><br>现在，要引入最关键的变量 <code>suffix</code> 数组。<code>suffix</code> 数组的下标 <code>k</code>，表示后缀子串的长度，下标对应的数组值存储的是，在模式串中跟好后缀<code>{u}</code>相匹配的子串<code>{u*}</code>的起始下标值。这句话不好理解，举一个例子。<br><img src="./d7be9aec.jpeg" alt="image"><br>但是，如果模式串中有多个（大于 <code>1</code> 个）子串跟后缀子串<code>{u}</code>匹配，那 <code>suffix</code> 数组中该存储哪一个子串的起始位置呢？为了避免模式串往后滑动得过头了，肯定要存储模式串中最靠后的那个子串的起始位置，也就是下标最大的那个子串的起始位置。不过，这样处理就足够了吗？</p>
+<p>实际上，仅仅是选最靠后的子串片段来存储是不够的。再回忆一下好后缀规则。</p>
+<p>不仅要在模式串中，查找跟好后缀匹配的另一个子串，还要在好后缀的后缀子串中，查找最长的能跟模式串前缀子串匹配的后缀子串。</p>
+<p>如果只记录刚刚定义的 <code>suffix</code>，实际上，只能处理规则的前半部分，也就是，在模式串中，查找跟好后缀匹配的另一个子串。所以，除了 <code>suffix</code> 数组之外，还需要另外一个 <code>boolean</code> 类型的 <code>prefix</code> 数组，来记录模式串的后缀子串是否能匹配模式串的前缀子串。<br><img src="./72bbc0fb.jpeg" alt="image"><br>现在来看下，<strong>如何来计算并填充这两个数组的值</strong>？这个计算过程非常巧妙。</p>
+<p>拿下标从 <code>0</code> 到 <code>i</code> 的子串（<code>i</code> 可以是 <code>0</code> 到 <code>m-2</code>）与整个模式串，求公共后缀子串。如果公共后缀子串的长度是 <code>k</code>，那就记录 <code>suffix[k]=j</code>（<code>j</code> 表示公共后缀子串的起始下标）。如果 <code>j</code> 等于 <code>0</code>，也就是说，公共后缀子串也是模式串的前缀子串，就记录 <code>prefix[k]=true</code>。<br><img src="./491ce881.jpeg" alt="image"><br>把 <code>suffix</code> 数组和 <code>prefix</code> 数组的计算过程，用代码实现出来，就是下面这个样子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// b 表示模式串，m 表示长度，suffix，prefix 数组事先申请好了</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">generateGS</span><span class="params">(<span class="keyword">char</span>[] b, <span class="keyword">int</span> m, <span class="keyword">int</span>[] suffix, <span class="keyword">boolean</span>[] prefix)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m; ++i) &#123; <span class="comment">// 初始化</span></span><br><span class="line">    suffix[i] = -<span class="number">1</span>;</span><br><span class="line">    prefix[i] = <span class="keyword">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m - <span class="number">1</span>; ++i) &#123; <span class="comment">// b[0, i]</span></span><br><span class="line">    <span class="keyword">int</span> j = i;</span><br><span class="line">    <span class="keyword">int</span> k = <span class="number">0</span>; <span class="comment">// 公共后缀子串长度</span></span><br><span class="line">    <span class="keyword">while</span> (j &gt;= <span class="number">0</span> &amp;&amp; b[j] == b[m-<span class="number">1</span>-k]) &#123; <span class="comment">// 与 b[0, m-1] 求公共后缀子串</span></span><br><span class="line">      --j;</span><br><span class="line">      ++k;</span><br><span class="line">      suffix[k] = j+<span class="number">1</span>; <span class="comment">//j+1 表示公共后缀子串在 b[0, i] 中的起始下标</span></span><br><span class="line">    &#125;</span><br><span class="line">    i</span><br><span class="line">    <span class="keyword">if</span> (j == -<span class="number">1</span>) prefix[k] = <span class="keyword">true</span>; <span class="comment">// 如果公共后缀子串也是模式串的前缀子串</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>有了这两个数组之后，现在来看，<strong>在模式串跟主串匹配的过程中，遇到不能匹配的字符时，如何根据好后缀规则，计算模式串往后滑动的位数</strong>？</p>
+<p>假设好后缀的长度是 <code>k</code>。先拿好后缀，在 <code>suffix</code> 数组中查找其匹配的子串。如果 <code>suffix[k]</code> 不等于 <code>-1</code>（<code>-1</code> 表示不存在匹配的子串），那就将模式串往后移动 <code>j-suffix[k]+1</code> 位（<code>j</code> 表示坏字符对应的模式串中的字符下标）。如果 <code>suffix[k]</code> 等于 <code>-1</code>，表示模式串中不存在另一个跟好后缀匹配的子串片段。可以用下面这条规则来处理。<br><img src="./ac59d876.jpeg" alt="image"><br>好后缀的后缀子串 <code>b[r, m-1]</code>（其中，<code>r</code> 取值从 <code>j+2</code> 到 <code>m-1</code>）的长度 <code>k=m-r</code>，如果 <code>prefix[k]</code> 等于 <code>true</code>，表示长度为 <code>k</code> 的后缀子串，有可匹配的前缀子串，这样可以把模式串后移 <code>r</code> 位。<br><img src="./c16df881.jpeg" alt="image"><br>如果两条规则都没有找到可以匹配好后缀及其后缀子串的子串，就将整个模式串后移 <code>m</code> 位。<br><img src="./a3ce8512.jpeg" alt="image"><br>至此，好后缀规则的代码实现也讲完了。把好后缀规则加到前面的代码框架里，就可以得到 <code>BM</code> 算法的完整版代码实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// a,b 表示主串和模式串；n，m 表示主串和模式串的长度。</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">bm</span><span class="params">(<span class="keyword">char</span>[] a, <span class="keyword">int</span> n, <span class="keyword">char</span>[] b, <span class="keyword">int</span> m)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span>[] bc = <span class="keyword">new</span> <span class="keyword">int</span>[SIZE]; <span class="comment">// 记录模式串中每个字符最后出现的位置</span></span><br><span class="line">  generateBC(b, m, bc); <span class="comment">// 构建坏字符哈希表</span></span><br><span class="line">  <span class="keyword">int</span>[] suffix = <span class="keyword">new</span> <span class="keyword">int</span>[m];</span><br><span class="line">  <span class="keyword">boolean</span>[] prefix = <span class="keyword">new</span> <span class="keyword">boolean</span>[m];</span><br><span class="line">  generateGS(b, m, suffix, prefix);</span><br><span class="line">  <span class="keyword">int</span> i = <span class="number">0</span>; <span class="comment">// j 表示主串与模式串匹配的第一个字符</span></span><br><span class="line">  <span class="keyword">while</span> (i &lt;= n - m) &#123;</span><br><span class="line">    <span class="keyword">int</span> j;</span><br><span class="line">    <span class="keyword">for</span> (j = m - <span class="number">1</span>; j &gt;= <span class="number">0</span>; --j) &#123; <span class="comment">// 模式串从后往前匹配</span></span><br><span class="line">      <span class="keyword">if</span> (a[i+j] != b[j]) <span class="keyword">break</span>; <span class="comment">// 坏字符对应模式串中的下标是 j</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (j &lt; <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> i; <span class="comment">// 匹配成功，返回主串与模式串第一个匹配的字符的位置</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> x = j - bc[(<span class="keyword">int</span>)a[i+j]];</span><br><span class="line">    <span class="keyword">int</span> y = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (j &lt; m-<span class="number">1</span>) &#123; <span class="comment">// 如果有好后缀的话</span></span><br><span class="line">      y = moveByGS(j, m, suffix, prefix);</span><br><span class="line">    &#125;</span><br><span class="line">    i = i + Math.max(x, y);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// j 表示坏字符对应的模式串中的字符下标 ; m 表示模式串长度</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">moveByGS</span><span class="params">(<span class="keyword">int</span> j, <span class="keyword">int</span> m, <span class="keyword">int</span>[] suffix, <span class="keyword">boolean</span>[] prefix)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> k = m - <span class="number">1</span> - j; <span class="comment">// 好后缀长度</span></span><br><span class="line">  <span class="keyword">if</span> (suffix[k] != -<span class="number">1</span>) <span class="keyword">return</span> j - suffix[k] +<span class="number">1</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> r = j+<span class="number">2</span>; r &lt;= m-<span class="number">1</span>; ++r) &#123;</span><br><span class="line">    <span class="keyword">if</span> (prefix[m-r] == <span class="keyword">true</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> r;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> m;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="BM-算法的性能分析及优化"><a href="#BM-算法的性能分析及优化" class="headerlink" title="BM 算法的性能分析及优化"></a>BM 算法的性能分析及优化</h2><p>先来分析 <code>BM</code> 算法的内存消耗。整个算法用到了额外的 <code>3</code> 个数组，其中 <code>bc</code> 数组的大小跟字符集大小有关，<code>suffix</code> 数组和 <code>prefix</code> 数组的大小跟模式串长度 <code>m</code> 有关。</p>
+<p>如果处理字符集很大的字符串匹配问题，<code>bc</code> 数组对内存的消耗就会比较多。因为好后缀和坏字符规则是独立的，如果运行的环境对内存要求苛刻，可以只使用好后缀规则，不使用坏字符规则，这样就可以避免 <code>bc</code> 数组过多的内存消耗。不过，单纯使用好后缀规则的 <code>BM</code> 算法效率就会下降一些了。</p>
+<p>对于执行效率来说，可以先从时间复杂度的角度来分析。</p>
+<p>实际上，前面讲的 <code>BM</code> 算法是个初级版本。为了更容易理解，有些复杂的优化我没有讲。基于目前的这个版本，在极端情况下，预处理计算 <code>suffix</code> 数组、<code>prefix</code> 数组的性能会比较差。</p>
+<p>比如模式串是 <code>aaaaaaa</code> 这种包含很多重复的字符的模式串，预处理的时间复杂度就是 $O(m^2)$。当然，大部分情况下，时间复杂度不会这么差。关于如何优化这种极端情况下的时间复杂度退化，如果感兴趣，可以自己研究一下。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>BM</code> 算法。尽管复杂、难懂，但匹配的效率却很高，在实际的软件开发中，特别是一些文本编辑器中，应用比较多。如果一遍看不懂的话，就多看几遍。</p>
+<p><code>BM</code> 算法核心思想是，利用模式串本身的特点，在模式串中某个字符与主串不能匹配的时候，将模式串往后多滑动几位，以此来减少不必要的字符比较，提高匹配的效率。<code>BM</code> 算法构建的规则有两类，坏字符规则和好后缀规则。好后缀规则可以独立于坏字符规则使用。因为坏字符规则的实现比较耗内存，为了节省内存，可以只用好后缀规则来实现 <code>BM</code> 算法。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>你熟悉的编程语言中的查找函数，或者工具、软件中的查找功能，都是用了哪种字符串匹配算法呢？欢迎留言和我分享.</p>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#BM-算法的核心思想"><span class="toc-text">BM 算法的核心思想</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BM-算法原理分析"><span class="toc-text">BM 算法原理分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-坏字符规则"><span class="toc-text">1. 坏字符规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-好后缀规则"><span class="toc-text">2. 好后缀规则</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BM-算法代码实现"><span class="toc-text">BM 算法代码实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BM-算法的性能分析及优化"><span class="toc-text">BM 算法的性能分析及优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#思考"><span class="toc-text">思考</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: 沐晨</div>
+      
+        <div>
+          原文链接: 
+          <a style="word-break: break-word;" href="" target="_blank">https://muchen.fun/passages/30/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      
+        <div class="site-footer-col">
+          <h5 class="site-footer-title">博客推荐</h5>
+          
+            <span class="site-footer-item">
+              <a href="https://muchen.fun/" target="_blank">沐晨</a>
+            </span>
+          
+            <span class="site-footer-item">
+              <a href="http://www.wangdabo.com" target="_blank">王大博</a>
+            </span>
+          
+        </div>
+      
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: lcoder@qq.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://fanciercoder.github.io/" target="_blank">沐晨</a>.
+      All rights reserved.
+    </div>
+    <div class="site-footer-info">
+        <span style="position: relative;">
+        <a style=" position: absolute;
+            white-space: nowrap;" id="colorPrint"></a></span>
+        </a>
+        </span>
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+        <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+          
+            <div>
+              <img src="/images/wechat.png" alt="WeChat">
+              
+                <p>WeChat</p>
+              
+            </div>
+          
+            <div>
+              <img src="/images/alipay.png" alt="AliPay">
+              
+                <p>AliPay</p>
+              
+            </div>
+          
+            <div>
+              <img src="/images/BitCoin.jpg" alt="BitCoin">
+              
+                <p>BitCoin</p>
+              
+            </div>
+          
+        </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="javascript:void(0);" data-enable="false">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/29/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+      <a href="javascript:void(0);" id="site-reward">
+        <i class="fa fa-thumbs-up"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-144841374-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-144841374-1');
+  </script>
+
+
+
+
+  <script async>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+
+
+
+
+ <script>
+ //const element =  document.querySelector('.home-article-wrapper')
+ //element.classList.add('animated', 'bounceInLeft')
+ function testAnim(x) {
+     $('.home-article-wrapper').removeClass('animate').addClass(x + ' animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+       $(this).removeClass('animate');
+     });
+   };
+
+   testAnim('flipInX');
+ </script>
+
+    
+      <script src="/js/footer.js"></script>
+    
+  </body>
+</html>
