@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta name="author" content="MuChen">
+  
+  
+  <title>33.`AC`自动机 | MuChen&#39;s Blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="后端,算法,">
+  
+
+  
+  <meta name="description" content="如何用多模式串匹配实现敏感词过滤功能？">
+
+  <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.14.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  
+
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8" async></script>
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"js4SiJ6prwCfvUwpG6UKP1T5-gzGzoHsz","appkey":"GsFF0HPExEnfzq4Jkw3X8AFd","comment":true,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2019-07-12",
+    passwords: ["0e31be4bd24c14e65633d11633fe616ee3d93b4f31d07726fdbe113fa98a391a", ],
+    is_post: true,
+    lock: false,
+    author: "MuChen",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">沐晨</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | Learn To Learn</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+        <a href="/friends/" target="_self">友链</a>
+      
+        <a href="/about/" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/FancierCoder" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/friends/" target="_self">
+            友链
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/about/" target="_self">
+            关于
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>19-08-09 13:10
+    </span>
+    
+      <span>
+        | <a href="/categories/后端/"><i class="fa fa-bookmark"></i>后端</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+      <span id="article-visit-info">
+        | <i class="fa fa-eye"></i>0
+      </span>
+  </div>
+  <h1 class="passage-title">
+    33.`AC`自动机
+  </h1>
+  
+  <article class="passage-article">
+    <p>很多支持用户发表文本内容的网站，比如 <code>BBS</code>，大都会有敏感词过滤功能，用来过滤掉用户输入的一些淫秽、反动、谩骂等内容。你有没有想过，这个功能是怎么实现的呢？</p>
+<h2 id="基于单模式串和-Trie-树实现的敏感词过滤"><a href="#基于单模式串和-Trie-树实现的敏感词过滤" class="headerlink" title="基于单模式串和 Trie 树实现的敏感词过滤"></a>基于单模式串和 Trie 树实现的敏感词过滤</h2><p><code>BF</code> 算法、<code>RK</code> 算法、<code>BM</code> 算法、<code>KMP</code> 算法，还有 <code>Trie</code> 树。前面四种算法都是单模式串匹配算法，只有 <code>Trie</code> 树是多模式串匹配算法。</p>
+<p>单模式串匹配算法，是在一个模式串和一个主串之间进行匹配，也就是说，在一个主串中查找一个模式串。多模式串匹配算法，就是在多个模式串和一个主串之间做匹配，也就是说，在一个主串中查找多个模式串。</p>
+<p>尽管，单模式串匹配算法也能完成多模式串的匹配工作。例如: 可以针对每个敏感词，通过单模式串匹配算法（比如 <code>KMP</code> 算法）与用户输入的文字内容进行匹配。但是，这样做的话，每个匹配过程都需要扫描一遍用户输入的内容。整个过程下来就要扫描很多遍用户输入的内容。如果敏感词很多，比如几千个，并且用户输入的内容很长，假如有上千个字符，那就需要扫描几千遍这样的输入内容。很显然，这种处理思路比较低效。</p>
+<p>与单模式匹配算法相比，多模式匹配算法在这个问题的处理上就很高效了。它只需要扫描一遍主串，就能在主串中一次性查找多个模式串是否存在，从而大大提高匹配效率。<code>Trie</code> 树就是一种多模式串匹配算法。那如何用 <code>Trie</code> 树实现敏感词过滤功能呢？</p>
+<p>可以对敏感词字典进行预处理，构建成 <code>Trie</code> 树结构。这个预处理的操作只需要做一次，如果敏感词字典动态更新了，比如删除、添加了一个敏感词，只需要动态更新一下 <code>Trie</code> 树就可以了。</p>
+<p>当用户输入一个文本内容后，把用户输入的内容作为主串，从第一个字符（假设是字符 <code>C</code>）开始，在 <code>Trie</code> 树中匹配。当匹配到 <code>Trie</code> 树的叶子节点，或者中途遇到不匹配字符的时候，将主串的开始匹配位置后移一位，也就是从字符 <code>C</code> 的下一个字符开始，重新在 <code>Trie</code> 树中匹配。</p>
+<p>基于 <code>Trie</code> 树的这种处理方法，有点类似单模式串匹配的 <code>BF</code> 算法。单模式串匹配算法中，<code>KMP</code> 算法对 <code>BF</code> 算法进行改进，引入了 <code>next</code> 数组，让匹配失败时，尽可能将模式串往后多滑动几位。借鉴单模式串的优化改进方法，能否对多模式串 <code>Trie</code> 树进行改进，进一步提高 <code>Trie</code> 树的效率呢？这就要用到 <code>AC</code> 自动机算法了。</p>
+<h2 id="经典的多模式串匹配算法：AC-自动机"><a href="#经典的多模式串匹配算法：AC-自动机" class="headerlink" title="经典的多模式串匹配算法：AC 自动机"></a>经典的多模式串匹配算法：AC 自动机</h2><p><code>AC</code> 自动机算法，全称是 <code>Aho-Corasick</code> 算法。其实，<code>Trie</code> 树跟 <code>AC</code> 自动机之间的关系，就像单串匹配中朴素的串匹配算法跟 <code>KMP</code> 算法之间的关系一样，只不过前者针对的是多模式串而已。所以，<code>AC</code> 自动机实际上就是在 <code>Trie</code> 树之上，加了类似 <code>KMP</code> 的 <code>next</code> 数组，只不过此处的 <code>next</code> 数组是构建在树上罢了。如果代码表示，就是下面这个样子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AcNode</span> </span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">char</span> data; </span><br><span class="line">  <span class="keyword">public</span> AcNode[] children = <span class="keyword">new</span> AcNode[<span class="number">26</span>]; <span class="comment">// 字符集只包含 a~z 这 26 个字符</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">boolean</span> isEndingChar = <span class="keyword">false</span>; <span class="comment">// 结尾字符为 true</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">int</span> length = -<span class="number">1</span>; <span class="comment">// 当 isEndingChar=true 时，记录模式串长度</span></span><br><span class="line">  <span class="keyword">public</span> AcNode fail; <span class="comment">// 失败指针</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">AcNode</span><span class="params">(<span class="keyword">char</span> data)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.data = data;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>所以，<code>AC</code> 自动机的构建，包含两个操作：</p>
+<ul>
+<li><p>将多个模式串构建成 <code>Trie</code> 树；</p>
+</li>
+<li><p>在 <code>Trie</code> 树上构建失败指针（相当于 <code>KMP</code> 中的失效函数 <code>next</code> 数组）。</p>
+</li>
+</ul>
+<p><strong>构建好 Trie 树之后，如何在它之上构建失败指针？</strong></p>
+<p>举一个例子。这里有 <code>4</code> 个模式串，分别是 <code>c</code>，<code>bc</code>，<code>bcd</code>，<code>abcd</code>；主串是 <code>abcd</code>。<br><img src="./c3a6a5d2.jpeg" alt="image"><br><code>Trie</code> 树中的每一个节点都有一个失败指针，它的作用和构建过程，跟 <code>KMP</code> 算法中的 <code>next</code> 数组极其相似。所以你<strong>要先理解 <code>KMP</code> 算法中 <code>next</code> 数组的构建过程</strong>。如果你还有点不清楚，建议先回头去弄懂 <code>KMP</code> 算法。</p>
+<p>假设沿 <code>Trie</code> 树走到 <code>p</code> 节点，也就是下图中的紫色节点，那 <code>p</code> 的失败指针就是从 <code>root</code> 走到紫色节点形成的字符串 <code>abc</code>，跟所有模式串前缀匹配的最长可匹配后缀子串，就是箭头指的 <code>bc</code> 模式串。</p>
+<p>这里的最长可匹配后缀子串，解释一下。字符串 <code>abc</code> 的后缀子串有两个 <code>bc</code>，<code>c</code>，拿它们与其他模式串匹配，如果某个后缀子串可以匹配某个模式串的前缀，那就把这个后缀子串叫作<strong>可匹配后缀子串</strong>。</p>
+<p>从可匹配后缀子串中，找出最长的一个，就是刚刚讲到的最长可匹配后缀子串。将 <code>p</code> 节点的失败指针指向那个最长匹配后缀子串对应的模式串的前缀的最后一个节点，就是下图中箭头指向的节点。<br><img src="./6cbbd777.jpeg" alt="image"><br>计算每个节点的失败指针这个过程看起来有些复杂。其实，如果把树中相同深度的节点放到同一层，那么某个节点的失败指针只有可能出现在它所在层的上一层。</p>
+<p>可以像 <code>KMP</code> 算法那样，当要求某个节点的失败指针的时候，通过已经求得的、深度更小的那些节点的失败指针来推导。也就是说，可以逐层依次来求解每个节点的失败指针。所以，失败指针的构建过程，是一个按层遍历树的过程。</p>
+<p>首先 <code>root</code> 的失败指针为 <code>NULL</code>，也就是指向自己。当已经求得某个节点 <code>p</code> 的失败指针之后，如何寻找它的子节点的失败指针呢？</p>
+<p>假设节点 <code>p</code> 的失败指针指向节点 <code>q</code>，看节点 <code>p</code> 的子节点 <code>pc</code> 对应的字符，是否也可以在节点 <code>q</code> 的子节点中找到。如果找到了节点 <code>q</code> 的一个子节点 <code>qc</code>，对应的字符跟节点 <code>pc</code> 对应的字符相同，则将节点 <code>pc</code> 的失败指针指向节点 <code>qc</code>。<br><img src="./e9c22607.jpeg" alt="image"><br>如果节点 <code>q</code> 中没有子节点的字符等于节点 <code>pc</code> 包含的字符，则令 <code>q = q -&gt; fail</code>（<code>fail</code> 表示失败指针，这里有没有很像 <code>KMP</code> 算法里求 <code>next</code> 的过程？），继续上面的查找，直到 <code>q</code> 是 <code>root</code> 为止，如果还没有找到相同字符的子节点，就让节点 <code>pc</code> 的失败指针指向 <code>root</code>。<br><img src="./ef840bc9.jpeg" alt="image"><br>构建失败指针的代码贴在这里，你可以对照着讲解一块看下，应该更容易理解。这里面，构建 <code>Trie</code> 树的代码并没有贴出来，你可以参看上一篇的代码去实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">buildFailurePointer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  Queue&lt;AcNode&gt; queue = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">  root.fail = <span class="keyword">null</span>;</span><br><span class="line">  queue.add(root);</span><br><span class="line">  <span class="keyword">while</span> (!queue.isEmpty()) &#123;</span><br><span class="line">    AcNode p = queue.remove();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">26</span>; ++i) &#123;</span><br><span class="line">      AcNode pc = p.children[i];</span><br><span class="line">      <span class="keyword">if</span> (pc == <span class="keyword">null</span>) <span class="keyword">continue</span>;</span><br><span class="line">      <span class="keyword">if</span> (p == root) &#123;</span><br><span class="line">        pc.fail = root;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        AcNode q = p.fail;</span><br><span class="line">        <span class="keyword">while</span> (q != <span class="keyword">null</span>) &#123;</span><br><span class="line">          AcNode qc = q.children[pc.data - <span class="string">'a'</span>];</span><br><span class="line">          <span class="keyword">if</span> (qc != <span class="keyword">null</span>) &#123;</span><br><span class="line">            pc.fail = qc;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">          &#125;</span><br><span class="line">          q = q.fail;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (q == <span class="keyword">null</span>) &#123;</span><br><span class="line">          pc.fail = root;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      queue.add(pc);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过按层来计算每个节点的子节点的失效指针，刚刚举的那个例子，最后构建完成之后的 <code>AC</code> 自动机就是下面这个样子：<br><img src="./3f8c2a50.jpeg" alt="image"><br><code>AC</code> 自动机到此就构建完成了。现在来看下，<strong>如何在 <code>AC</code> 自动机上匹配主串</strong>？</p>
+<p>还是拿之前的例子来讲解。在匹配过程中，主串从 <code>i = 0</code> 开始，<code>AC</code> 自动机从指针 <code>p = root</code> 开始，假设模式串是 <code>b</code>，主串是 <code>a</code>。</p>
+<ul>
+<li><p>如果 <code>p</code> 指向的节点有一个等于 <code>b[i]</code> 的子节点 <code>x</code>，就更新 <code>p</code> 指向 <code>x</code>，这个时候需要通过失败指针，检测一系列失败指针为结尾的路径是否是模式串。这一句不好理解，可以结合代码看。处理完之后，将 <code>i</code> 加一，继续这两个过程；</p>
+</li>
+<li><p>如果 <code>p</code> 指向的节点没有等于 <code>b[i]</code> 的子节点，那失败指针就派上用场了，让 <code>p = p -&gt; fail</code>，然后继续这 <code>2</code> 个过程。</p>
+</li>
+</ul>
+<p>关于匹配的这部分，文字描述不如代码看得清楚，所以下面把代码贴了出来，非常简短，并且添加了详细的注释，可以对照着看下。这段代码输出的就是，在主串中每个可以匹配的模式串出现的位置。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">match</span><span class="params">(<span class="keyword">char</span>[] text)</span> </span>&#123; <span class="comment">// text 是主串</span></span><br><span class="line">  <span class="keyword">int</span> n = text.length;</span><br><span class="line">  AcNode p = root;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">    <span class="keyword">int</span> idx = text[i] - <span class="string">'a'</span>;</span><br><span class="line">    <span class="keyword">while</span> (p.children[idx] == <span class="keyword">null</span> &amp;&amp; p != root) &#123;</span><br><span class="line">      p = p.fail; <span class="comment">// 失败指针发挥作用的地方</span></span><br><span class="line">    &#125;</span><br><span class="line">    p = p.children[idx];</span><br><span class="line">    <span class="keyword">if</span> (p == <span class="keyword">null</span>) p = root; <span class="comment">// 如果没有匹配的，从 root 开始重新匹配</span></span><br><span class="line">    AcNode tmp = p;</span><br><span class="line">    <span class="keyword">while</span> (tmp != root) &#123; <span class="comment">// 打印出可以匹配的模式串</span></span><br><span class="line">      <span class="keyword">if</span> (tmp.isEndingChar == <span class="keyword">true</span>) &#123;</span><br><span class="line">        <span class="keyword">int</span> pos = i-tmp.length+<span class="number">1</span>;</span><br><span class="line">        System.out.println(<span class="string">" 匹配起始下标 "</span> + pos + <span class="string">"; 长度 "</span> + tmp.length);</span><br><span class="line">      &#125;</span><br><span class="line">      tmp = tmp.fail;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>单模式串匹配算法是为了快速在主串中查找一个模式串，而多模式串匹配算法是为了快速在主串中查找多个模式串。</p>
+<p><code>AC</code> 自动机是基于 <code>Trie</code> 树的一种改进算法，它跟 <code>Trie</code> 树的关系，就像单模式串中，<code>KMP</code> 算法与 <code>BF</code> 算法的关系一样。<code>KMP</code> 算法中有一个非常关键的 <code>next</code> 数组，类比到 <code>AC</code> 自动机中就是失败指针。而且，<code>AC</code> 自动机失败指针的构建过程，跟 <code>KMP</code> 算法中计算 <code>next</code> 数组极其相似。所以，要理解 <code>AC</code> 自动机，最好先掌握 <code>KMP</code> 算法，因为 <code>AC</code> 自动机其实就是 <code>KMP</code> 算法在多模式串上的改造。</p>
+<p>整个 <code>AC</code> 自动机算法包含两个部分，第一部分是将多个模式串构建成 <code>AC</code> 自动机，第二部分是在 <code>AC</code> 自动机中匹配主串。第一部分又分为两个小的步骤，一个是将模式串构建成 <code>Trie</code> 树，另一个是在 <code>Trie</code> 树上构建失败指针。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ul>
+<li>如何用多模式串匹配实现敏感词过滤功能？</li>
+</ul>
+<blockquote>
+<p>实际上，上面贴出来的代码，已经是一个敏感词过滤的原型代码了。它可以找到所有敏感词出现的位置（在用户输入的文本中的起始下标）。只需要稍加改造，再遍历一遍文本内容（主串），就可以将文本中的所有敏感词替换成“<strong>*”。<br>所以这里着重讲一下，</strong><code>AC</code> 自动机实现的敏感词过滤系统，是否比单模式串匹配方法更高效呢？**</p>
+<p>首先，需要将敏感词构建成 <code>AC</code> 自动机，包括构建 <code>Trie</code> 树以及构建失败指针。</p>
+<p><code>Trie</code> 树构建的时间复杂度是 $O(m * len)$，其中 <code>len</code> 表示敏感词的平均长度，<code>m</code> 表示敏感词的个数。那构建失败指针的时间复杂度是多少呢？这里给出一个不是很准确的上界。<br>假设 <code>Trie</code> 树中总的节点个数是 <code>k</code>，每个节点构建失败指针的时候，（你可以看下代码）最耗时的环节是 <code>while</code> 循环中的 <code>q = q -&gt; fail</code>，每运行一次这个语句，<code>q</code> 指向节点的深度都会减少 <code>1</code>，而树的高度最高也不会超过 <code>len</code>，所以每个节点构建失败指针的时间复杂度是 $O(len)$。整个失败指针的构建过程就是 $O(k*len)$。</p>
+<p>不过，<code>AC</code> 自动机的构建过程都是预先处理好的，构建好之后，并不会频繁地更新，所以不会影响到敏感词过滤的运行效率。<br>再来看下，<strong>用 <code>AC</code> 自动机做匹配的时间复杂度是多少？</strong></p>
+<p>跟刚刚构建失败指针的分析类似，<code>for</code> 循环依次遍历主串中的每个字符，<code>for</code> 循环内部最耗时的部分也是 <code>while</code> 循环，而这一部分的时间复杂度也是 $O(len)$，所以总的匹配的时间复杂度就是 $O(n*len)$。因为敏感词并不会很长，而且这个时间复杂度只是一个非常宽泛的上限，实际情况下，可能近似于 $O(n)$，所以 <code>AC</code> 自动机做敏感词过滤，性能非常高。<br>你可能会说，从时间复杂度上看，<code>AC</code> 自动机匹配的效率跟 <code>Trie</code> 树一样啊。实际上，因为失效指针可能大部分情况下都指向 <code>root</code> 节点，所以绝大部分情况下，在 <code>AC</code> 自动机上做匹配的效率要远高于刚刚计算出的比较宽泛的时间复杂度。只有在极端情况下，如图所示，<code>AC</code> 自动机的性能才会退化的跟 <code>Trie</code> 树一样。<br><img src="./3903c8d0.jpeg" alt="image"></p>
+</blockquote>
+<ul>
+<li>你能试着分析总结一下，各个字符串匹配算法的特点和比较适合的应用场景吗？欢迎留言和我分享。</li>
+</ul>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基于单模式串和-Trie-树实现的敏感词过滤"><span class="toc-text">基于单模式串和 Trie 树实现的敏感词过滤</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#经典的多模式串匹配算法：AC-自动机"><span class="toc-text">经典的多模式串匹配算法：AC 自动机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#思考"><span class="toc-text">思考</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: 沐晨</div>
+      
+        <div>
+          原文链接: 
+          <a style="word-break: break-word;" href="" target="_blank">https://muchen.fun/passages/33/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      
+        <div class="site-footer-col">
+          <h5 class="site-footer-title">博客推荐</h5>
+          
+            <span class="site-footer-item">
+              <a href="https://muchen.fun/" target="_blank">沐晨</a>
+            </span>
+          
+            <span class="site-footer-item">
+              <a href="http://www.wangdabo.com" target="_blank">王大博</a>
+            </span>
+          
+        </div>
+      
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: lcoder@qq.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://fanciercoder.github.io/" target="_blank">沐晨</a>.
+      All rights reserved.
+    </div>
+    <div class="site-footer-info">
+        <span style="position: relative;">
+        <a style=" position: absolute;
+            white-space: nowrap;" id="colorPrint">
+        </a>
+        </span>
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+        <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+          
+            <div>
+              <img src="/images/wechat.png" alt="WeChat">
+              
+                <p>WeChat</p>
+              
+            </div>
+          
+            <div>
+              <img src="/images/alipay.png" alt="AliPay">
+              
+                <p>AliPay</p>
+              
+            </div>
+          
+            <div>
+              <img src="/images/BitCoin.jpg" alt="BitCoin">
+              
+                <p>BitCoin</p>
+              
+            </div>
+          
+        </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="javascript:void(0);" data-enable="false">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/32/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+      <a href="javascript:void(0);" id="site-reward">
+        <i class="fa fa-thumbs-up"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-144841374-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-144841374-1');
+  </script>
+
+
+
+
+  <script async>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+
+
+
+
+ <script>
+ //const element =  document.querySelector('.home-article-wrapper')
+ //element.classList.add('animated', 'bounceInLeft')
+ function testAnim(x) {
+     $('.home-article-wrapper').removeClass('animate').addClass(x + ' animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+       $(this).removeClass('animate');
+     });
+   };
+
+   testAnim('flipInX');
+ </script>
+
+    
+      <script src="/js/footer.js"></script>
+    
+  </body>
+</html>
