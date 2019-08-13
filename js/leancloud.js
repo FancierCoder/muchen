@@ -59,7 +59,7 @@
         query.equalTo('identity_path', pathname);
         query.count()
           .then(num => {
-            infoDOM.innerHTML = `| <i class="fa fa-eye"></i>${num}`;
+            infoDOM.innerHTML = `<i class="fa fa-eye"></i>${num}浏览`;
             running = false;
           });
       }, ts);

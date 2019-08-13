@@ -344,10 +344,11 @@ main {
   @media screen and (min-width: 769px) {
     .site-header {
       border-bottom: transparent solid 2px;
-      box-shadow: 0 2px 2px #ECEFF1; } }
+      box-shadow: /*0 2px 2px #ECEFF1;*/rgba(69, 71, 77, 0.2) 0 1px 10px 0; } }
   @media screen and (max-width: 768px) {
     .site-header {
-      background: #F5F5F5; } }
+      /*background: #F5F5F5;*/
+      box-shadow: rgba(69, 71, 77, 0.2) 0px 1px 10px 0px; } }
   .site-header-brand, .site-header-right {
     display: flex;
     align-items: center; }
@@ -504,7 +505,7 @@ main {
   transition: all .3s ease;
   background: white;
   width: 100%;
-  padding: 60px 60px 40px;
+  padding: 40px 60px 20px;
   border-radius: 10px; }
   @media screen and (max-width: 768px) {
     .home-article-inner {
@@ -524,7 +525,9 @@ main {
   position: relative;
   height: 100%;
   width: 100%;
-  z-index: 1; }
+  z-index: 1;
+  box-shadow: 0 8px 16px 0 rgba(7,17,27,0.05);
+  border-radius: 12px;}
   .home-article[data-cover=false] {
     padding-right: 0; }
   .home-article[data-cover=true] {
@@ -535,7 +538,11 @@ main {
   .home-article-title {
     font-size: 26px;
     line-height: 42px;
-    margin: 20px 0 25px; }
+    margin: 20px 0 25px;
+    color: #1c1f21;
+    word-wrap: break-word;
+    word-break: break-all;
+    font-weight: 700;}
   .home-article-content {
     margin-top: 10px;
     font-size: 16px; }
@@ -555,7 +562,19 @@ main {
 .passage {
   max-width: 1024px;
   margin: 20px auto;
-  width: 95%; }
+  /*width: 95%;*/
+  padding: 40px 40px 24px 40px;
+  box-shadow: 0 8px 16px 6px rgba(7,17,27,0.05);
+  border-radius: 12px;}
+@media screen and (max-width: 768px) {
+  .passage {
+    max-width: 1024px;
+    margin: 20px auto;
+    /*width: 95%;*/
+    padding: 20px 20px 24px 20px;
+    box-shadow: none;
+    border-radius: 12px;}
+}
   .passage-article {
     font-size: 16px;
     font-family: -apple-system, "PingFang SC", BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
@@ -659,14 +678,26 @@ main {
         .passage-article > table tbody tr td {
           padding: 16px;
           border-bottom: 1px solid #EEEEEE; }
+   .passage-title-wrap {
+     line-height: 42px;
+     margin: 0px 0 40px;
+   }
   .passage-title {
     font-size: 36px;
-    line-height: 42px;
-    margin: 25px 0 40px; }
+    color: #1c1f21;
+    line-height: 40px;
+    margin: 8px 0;
+    word-wrap: break-word;
+    word-break: break-all;
+    font-weight: 700;
+     }
     @media screen and (max-width: 768px) {
       .passage-title {
         font-size: 30px;
-        margin-bottom: 25px; } }
+      }
+      .passage-title-wrap {
+        margin-bottom: 25px;
+      }}
   .passage-cover {
     display: block;
     width: 100%;
@@ -700,10 +731,11 @@ main {
       .passage-copyright a:hover {
         color: #F4511E; }
   .passage-meta {
-    font-size: 16px;
-    color: #616161; }
+    font-size: 13px;
+    color: #9199a1;
+    line-height: 24px; }
     .passage-meta a {
-      color: #616161;
+      color: #9199a1;
       transition: all .2s; }
       .passage-meta a:hover {
         color: #212121; }

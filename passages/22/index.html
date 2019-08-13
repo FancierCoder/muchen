@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="后端,数据结构,算法,">
+    <meta name="keywords" content="后端,算法,数据结构,">
   
 
   
@@ -175,26 +175,32 @@
       
   <div class="passage">
   <div class="passage-meta">
-    <span>
-      <i class="fa fa-calendar"></i>19-07-29 16:14
-    </span>
+
     
-      <span>
-        | <a href="/categories/后端/"><i class="fa fa-bookmark"></i>后端</a>
+      <span style="margin-right: 24px;">
+        <a href="/categories/后端/"><i class="fa fa-bookmark"></i>后端</a>
       </span>
     
     
-      <span>
-        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      <span style="margin-right: 24px;">
+         <i class="fa fa-unlock-alt"></i>UNLOCK
       </span>
     
-      <span id="article-visit-info">
-        | <i class="fa fa-eye"></i>0
-      </span>
+
   </div>
-  <h1 class="passage-title">
-    22.红黑树（上）
-  </h1>
+  <div class="passage-title-wrap">
+      <h1 class="passage-title">
+        22.红黑树（上）
+      </h1>
+      <div class="passage-meta">
+        <span style="margin-right: 24px;">
+          <i class="fa fa-calendar"></i>2019.07.29 16:14
+        </span>
+        <span id="article-visit-info" style="margin-right: 24px;">
+            <i class="fa fa-eye"></i> 0
+        </span>
+      </div>
+  </div>
   
   <article class="passage-article">
     <h2 id="什么是“平衡二叉查找树”？"><a href="#什么是“平衡二叉查找树”？" class="headerlink" title="什么是“平衡二叉查找树”？"></a>什么是“平衡二叉查找树”？</h2><p>平衡二叉树的严格定义是这样的：二叉树中任意一个节点的左右子树的高度相差不能大于 <code>1</code>。从这个定义来看，上一篇的完全二叉树、满二叉树其实都是平衡二叉树，但是非完全二叉树也有可能是平衡二叉树。<br><img src="./f33e921b.png" alt="image"><br>发明平衡二叉查找树这类数据结构的初衷是，解决普通二叉查找树在频繁的插入、删除等动态更新的情况下，出现时间复杂度退化的问题。<br>所以，<strong>平衡二叉查找树中“平衡”的意思，其实就是让整棵树左右看起来比较“对称”、比较“平衡”，不要出现左子树很高、右子树很矮的情况。这样就能让整棵树的高度相对来说低一些，相应的插入、删除、查找等操作的效率高一些。</strong></p>
@@ -260,9 +266,9 @@
   
     <div class="passage-tags">
      
-      <a style="word-break: break-word;" href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
-     
       <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+     
+      <a style="word-break: break-word;" href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
     
     </div>
   
