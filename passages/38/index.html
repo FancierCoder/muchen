@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta name="author" content="MuChen">
+  
+  
+  <title>38.动态规划理论 | MuChen&#39;s Blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="后端,算法,">
+  
+
+  
+  <meta name="description" content="彻底搞懂最优子结构、无后效性和重复子问题">
+
+  <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.14.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  
+
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8" async></script>
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"js4SiJ6prwCfvUwpG6UKP1T5-gzGzoHsz","appkey":"GsFF0HPExEnfzq4Jkw3X8AFd","comment":true,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2019-07-12",
+    passwords: ["0e31be4bd24c14e65633d11633fe616ee3d93b4f31d07726fdbe113fa98a391a", ],
+    is_post: true,
+    lock: false,
+    author: "MuChen",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">沐晨</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | Learn To Learn</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+        <a href="/friends/" target="_self">友链</a>
+      
+        <a href="/about/" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/FancierCoder" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/friends/" target="_self">
+            友链
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/about/" target="_self">
+            关于
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+
+    
+      <span style="margin-right: 24px;">
+        <a href="/categories/后端/"><i class="fa fa-bookmark"></i>后端</a>
+      </span>
+    
+    
+      <span style="margin-right: 24px;">
+         <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+
+  </div>
+  <div class="passage-title-wrap">
+      <h1 class="passage-title">
+        38.动态规划理论
+      </h1>
+      <div class="passage-meta">
+        <span style="margin-right: 24px;">
+          <i class="fa fa-calendar"></i>2019.08.14 13:19
+        </span>
+        <span id="article-visit-info" style="margin-right: 24px;">
+            <i class="fa fa-eye"></i> 0
+        </span>
+      </div>
+  </div>
+  
+  <article class="passage-article">
+    <p>上一篇，通过两个非常经典的问题，向你展示了用动态规划解决问题的过程。现在你对动态规划应该有了一个初步的认识。</p>
+<h2 id="“一个模型三个特征”理论"><a href="#“一个模型三个特征”理论" class="headerlink" title="“一个模型三个特征”理论"></a>“一个模型三个特征”理论</h2><p>什么样的问题适合用动态规划来解决呢？换句话说，动态规划能解决的问题有什么规律可循呢？实际上，动态规划作为一个非常成熟的算法思想，很多人对此已经做了非常全面的总结。这里把这部分理论总结为“<strong>一个模型三个特征</strong>”。</p>
+<p>首先来看，什么是“<strong>一个模型</strong>”？它指的是动态规划适合解决的问题的模型。把这个模型定义为“<strong>多阶段决策最优解模型</strong>”。下面我具体来讲讲。</p>
+<p>一般是用动态规划来解决最优问题。而解决问题的过程，需要经历多个决策阶段。每个决策阶段都对应着一组状态。然后寻找一组决策序列，经过这组决策序列，能够产生最终期望求解的最优值。</p>
+<p>现在再来看，什么是“<strong>三个特征</strong>”？它们分别是<strong>最优子结构</strong>、<strong>无后效性</strong>和<strong>重复子问题</strong>。这三个概念比较抽象，下面来逐一详细解释一下。</p>
+<h3 id="1-最优子结构"><a href="#1-最优子结构" class="headerlink" title="1. 最优子结构"></a>1. 最优子结构</h3><p>最优子结构指的是，问题的最优解包含子问题的最优解。反过来说就是，可以通过子问题的最优解，推导出问题的最优解。如果把最优子结构，对应到前面定义的动态规划问题模型上，那也可以理解为，后面阶段的状态可以通过前面阶段的状态推导出来。</p>
+<h3 id="2-无后效性"><a href="#2-无后效性" class="headerlink" title="2. 无后效性"></a>2. 无后效性</h3><p>无后效性有两层含义，第一层含义是，在推导后面阶段的状态的时候，只关心前面阶段的状态值，不关心这个状态是怎么一步一步推导出来的。第二层含义是，某阶段状态一旦确定，就不受之后阶段的决策影响。无后效性是一个非常“宽松”的要求。只要满足前面提到的动态规划问题模型，其实基本上都会满足无后效性。    </p>
+<h3 id="3-重复子问题"><a href="#3-重复子问题" class="headerlink" title="3. 重复子问题"></a>3. 重复子问题</h3><p>这个概念比较好理解。前面已经多次提过。如果用一句话概括一下，那就是，不同的决策序列，到达某个相同的阶段时，可能会产生重复的状态。</p>
+<h2 id="“一个模型三个特征”实例剖析"><a href="#“一个模型三个特征”实例剖析" class="headerlink" title="“一个模型三个特征”实例剖析"></a>“一个模型三个特征”实例剖析</h2><p>“一个模型三个特征”这部分是理论知识，比较抽象，看了之后可能还是有点懵，有种似懂非懂的感觉，没关系，这个很正常。接下来，结合一个具体的动态规划问题，来详细解释。</p>
+<p>假设有一个 <code>n</code> 乘以 <code>n</code> 的矩阵 <code>w[n][n]</code>。矩阵存储的都是正整数。棋子起始位置在左上角，终止位置在右下角。将棋子从左上角移动到右下角。每次只能向右或者向下移动一位。从左上角到右下角，会有很多不同的路径可以走。把每条路径经过的数字加起来看作路径的长度。那从左上角移动到右下角的最短路径长度是多少呢？<br><img src="./4319a62f.jpeg" alt="image"><br>先看看，这个问题是否符合“一个模型”？</p>
+<p>从 <code>(0, 0)</code> 走到 <code>(n-1, n-1)</code>，总共要走 <code>2*(n-1)</code> 步，也就对应着 <code>2*(n-1)</code> 个阶段。每个阶段都有向右走或者向下走两种决策，并且每个阶段都会对应一个状态集合。</p>
+<p>把状态定义为 <code>min_dist(i, j)</code>，其中 <code>i</code> 表示行，<code>j</code> 表示列。<code>min_dist</code> 表达式的值表示从 <code>(0, 0)</code> 到达 <code>(i, j)</code> 的最短路径长度。所以，这个问题是一个多阶段决策最优解问题，符合动态规划的模型。<br><img src="./bda61ae7.jpeg" alt="image"><br>再来看，这个问题是否符合“三个特征”？<br>可以用回溯算法来解决这个问题。如果你自己写一下代码，画一下递归树，就会发现，递归树中有重复的节点。重复的节点表示，从左上角到节点对应的位置，有多种路线，这也能说明这个问题中存在重复子问题。<br><img src="./1bd0b304.jpeg" alt="image"><br>如果走到 <code>(i, j)</code> 这个位置，只能通过 <code>(i-1, j)</code>，<code>(i, j-1)</code> 这两个位置移动过来，也就是说，想要计算 <code>(i, j)</code> 位置对应的状态，只需要关心 <code>(i-1, j)</code>，<code>(i, j-1)</code> 两个位置对应的状态，并不关心棋子是通过什么样的路线到达这两个位置的。而且，仅仅允许往下和往右移动，不允许后退，所以，前面阶段的状态确定之后，不会被后面阶段的决策所改变，所以，这个问题符合“无后效性”这一特征。</p>
+<p>刚刚定义状态的时候，把从起始位置 <code>(0, 0)</code> 到 <code>(i, j)</code> 的最小路径，记作 <code>min_dist(i, j)</code>。因为只能往右或往下移动，所以，只有可能从 <code>(i, j-1)</code> 或者 <code>(i-1, j)</code> 两个位置到达 <code>(i, j)</code>。也就是说，到达 <code>(i, j)</code> 的最短路径要么经过 <code>(i, j-1)</code>，要么经过 <code>(i-1, j)</code>，而且到达 <code>(i, j)</code> 的最短路径肯定包含到达这两个位置的最短路径之一。换句话说就是，<code>min_dist(i, j)</code> 可以通过 <code>min_dist(i, j-1)</code> 和 <code>min_dist(i-1, j)</code> 两个状态推导出来。这就说明，这个问题符合“最优子结构”。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">min_dist(i, j) = w[i][j] + min(min_dist(i, j-<span class="number">1</span>), min_dist(i-<span class="number">1</span>, j))</span><br></pre></td></tr></table></figure>
+
+<h2 id="两种动态规划解题思路总结"><a href="#两种动态规划解题思路总结" class="headerlink" title="两种动态规划解题思路总结"></a>两种动态规划解题思路总结</h2><p>现在再总结一下，动态规划解题的一般思路，让你面对动态规划问题的时候，能够有章可循，不至于束手无策。</p>
+<p>个人觉得，解决动态规划问题，一般有两种思路。把它们分别叫作，状态转移表法和状态转移方程法。</p>
+<h3 id="1-状态转移表法"><a href="#1-状态转移表法" class="headerlink" title="1. 状态转移表法"></a>1. 状态转移表法</h3><p>一般能用动态规划解决的问题，都可以使用回溯算法的暴力搜索解决。所以，当拿到问题的时候，可以先用简单的回溯算法解决，然后定义状态，每个状态表示一个节点，然后对应画出递归树。从递归树中，很容易可以看出来，是否存在重复子问题，以及重复子问题是如何产生的。以此来寻找规律，看是否能用动态规划解决。</p>
+<p>找到重复子问题之后，接下来，有两种处理思路，第一种是直接用<strong>回溯加“备忘录”</strong>的方法，来避免重复子问题。从执行效率上来讲，这跟动态规划的解决思路没有差别。第二种是使用动态规划的解决方法，<strong>状态转移表法</strong>。第一种思路，你可以看看上一篇的两个例子。重点来看状态转移表法是如何工作的。</p>
+<p>先画出一个状态表。状态表一般都是二维的，所以你可以把它想象成二维数组。其中，每个状态包含三个变量，行、列、数组值。根据决策的先后过程，从前往后，根据递推关系，分阶段填充状态表中的每个状态。最后，将这个递推填表的过程，翻译成代码，就是动态规划代码了。</p>
+<p>尽管大部分状态表都是二维的，但是如果问题的状态比较复杂，需要很多变量来表示，那对应的状态表可能就是高维的，比如三维、四维。那这个时候，就不适合用状态转移表法来解决了。一方面是因为高维状态转移表不好画图表示，另一方面是因为人脑确实很不擅长思考高维的东西。</p>
+<p>现在来看一下，如何套用这个状态转移表法，来解决之前那个矩阵最短路径的问题？</p>
+<p>从起点到终点，有很多种不同的走法。可以穷举所有走法，然后对比找出一个最短走法。不过如何才能无重复又不遗漏地穷举出所有走法呢？可以用回溯算法这个比较有规律的穷举算法。</p>
+<p>回溯算法的代码实现如下所示。代码很短，而且前面也分析过很多回溯算法的例题，这里就不多做解释了，你自己来看看。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> minDist = Integer.MAX_VALUE; <span class="comment">// 全局变量或者成员变量</span></span><br><span class="line"><span class="comment">// 调用方式：minDistBacktracing(0, 0, 0, w, n);</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">minDistBT</span><span class="params">(<span class="keyword">int</span> i, <span class="keyword">int</span> j, <span class="keyword">int</span> dist, <span class="keyword">int</span>[][] w, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 到达了 n-1, n-1 这个位置了，这里看着有点奇怪哈，你自己举个例子看下</span></span><br><span class="line">  <span class="keyword">if</span> (i == n &amp;&amp; j == n) &#123;</span><br><span class="line">    <span class="keyword">if</span> (dist &lt; minDist) minDist = dist;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (i &lt; n) &#123; <span class="comment">// 往下走，更新 i=i+1, j=j</span></span><br><span class="line">    minDistBT(i + <span class="number">1</span>, j, dist+w[i][j], w, n);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (j &lt; n) &#123; <span class="comment">// 往右走，更新 i=i, j=j+1</span></span><br><span class="line">    minDistBT(i, j+<span class="number">1</span>, dist+w[i][j], w, n);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>有了回溯代码之后，接下来，要画出递归树，以此来寻找重复子问题。在递归树中，一个状态（也就是一个节点）包含三个变量 <code>(i, j, dist)</code>，其中 <code>i</code>，<code>j</code> 分别表示行和列，<code>dist</code> 表示从起点到达 <code>(i, j)</code> 的路径长度。从图中可以看出，尽管 <code>(i, j, dist)</code> 不存在重复的，但是 <code>(i, j)</code> 重复的有很多。对于 <code>(i, j)</code> 重复的节点，只需要选择 <code>dist</code> 最小的节点，继续递归求解，其他节点就可以舍弃了。<br><img src="./fe36fce1.jpeg" alt="image"><br>既然存在重复子问题，就可以尝试看下，是否可以用动态规划来解决呢？</p>
+<p>画出一个二维状态表，表中的行、列表示棋子所在的位置，表中的数值表示从起点到这个位置的最短路径。按照决策过程，通过不断状态递推演进，将状态表填好。为了方便代码实现，按行来进行依次填充。<br><img src="./dcd08767.jpeg" alt="image"><br>弄懂了填表的过程，代码实现就简单多了。将上面的过程，翻译成代码，就是下面这个样子。结合着代码、图和文字描述，应该更容易理解我讲的内容。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">minDistDP</span><span class="params">(<span class="keyword">int</span>[][] matrix, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span>[][] states = <span class="keyword">new</span> <span class="keyword">int</span>[n][n];</span><br><span class="line">  <span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; ++j) &#123; <span class="comment">// 初始化 states 的第一行数据</span></span><br><span class="line">    sum += matrix[<span class="number">0</span>][j];</span><br><span class="line">    states[<span class="number">0</span>][j] = sum;</span><br><span class="line">  &#125;</span><br><span class="line">  sum = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123; <span class="comment">// 初始化 states 的第一列数据</span></span><br><span class="line">    sum += matrix[i][<span class="number">0</span>];</span><br><span class="line">    states[i][<span class="number">0</span>] = sum;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; n; ++i) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt; n; ++j) &#123;</span><br><span class="line">      states[i][j] = </span><br><span class="line">            matrix[i][j] + Math.min(states[i][j-<span class="number">1</span>], states[i-<span class="number">1</span>][j]);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> states[n-<span class="number">1</span>][n-<span class="number">1</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-状态转移方程法"><a href="#2-状态转移方程法" class="headerlink" title="2. 状态转移方程法"></a>2. 状态转移方程法</h3><p>状态转移方程法有点类似递归的解题思路。需要分析某个问题如何通过子问题来递归求解，也就是所谓的最优子结构。根据最优子结构，写出递归公式，也就是所谓的状态转移方程。有了状态转移方程，代码实现就非常简单了。一般情况下，有两种代码实现方法，一种是<strong>递归加“备忘录”</strong>，另一种是<strong>迭代递推</strong>。</p>
+<p>还是拿刚才的例子来举例。最优子结构前面已经分析过了，你可以回过头去再看下。为了方便你查看，把状态转移方程放到这里。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">min_dist(i, j) = w[i][j] + min(min_dist(i, j-<span class="number">1</span>), min_dist(i-<span class="number">1</span>, j))</span><br></pre></td></tr></table></figure>
+
+<p>这里强调一下，<strong>状态转移方程是解决动态规划的关键</strong>。如果能写出状态转移方程，那动态规划问题基本上就解决一大半了，而翻译成代码非常简单。但是很多动态规划问题的状态本身就不好定义，状态转移方程也就更不好想到。</p>
+<p>下面用递归加“备忘录”的方式，将状态转移方程翻译成来代码，你可以看看。对于另一种实现方式，跟状态转移表法的代码实现是一样的，只是思路不同。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">int</span>[][] matrix = &#123;&#123;<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">9</span>&#125;, &#123;<span class="number">2</span>,<span class="number">1</span>,<span class="number">3</span>,<span class="number">4</span>&#125;, &#123;<span class="number">5</span>,<span class="number">2</span>,<span class="number">6</span>,<span class="number">7</span>&#125;, &#123;<span class="number">6</span>,<span class="number">8</span>,<span class="number">4</span>,<span class="number">3</span>&#125;&#125;;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> n = <span class="number">4</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span>[][] mem = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">4</span>][<span class="number">4</span>];</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">minDist</span><span class="params">(<span class="keyword">int</span> i, <span class="keyword">int</span> j)</span> </span>&#123; <span class="comment">// 调用 minDist(n-1, n-1);</span></span><br><span class="line">  <span class="keyword">if</span> (i == <span class="number">0</span> &amp;&amp; j == <span class="number">0</span>) <span class="keyword">return</span> matrix[<span class="number">0</span>][<span class="number">0</span>];</span><br><span class="line">  <span class="keyword">if</span> (mem[i][j] &gt; <span class="number">0</span>) <span class="keyword">return</span> mem[i][j];</span><br><span class="line">  <span class="keyword">int</span> minLeft = Integer.MAX_VALUE;</span><br><span class="line">  <span class="keyword">if</span> (j-<span class="number">1</span> &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">    minLeft = minDist(i, j-<span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">int</span> minUp = Integer.MAX_VALUE;</span><br><span class="line">  <span class="keyword">if</span> (i-<span class="number">1</span> &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">    minUp = minDist(i-<span class="number">1</span>, j);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">int</span> currMinDist = matrix[i][j] + Math.min(minLeft, minUp);</span><br><span class="line">  mem[i][j] = currMinDist;</span><br><span class="line">  <span class="keyword">return</span> currMinDist;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>两种动态规划解题思路到这里就讲完了。强调一点，不是每个问题都同时适合这两种解题思路。有的问题可能用第一种思路更清晰，而有的问题可能用第二种思路更清晰，所以，你要结合具体的题目来看，到底选择用哪种解题思路。</p>
+<h2 id="四种算法思想比较分析"><a href="#四种算法思想比较分析" class="headerlink" title="四种算法思想比较分析"></a>四种算法思想比较分析</h2><p>到本篇为止，已经学习了四种算法思想，贪心、分治、回溯和动态规划。本篇的内容主要讲些理论知识，正好也分析一下这四种算法，看看它们之间有什么区别和联系。</p>
+<p>如果将这四种算法思想分一下类，那贪心、回溯、动态规划可以归为一类，而分治单独可以作为一类，因为它跟其他三个都不大一样。为什么这么说呢？前三个算法解决问题的模型，都可以抽象成上面的多阶段决策最优解模型，而分治算法解决的问题尽管大部分也是最优解问题，但是，大部分都不能抽象成多阶段决策模型。</p>
+<p>回溯算法是个“万金油”。基本上能用到动态规划、贪心解决的问题，都可以用回溯算法解决。回溯算法相当于穷举搜索。穷举所有的情况，然后对比得到最优解。不过，回溯算法的时间复杂度非常高，是指数级别的，只能用来解决小规模数据的问题。对于大规模数据的问题，用回溯算法解决的执行效率就很低了。</p>
+<p>尽管动态规划比回溯算法高效，但是，并不是所有问题，都可以用动态规划来解决。能用动态规划解决的问题，需要满足三个特征，最优子结构、无后效性和重复子问题。在重复子问题这一点上，动态规划和分治算法的区分非常明显。分治算法要求分割成的子问题，不能有重复子问题，而动态规划正好相反，动态规划之所以高效，就是因为回溯算法实现中存在大量的重复子问题。</p>
+<p>贪心算法实际上是动态规划算法的一种特殊情况。它解决问题起来更加高效，代码实现也更加简洁。不过，它可以解决的问题也更加有限。它能解决的问题需要满足三个条件，最优子结构、无后效性和贪心选择性（这里不怎么强调重复子问题）。</p>
+<p>其中，最优子结构、无后效性跟动态规划中的无异。“贪心选择性”的意思是，通过局部最优的选择，能产生全局的最优选择。每一个阶段，都选择当前看起来最优的决策，所有阶段的决策完成之后，最终由这些局部最优解构成全局最优解。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本篇首先讲了什么样的问题适合用动态规划解决。这些问题可以总结概括为“一个模型三个特征”。其中，“一个模型”指的是，问题可以抽象成分阶段决策最优解模型。“三个特征”指的是最优子节、无后效性和重复子问题。</p>
+<p>然后，讲了两种动态规划的解题思路。它们分别是状态转移表法和状态转移方程法。其中，状态转移表法解题思路大致可以概括为，<strong>回溯算法实现 - 定义状态 - 画递归树 - 找重复子问题 - 画状态转移表 - 根据递推关系填表 - 将填表过程翻译成代码</strong>。状态转移方程法的大致思路可以概括为，<strong>找最优子结构 - 写状态转移方程 - 将状态转移方程翻译成代码</strong>。</p>
+<p>最后，对比了之前讲过的四种算法思想。贪心、回溯、动态规划可以解决的问题模型类似，都可以抽象成多阶段决策最优解模型。尽管分治算法也能解决最优问题，但是大部分问题的背景都不适合抽象成多阶段决策模型。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ul>
+<li>假设有几种不同币值的硬币 <code>v1</code>，<code>v2</code>，……，<code>vn</code>（单位是元）。如果要支付 <code>w</code> 元，求最少需要多少个硬币。比如，有 <code>3</code> 种不同的硬币，<code>1</code> 元、<code>3</code> 元、<code>5</code> 元，要支付 <code>9</code> 元，最少需要 <code>3</code> 个硬币（<code>3</code> 个 <code>3</code> 元的硬币）。欢迎留言和我分享。</li>
+</ul>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#“一个模型三个特征”理论"><span class="toc-text">“一个模型三个特征”理论</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-最优子结构"><span class="toc-text">1. 最优子结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-无后效性"><span class="toc-text">2. 无后效性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-重复子问题"><span class="toc-text">3. 重复子问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#“一个模型三个特征”实例剖析"><span class="toc-text">“一个模型三个特征”实例剖析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#两种动态规划解题思路总结"><span class="toc-text">两种动态规划解题思路总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-状态转移表法"><span class="toc-text">1. 状态转移表法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-状态转移方程法"><span class="toc-text">2. 状态转移方程法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四种算法思想比较分析"><span class="toc-text">四种算法思想比较分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#思考"><span class="toc-text">思考</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: 沐晨</div>
+      
+        <div>
+          原文链接: 
+          <a style="word-break: break-word;" href="" target="_blank">https://muchen.fun/passages/38/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      
+        <div class="site-footer-col">
+          <h5 class="site-footer-title">博客推荐</h5>
+          
+            <span class="site-footer-item">
+              <a href="https://muchen.fun/" target="_blank">沐晨</a>
+            </span>
+          
+            <span class="site-footer-item">
+              <a href="http://www.wangdabo.com" target="_blank">王大博</a>
+            </span>
+          
+        </div>
+      
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: lcoder@qq.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://fanciercoder.github.io/" target="_blank">沐晨</a>.
+      All rights reserved.
+    </div>
+    <div class="site-footer-info">
+        <span style="position: relative;">
+        <a style=" position: absolute;
+            white-space: nowrap;" id="colorPrint">
+        </a>
+        </span>
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+        <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+          
+            <div>
+              <img src="/images/wechat.png" alt="WeChat">
+              
+                <p>WeChat</p>
+              
+            </div>
+          
+            <div>
+              <img src="/images/alipay.png" alt="AliPay">
+              
+                <p>AliPay</p>
+              
+            </div>
+          
+            <div>
+              <img src="/images/BitCoin.jpg" alt="BitCoin">
+              
+                <p>BitCoin</p>
+              
+            </div>
+          
+        </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="javascript:void(0);" data-enable="false">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/37/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+      <a href="javascript:void(0);" id="site-reward">
+        <i class="fa fa-thumbs-up"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-144841374-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-144841374-1');
+  </script>
+
+
+
+
+  <script async>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+
+
+
+
+ <script>
+ //const element =  document.querySelector('.home-article-wrapper')
+ //element.classList.add('animated', 'bounceInLeft')
+ function testAnim(x) {
+     $('.home-article-wrapper').removeClass('animate').addClass(x + ' animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+       $(this).removeClass('animate');
+     });
+   };
+
+   testAnim('flipInX');
+ </script>
+
+    
+      <script src="/js/footer.js"></script>
+    
+  </body>
+</html>
