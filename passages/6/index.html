@@ -15,7 +15,7 @@
   
 
   
-  <meta name="description" content="浏览器的前进、后退功能，我想你肯定很熟悉吧？假设你是 Chrome 浏览器的开发工程师，你会如何实现这个功能呢？">
+  <meta name="description" content="浏览器的前进、后退功能，你肯定很熟悉吧？假设你是 Chrome 浏览器的开发工程师，你会如何实现这个功能呢？">
 
   <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
 
@@ -213,7 +213,7 @@
 <ul>
 <li>栈是一种操作受限的数据结构，其操作特性用数组和链表均可实现。</li>
 <li>任何数据结构都是对特定应用场景的抽象，数组和链表虽然使用起来更加灵活，但却暴露了几乎所有的操作，难免会引发错误操作的风险。</li>
-<li>所以，当某个数据集合只涉及在某端插入和删除数据，且满足后进者先出，先进者后出的操作特性时，我们应该首选栈这种数据结构。</li>
+<li>所以，当某个数据集合只涉及在某端插入和删除数据，且满足后进者先出，先进者后出的操作特性时，应该首选栈这种数据结构。</li>
 </ul>
 </blockquote>
 <h2 id="三、如何实现栈？"><a href="#三、如何实现栈？" class="headerlink" title="三、如何实现栈？"></a>三、如何实现栈？</h2><h5 id="1-栈的API"><a href="#1-栈的API" class="headerlink" title="1.栈的API"></a>1.栈的API</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Stack</span>&lt;<span class="title">Item</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">//压栈</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">push</span><span class="params">(Item item)</span></span>&#123;&#125;</span><br><span class="line">    <span class="comment">//弹栈</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Item <span class="title">pop</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">    <span class="comment">//是否为空</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">    <span class="comment">//栈中数据的数量</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">size</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">    <span class="comment">//返回栈中最近添加的元素而不删除它</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Item <span class="title">peek</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -221,7 +221,7 @@
 <h5 id="2-数组实现（自动扩容）"><a href="#2-数组实现（自动扩容）" class="headerlink" title="2.数组实现（自动扩容）"></a>2.数组实现（自动扩容）</h5><blockquote>
 <ul>
 <li>时间复杂度分析：根据均摊复杂度的定义，可以得数组实现（自动扩容）符合大多数情况是$O(1)$级别复杂度，个别情况是$O(n)$级别复杂度，比如自动扩容时，会进行完整数据的拷贝。</li>
-<li>空间复杂度分析：在入栈和出栈的过程中，只需要一两个临时变量存储空间，所以$O(1)$级别。我们说空间复杂度的时候，是指除了原本的数据存储空间外，算法运行还需要额外的存储空间。</li>
+<li>空间复杂度分析：在入栈和出栈的过程中，只需要一两个临时变量存储空间，所以是$O(1)$级别。我们说空间复杂度的时候，是指除了原本的数据存储空间外，算法运行还需要额外的存储空间。</li>
 </ul>
 </blockquote>
 <p>实现代码：</p>
@@ -230,7 +230,7 @@
 <h5 id="3-链表实现"><a href="#3-链表实现" class="headerlink" title="3.链表实现"></a>3.链表实现</h5><blockquote>
 <ul>
 <li>时间复杂度分析：压栈和弹栈的时间复杂度均为$O(1)$级别，因为只需更改单个节点的索引即可。</li>
-<li>空间复杂度分析：在入栈和出栈的过程中，只需要一两个临时变量存储空间，所以$O(1)$级别。我们说空间复杂度的时候，是指除了原本的数据存储空间外，算法运行还需要额外的存储空间。</li>
+<li>空间复杂度分析：在入栈和出栈的过程中，只需要一两个临时变量存储空间，所以是$O(1)$级别。我们说空间复杂度的时候，是指除了原本的数据存储空间外，算法运行还需要额外的存储空间。</li>
 </ul>
 </blockquote>
 <p>实现代码：</p>
@@ -250,7 +250,7 @@
 <ul>
 <li>2.栈在表达式求值中的应用（比如：<code>34+13*9+44-12/3</code>）<blockquote>
 <ul>
-<li>利用两个栈，其中一个用来保存操作数，另一个用来保存运算符。<br>我们从左向右遍历表达式，当遇到数字，我们就直接压入操作数栈；<br>当遇到运算符，就与运算符栈的栈顶元素进行比较，若比运算符栈顶元素优先级高，就将当前运算符压入栈，若比运算符栈顶元素的优先级低或者相同，从运算符栈中取出栈顶运算符，从操作数栈顶取出2个操作数，然后进行计算，把计算完的结果压入操作数栈，继续比较。</li>
+<li>利用两个栈，其中一个用来保存操作数，另一个用来保存运算符。<br>从左向右遍历表达式，当遇到数字，就直接压入操作数栈；<br>当遇到运算符，就与运算符栈的栈顶元素进行比较，若比运算符栈顶元素优先级高，就将当前运算符压入栈，若比运算符栈顶元素的优先级低或者相同，从运算符栈中取出栈顶运算符，从操作数栈顶取出2个操作数，然后进行计算，把计算完的结果压入操作数栈，继续比较。</li>
 </ul>
 </blockquote>
 </li>
@@ -270,7 +270,7 @@
 <ul>
 <li>4.<strong>如何实现浏览器的前进后退功能</strong>？<blockquote>
 <ul>
-<li>我们使用两个栈<code>X</code>和<code>Y</code>，我们把首次浏览的页面依次压如栈<code>X</code>，当点击后退按钮时，再依次从栈<code>X</code>中出栈，并将出栈的数据一次放入<code>Y</code>栈。<br>当点击前进按钮时，我们依次从栈<code>Y</code>中取出数据，放入栈<code>X</code>中。<br>当栈<code>X</code>中没有数据时，说明没有页面可以继续后退浏览了。<br>当<code>Y</code>栈没有数据，那就说明没有页面可以点击前进浏览了。</li>
+<li>使用两个栈<code>X</code>和<code>Y</code>，把首次浏览的页面依次压如栈<code>X</code>，当点击后退按钮时，再依次从栈<code>X</code>中出栈，并将出栈的数据一次放入<code>Y</code>栈。<br>当点击前进按钮时，依次从栈<code>Y</code>中取出数据，放入栈<code>X</code>中。<br>当栈<code>X</code>中没有数据时，说明没有页面可以继续后退浏览了。<br>当<code>Y</code>栈没有数据，那就说明没有页面可以点击前进浏览了。</li>
 </ul>
 </blockquote>
 </li>
@@ -278,9 +278,9 @@
 </blockquote>
 <h2 id="五、思考"><a href="#五、思考" class="headerlink" title="五、思考"></a>五、思考</h2><blockquote>
 <ul>
-<li>1.我们在讲栈的应用时，讲到用函数调用栈来保存临时变量，为什么函数调用要用“栈”来保存临时变量呢？用其他数据结构不行吗？<blockquote>
+<li>1.在讲栈的应用时，讲到用函数调用栈来保存临时变量，为什么函数调用要用“栈”来保存临时变量呢？用其他数据结构不行吗？<blockquote>
 <ul>
-<li>答：因为函数调用的执行顺序符合后进者先出，先进者后出的特点。<br>比如函数中的局部变量的生命周期的长短是先定义的生命周期长，后定义的生命周期短；<br>还有函数中调用函数也是这样，先开始执行的函数只有等到内部调用的其他函数执行完毕，该函数才能执行结束。<br>正是由于函数调用的这些特点，根据数据结构是特定应用场景的抽象的原则，我们优先考虑栈结构。</li>
+<li>答：因为函数调用的执行顺序符合后进者先出，先进者后出的特点。<br>比如函数中的局部变量的生命周期的长短是先定义的生命周期长，后定义的生命周期短；<br>还有函数中调用函数也是这样，先开始执行的函数只有等到内部调用的其他函数执行完毕，该函数才能执行结束。<br>正是由于函数调用的这些特点，根据数据结构是特定应用场景的抽象的原则，优先考虑栈结构。</li>
 </ul>
 </blockquote>
 </li>

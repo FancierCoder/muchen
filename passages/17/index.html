@@ -208,7 +208,7 @@
 <li>散列表的优点：支持高效的数据插入、删除和查找操作</li>
 <li>散列表的缺点：不支持快速顺序遍历散列表中的数据</li>
 <li>如何按照顺序快速遍历散列表的数据？<br>只能将数据转移到数组，然后排序，最后再遍历数据。</li>
-<li>我们知道散列表是动态的数据结构，需要频繁的插入和删除数据，那么每次顺序遍历之前都需要先排序，这势必会造成效率非常低下。</li>
+<li>散列表是动态的数据结构，需要频繁的插入和删除数据，那么每次顺序遍历之前都需要先排序，这势必会造成效率非常低下。</li>
 <li>如何解决上面的问题呢？<br>就是将散列表和链表（或跳表）结合起来使用。</li>
 </ol>
 </blockquote>
@@ -229,7 +229,7 @@
 </blockquote>
 <blockquote>
 <ol start="4">
-<li><code>LRU</code>缓存淘汰算法的<code>3</code>个主要操作如何做到时间复杂度为$O(1)$呢？<br>首先，我们明确一点就是链表本身插入和删除一个节点的时间复杂度为$O(1)$，因为只需更改几个指针指向即可。<br>接着，来分析查找操作的时间复杂度。当要查找一个数据时，通过散列表可实现在$O(1)$时间复杂度找到该数据，再加上前面说的插入或删除的时间复杂度是$O(1)$，所以我们总操作的时间复杂度就是$O(1)$。</li>
+<li><code>LRU</code>缓存淘汰算法的<code>3</code>个主要操作如何做到时间复杂度为$O(1)$呢？<br>首先，明确一点就是链表本身插入和删除一个节点的时间复杂度为$O(1)$，因为只需更改几个指针指向即可。<br>接着，来分析查找操作的时间复杂度。当要查找一个数据时，通过散列表可实现在$O(1)$时间复杂度找到该数据，再加上前面说的插入或删除的时间复杂度是$O(1)$，所以总操作的时间复杂度就是$O(1)$。</li>
 </ol>
 </blockquote>
 <h3 id="Redis有序集合"><a href="#Redis有序集合" class="headerlink" title="Redis有序集合"></a>Redis有序集合</h3><blockquote>
@@ -256,7 +256,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 10 是初始大小，0.75 是装载因子，true 是表示按照访问时间排序</span></span><br><span class="line">HashMap&lt;Integer, Integer&gt; m = <span class="keyword">new</span> LinkedHashMap&lt;&gt;(<span class="number">10</span>, <span class="number">0.75f</span>, <span class="keyword">true</span>);</span><br><span class="line">m.put(<span class="number">3</span>, <span class="number">11</span>);</span><br><span class="line">m.put(<span class="number">1</span>, <span class="number">12</span>);</span><br><span class="line">m.put(<span class="number">5</span>, <span class="number">23</span>);</span><br><span class="line">m.put(<span class="number">2</span>, <span class="number">22</span>);</span><br><span class="line"></span><br><span class="line">m.put(<span class="number">3</span>, <span class="number">26</span>);</span><br><span class="line">m.get(<span class="number">5</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (Map.Entry e : m.entrySet()) &#123;</span><br><span class="line">  System.out.println(e.getKey());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <blockquote>
-<p>这段代码打印的结果是 <code>1，2，3，5</code>。<br>这里分析一下，为什么这段代码会按照这样顺序来打印。<br>每次调用 <code>put()</code> 函数，往 <code>LinkedHashMap</code> 中添加数据的时候，都会将数据添加到链表的尾部，所以，在前四个操作完成之后，链表中的数据是下面这样：<br><img src="./2390a7cd.png" alt><br>在第 <code>8</code> 行代码中，再次将键值为 <code>3</code> 的数据放入到 <code>LinkedHashMap</code> 的时候，会先查找这个键值是否已经有了，然后，再将已经存在的 <code>(3,11)</code> 删除，并且将新的 <code>(3,26)</code> 放到链表的尾部。所以，这个时候链表中的数据就是下面这样：<br><img src="./27059c62.png" alt><br>当第 <code>9</code> 行代码访问到 <code>key</code> 为 <code>5</code> 的数据的时候，我们将被访问到的数据移动到链表的尾部。所以，第 <code>9</code> 行代码之后，链表中的数据是下面这样：<br><img src="./3f2cbd00.png" alt><br>所以，最后打印出来的数据是 <code>1，2，3，5</code>。从上面的分析，你有没有发现，按照访问时间排序的 <code>LinkedHashMap</code> 本身就是一个支持 <code>LRU</code> 缓存淘汰策略的缓存系统？实际上，它们两个的实现原理也是一模一样的。<br>总结一下，实际上，<code>LinkedHashMap</code> 是通过双向链表和散列表这两种数据结构组合实现的。<code>LinkedHashMap</code> 中的“<code>Linked</code>”实际上是指的是双向链表，并非指用链表法解决散列冲突。</p>
+<p>这段代码打印的结果是 <code>1，2，3，5</code>。<br>这里分析一下，为什么这段代码会按照这样顺序来打印。<br>每次调用 <code>put()</code> 函数，往 <code>LinkedHashMap</code> 中添加数据的时候，都会将数据添加到链表的尾部，所以，在前四个操作完成之后，链表中的数据是下面这样：<br><img src="./2390a7cd.png" alt><br>在第 <code>8</code> 行代码中，再次将键值为 <code>3</code> 的数据放入到 <code>LinkedHashMap</code> 的时候，会先查找这个键值是否已经有了，然后，再将已经存在的 <code>(3,11)</code> 删除，并且将新的 <code>(3,26)</code> 放到链表的尾部。所以，这个时候链表中的数据就是下面这样：<br><img src="./27059c62.png" alt><br>当第 <code>9</code> 行代码访问到 <code>key</code> 为 <code>5</code> 的数据的时候，将被访问到的数据移动到链表的尾部。所以，第 <code>9</code> 行代码之后，链表中的数据是下面这样：<br><img src="./3f2cbd00.png" alt><br>所以，最后打印出来的数据是 <code>1，2，3，5</code>。从上面的分析，你有没有发现，按照访问时间排序的 <code>LinkedHashMap</code> 本身就是一个支持 <code>LRU</code> 缓存淘汰策略的缓存系统？实际上，它们两个的实现原理也是一模一样的。<br>总结一下，实际上，<code>LinkedHashMap</code> 是通过双向链表和散列表这两种数据结构组合实现的。<code>LinkedHashMap</code> 中的“<code>Linked</code>”实际上是指的是双向链表，并非指用链表法解决散列冲突。</p>
 </blockquote>
 <h2 id="三、思考"><a href="#三、思考" class="headerlink" title="三、思考"></a>三、思考</h2><blockquote>
 <ol>
@@ -280,7 +280,7 @@
 <li>数组占据随机访问的优势，却有需要连续内存的缺点。</li>
 <li>链表具有可不连续存储的优势，但访问查找是线性的。</li>
 <li>散列表和链表、跳表的混合使用，是为了结合数组和链表的优势，规避它们的不足。</li>
-<li>我们可以得出数据结构和算法的重要性排行榜：连续空间 &gt; 时间 &gt; 碎片空间。</li>
+<li>可以得出数据结构和算法的重要性排行榜：连续空间 &gt; 时间 &gt; 碎片空间。</li>
 </ul>
 </blockquote>
   </article>
