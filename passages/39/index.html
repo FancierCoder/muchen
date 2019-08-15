@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta name="author" content="MuChen">
+  
+  
+  <title>39.动态规划实战 | MuChen&#39;s Blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="后端,算法,">
+  
+
+  
+  <meta name="description" content="如何实现搜索引擎中的拼写纠错功能？">
+
+  <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.14.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  
+
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8" async></script>
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"js4SiJ6prwCfvUwpG6UKP1T5-gzGzoHsz","appkey":"GsFF0HPExEnfzq4Jkw3X8AFd","comment":true,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2019-07-12",
+    passwords: ["0e31be4bd24c14e65633d11633fe616ee3d93b4f31d07726fdbe113fa98a391a", ],
+    is_post: true,
+    lock: false,
+    author: "MuChen",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">沐晨</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | Learn To Learn</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+        <a href="/friends/" target="_self">友链</a>
+      
+        <a href="/about/" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/FancierCoder" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/friends/" target="_self">
+            友链
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/about/" target="_self">
+            关于
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+
+    
+      <span style="margin-right: 24px;">
+        <a href="/categories/后端/"><i class="fa fa-bookmark"></i>后端</a>
+      </span>
+    
+    
+      <span style="margin-right: 24px;">
+         <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+
+  </div>
+  <div class="passage-title-wrap">
+      <h1 class="passage-title">
+        39.动态规划实战
+      </h1>
+      <div class="passage-meta">
+        <span style="margin-right: 24px;">
+          <i class="fa fa-calendar"></i>2019.08.15 11:42
+        </span>
+        <span id="article-visit-info" style="margin-right: 24px;">
+            <i class="fa fa-eye"></i> 0
+        </span>
+      </div>
+  </div>
+  
+  <article class="passage-article">
+    <p>当你在搜索框中，一不小心输错单词时，搜索引擎会非常智能地检测出你的拼写错误，并且用对应的正确单词来进行搜索。作为一名软件开发工程师，你是否想过，这个功能是怎么实现的呢？</p>
+<h2 id="如何量化两个字符串的相似度？"><a href="#如何量化两个字符串的相似度？" class="headerlink" title="如何量化两个字符串的相似度？"></a>如何量化两个字符串的相似度？</h2><p>如何量化两个字符串之间的相似程度呢？有一个非常著名的量化方法，那就是编辑距离（<code>Edit Distance</code>）。</p>
+<p>顾名思义，<strong>编辑距离</strong>指的就是，将一个字符串转化成另一个字符串，需要的最少编辑操作次数（比如增加一个字符、删除一个字符、替换一个字符）。编辑距离越大，说明两个字符串的相似程度越小；相反，编辑距离就越小，说明两个字符串的相似程度越大。对于两个完全相同的字符串来说，编辑距离就是 <code>0</code>。</p>
+<p>根据所包含的编辑操作种类的不同，编辑距离有多种不同的计算方式，比较著名的有<strong>莱文斯坦距离</strong>（<code>Levenshtein distance</code>）和<strong>最长公共子串长度</strong>（<code>Longest common substring length</code>）。其中，莱文斯坦距离允许增加、删除、替换字符这三个编辑操作，最长公共子串长度只允许增加、删除字符这两个编辑操作。</p>
+<p>而且，莱文斯坦距离和最长公共子串长度，从两个截然相反的角度，分析字符串的相似程度。莱文斯坦距离的大小，表示两个字符串差异的大小；而最长公共子串的大小，表示两个字符串相似程度的大小。</p>
+<p>关于这两个计算方法，举个例子给你说明一下。这里面，两个字符串 <code>mitcmu</code> 和 <code>mtacnu</code> 的莱文斯坦距离是 <code>3</code>，最长公共子串长度是 <code>4</code>。如下图所示：<br><img src="./48f6d0eb.jpeg" alt="image"></p>
+<h2 id="如何编程计算莱文斯坦距离？"><a href="#如何编程计算莱文斯坦距离？" class="headerlink" title="如何编程计算莱文斯坦距离？"></a>如何编程计算莱文斯坦距离？</h2><p>这个问题是求把一个字符串变成另一个字符串，需要的最少编辑次数。整个求解过程，涉及多个决策阶段，需要依次考察一个字符串中的每个字符，跟另一个字符串中的字符是否匹配，匹配的话如何处理，不匹配的话又如何处理。所以，这个问题符合<strong>多阶段决策最优解模型</strong>。</p>
+<p>前面讲了，贪心、回溯、动态规划可以解决的问题，都可以抽象成这样一个模型。要解决这个问题，可以先看一看，用最简单的回溯算法，该如何来解决。</p>
+<p>回溯是一个递归处理的过程。如果 <code>a[i]</code> 与 <code>b[j]</code> 匹配，递归考察 <code>a[i+1]</code> 和 <code>b[j+1]</code>。如果 <code>a[i]</code> 与 <code>b[j]</code> 不匹配，有多种处理方式可选：</p>
+<ul>
+<li><p>可以删除 <code>a[i]</code>，然后递归考察 <code>a[i+1]</code> 和 <code>b[j]</code>；</p>
+</li>
+<li><p>可以删除 <code>b[j]</code>，然后递归考察 <code>a[i]</code> 和 <code>b[j+1]</code>；</p>
+</li>
+<li><p>可以在 <code>a[i]</code> 前面添加一个跟 <code>b[j]</code> 相同的字符，然后递归考察 <code>a[i]</code> 和 <code>b[j+1]</code>;</p>
+</li>
+<li><p>可以在 <code>b[j]</code> 前面添加一个跟 <code>a[i]</code> 相同的字符，然后递归考察 <code>a[i+1]</code> 和 <code>b[j]</code>；</p>
+</li>
+<li><p>可以将 <code>a[i]</code> 替换成 <code>b[j]</code>，或者将 <code>b[j]</code> 替换成 <code>a[i]</code>，然后递归考察 <code>a[i+1]</code> 和 <code>b[j+1]</code>。</p>
+</li>
+</ul>
+<p>将上面的回溯算法的处理思路，翻译成代码，就是下面这个样子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">char</span>[] a = <span class="string">"mitcmu"</span>.toCharArray();</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">char</span>[] b = <span class="string">"mtacnu"</span>.toCharArray();</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> n = <span class="number">6</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> m = <span class="number">6</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> minDist = Integer.MAX_VALUE; <span class="comment">// 存储结果</span></span><br><span class="line"><span class="comment">// 调用方式 lwstBT(0, 0, 0);</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">lwstBT</span><span class="params">(<span class="keyword">int</span> i, <span class="keyword">int</span> j, <span class="keyword">int</span> edist)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (i == n || j == m) &#123;</span><br><span class="line">    <span class="keyword">if</span> (i &lt; n) edist += (n-i);</span><br><span class="line">    <span class="keyword">if</span> (j &lt; m) edist += (m - j);</span><br><span class="line">    <span class="keyword">if</span> (edist &lt; minDist) minDist = edist;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (a[i] == b[j]) &#123; <span class="comment">// 两个字符匹配</span></span><br><span class="line">    lwstBT(i+<span class="number">1</span>, j+<span class="number">1</span>, edist);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123; <span class="comment">// 两个字符不匹配</span></span><br><span class="line">    lwstBT(i + <span class="number">1</span>, j, edist + <span class="number">1</span>); <span class="comment">// 删除 a[i] 或者 b[j] 前添加一个字符</span></span><br><span class="line">    lwstBT(i, j + <span class="number">1</span>, edist + <span class="number">1</span>); <span class="comment">// 删除 b[j] 或者 a[i] 前添加一个字符</span></span><br><span class="line">    lwstBT(i + <span class="number">1</span>, j + <span class="number">1</span>, edist + <span class="number">1</span>); <span class="comment">// 将 a[i] 和 b[j] 替换为相同字符</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>根据回溯算法的代码实现，可以画出递归树，看是否存在重复子问题。如果存在重复子问题，那就可以考虑能否用动态规划来解决；如果不存在重复子问题，那回溯就是最好的解决方法。<br><img src="./79d5874b.jpeg" alt="image"><br>在递归树中，每个节点代表一个状态，状态包含三个变量 <code>(i, j, edist)</code>，其中，<code>edist</code> 表示处理到 <code>a[i]</code> 和 <code>b[j]</code> 时，已经执行的编辑操作的次数。</p>
+<p>在递归树中，<code>(i, j)</code> 两个变量重复的节点很多，比如 <code>(3, 2)</code> 和 <code>(2, 3)</code>。对于 <code>(i, j)</code> 相同的节点，只需要保留 <code>edist</code> 最小的，继续递归处理就可以了，剩下的节点都可以舍弃。所以，状态就从 <code>(i, j, edist)</code> 变成了 <code>(i, j, min_edist)</code>，其中 <code>min_edist</code> 表示处理到 <code>a[i]</code> 和 <code>b[j]</code>，已经执行的最少编辑次数。</p>
+<p>看到这里，有没有觉得，这个问题跟上两篇的动态规划例子非常相似？不过，这个问题的状态转移方式，要比之前的例子都要复杂很多。上一篇的矩阵最短路径问题中，到达状态 <code>(i, j)</code> 只能通过 <code>(i-1, j)</code> 或 <code>(i, j-1)</code> 两个状态转移过来，而这个问题，状态 <code>(i, j)</code> 可能从 <code>(i-1, j)</code>，<code>(i, j-1)</code>，<code>(i-1, j-1)</code> 三个状态中的任意一个转移过来。<br><img src="./9b87cf29.jpeg" alt="image"><br>基于刚刚的分析，可以尝试着将把状态转移的过程，用公式写出来。这就是前面讲的状态转移方程。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">如果：a[i]!=b[j]，那么：min_edist(i, j) 就等于：</span><br><span class="line">min(min_edist(i-<span class="number">1</span>,j)+<span class="number">1</span>, min_edist(i,j-<span class="number">1</span>)+<span class="number">1</span>, min_edist(i-<span class="number">1</span>,j-<span class="number">1</span>)+<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">如果：a[i]==b[j]，那么：min_edist(i, j) 就等于：</span><br><span class="line">min(min_edist(i-<span class="number">1</span>,j)+<span class="number">1</span>, min_edist(i,j-<span class="number">1</span>)+<span class="number">1</span>，min_edist(i-<span class="number">1</span>,j-<span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">其中，min 表示求三数中的最小值。</span><br></pre></td></tr></table></figure>
+
+<p>了解了状态与状态之间的递推关系，画出一个二维的状态表，按行依次来填充状态表中的每个值。<br><img src="./f68d773e.jpeg" alt="image"><br>现在既有状态转移方程，又理清了完整的填表过程，代码实现就非常简单了。代码贴在下面，你可以对比着文字解释，一起看下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">lwstDP</span><span class="params">(<span class="keyword">char</span>[] a, <span class="keyword">int</span> n, <span class="keyword">char</span>[] b, <span class="keyword">int</span> m)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span>[][] minDist = <span class="keyword">new</span> <span class="keyword">int</span>[n][m];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; m; ++j) &#123; <span class="comment">// 初始化第 0 行:a[0..0] 与 b[0..j] 的编辑距离</span></span><br><span class="line">    <span class="keyword">if</span> (a[<span class="number">0</span>] == b[j]) minDist[<span class="number">0</span>][j] = j;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (j != <span class="number">0</span>) minDist[<span class="number">0</span>][j] = minDist[<span class="number">0</span>][j-<span class="number">1</span>]+<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">else</span> minDist[<span class="number">0</span>][j] = <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123; <span class="comment">// 初始化第 0 列:a[0..i] 与 b[0..0] 的编辑距离</span></span><br><span class="line">    <span class="keyword">if</span> (a[i] == b[<span class="number">0</span>]) minDist[i][<span class="number">0</span>] = i;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (i != <span class="number">0</span>) minDist[i][<span class="number">0</span>] = minDist[i-<span class="number">1</span>][<span class="number">0</span>]+<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">else</span> minDist[i][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; n; ++i) &#123; <span class="comment">// 按行填表</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt; m; ++j) &#123;</span><br><span class="line">      <span class="keyword">if</span> (a[i] == b[j]) minDist[i][j] = min(</span><br><span class="line">          minDist[i-<span class="number">1</span>][j]+<span class="number">1</span>, minDist[i][j-<span class="number">1</span>]+<span class="number">1</span>, minDist[i-<span class="number">1</span>][j-<span class="number">1</span>]);</span><br><span class="line">      <span class="keyword">else</span> minDist[i][j] = min(</span><br><span class="line">          minDist[i-<span class="number">1</span>][j]+<span class="number">1</span>, minDist[i][j-<span class="number">1</span>]+<span class="number">1</span>, minDist[i-<span class="number">1</span>][j-<span class="number">1</span>]+<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> minDist[n-<span class="number">1</span>][m-<span class="number">1</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">min</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y, <span class="keyword">int</span> z)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> minv = Integer.MAX_VALUE;</span><br><span class="line">  <span class="keyword">if</span> (x &lt; minv) minv = x;</span><br><span class="line">  <span class="keyword">if</span> (y &lt; minv) minv = y;</span><br><span class="line">  <span class="keyword">if</span> (z &lt; minv) minv = z;</span><br><span class="line">  <span class="keyword">return</span> minv;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>你可能会说，虽然能看懂思路，但是遇到新的问题的时候，还是会感觉到无从下手。这种感觉是非常正常的。关于复杂算法问题的解决思路，有一些经验、小技巧，可以分享给你。</p>
+<p>当拿到一个问题的时候，<strong>可以先不思考计算机会如何实现这个问题，而是单纯考虑“人脑”会如何去解决这个问题</strong>。人脑比较倾向于思考具象化的、摸得着看得见的东西，不适合思考过于抽象的问题。所以，需要把抽象问题具象化。那如何具象化呢？可以实例化几个测试数据，通过人脑去分析具体实例的解，然后总结规律，再尝试套用学过的算法，看是否能够解决。</p>
+<p>除此之外，还有一个非常有效、但也算不上技巧的东西，那就是<strong>多练</strong>。实际上，等你做多了题目之后，自然就会有感觉，看到问题，立马就能想到能否用动态规划解决，然后直接就可以寻找最优子结构，写出动态规划方程，然后将状态转移方程翻译成代码。</p>
+<h2 id="如何编程计算最长公共子串长度？"><a href="#如何编程计算最长公共子串长度？" class="headerlink" title="如何编程计算最长公共子串长度？"></a>如何编程计算最长公共子串长度？</h2><p>最长公共子串作为编辑距离中的一种，只允许增加、删除字符两种编辑操作。从名字上，你可能觉得它看起来跟编辑距离没什么关系。实际上，从本质上来说，它表征的也是两个字符串之间的相似程度。</p>
+<p>这个问题的解决思路，跟莱文斯坦距离的解决思路非常相似，也可以用动态规划解决。刚刚已经详细讲解了莱文斯坦距离的动态规划解决思路，所以，针对这个问题，这里直接定义状态，然后写状态转移方程。</p>
+<p>每个状态还是包括三个变量 <code>(i, j, max_lcs)</code>，<code>max_lcs</code> 表示 <code>a[0…i]</code> 和 <code>b[0…j]</code> 的最长公共子串长度。那 <code>(i, j)</code> 这个状态都是由哪些状态转移过来的呢？</p>
+<p>先来看回溯的处理思路。从 <code>a[0]</code> 和 <code>b[0]</code> 开始，依次考察两个字符串中的字符是否匹配。</p>
+<ul>
+<li><p>如果 <code>a[i]</code> 与 <code>b[j]</code> 互相匹配，将最大公共子串长度加一，并且继续考察 <code>a[i+1]</code> 和 <code>b[j+1]</code>。</p>
+</li>
+<li><p>如果 <code>a[i]</code> 与 <code>b[j]</code> 不匹配，最长公共子串长度不变，这个时候，有两个不同的决策路线：</p>
+</li>
+<li><p>删除 <code>a[i]</code>，或者在 <code>b[j]</code> 前面加上一个字符 <code>a[i]</code>，然后继续考察 <code>a[i+1]</code> 和 <code>b[j]</code>；</p>
+</li>
+<li><p>删除 <code>b[j]</code>，或者在 <code>a[i]</code> 前面加上一个字符 <code>b[j]</code>，然后继续考察 <code>a[i]</code> 和 <code>b[j+1]</code>。</p>
+</li>
+</ul>
+<p>反过来也就是说，如果要求 <code>a[0…i]</code> 和 <code>b[0…j]</code> 的最长公共长度 <code>max_lcs(i, j)</code>，只有可能通过下面三个状态转移过来：</p>
+<p><code>(i-1, j-1, max_lcs)</code>，其中 <code>max_lcs</code> 表示 <code>a[0…i-1</code>] 和 <code>b[0…j-1]</code> 的最长公共子串长度；</p>
+<p><code>(i-1, j, max_lcs)</code>，其中 <code>max_lcs</code> 表示 <code>a[0…i-1]</code> 和<code>b[0…j]</code> 的最长公共子串长度；</p>
+<p><code>(i, j-1, max_lcs)</code>，其中 <code>max_lcs</code> 表示 <code>a[0…i]</code> 和 <code>b[0…j-1]</code> 的最长公共子串长度。</p>
+<p>如果把这个转移过程，用状态转移方程写出来，就是下面这个样子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">如果：a[i]==b[j]，那么：max_lcs(i, j) 就等于：</span><br><span class="line">max(max_lcs(i-<span class="number">1</span>,j-<span class="number">1</span>)+<span class="number">1</span>, max_lcs(i-<span class="number">1</span>, j), max_lcs(i, j-<span class="number">1</span>))；</span><br><span class="line"></span><br><span class="line">如果：a[i]!=b[j]，那么：max_lcs(i, j) 就等于：</span><br><span class="line">max(max_lcs(i-<span class="number">1</span>,j-<span class="number">1</span>), max_lcs(i-<span class="number">1</span>, j), max_lcs(i, j-<span class="number">1</span>))；</span><br><span class="line"></span><br><span class="line">其中 max 表示求三数中的最大值。</span><br></pre></td></tr></table></figure>
+
+<p>有了状态转移方程，代码实现就简单多了。代码贴到了下面，你可以对比着文字一块儿看。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">lcs</span><span class="params">(<span class="keyword">char</span>[] a, <span class="keyword">int</span> n, <span class="keyword">char</span>[] b, <span class="keyword">int</span> m)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span>[][] maxlcs = <span class="keyword">new</span> <span class="keyword">int</span>[n][m];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; m; ++j) &#123;<span class="comment">// 初始化第 0 行：a[0..0] 与 b[0..j] 的 maxlcs</span></span><br><span class="line">    <span class="keyword">if</span> (a[<span class="number">0</span>] == b[j]) maxlcs[<span class="number">0</span>][j] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (j != <span class="number">0</span>) maxlcs[<span class="number">0</span>][j] = maxlcs[<span class="number">0</span>][j-<span class="number">1</span>];</span><br><span class="line">    <span class="keyword">else</span> maxlcs[<span class="number">0</span>][j] = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;<span class="comment">// 初始化第 0 列：a[0..i] 与 b[0..0] 的 maxlcs</span></span><br><span class="line">    <span class="keyword">if</span> (a[i] == b[<span class="number">0</span>]) maxlcs[i][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (i != <span class="number">0</span>) maxlcs[i][<span class="number">0</span>] = maxlcs[i-<span class="number">1</span>][<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">else</span> maxlcs[i][<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; n; ++i) &#123; <span class="comment">// 填表</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt; m; ++j) &#123;</span><br><span class="line">      <span class="keyword">if</span> (a[i] == b[j]) maxlcs[i][j] = max(</span><br><span class="line">          maxlcs[i-<span class="number">1</span>][j], maxlcs[i][j-<span class="number">1</span>], maxlcs[i-<span class="number">1</span>][j-<span class="number">1</span>]+<span class="number">1</span>);</span><br><span class="line">      <span class="keyword">else</span> maxlcs[i][j] = max(</span><br><span class="line">          maxlcs[i-<span class="number">1</span>][j], maxlcs[i][j-<span class="number">1</span>], maxlcs[i-<span class="number">1</span>][j-<span class="number">1</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> maxlcs[n-<span class="number">1</span>][m-<span class="number">1</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">max</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y, <span class="keyword">int</span> z)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> maxv = Integer.MIN_VALUE;</span><br><span class="line">  <span class="keyword">if</span> (x &gt; maxv) maxv = x;</span><br><span class="line">  <span class="keyword">if</span> (y &gt; maxv) maxv = y;</span><br><span class="line">  <span class="keyword">if</span> (z &gt; maxv) maxv = z;</span><br><span class="line">  <span class="keyword">return</span> maxv;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>动态规划的理论尽管并不复杂，总结起来就是“<strong>一个模型三个特征</strong>”。但是，要想灵活应用并不简单。要想能真正理解、掌握动态规划，只有多练习。</p>
+<p>这三篇中，加上课后思考题，总共有 <code>8</code> 个动态规划问题。这 <code>8</code> 个问题都非常经典。很多动态规划问题其实都可以抽象成这几个问题模型，所以，一定要多看几遍，多思考一下，争取真正搞懂它们。</p>
+<p>只要弄懂了这几个问题，一般的动态规划问题，你应该都可以应付。对于动态规划这个知识点，就算是入门了，再学习更加复杂的就会简单很多。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ul>
+<li><p>如何实现搜索引擎中的拼写纠错功能？</p>
+<blockquote>
+<p>当用户在搜索框内，输入一个拼写错误的单词时，就拿这个单词跟词库中的单词一一进行比较，计算编辑距离，将编辑距离最小的单词，作为纠正之后的单词，提示给用户。</p>
+<p>这就是拼写纠错最基本的原理。不过，真正用于商用的搜索引擎，拼写纠错功能显然不会就这么简单。一方面，单纯利用编辑距离来纠错，效果并不一定好；另一方面，词库中的数据量可能很大，搜索引擎每天要支持海量的搜索，所以对纠错的性能要求很高。<br>针对纠错效果不好的问题，有很多种优化思路，这里介绍几种。</p>
+<ul>
+<li><p>并不仅仅取出编辑距离最小的那个单词，而是取出编辑距离最小的 <code>TOP 10</code>，然后根据其他参数，决策选择哪个单词作为拼写纠错单词。比如使用搜索热门程度来决定哪个单词作为拼写纠错单词。</p>
+</li>
+<li><p>还可以用多种编辑距离计算方法，比如上面讲到的两种，然后分别编辑距离最小的 <code>TOP 10</code>，然后求交集，用交集的结果，再继续优化处理。</p>
+</li>
+<li><p>还可以通过统计用户的搜索日志，得到最常被拼错的单词列表，以及对应的拼写正确的单词。搜索引擎在拼写纠错的时候，首先在这个最长被拼错单词列表中查找。如果一旦找到，直接返回对应的正确的单词。这样纠错的效果非常好。</p>
+</li>
+<li><p>还有更加高级一点的做法，引入个性化因素。针对每个用户，维护这个用户特有的搜索喜好，也就是常用的搜索关键词。当用户输入错误的单词的时候，首先在这个用户常用的搜索关键词中，计算编辑距离，查找编辑距离最小的单词。</p>
+</li>
+</ul>
+<p>针对纠错性能方面，也有相应的优化方式。这里讲两种分治的优化思路。</p>
+<ul>
+<li><p>如果纠错功能的 <code>TPS</code> 不高，可以部署多台机器，每台机器运行一个独立的纠错功能。当有一个纠错请求的时候，通过负载均衡，分配到其中一台机器，来计算编辑距离，得到纠错单词。</p>
+</li>
+<li><p>如果纠错系统的响应时间太长，也就是，每个纠错请求处理时间过长，可以将纠错的词库，分割到很多台机器。当有一个纠错请求的时候，就将这个拼写错误的单词，同时发送到这多台机器，让多台机器并行处理，分别得到编辑距离最小的单词，然后再比对合并，最终决定出一个最优的纠错单词。</p>
+</li>
+</ul>
+<p>真正的搜索引擎的拼写纠错优化，肯定不止这么简单，但是万变不离其宗。掌握了核心原理，就是掌握了解决问题的方法，剩下就靠你自己的灵活运用和实战操练了。</p>
+</blockquote>
+</li>
+<li><p>有一个数字序列包含 <code>n</code> 个不同的数字，如何求出这个序列中的最长递增子序列长度？比如 <code>2, 9, 3, 6, 5, 1, 7</code> 这样一组数字序列，它的最长递增子序列就是 <code>2, 3, 5, 7</code>，所以最长递增子序列的长度是 <code>4</code>。欢迎留言和我分享。</p>
+</li>
+</ul>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#如何量化两个字符串的相似度？"><span class="toc-text">如何量化两个字符串的相似度？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何编程计算莱文斯坦距离？"><span class="toc-text">如何编程计算莱文斯坦距离？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何编程计算最长公共子串长度？"><span class="toc-text">如何编程计算最长公共子串长度？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#思考"><span class="toc-text">思考</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: 沐晨</div>
+      
+        <div>
+          原文链接: 
+          <a style="word-break: break-word;" href="" target="_blank">https://muchen.fun/passages/39/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      
+        <div class="site-footer-col">
+          <h5 class="site-footer-title">博客推荐</h5>
+          
+            <span class="site-footer-item">
+              <a href="https://muchen.fun/" target="_blank">沐晨</a>
+            </span>
+          
+            <span class="site-footer-item">
+              <a href="http://www.wangdabo.com" target="_blank">王大博</a>
+            </span>
+          
+        </div>
+      
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: lcoder@qq.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://fanciercoder.github.io/" target="_blank">沐晨</a>.
+      All rights reserved.
+    </div>
+    <div class="site-footer-info">
+        <span style="position: relative;">
+        <a style=" position: absolute;
+            white-space: nowrap;" id="colorPrint">
+        </a>
+        </span>
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+        <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+          
+            <div>
+              <img src="/images/wechat.png" alt="WeChat">
+              
+                <p>WeChat</p>
+              
+            </div>
+          
+            <div>
+              <img src="/images/alipay.png" alt="AliPay">
+              
+                <p>AliPay</p>
+              
+            </div>
+          
+            <div>
+              <img src="/images/BitCoin.jpg" alt="BitCoin">
+              
+                <p>BitCoin</p>
+              
+            </div>
+          
+        </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="javascript:void(0);" data-enable="false">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/38/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+      <a href="javascript:void(0);" id="site-reward">
+        <i class="fa fa-thumbs-up"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-144841374-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-144841374-1');
+  </script>
+
+
+
+
+  <script async>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+
+
+
+
+ <script>
+ //const element =  document.querySelector('.home-article-wrapper')
+ //element.classList.add('animated', 'bounceInLeft')
+ function testAnim(x) {
+     $('.home-article-wrapper').removeClass('animate').addClass(x + ' animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+       $(this).removeClass('animate');
+     });
+   };
+
+   testAnim('flipInX');
+ </script>
+
+    
+      <script src="/js/footer.js"></script>
+    
+  </body>
+</html>
