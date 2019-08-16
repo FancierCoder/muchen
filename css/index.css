@@ -809,7 +809,7 @@ main {
       .set .category-list-item .category-list-count::after, .set .category-list-item .tag-list-count::after, .set .tag-list-item .category-list-count::after, .set .tag-list-item .tag-list-count::after {
         content: "]"; }
   .set .category-list-item {
-    width: 50%;
+    width: 60%;
     margin: 5px 0; }
     @media screen and (max-width: 768px) {
       .set .category-list-item {
