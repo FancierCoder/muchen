@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta name="author" content="MuChen">
+  
+  
+  <title>40.拓扑排序 | MuChen&#39;s Blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="后端,算法,">
+  
+
+  
+  <meta name="description" content="如何确定代码源文件的编译依赖关系？">
+
+  <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.14.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  
+
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8" async></script>
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"js4SiJ6prwCfvUwpG6UKP1T5-gzGzoHsz","appkey":"GsFF0HPExEnfzq4Jkw3X8AFd","comment":true,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2019-07-12",
+    passwords: ["0e31be4bd24c14e65633d11633fe616ee3d93b4f31d07726fdbe113fa98a391a", ],
+    is_post: true,
+    lock: false,
+    author: "MuChen",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">沐晨</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | Learn To Learn</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+        <a href="/friends/" target="_self">友链</a>
+      
+        <a href="/about/" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/FancierCoder" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/friends/" target="_self">
+            友链
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/about/" target="_self">
+            关于
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+
+    
+      <span style="margin-right: 24px;">
+        <a href="/categories/后端/"><i class="fa fa-bookmark"></i>后端</a>
+      </span>
+    
+    
+      <span style="margin-right: 24px;">
+         <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+
+  </div>
+  <div class="passage-title-wrap">
+      <h1 class="passage-title">
+        40.拓扑排序
+      </h1>
+      <div class="passage-meta">
+        <span style="margin-right: 24px;">
+          <i class="fa fa-calendar"></i>2019.08.16 13:16
+        </span>
+        <span id="article-visit-info" style="margin-right: 24px;">
+            <i class="fa fa-eye"></i> 0
+        </span>
+      </div>
+  </div>
+  
+  <article class="passage-article">
+    <p>一个完整的项目往往会包含很多代码源文件。编译器在编译整个项目的时候，需要按照依赖关系，依次编译每个源文件。比如，<code>A.cpp</code> 依赖 <code>B.cpp</code>，那在编译的时候，编译器需要先编译 <code>B.cpp</code>，才能编译 <code>A.cpp</code>。</p>
+<p>编译器通过分析源文件或者程序员事先写好的编译配置文件（比如 <code>Makefile</code> 文件），来获取这种局部的依赖关系。那编译器又该如何通过源文件两两之间的局部依赖关系，确定一个全局的编译顺序呢？<br><img src="./e5d0b8e4.jpeg" alt="image"></p>
+<h2 id="算法解析"><a href="#算法解析" class="headerlink" title="算法解析"></a>算法解析</h2><p>这个问题的解决思路与“图”这种数据结构的一个经典算法“拓扑排序算法”有关。那什么是拓扑排序呢？这个概念很好理解，先来看一个生活中的拓扑排序的例子。</p>
+<p>我们在穿衣服的时候都有一定的顺序，可以把这种顺序想成，衣服与衣服之间有一定的依赖关系。比如说，必须先穿袜子才能穿鞋，先穿内裤才能穿秋裤。假设现在有八件衣服要穿，它们之间的两两依赖关系已经很清楚了，那如何安排一个穿衣序列，能够满足所有的两两之间的依赖关系？</p>
+<p>这就是个拓扑排序问题。从这个例子中，你应该能想到，在很多时候，拓扑排序的序列并不是唯一的。你可以下面的这幅图，有好几种满足这些局部先后关系的穿衣序列。<br><img src="./9069b4db.jpeg" alt="image"><br>弄懂了这个生活中的例子，关于编译顺序的问题，你应该也有思路了。</p>
+<p>拓扑排序的原理非常简单，重点应该放到拓扑排序的实现上面。</p>
+<p>算法是构建在具体的数据结构之上的。针对这个问题，先来看下，如何将问题背景抽象成具体的数据结构？</p>
+<p>可以把源文件与源文件之间的依赖关系，抽象成一个有向图。每个源文件对应图中的一个顶点，源文件之间的依赖关系就是顶点之间的边。</p>
+<p>如果 <code>a</code> 先于 <code>b</code> 执行，也就是说 <code>b</code> 依赖于 <code>a</code>，那么就在顶点 <code>a</code> 和顶点 <code>b</code> 之间，构建一条从 <code>a</code> 指向 <code>b</code> 的边。而且，这个图不仅要是有向图，还要是一个有向无环图，也就是不能存在像 <code>a-&gt;b-&gt;c-&gt;a</code> 这样的循环依赖关系。因为图中一旦出现环，拓扑排序就无法工作了。实际上，拓扑排序本身就是基于有向无环图的一个算法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Graph</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span> v; <span class="comment">// 顶点的个数</span></span><br><span class="line">  <span class="keyword">private</span> LinkedList&lt;Integer&gt; adj[]; <span class="comment">// 邻接表</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">Graph</span><span class="params">(<span class="keyword">int</span> v)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.v = v;</span><br><span class="line">    adj = <span class="keyword">new</span> LinkedList[v];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;v; ++i) &#123;</span><br><span class="line">      adj[i] = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addEdge</span><span class="params">(<span class="keyword">int</span> s, <span class="keyword">int</span> t)</span> </span>&#123; <span class="comment">// s 先于 t，边 s-&gt;t</span></span><br><span class="line">    adj[s].add(t);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>数据结构定义好了，现在来看，<strong>如何在这个有向无环图上，实现拓扑排序？</strong></p>
+<p>拓扑排序有两种实现方法，都不难理解。它们分别是<strong>Kahn 算法</strong>和<strong>DFS 深度优先搜索算法</strong>。依次来看下它们都是怎么工作的。</p>
+<h3 id="1-Kahn-算法"><a href="#1-Kahn-算法" class="headerlink" title="1. Kahn 算法"></a>1. Kahn 算法</h3><p><code>Kahn</code> 算法实际上用的是贪心算法思想，思路非常简单、好懂。</p>
+<p>定义数据结构的时候，如果 <code>s</code> 需要先于 <code>t</code> 执行，那就添加一条 <code>s</code> 指向 <code>t</code> 的边。所以，如果某个顶点入度为 <code>0</code>，也就表示，没有任何顶点必须先于这个顶点执行，那么这个顶点就可以执行了。</p>
+<p>先从图中，找出一个入度为 <code>0</code> 的顶点，将其输出到拓扑排序的结果序列中（对应代码中就是把它打印出来），并且把这个顶点从图中删除（也就是把这个顶点可达的顶点的入度都减 <code>1</code>）。循环执行上面的过程，直到所有的顶点都被输出。最后输出的序列，就是满足局部依赖关系的拓扑排序。</p>
+<p><code>Kahn</code> 算法的代码实现如下，你可以结合着文字描述一块看下。不过，你应该能发现，这段代码实现更有技巧一些，并没有真正删除顶点的操作。代码中有详细的注释，就不多解释了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">topoSortByKahn</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span>[] inDegree = <span class="keyword">new</span> <span class="keyword">int</span>[v]; <span class="comment">// 统计每个顶点的入度</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; v; ++i) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; adj[i].size(); ++j) &#123;</span><br><span class="line">      <span class="keyword">int</span> w = adj[i].get(j); <span class="comment">// i-&gt;w</span></span><br><span class="line">      inDegree[w]++;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  LinkedList&lt;Integer&gt; queue = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; v; ++i) &#123;</span><br><span class="line">    <span class="keyword">if</span> (inDegree[i] == <span class="number">0</span>) queue.add(i);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">while</span> (!queue.isEmpty()) &#123;</span><br><span class="line">    <span class="keyword">int</span> i = queue.remove();</span><br><span class="line">    System.out.print(<span class="string">"-&gt;"</span> + i);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; adj[i].size(); ++j) &#123;</span><br><span class="line">      <span class="keyword">int</span> k = adj[i].get(j);</span><br><span class="line">      inDegree[k]--;</span><br><span class="line">      <span class="keyword">if</span> (inDegree[k] == <span class="number">0</span>) queue.add(k);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-DFS-算法"><a href="#2-DFS-算法" class="headerlink" title="2. DFS 算法"></a>2. DFS 算法</h3><p>实际上，拓扑排序也可以用深度优先搜索来实现。不过这里的名字要稍微改下，更加确切的说法应该是深度优先遍历，遍历图中的所有顶点，而非只是搜索一个顶点到另一个顶点的路径。</p>
+<p>关于这个算法的实现原理，先把代码贴在下面，下面具体解释。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">topoSortByDFS</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 先构建逆邻接表，边 s-&gt;t 表示，s 依赖于 t，t 先于 s</span></span><br><span class="line">  LinkedList&lt;Integer&gt; inverseAdj[] = <span class="keyword">new</span> LinkedList[v];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; v; ++i) &#123; <span class="comment">// 申请空间</span></span><br><span class="line">    inverseAdj[i] = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; v; ++i) &#123; <span class="comment">// 通过邻接表生成逆邻接表</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; adj[i].size(); ++j) &#123;</span><br><span class="line">      <span class="keyword">int</span> w = adj[i].get(j); <span class="comment">// i-&gt;w</span></span><br><span class="line">      inverseAdj[w].add(i); <span class="comment">// w-&gt;i</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">boolean</span>[] visited = <span class="keyword">new</span> <span class="keyword">boolean</span>[v];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; v; ++i) &#123; <span class="comment">// 深度优先遍历图</span></span><br><span class="line">    <span class="keyword">if</span> (visited[i] == <span class="keyword">false</span>) &#123;</span><br><span class="line">      visited[i] = <span class="keyword">true</span>;</span><br><span class="line">      dfs(i, inverseAdj, visited);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">dfs</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">int</span> vertex, LinkedList&lt;Integer&gt; inverseAdj[], <span class="keyword">boolean</span>[] visited)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; inverseAdj[vertex].size(); ++i) &#123;</span><br><span class="line">    <span class="keyword">int</span> w = inverseAdj[vertex].get(i);</span><br><span class="line">    <span class="keyword">if</span> (visited[w] == <span class="keyword">true</span>) <span class="keyword">continue</span>;</span><br><span class="line">    visited[w] = <span class="keyword">true</span>;</span><br><span class="line">    dfs(w, inverseAdj, visited);</span><br><span class="line">  &#125; <span class="comment">// 先把 vertex 这个顶点可达的所有顶点都打印出来之后，再打印它自己</span></span><br><span class="line">  System.out.print(<span class="string">"-&gt;"</span> + vertex);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个算法包含两个关键部分。</p>
+<p>第一部分是<strong>通过邻接表构造逆邻接表</strong>。邻接表中，边 <code>s-&gt;t</code> 表示 <code>s</code> 先于 <code>t</code> 执行，也就是 <code>t</code> 要依赖 <code>s</code>。在逆邻接表中，边 <code>s-&gt;t</code> 表示 <code>s</code> 依赖于 <code>t</code>，<code>s</code> 后于 <code>t</code> 执行。为什么这么转化呢？这个跟这个算法的实现思想有关。</p>
+<p>第二部分是这个算法的核心，也就是<strong>递归处理每个顶点</strong>。对于顶点 <code>vertex</code> 来说，先输出它可达的所有顶点，也就是说，先把它依赖的所有的顶点输出了，然后再输出自己。</p>
+<p><strong>这两个算法的时间复杂度分别是多少呢？</strong></p>
+<p>从 <code>Kahn</code> 代码中可以看出来，每个顶点被访问了一次，每个边也都被访问了一次，所以，<code>Kahn</code> 算法的时间复杂度就是 $O(V+E)$（<code>V</code> 表示顶点个数，<code>E</code> 表示边的个数）。</p>
+<p><code>DFS</code> 算法的时间复杂度之前分析过。每个顶点被访问两次，每条边都被访问一次，所以时间复杂度也是 $O(V+E)$。</p>
+<p>注意，这里的图可能不是连通的，有可能是有好几个不连通的子图构成，所以，<code>E</code> 并不一定大于 <code>V</code>，两者的大小关系不确定。所以，在表示时间复杂度的时候，<code>V</code>、<code>E</code> 都要考虑在内。</p>
+<h2 id="总结引申"><a href="#总结引申" class="headerlink" title="总结引申"></a>总结引申</h2><p>拓扑排序应用非常广泛，解决的问题的模型也非常一致。凡是需要通过局部顺序来推导全局顺序的，一般都能用拓扑排序来解决。除此之外，拓扑排序还能检测图中环的存在。对于 <code>Kahn</code> 算法来说，如果最后输出的顶点个数，少于图中顶点个数，图中还有入度不是 <code>0</code> 的顶点，那就说明，图中存在环。</p>
+<p>关于图中环的检测，在递归那一篇讲过一个例子，在查找最终推荐人的时候，可能会因为脏数据，造成存在循环推荐，比如，用户 <code>A</code> 推荐了用户 <code>B</code>，用户 <code>B</code> 推荐了用户 <code>C</code>，用户 <code>C</code> 又推荐了用户 <code>A</code>。如何避免这种脏数据导致的无限递归？这个问题当时留给你思考了，现在是时候解答了。</p>
+<p>实际上，这就是环的检测问题。因为每次都只是查找一个用户的最终推荐人，所以，并不需要动用复杂的拓扑排序算法，而只需要记录已经访问过的用户 <code>ID</code>，当用户 <code>ID</code> 第二次被访问的时候，就说明存在环，也就说明存在脏数据。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">HashSet&lt;Integer&gt; hashTable = <span class="keyword">new</span> HashSet&lt;&gt;(); <span class="comment">// 保存已经访问过的 actorId</span></span><br><span class="line"><span class="function"><span class="keyword">long</span> <span class="title">findRootReferrerId</span><span class="params">(<span class="keyword">long</span> actorId)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (hashTable.contains(actorId)) &#123; <span class="comment">// 存在环</span></span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  hashTable.add(actorId);</span><br><span class="line">  Long referrerId = </span><br><span class="line">       select referrer_id from [table] where actor_id = actorId;</span><br><span class="line">  <span class="keyword">if</span> (referrerId == <span class="keyword">null</span>) <span class="keyword">return</span> actorId;</span><br><span class="line">  <span class="keyword">return</span> findRootReferrerId(referrerId);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果把这个问题改一下，想要知道数据库中的所有用户之间的推荐关系，有没有存在环的情况。这个问题，就需要用到拓扑排序算法了。把用户之间的推荐关系，从数据库中加载到内存中，然后构建成上面的这种有向图数据结构，再利用拓扑排序，就可以快速检测出是否存在环了。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ul>
+<li><p>用图表示依赖关系的时候，如果 <code>a</code> 先于 <code>b</code> 执行，就画一条从 <code>a</code> 到 <code>b</code> 的有向边；反过来，如果 <code>a</code> 先于 <code>b</code>，画一条从 <code>b</code> 到 <code>a</code> 的有向边，表示 <code>b</code> 依赖 <code>a</code>，那上面的 <code>Kahn</code> 算法和 <code>DFS</code> 算法还能否正确工作呢？如果不能，应该如何改造一下呢？</p>
+</li>
+<li><p>上面讲了两种拓扑排序算法的实现思路，<code>Kahn</code> 算法和 <code>DFS</code> 深度优先搜索算法，如果换做 <code>BFS</code> 广度优先搜索算法，还可以实现吗？欢迎留言和我分享。</p>
+</li>
+</ul>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#算法解析"><span class="toc-text">算法解析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Kahn-算法"><span class="toc-text">1. Kahn 算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-DFS-算法"><span class="toc-text">2. DFS 算法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结引申"><span class="toc-text">总结引申</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#思考"><span class="toc-text">思考</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: 沐晨</div>
+      
+        <div>
+          原文链接: 
+          <a style="word-break: break-word;" href="" target="_blank">https://muchen.fun/passages/40/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      
+        <div class="site-footer-col">
+          <h5 class="site-footer-title">博客推荐</h5>
+          
+            <span class="site-footer-item">
+              <a href="https://muchen.fun/" target="_blank">沐晨</a>
+            </span>
+          
+            <span class="site-footer-item">
+              <a href="http://www.wangdabo.com" target="_blank">王大博</a>
+            </span>
+          
+        </div>
+      
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: lcoder@qq.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://fanciercoder.github.io/" target="_blank">沐晨</a>.
+      All rights reserved.
+    </div>
+    <div class="site-footer-info">
+        <span style="position: relative;">
+        <a style=" position: absolute;
+            white-space: nowrap;" id="colorPrint">
+        </a>
+        </span>
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+        <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+          
+            <div>
+              <img src="/images/wechat.png" alt="WeChat">
+              
+                <p>WeChat</p>
+              
+            </div>
+          
+            <div>
+              <img src="/images/alipay.png" alt="AliPay">
+              
+                <p>AliPay</p>
+              
+            </div>
+          
+            <div>
+              <img src="/images/BitCoin.jpg" alt="BitCoin">
+              
+                <p>BitCoin</p>
+              
+            </div>
+          
+        </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="javascript:void(0);" data-enable="false">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/39/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+      <a href="javascript:void(0);" id="site-reward">
+        <i class="fa fa-thumbs-up"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-144841374-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-144841374-1');
+  </script>
+
+
+
+
+  <script async>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+
+
+
+
+ <script>
+ //const element =  document.querySelector('.home-article-wrapper')
+ //element.classList.add('animated', 'bounceInLeft')
+ function testAnim(x) {
+     $('.home-article-wrapper').removeClass('animate').addClass(x + ' animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+       $(this).removeClass('animate');
+     });
+   };
+
+   testAnim('flipInX');
+ </script>
+
+    
+      <script src="/js/footer.js"></script>
+    
+  </body>
+</html>
