@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta name="author" content="MuChen">
+  
+  
+  <title>41.最短路径 | MuChen&#39;s Blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="数据结构与算法(高级),算法,">
+  
+
+  
+  <meta name="description" content="地图软件是如何计算出最优出行路径的？">
+
+  <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.14.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  
+
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8" async></script>
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"js4SiJ6prwCfvUwpG6UKP1T5-gzGzoHsz","appkey":"GsFF0HPExEnfzq4Jkw3X8AFd","comment":true,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2019-07-12",
+    passwords: ["0e31be4bd24c14e65633d11633fe616ee3d93b4f31d07726fdbe113fa98a391a", ],
+    is_post: true,
+    lock: false,
+    author: "MuChen",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">沐晨</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | Learn To Learn</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+        <a href="/friends/" target="_self">友链</a>
+      
+        <a href="/about/" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/FancierCoder" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/friends/" target="_self">
+            友链
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/about/" target="_self">
+            关于
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+
+    
+      <span style="margin-right: 24px;">
+        <a href="/categories/数据结构与算法-高级/"><i class="fa fa-bookmark"></i>数据结构与算法(高级)</a>
+      </span>
+    
+    
+      <span style="margin-right: 24px;">
+         <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+
+  </div>
+  <div class="passage-title-wrap">
+      <h1 class="passage-title">
+        41.最短路径
+      </h1>
+      <div class="passage-meta">
+        <span style="margin-right: 24px;">
+          <i class="fa fa-calendar"></i>2019.08.17 14:58
+        </span>
+        <span id="article-visit-info" style="margin-right: 24px;">
+            <i class="fa fa-eye"></i> 0
+        </span>
+      </div>
+  </div>
+  
+  <article class="passage-article">
+    <p>像 <code>Google</code> 地图、百度地图、高德地图这样的地图软件，你应该经常使用吧？如果想从家开车到公司，你只需要输入起始、结束地址，地图就会给你规划一条最优出行路线。这里的最优，有很多种定义，比如最短路线、最少用时路线、最少红绿灯路线等等。<strong>作为一名软件开发工程师，你是否思考过，地图软件的最优路线是如何计算出来的吗？底层依赖了什么算法呢？</strong></p>
+<h2 id="算法解析"><a href="#算法解析" class="headerlink" title="算法解析"></a>算法解析</h2><p>刚提到的最优问题包含三个：最短路线、最少用时和最少红绿灯。先解决最简单的，最短路线。</p>
+<p>解决软件开发中的实际问题，最重要的一点就是<strong>建模</strong>，也就是将复杂的场景抽象成具体的数据结构。针对这个问题，该如何抽象成数据结构呢？</p>
+<p>图这种数据结构的表达能力很强，显然，把地图抽象成图最合适不过了。把每个岔路口看作一个顶点，岔路口与岔路口之间的路看作一条边，路的长度就是边的权重。如果路是单行道，就在两个顶点之间画一条有向边；如果路是双行道，就在两个顶点之间画两条方向不同的边。这样，整个地图就被抽象成一个有向有权图。</p>
+<p>具体的代码实现如下。于是，要求解的问题就转化为，在一个有向有权图中，求两个顶点间的最短路径。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Graph</span> </span>&#123; <span class="comment">// 有向有权图的邻接表表示</span></span><br><span class="line">  <span class="keyword">private</span> LinkedList&lt;Edge&gt; adj[]; <span class="comment">// 邻接表</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span> v; <span class="comment">// 顶点个数</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">Graph</span><span class="params">(<span class="keyword">int</span> v)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.v = v;</span><br><span class="line">    <span class="keyword">this</span>.adj = <span class="keyword">new</span> LinkedList[v];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; v; ++i) &#123;</span><br><span class="line">      <span class="keyword">this</span>.adj[i] = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addEdge</span><span class="params">(<span class="keyword">int</span> s, <span class="keyword">int</span> t, <span class="keyword">int</span> w)</span> </span>&#123; <span class="comment">// 添加一条边</span></span><br><span class="line">    <span class="keyword">this</span>.adj[s].add(<span class="keyword">new</span> Edge(s, t, w));</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">Edge</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> sid; <span class="comment">// 边的起始顶点编号</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> tid; <span class="comment">// 边的终止顶点编号</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> w; <span class="comment">// 权重</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Edge</span><span class="params">(<span class="keyword">int</span> sid, <span class="keyword">int</span> tid, <span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.sid = sid;</span><br><span class="line">      <span class="keyword">this</span>.tid = tid;</span><br><span class="line">      <span class="keyword">this</span>.w = w;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 下面这个类是为了 dijkstra 实现用的</span></span><br><span class="line">  <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">Vertex</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> id; <span class="comment">// 顶点编号 ID</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> dist; <span class="comment">// 从起始顶点到这个顶点的距离</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Vertex</span><span class="params">(<span class="keyword">int</span> id, <span class="keyword">int</span> dist)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.id = id;</span><br><span class="line">      <span class="keyword">this</span>.dist = dist;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>想要解决这个问题，有一个非常经典的算法，最短路径算法，更加准确地说，是<strong>单源最短路径算法</strong>（一个顶点到一个顶点）。提到最短路径算法，最出名的莫过于 <code>Dijkstra</code> 算法了。所以，现在来看，<code>Dijkstra</code> 算法是怎么工作的。</p>
+<p>这个算法的原理稍微有点儿复杂，单纯的文字描述，不是很好懂。所以，还是结合代码来讲解。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 因为 Java 提供的优先级队列，没有暴露更新数据的接口，所以我们需要重新实现一个</span></span><br><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">PriorityQueue</span> </span>&#123; <span class="comment">// 根据 vertex.dist 构建小顶堆</span></span><br><span class="line">  <span class="keyword">private</span> Vertex[] nodes;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span> count;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">PriorityQueue</span><span class="params">(<span class="keyword">int</span> v)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.nodes = <span class="keyword">new</span> Vertex[v+<span class="number">1</span>];</span><br><span class="line">    <span class="keyword">this</span>.count = v;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> Vertex <span class="title">poll</span><span class="params">()</span> </span>&#123; <span class="comment">// <span class="doctag">TODO:</span> 留给读者实现... &#125;</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(Vertex vertex)</span> </span>&#123; <span class="comment">// <span class="doctag">TODO:</span> 留给读者实现...&#125;</span></span><br><span class="line">  <span class="comment">// 更新结点的值，并且从下往上堆化，重新符合堆的定义。时间复杂度 O(logn)。</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">update</span><span class="params">(Vertex vertex)</span> </span>&#123; <span class="comment">// <span class="doctag">TODO:</span> 留给读者实现...&#125; </span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span> </span>&#123; <span class="comment">// <span class="doctag">TODO:</span> 留给读者实现...&#125;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dijkstra</span><span class="params">(<span class="keyword">int</span> s, <span class="keyword">int</span> t)</span> </span>&#123; <span class="comment">// 从顶点 s 到顶点 t 的最短路径</span></span><br><span class="line">  <span class="keyword">int</span>[] predecessor = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="keyword">this</span>.v]; <span class="comment">// 用来还原最短路径</span></span><br><span class="line">  Vertex[] vertexes = <span class="keyword">new</span> Vertex[<span class="keyword">this</span>.v];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="keyword">this</span>.v; ++i) &#123;</span><br><span class="line">    vertexes[i] = <span class="keyword">new</span> Vertex(i, Integer.MAX_VALUE);</span><br><span class="line">  &#125;</span><br><span class="line">  PriorityQueue queue = <span class="keyword">new</span> PriorityQueue(<span class="keyword">this</span>.v);<span class="comment">// 小顶堆</span></span><br><span class="line">  <span class="keyword">boolean</span>[] inqueue = <span class="keyword">new</span> <span class="keyword">boolean</span>[<span class="keyword">this</span>.v]; <span class="comment">// 标记是否进入过队列</span></span><br><span class="line">  vertexes[s].dist = <span class="number">0</span>;</span><br><span class="line">  queue.add(vertexes[s]);</span><br><span class="line">  inqueue[s] = <span class="keyword">true</span>;</span><br><span class="line">  <span class="keyword">while</span> (!queue.isEmpty()) &#123;</span><br><span class="line">    Vertex minVertex= queue.poll(); <span class="comment">// 取堆顶元素并删除</span></span><br><span class="line">    <span class="keyword">if</span> (minVertex.id == t) <span class="keyword">break</span>; <span class="comment">// 最短路径产生了</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; adj[minVertex.id].size(); ++i) &#123;</span><br><span class="line">      Edge e = adj[minVertex.id].get(i); <span class="comment">// 取出一条 minVetex 相连的边</span></span><br><span class="line">      Vertex nextVertex = vertexes[e.tid]; <span class="comment">// minVertex--&gt;nextVertex</span></span><br><span class="line">      <span class="keyword">if</span> (minVertex.dist + e.w &lt; nextVertex.dist) &#123; <span class="comment">// 更新 next 的 dist</span></span><br><span class="line">        nextVertex.dist = minVertex.dist + e.w;</span><br><span class="line">        predecessor[nextVertex.id] = minVertex.id;</span><br><span class="line">        <span class="keyword">if</span> (inqueue[nextVertex.id] == <span class="keyword">true</span>) &#123;</span><br><span class="line">          queue.update(nextVertex); <span class="comment">// 更新队列中的 dist 值</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          queue.add(nextVertex);</span><br><span class="line">          inqueue[nextVertex.id] = <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 输出最短路径</span></span><br><span class="line">  System.out.print(s);</span><br><span class="line">  print(s, t, predecessor);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(<span class="keyword">int</span> s, <span class="keyword">int</span> t, <span class="keyword">int</span>[] predecessor)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (s == t) <span class="keyword">return</span>;</span><br><span class="line">  print(s, predecessor[t], predecessor);</span><br><span class="line">  System.out.print(<span class="string">"-&gt;"</span> + t);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>用 <code>vertexes</code> 数组，记录从起始顶点到每个顶点的距离（<code>dist</code>）。起初，把所有顶点的 <code>dist</code> 都初始化为无穷大（也就是代码中的 <code>Integer.MAX_VALUE</code>）。把起始顶点的 <code>dist</code> 值初始化为 <code>0</code>，然后将其放到优先级队列中。</p>
+<p>从优先级队列中取出 <code>dist</code> 最小的顶点 <code>minVertex</code>，然后考察这个顶点可达的所有顶点（代码中的 <code>nextVertex</code>）。如果 <code>minVertex</code> 的 <code>dist</code> 值加上 <code>minVertex</code> 与 <code>nextVertex</code> 之间边的权重 <code>w</code> 小于 <code>nextVertex</code> 当前的 <code>dist</code> 值，也就是说，存在另一条更短的路径，它经过 <code>minVertex</code> 到达 <code>nextVertex</code>。那就把 <code>nextVertex</code> 的 <code>dist</code> 更新为 <code>minVertex</code> 的 <code>dist</code> 值加上 <code>w</code>。然后把 <code>nextVertex</code> 加入到优先级队列中。重复这个过程，直到找到终止顶点 <code>t</code> 或者队列为空。</p>
+<p>以上就是 <code>Dijkstra</code> 算法的核心逻辑。除此之外，代码中还有两个额外的变量，<code>predecessor</code> 数组和 <code>inqueue</code> 数组。</p>
+<p><code>predecessor</code> 数组的作用是为了还原最短路径，它记录每个顶点的前驱顶点。最后，通过递归的方式，将这个路径打印出来。打印路径的 <code>print</code> 递归代码就不详细讲了，这个跟在图的搜索中讲的打印路径方法一样。如果不理解的话，你可以回过头去看下那一篇。</p>
+<p><code>inqueue</code> 数组是为了避免将一个顶点多次添加到优先级队列中。更新了某个顶点的 <code>dist</code> 值之后，如果这个顶点已经在优先级队列中了，就不要再将它重复添加进去了。</p>
+<p>看完了代码和文字解释，可能还是有点懵，那就举个例子，再解释一下。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/17/9cd6bb50-c0b6-11e9-9e3a-517fabdf7fc0.png" alt="image.png"><br>理解了 <code>Dijkstra</code> 的原理和代码实现，来看下，<code>Dijkstra</code> 算法的时间复杂度是多少？</p>
+<p>在刚刚的代码实现中，最复杂就是 <code>while</code> 循环嵌套 <code>for</code> 循环那部分代码了。<code>while</code> 循环最多会执行 <code>V</code> 次（<code>V</code> 表示顶点的个数），而内部的 <code>for</code> 循环的执行次数不确定，跟每个顶点的相邻边的个数有关，分别记作 <code>E0</code>，<code>E1</code>，<code>E2</code>，……，<code>E(V-1)</code>。如果把这 <code>V</code> 个顶点的边都加起来，最大也不会超过图中所有边的个数 <code>E</code>（<code>E</code> 表示边的个数）。</p>
+<p><code>for</code> 循环内部的代码涉及从优先级队列取数据、往优先级队列中添加数据、更新优先级队列中的数据，这样三个主要的操作。优先级队列是用堆来实现的，堆中的这几个操作，时间复杂度都是 $O(logV)$（堆中的元素个数不会超过顶点的个数 <code>V</code>）。</p>
+<p>所以，综合这两部分，再利用乘法原则，整个代码的时间复杂度就是 <code>O(E*logV)</code>。</p>
+<p>弄懂了 <code>Dijkstra</code> 算法，再来回答之前的问题，如何计算最优出行路线？</p>
+<p>从理论上讲，用 <code>Dijkstra</code> 算法可以计算出两点之间的最短路径。但是，你有没有想过，对于一个超级大地图来说，岔路口、道路都非常多，对应到图这种数据结构上来说，就有非常多的顶点和边。如果为了计算两点之间的最短路径，在一个超级大图上动用 <code>Dijkstra</code> 算法，遍历所有的顶点和边，显然会非常耗时。那有没有什么优化的方法呢？</p>
+<p>做工程不像做理论，一定要给出个最优解。理论上算法再好，如果执行效率太低，也无法应用到实际的工程中。<strong>对于软件开发工程师来说，我们经常要根据问题的实际背景，对解决方案权衡取舍。类似出行路线这种工程上的问题，我们没有必要非得求出个绝对最优解。很多时候，为了兼顾执行效率，我们只需要计算出一个可行的次优解就可以了。</strong></p>
+<p>有了这个原则，你能想出刚刚那个问题的优化方案吗？</p>
+<p>虽然地图很大，但是两点之间的最短路径或者说较好的出行路径，并不会很“发散”，只会出现在两点之间和两点附近的区块内。所以可以在整个大地图上，划出一个小的区块，这个小区块恰好可以覆盖住两个点，但又不会很大。只需要在这个小区块内部运行 <code>Dijkstra</code> 算法，这样就可以避免遍历整个大图，也就大大提高了执行效率。</p>
+<p>不过你可能会说了，如果两点距离比较远，从北京海淀区某个地点，到上海黄浦区某个地点，那上面的这种处理方法，显然就不工作了，毕竟覆盖北京和上海的区块并不小。</p>
+<p>给你点提示，你可以现在打开地图 <code>App</code>，缩小放大一下地图，看下地图上的路线有什么变化，然后再思考，这个问题该怎么解决。</p>
+<p>对于这样两点之间距离较远的路线规划，可以把北京海淀区或者北京看作一个顶点，把上海黄浦区或者上海看作一个顶点，先规划大的出行路线。比如，如何从北京到上海，必须要经过某几个顶点，或者某几条干道，然后再细化每个阶段的小路线。</p>
+<p>这样，最短路径问题就解决了。再来看另外两个问题，最少时间和最少红绿灯。</p>
+<p>前面讲最短路径的时候，每条边的权重是路的长度。在计算最少时间的时候，算法还是不变，只需要把边的权重，从路的长度变成经过这段路所需要的时间。不过，这个时间会根据拥堵情况时刻变化。如何计算车通过一段路的时间呢？这是一个蛮有意思的问题，你可以自己思考下。</p>
+<p>每经过一条边，就要经过一个红绿灯。关于最少红绿灯的出行方案，实际上，只需要把每条边的权值改为 <code>1</code> 即可，算法还是不变，可以继续使用前面讲的 <code>Dijkstra</code> 算法。不过，边的权值为 <code>1</code>，也就相当于无权图了，还可以使用之前讲过的广度优先搜索算法。因为前面讲过，广度优先搜索算法计算出来的两点之间的路径，就是两点的最短路径。</p>
+<p>不过，这里给出的所有方案都非常粗糙，只是为了给你展示，如何结合实际的场景，灵活地应用算法，让算法为我们所用，真实的地图软件的路径规划，要比这个复杂很多。而且，比起 <code>Dijkstra</code> 算法，地图软件用的更多的是类似 <code>A*</code> 的启发式搜索算法，不过也是在 <code>Dijkstra</code> 算法上的优化罢了。</p>
+<h2 id="总结引申"><a href="#总结引申" class="headerlink" title="总结引申"></a>总结引申</h2><p>上面了一种非常重要的图算法，<strong>Dijkstra 最短路径算法</strong>。实际上，最短路径算法还有很多，比如 <code>Bellford</code> 算法、<code>Floyd</code> 算法等等。</p>
+<p>这些算法实现思路非常经典，掌握了这些思路，就可以拿来指导、解决其他问题。比如 <code>Dijkstra</code> 这个算法的核心思想，就可以拿来解决下面这个看似完全不相关的问题。</p>
+<p>有一个翻译系统，只能针对单个词来做翻译。如果要翻译一整个句子，需要将句子拆成一个一个的单词，再丢给翻译系统。针对每个单词，翻译系统会返回一组可选的翻译列表，并且针对每个翻译打一个分，表示这个翻译的可信程度。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/17/57b3ec10-c0ba-11e9-9e3a-517fabdf7fc0.png" alt="image.png"><br>针对每个单词，从可选列表中，选择其中一个翻译，组合起来就是整个句子的翻译。每个单词的翻译的得分之和，就是整个句子的翻译得分。随意搭配单词的翻译，会得到一个句子的不同翻译。针对整个句子，希望计算出得分最高的前 <code>k</code> 个翻译结果，你会怎么编程来实现呢？<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/17/8f62fcf0-c0ba-11e9-9e3a-517fabdf7fc0.png" alt="image.png"><br>当然，最简单的办法还是借助回溯算法，穷举所有的排列组合情况，然后选出得分最高的前 <code>k</code> 个翻译结果。但是，这样做的时间复杂度会比较高，是 $O(m^n)$，其中，<code>m</code> 表示平均每个单词的可选翻译个数，<code>n</code> 表示一个句子中包含多少个单词。这个解决方案，你可以当作回溯算法的练习题，自己编程实现一下。</p>
+<p>实际上，这个问题可以借助 <code>Dijkstra</code> 算法的核心思想，非常高效地解决。每个单词的可选翻译是按照分数从大到小排列的，所以 $a_0b_0c_0$ 肯定是得分最高组合结果。把 $a_0b_0c_0$ 及得分作为一个对象，放入到优先级队列中。</p>
+<p>每次从优先级队列中取出一个得分最高的组合，并基于这个组合进行扩展。扩展的策略是每个单词的翻译分别替换成下一个单词的翻译。比如 $a_0b_0c_0$ 扩展后，会得到三个组合，$a_1b_0c_0$、$a_0b_1c_0$、$a_0b_0c_1$。把扩展之后的组合，加到优先级队列中。重复这个过程，直到获取到 <code>k</code> 个翻译组合或者队列为空。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/17/d4bf8790-c0bb-11e9-9e3a-517fabdf7fc0.png" alt="image.png"><br>这种实现思路的时间复杂度是多少？</p>
+<p>假设句子包含 <code>n</code> 个单词，每个单词平均有 <code>m</code> 个可选的翻译，求得分最高的前 <code>k</code> 个组合结果。每次一个组合出队列，就对应着一个组合结果，如果希望得到 <code>k</code> 个，那就对应着 <code>k</code> 次出队操作。每次有一个组合出队列，就有 <code>n</code> 个组合入队列。优先级队列中出队和入队操作的时间复杂度都是 $O(logX)$，<code>X</code> 表示队列中的组合个数。所以，总的时间复杂度就是 $O(k * n * logX)$。那 <code>X</code> 到底是多少呢？</p>
+<p><code>k</code> 次出入队列，队列中的总数据不会超过 <code>k*n</code>，也就是说，出队、入队操作的时间复杂度是 $O(log(k*n))$。所以，总的时间复杂度就是 $O(k * n * log(k * n))$，比之前的指数级时间复杂度降低了很多。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ul>
+<li><p>在计算最短时间的出行路线中，如何获得通过某条路的时间呢？</p>
+</li>
+<li><p>上面讲的出行路线问题，假设的是开车出行，那如果是公交出行呢？如果混合地铁、公交、步行，又该如何规划路线呢？欢迎留言和我分享。</p>
+</li>
+</ul>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#算法解析"><span class="toc-text">算法解析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结引申"><span class="toc-text">总结引申</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#思考"><span class="toc-text">思考</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: 沐晨</div>
+      
+        <div>
+          原文链接:
+          <a style="word-break: break-word;" href="" target="_blank">https://muchen.fun/passages/41/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+    
+      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+    
+    </div>
+  
+</div>
+
+<div class="left_prev_arrow_div">
+    <div class="left_prev_arrow arrow_div">
+        <a href="/passages/40/" data-enable="true">
+            <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        </a>
+    </div>
+</div>
+<div class="right_prev_arrow_div">
+    <div class="right_prev_arrow arrow_div">
+        <a href="javascript:void(0);" data-enable="false">
+            <i class="fa fa-chevron-right" aria-hidden="true"></i>
+        </a>
+    </div>
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      
+        <div class="site-footer-col">
+          <h5 class="site-footer-title">博客推荐</h5>
+          
+            <span class="site-footer-item">
+              <a href="https://muchen.fun/" target="_blank">沐晨</a>
+            </span>
+          
+            <span class="site-footer-item">
+              <a href="http://www.wangdabo.com" target="_blank">王大博</a>
+            </span>
+          
+        </div>
+      
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: lcoder@qq.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://fanciercoder.github.io/" target="_blank">沐晨</a>.
+      All rights reserved.
+    </div>
+    <div class="site-footer-info">
+        <span style="position: relative;">
+        <a style=" position: absolute;
+            white-space: nowrap;" id="colorPrint">
+        </a>
+        </span>
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+        <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+          
+            <div>
+              <img src="/images/wechat.png" alt="WeChat">
+              
+                <p>WeChat</p>
+              
+            </div>
+          
+            <div>
+              <img src="/images/alipay.png" alt="AliPay">
+              
+                <p>AliPay</p>
+              
+            </div>
+          
+            <div>
+              <img src="/images/BitCoin.jpg" alt="BitCoin">
+              
+                <p>BitCoin</p>
+              
+            </div>
+          
+        </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="javascript:void(0);" data-enable="false">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/40/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+      <a href="javascript:void(0);" id="site-reward">
+        <i class="fa fa-thumbs-up"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-144841374-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-144841374-1');
+  </script>
+
+
+
+
+  <script async>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+
+
+
+
+ <script>
+ //const element =  document.querySelector('.home-article-wrapper')
+ //element.classList.add('animated', 'bounceInLeft')
+ function testAnim(x) {
+     $('.home-article-wrapper').removeClass('animate').addClass(x + ' animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+       $(this).removeClass('animate');
+     });
+   };
+
+   testAnim('flipInX');
+ </script>
+
+    
+      <script src="/js/footer.js"></script>
+    
+  </body>
+</html>
