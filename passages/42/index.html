@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta name="author" content="MuChen">
+  
+  
+  <title>42.位图 | MuChen&#39;s Blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="数据结构与算法(高级),数据结构,算法,">
+  
+
+  
+  <meta name="description" content="如何实现网页爬虫中的`URL`去重功能？">
+
+  <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.14.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  
+
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8" async></script>
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"js4SiJ6prwCfvUwpG6UKP1T5-gzGzoHsz","appkey":"GsFF0HPExEnfzq4Jkw3X8AFd","comment":true,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2019-07-12",
+    passwords: ["0e31be4bd24c14e65633d11633fe616ee3d93b4f31d07726fdbe113fa98a391a", ],
+    is_post: true,
+    lock: false,
+    author: "MuChen",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">沐晨</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | Learn To Learn</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+        <a href="/friends/" target="_self">友链</a>
+      
+        <a href="/about/" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/FancierCoder" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/friends/" target="_self">
+            友链
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/about/" target="_self">
+            关于
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+
+    
+      <span style="margin-right: 24px;">
+        <a href="/categories/数据结构与算法-高级/"><i class="fa fa-bookmark"></i>数据结构与算法(高级)</a>
+      </span>
+    
+    
+      <span style="margin-right: 24px;">
+         <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+
+  </div>
+  <div class="passage-title-wrap">
+      <h1 class="passage-title">
+        42.位图
+      </h1>
+      <div class="passage-meta">
+        <span style="margin-right: 24px;">
+          <i class="fa fa-calendar"></i>2019.08.18 16:26
+        </span>
+        <span id="article-visit-info" style="margin-right: 24px;">
+            <i class="fa fa-eye"></i> 0
+        </span>
+      </div>
+  </div>
+  
+  <article class="passage-article">
+    <p>网页爬虫是搜索引擎中的非常重要的系统，负责爬取几十亿、上百亿的网页。爬虫的工作原理是，通过解析已经爬取页面中的网页链接，然后再爬取这些链接对应的网页。<strong>而同一个网页链接有可能被包含在多个页面中，这就会导致爬虫在爬取的过程中，重复爬取相同的网页。如果你是一名负责爬虫的工程师，你会如何避免这些重复的爬取呢？</strong></p>
+<p>最容易想到的方法就是，记录已经爬取的网页链接（也就是 <code>URL</code>），在爬取一个新的网页之前，拿它的链接，在已经爬取的网页链接列表中搜索。如果存在，那就说明这个网页已经被爬取过了；如果不存在，那就说明这个网页还没有被爬取过，可以继续去爬取。等爬取到这个网页之后，将这个网页的链接添加到已经爬取的网页链接列表了。</p>
+<p>思路非常简单，应该很容易就能想到。不过，该如何记录已经爬取的网页链接呢？需要用什么样的数据结构呢？</p>
+<h2 id="算法解析"><a href="#算法解析" class="headerlink" title="算法解析"></a>算法解析</h2><p>这个问题要处理的对象是网页链接，也就是 <code>URL</code>，需要支持的操作有两个，添加一个 <code>URL</code> 和查询一个 <code>URL</code>。除了这两个功能性的要求之外，在非功能性方面，还要求这两个操作的执行效率要尽可能高。除此之外，因为要处理的是上亿的网页链接，内存消耗会非常大，所以在存储效率上，要尽可能地高效。</p>
+<p>回想一下，满足这些条件的数据结构有哪些呢？显然，散列表、红黑树、跳表这些动态数据结构，都能支持快速地插入、查找数据，但是对内存消耗方面，是否可以接受呢？</p>
+<p>拿散列表来举例。假设要爬取 <code>10</code> 亿个网页（像 <code>Google</code>、百度这样的通用搜索引擎，爬取的网页可能会更多），为了判重，把这 <code>10</code> 亿网页链接存储在散列表中。估算下，大约需要多少内存？</p>
+<p>假设一个 <code>URL</code> 的平均长度是 <code>64</code> 字节，那单纯存储这 <code>10</code> 亿个 <code>URL</code>，需要大约 <code>60GB</code> 的内存空间。因为散列表必须维持较小的装载因子，才能保证不会出现过多的散列冲突，导致操作的性能下降。而且，用链表法解决冲突的散列表，还会存储链表指针。所以，如果将这 <code>10</code> 亿个 <code>URL</code> 构建成散列表，那需要的内存空间会远大于 <code>60GB</code>，有可能会超过 <code>100GB</code>。</p>
+<p>当然，对于一个大型的搜索引擎来说，即便是 <code>100GB</code> 的内存要求，其实也不算太高，可以采用分治的思想，用多台机器（比如 <code>20</code> 台内存是 <code>8GB</code> 的机器）来存储这 <code>10</code> 亿网页链接。</p>
+<p>对于爬虫的 <code>URL</code> 去重这个问题，刚刚讲到的分治加散列表的思路，已经是可以实实在在工作的了。不过，<strong>作为一个有追求的工程师，应该考虑，在添加、查询数据的效率以及内存消耗方面，是否还有进一步的优化空间呢？</strong></p>
+<p>你可能会说，散列表中添加、查找数据的时间复杂度已经是 $O(1)$，还能有进一步优化的空间吗？实际上，前面也讲过，时间复杂度并不能完全代表代码的执行时间。大 $O$ 时间复杂度表示法，会忽略掉常数、系数和低阶，并且统计的对象是语句的频度。不同的语句，执行时间也是不同的。时间复杂度只是表示执行时间随数据规模的变化趋势，并不能度量在特定的数据规模下，代码执行时间的多少。</p>
+<p>如果时间复杂度中原来的系数是 <code>10</code>，现在能够通过优化，将系数降为 <code>1</code>，那在时间复杂度没有变化的情况下，执行效率就提高了 <code>10</code> 倍。对于实际的软件开发来说，<code>10</code> 倍效率的提升，显然是一个非常值得的优化。</p>
+<p>如果用基于链表的方法解决冲突问题，散列表中存储的是 <code>URL</code>，那当查询的时候，通过哈希函数定位到某个链表之后，还需要依次比对每个链表中的 <code>URL</code>。这个操作是比较耗时的，主要有两点原因。</p>
+<p>一方面，链表中的结点在内存中不是连续存储的，所以不能一下子加载到 <code>CPU</code> 缓存中，没法很好地利用到 <code>CPU</code> 高速缓存，所以数据访问性能方面会打折扣。</p>
+<p>另一方面，链表中的每个数据都是 <code>URL</code>，而 <code>URL</code> 不是简单的数字，是平均长度为 <code>64</code> 字节的字符串。也就是说，要让待判重的 <code>URL</code>，跟链表中的每个 <code>URL</code>，做字符串匹配。显然，这样一个字符串匹配操作，比起单纯的数字比对，要慢很多。所以，基于这两点，执行效率方面肯定是有优化空间的。</p>
+<p>对于内存消耗方面的优化，除了刚刚这种基于散列表的解决方案，貌似没有更好的法子了。实际上，如果要想内存方面有明显的节省，那就得换一种解决方案，也就是要着重讲的这种存储结构，<strong>布隆过滤器</strong>（<code>Bloom Filter</code>）。</p>
+<p>在讲布隆过滤器前，要先讲一下另一种存储结构，<strong>位图</strong>（<code>BitMap</code>）。因为，布隆过滤器本身就是基于位图的，是对位图的一种改进。</p>
+<p>先来看一个稍微简单的问题。<strong>有 <code>1</code> 千万个整数，整数的范围在 <code>1</code> 到 <code>1</code> 亿之间。如何快速查找某个整数是否在这 <code>1</code> 千万个整数中呢？</strong></p>
+<p>当然，这个问题可以用散列表来解决。不过，还可以使用一种比较“特殊”的散列表，那就是位图。申请一个大小为 <code>1</code> 亿、数据类型为布尔类型（<code>true</code> 或者 <code>false</code>）的数组。将这 <code>1</code> 千万个整数作为数组下标，将对应的数组值设置成 <code>true</code>。比如，整数 <code>5</code> 对应下标为 <code>5</code> 的数组值设置为 <code>true</code>，也就是 <code>array[5]=true</code>。</p>
+<p>当查询某个整数 <code>K</code> 是否在这 <code>1</code> 千万个整数中的时候，只需要将对应的数组值 <code>array[K]</code> 取出来，看是否等于 <code>true</code>。如果等于 <code>true</code>，那说明 <code>1</code> 千万整数中包含这个整数 <code>K</code>；相反，就表示不包含这个整数 <code>K</code>。</p>
+<p>不过，很多语言中提供的布尔类型，大小是 <code>1</code> 个字节的，并不能节省太多内存空间。实际上，表示 <code>true</code> 和 <code>false</code> 两个值，只需要用一个二进制位（<code>bit</code>）就可以了。那如何通过编程语言，来表示一个二进制位呢？</p>
+<p>这里就要用到位运算了。可以借助编程语言中提供的数据类型，比如 <code>int</code>、<code>long</code>、<code>char</code> 等类型，通过位运算，用其中的某个位表示某个数字。文字描述起来有点儿不好理解，这里把位图的代码实现写了出来，你可以对照着代码看下，应该就能看懂了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BitMap</span> </span>&#123; <span class="comment">// Java 中 char 类型占 16bit，也即是 2 个字节</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">char</span>[] bytes;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span> nbits;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">BitMap</span><span class="params">(<span class="keyword">int</span> nbits)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.nbits = nbits;</span><br><span class="line">    <span class="keyword">this</span>.bytes = <span class="keyword">new</span> <span class="keyword">char</span>[nbits/<span class="number">16</span>+<span class="number">1</span>];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">set</span><span class="params">(<span class="keyword">int</span> k)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (k &gt; nbits) <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">int</span> byteIndex = k / <span class="number">16</span>;</span><br><span class="line">    <span class="keyword">int</span> bitIndex = k % <span class="number">16</span>;</span><br><span class="line">    bytes[byteIndex] |= (<span class="number">1</span> &lt;&lt; bitIndex);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">get</span><span class="params">(<span class="keyword">int</span> k)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (k &gt; nbits) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">int</span> byteIndex = k / <span class="number">16</span>;</span><br><span class="line">    <span class="keyword">int</span> bitIndex = k % <span class="number">16</span>;</span><br><span class="line">    <span class="keyword">return</span> (bytes[byteIndex] &amp; (<span class="number">1</span> &lt;&lt; bitIndex)) != <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>你应该可以发现，位图通过数组下标来定位数据，所以，访问效率非常高。而且，每个数字用一个二进制位来表示，在数字范围不大的情况下，所需要的内存空间非常节省。</p>
+<p>比如刚刚那个例子，如果用散列表存储这 <code>1</code> 千万的数据，数据是 <code>32</code> 位的整型数，也就是需要 <code>4</code> 个字节的存储空间，那总共至少需要 <code>40MB</code> 的存储空间。如果通过位图的话，数字范围在 <code>1</code> 到 <code>1</code> 亿之间，只需要 <code>1</code> 亿个二进制位，也就是 <code>12MB</code> 左右的存储空间就够了。</p>
+<p>关于位图，是不是挺简单的？不过这里有个假设，就是数字所在的范围不是很大。如果数字的范围很大，比如刚刚那个问题，数字范围不是 <code>1</code> 到 <code>1</code> 亿，而是 <code>1</code> 到 <code>10</code> 亿，那位图的大小就是 <code>10</code> 亿个二进制位，也就是 <code>120MB</code> 的大小，消耗的内存空间，不降反增。</p>
+<p>这个时候，布隆过滤器就要出场了。布隆过滤器就是为了解决刚刚这个问题，对位图这种数据结构的一种改进。</p>
+<p>还是刚刚那个例子，数据个数是 <code>1</code> 千万，数据的范围是 <code>1</code> 到 <code>10</code> 亿。布隆过滤器的做法是，仍然使用一个 <code>1</code> 亿个二进制大小的位图，然后通过哈希函数，对数字进行处理，让它落在这 <code>1</code> 到 <code>1</code> 亿范围内。比如把哈希函数设计成 <code>f(x)=x%n</code>。其中，<code>x</code> 表示数字，<code>n</code> 表示位图的大小（<code>1</code> 亿），也就是，对数字跟位图的大小进行取模求余。</p>
+<p>不过，你肯定会说，哈希函数会存在冲突的问题啊，一亿零一和 <code>1</code> 两个数字，经过刚刚那个取模求余的哈希函数处理之后，最后的结果都是 <code>1</code>。这样就无法区分，位图存储的是 <code>1</code> 还是一亿零一了。</p>
+<p>为了降低这种冲突概率，当然可以设计一个复杂点、随机点的哈希函数。除此之外，还有其他方法吗？来看布隆过滤器的处理方法。既然一个哈希函数可能会存在冲突，那用多个哈希函数一块儿定位一个数据，是否能降低冲突的概率呢？下面具体解释一下，布隆过滤器是怎么做的。</p>
+<p>使用 <code>K</code> 个哈希函数，对同一个数字进行求哈希值，那会得到 <code>K</code> 个不同的哈希值，分别记作 $X_1$，$X_2$，$X_3$，…，$X_K$。把这 <code>K</code> 个数字作为位图中的下标，将对应的 BitMap[$X_1$]，BitMap[$X_2$]，BitMap[$X_3$]，…，BitMap[$X_K$] 都设置成 <code>true</code>，也就是说，用 <code>K</code> 个二进制位，来表示一个数字的存在。</p>
+<p>当要查询某个数字是否存在的时候，用同样的 <code>K</code> 个哈希函数，对这个数字求哈希值，分别得到 $Y_1$，$Y_2$，$Y_3$，…，$Y_K$。然后看这 <code>K</code> 个哈希值，对应位图中的数值是否都为 <code>true</code>，如果都是 <code>true</code>，则说明，这个数字存在，如果有其中任意一个不为 <code>true</code>，那就说明这个数字不存在。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/18/851db9c0-c190-11e9-be13-e5fb1c0c4586.png" alt="image.png"><br>对于两个不同的数字来说，经过一个哈希函数处理之后，可能会产生相同的哈希值。但是经过 <code>K</code> 个哈希函数处理之后，<code>K</code> 个哈希值都相同的概率就非常低了。尽管采用 <code>K</code> 个哈希函数之后，两个数字哈希冲突的概率降低了，但是，这种处理方式又带来了新的问题，那就是容易误判。看下面这个例子。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/18/a2cdf9d0-c190-11e9-be13-e5fb1c0c4586.png" alt="image.png"><br>布隆过滤器的误判有一个特点，那就是，它只会对存在的情况有误判。如果某个数字经过布隆过滤器判断不存在，那说明这个数字真的不存在，不会发生误判；如果某个数字经过布隆过滤器判断存在，这个时候才会有可能误判，有可能并不存在。不过，只要调整哈希函数的个数、位图大小跟要存储数字的个数之间的比例，那就可以将这种误判的概率降到非常低。</p>
+<p>尽管布隆过滤器会存在误判，但是，这并不影响它发挥大作用。很多场景对误判有一定的容忍度。比如上面要解决的爬虫判重这个问题，即便一个没有被爬取过的网页，被误判为已经被爬取，对于搜索引擎来说，也并不是什么大事情，是可以容忍的，毕竟网页太多了，搜索引擎也不可能 <code>100%</code> 都爬取到。</p>
+<p>弄懂了布隆过滤器，爬虫网页去重的问题，就很简单了。</p>
+<p>用布隆过滤器来记录已经爬取过的网页链接，假设需要判重的网页有 <code>10</code> 亿，那可以用一个 <code>10</code> 倍大小的位图来存储，也就是 <code>100</code> 亿个二进制位，换算成字节，那就是大约 <code>1.2GB</code>。之前用散列表判重，需要至少 <code>100GB</code> 的空间。相比来讲，布隆过滤器在存储空间的消耗上，降低了非常多。</p>
+<p>那再来看下，利用布隆过滤器，在执行效率方面，是否比散列表更加高效呢？</p>
+<p>布隆过滤器用多个哈希函数对同一个网页链接进行处理，<code>CPU</code> 只需要将网页链接从内存中读取一次，进行多次哈希计算，理论上讲这组操作是 <code>CPU</code> 密集型的。而在散列表的处理方式中，需要读取散列冲突拉链的多个网页链接，分别跟待判重的网页链接，进行字符串匹配。这个操作涉及很多内存数据的读取，所以是内存密集型的。但是 <code>CPU</code> 计算可是要比内存访问更快速的，所以，理论上讲，布隆过滤器的判重方式，更加快速。</p>
+<h2 id="总结引申"><a href="#总结引申" class="headerlink" title="总结引申"></a>总结引申</h2><p>关于搜索引擎爬虫网页去重问题的解决，从散列表讲到位图，再讲到布隆过滤器。布隆过滤器非常适合这种不需要 <code>100%</code> 准确的、允许存在小概率误判的大规模判重场景。除了爬虫网页去重这个例子，还有比如统计一个大型网站的每天的 <code>UV</code> 数，也就是每天有多少用户访问了网站，就可以使用布隆过滤器，对重复访问的用户，进行去重。</p>
+<p>前面讲到，布隆过滤器的误判率，主要跟哈希函数的个数、位图的大小有关。当往布隆过滤器中不停地加入数据之后，位图中 <code>true</code> 的位置就越来越少了，误判率就越来越高了。所以，对于无法事先知道要判重的数据个数的情况，需要支持自动扩容的功能。</p>
+<p>当布隆过滤器中，数据个数与位图大小的比例超过某个阈值的时候，就重新申请一个新的位图。后面来的新数据，会被放置到新的位图中。但是，如果要判断某个数据是否在布隆过滤器中已经存在，就需要查看多个位图，相应的执行效率就降低了一些。</p>
+<p>位图、布隆过滤器应用如此广泛，很多编程语言都已经实现了。比如 <code>Java</code> 中的 <code>BitSet</code> 类就是一个位图，<code>Redis</code> 也提供了 <code>BitMap</code> 位图类，<code>Google</code> 的 <code>Guava</code> 工具包提供了 <code>BloomFilter</code> 布隆过滤器的实现。如果你感兴趣，可以去研究下这些实现的源码。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ul>
+<li><p>假设有 <code>1</code> 亿个整数，数据范围是从 <code>1</code> 到 <code>10</code> 亿，如何快速并且省内存地给这 <code>1</code> 亿个数据从小到大排序？</p>
+</li>
+<li><p>还记得在哈希函数（下）讲过的利用分治思想，用散列表以及哈希函数，实现海量图库中的判重功能吗？如果允许小概率的误判，那是否可以用布隆过滤器来解决呢？你可以参照当时的估算方法，重新估算下，用布隆过滤器需要多少台机器？欢迎留言和我分享。</p>
+</li>
+</ul>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#算法解析"><span class="toc-text">算法解析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结引申"><span class="toc-text">总结引申</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#思考"><span class="toc-text">思考</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: 沐晨</div>
+      
+        <div>
+          原文链接:
+          <a style="word-break: break-word;" href="" target="_blank">https://muchen.fun/passages/42/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+    
+      <a style="word-break: break-word;" href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
+    
+      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+    
+    </div>
+  
+</div>
+
+<div class="left_prev_arrow_div">
+    <div class="left_prev_arrow arrow_div">
+        <a href="/passages/41/" data-enable="true">
+            <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        </a>
+    </div>
+</div>
+<div class="right_prev_arrow_div">
+    <div class="right_prev_arrow arrow_div">
+        <a href="javascript:void(0);" data-enable="false">
+            <i class="fa fa-chevron-right" aria-hidden="true"></i>
+        </a>
+    </div>
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      
+        <div class="site-footer-col">
+          <h5 class="site-footer-title">博客推荐</h5>
+          
+            <span class="site-footer-item">
+              <a href="https://muchen.fun/" target="_blank">沐晨</a>
+            </span>
+          
+            <span class="site-footer-item">
+              <a href="http://www.wangdabo.com" target="_blank">王大博</a>
+            </span>
+          
+        </div>
+      
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: lcoder@qq.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://fanciercoder.github.io/" target="_blank">沐晨</a>.
+      All rights reserved.
+    </div>
+    <div class="site-footer-info">
+        <span style="position: relative;">
+        <a style=" position: absolute;
+            white-space: nowrap;" id="colorPrint">
+        </a>
+        </span>
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+        <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+          
+            <div>
+              <img src="/images/wechat.png" alt="WeChat">
+              
+                <p>WeChat</p>
+              
+            </div>
+          
+            <div>
+              <img src="/images/alipay.png" alt="AliPay">
+              
+                <p>AliPay</p>
+              
+            </div>
+          
+            <div>
+              <img src="/images/BitCoin.jpg" alt="BitCoin">
+              
+                <p>BitCoin</p>
+              
+            </div>
+          
+        </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="javascript:void(0);" data-enable="false">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/41/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+      <a href="javascript:void(0);" id="site-reward">
+        <i class="fa fa-thumbs-up"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-144841374-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-144841374-1');
+  </script>
+
+
+
+
+  <script async>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+
+
+
+
+ <script>
+ //const element =  document.querySelector('.home-article-wrapper')
+ //element.classList.add('animated', 'bounceInLeft')
+ function testAnim(x) {
+     $('.home-article-wrapper').removeClass('animate').addClass(x + ' animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+       $(this).removeClass('animate');
+     });
+   };
+
+   testAnim('flipInX');
+ </script>
+
+    
+      <script src="/js/footer.js"></script>
+    
+  </body>
+</html>
