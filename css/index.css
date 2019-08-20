@@ -1369,12 +1369,6 @@ main {
     margin-bottom: 30px;
 }
 
-@media (prefers-color-scheme: dark) {
-    body {
-        color: white;
-        background-color: black;
-    }
-}
 
 .preloader {
     width: 100%;
