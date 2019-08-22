@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta name="author" content="MuChen">
+  
+  
+  <title>46.搜索 | MuChen&#39;s Blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="数据结构与算法(高级),数据结构,算法,">
+  
+
+  
+  <meta name="description" content="如何用A*搜索算法实现游戏中的寻路功能？">
+
+  <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.14.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  
+
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8" async></script>
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"js4SiJ6prwCfvUwpG6UKP1T5-gzGzoHsz","appkey":"GsFF0HPExEnfzq4Jkw3X8AFd","comment":true,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2019-07-12",
+    passwords: ["0e31be4bd24c14e65633d11633fe616ee3d93b4f31d07726fdbe113fa98a391a", ],
+    is_post: true,
+    lock: false,
+    author: "MuChen",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">沐晨</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | Learn To Learn</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+        <a href="/friends/" target="_self">友链</a>
+      
+        <a href="/about/" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/FancierCoder" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/friends/" target="_self">
+            友链
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/about/" target="_self">
+            关于
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+
+    
+      <span style="margin-right: 24px;">
+        <a href="/categories/数据结构与算法-高级/"><i class="fa fa-bookmark"></i>数据结构与算法(高级)</a>
+      </span>
+    
+    
+      <span style="margin-right: 24px;">
+         <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+
+  </div>
+  <div class="passage-title-wrap">
+      <h1 class="passage-title">
+        46.搜索
+      </h1>
+      <div class="passage-meta">
+        <span style="margin-right: 24px;">
+          <i class="fa fa-calendar"></i>2019.08.22 11:39
+        </span>
+        <span id="article-visit-info" style="margin-right: 24px;">
+            <i class="fa fa-eye"></i> 0
+        </span>
+      </div>
+  </div>
+  
+  <article class="passage-article">
+    <p>魔兽世界、仙剑奇侠传这类 <code>MMRPG</code> 游戏，不知道你有没有玩过？在这些游戏中，有一个非常重要的功能，那就是人物角色自动寻路。<strong>当人物处于游戏地图中的某个位置的时候，用鼠标点击另外一个相对较远的位置，人物就会自动地绕过障碍物走过去。玩过这么多游戏，不知你是否思考过，这个功能是怎么实现的呢？</strong></p>
+<h2 id="算法解析"><a href="#算法解析" class="headerlink" title="算法解析"></a>算法解析</h2><p>实际上，这是一个非常典型的搜索问题。人物的起点就是他当下所在的位置，终点就是鼠标点击的位置。我们需要在地图中，找一条从起点到终点的路径。这条路径要绕过地图中所有障碍物，并且看起来要是一种非常聪明的走法。所谓“聪明”，笼统地解释就是，走的路不能太绕。理论上讲，最短路径显然是最聪明的走法，是这个问题的最优解。</p>
+<p>不过，在<a href="https://muchen.fun/passages/41/">第 41 篇</a>最优出行路线规划问题中，提到过，如果图非常大，那 <code>Dijkstra</code> 最短路径算法的执行耗时会很多。在真实的软件开发中，面对的是超级大的地图和海量的寻路请求，算法的执行效率太低，这显然是无法接受的。</p>
+<p>实际上，像出行路线规划、游戏寻路，这些真实软件开发中的问题，一般情况下，都不需要非得求最优解（也就是最短路径）。在权衡路线规划质量和执行效率的情况下，只需要寻求一个次优解就足够了。那<strong>如何快速找出一条接近于最短路线的次优路线呢？</strong></p>
+<p>这个快速的路径规划算法，就是 <code>A*</code> 算法。实际上，<code>A*</code> 算法是对 <code>Dijkstra</code> 算法的优化和改造。如何将 <code>Dijkstra</code> 算法改造成 <code>A*</code> 算法呢？为了更好地理解接下来要讲的内容，建议你先温习下<a href="https://muchen.fun/passages/41/">第 41 篇</a>中的 <code>Dijkstra</code> 算法的实现原理。</p>
+<p><code>Dijkstra</code> 算法有点儿类似 <code>BFS</code> 算法，它每次找到跟起点最近的顶点，往外扩展。这种往外扩展的思路，其实有些盲目。为什么这么说呢？举一个例子来解释一下。下面这个图对应一个真实的地图，每个顶点在地图中的位置，用一个二维坐标<code>(x,y)</code>来表示，其中，<code>x</code> 表示横坐标，<code>y</code> 表示纵坐标。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/22/f1f902f0-c48a-11e9-808b-1970743a43bb.png" alt="image.png"><br>在 <code>Dijkstra</code> 算法的实现思路中，用一个优先级队列，来记录已经遍历到的顶点以及这个顶点与起点的路径长度。顶点与起点路径长度越小，就越先被从优先级队列中取出来扩展，从图中举的例子可以看出，尽管找的是从 <code>s</code> 到 <code>t</code> 的路线，但是最先被搜索到的顶点依次是 <code>1</code>，<code>2</code>，<code>3</code>。通过肉眼来观察，这个搜索方向跟期望的路线方向（<code>s</code> 到 <code>t</code> 是从西向东）是反着的，路线搜索的方向明显“跑偏”了。</p>
+<p>之所以会“跑偏”，那是因为按照顶点与起点的路径长度的大小，来安排出队列顺序的。与起点越近的顶点，就会越早出队列。并没有考虑到这个顶点到终点的距离，所以，在地图中，尽管 <code>1</code>，<code>2</code>，<code>3</code> 三个顶点离起始顶点最近，但离终点却越来越远。</p>
+<p>如果综合更多的因素，把这个顶点到终点可能还要走多远，也考虑进去，综合来判断哪个顶点该先出队列，那是不是就可以避免“跑偏”呢？</p>
+<p>当遍历到某个顶点的时候，从起点走到这个顶点的路径长度是确定的，记作 <code>g(i)</code>（<code>i</code> 表示顶点编号）。但是，从这个顶点到终点的路径长度是未知的。虽然确切的值无法提前知道，但是可以用其他估计值来代替。</p>
+<p>这里可以通过这个顶点跟终点之间的直线距离，也就是欧几里得距离，来近似地估计这个顶点跟终点的路径长度（注意：路径长度跟直线距离是两个概念）。把这个距离记作 <code>h(i)</code>（<code>i</code> 表示这个顶点的编号），专业的叫法是<strong>启发函数</strong>（<code>heuristic function</code>）。因为欧几里得距离的计算公式，会涉及比较耗时的开根号计算，所以，一般通过另外一个更加简单的距离计算公式，那就是<strong>曼哈顿距离</strong>（<code>Manhattan distance</code>）。曼哈顿距离是两点之间横纵坐标的距离之和。计算的过程只涉及加减法、符号位反转，所以比欧几里得距离更加高效。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">hManhattan</span><span class="params">(Vertex v1, Vertex v2)</span> </span>&#123; <span class="comment">// Vertex 表示顶点，后面有定义</span></span><br><span class="line">  <span class="keyword">return</span> Math.abs(v1.x - v2.x) + Math.abs(v1.y - v2.y);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>原来只是单纯地通过顶点与起点之间的路径长度 <code>g(i)</code>，来判断谁先出队列，现在有了顶点到终点的路径长度估计值，通过两者之和 <code>f(i)=g(i)+h(i)</code>，来判断哪个顶点该最先出队列。综合两部分，就能有效避免刚刚讲的“跑偏”。这里 <code>f(i)</code> 的专业叫法是<strong>估价函数</strong>（<code>evaluation function</code>）。    </p>
+<p>从刚刚的描述，可以发现，<code>A*</code> 算法就是对 <code>Dijkstra</code> 算法的简单改造。实际上，代码实现方面，也只需要稍微改动几行代码，就能把 <code>Dijkstra</code> 算法的代码实现，改成 <code>A*</code> 算法的代码实现。</p>
+<p>在 <code>A*</code> 算法的代码实现中，顶点 <code>Vertex</code> 类的定义，跟 <code>Dijkstra</code> 算法中的定义，稍微有点儿区别，多了 <code>x</code>，<code>y</code> 坐标，以及刚刚提到的 <code>f(i)</code> 值。图 <code>Graph</code> 类的定义跟 <code>Dijkstra</code> 算法中的定义一样。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">Vertex</span> </span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">int</span> id; <span class="comment">// 顶点编号 ID</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">int</span> dist; <span class="comment">// 从起始顶点，到这个顶点的距离，也就是 g(i)</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">int</span> f; <span class="comment">// 新增：f(i)=g(i)+h(i)</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">int</span> x, y; <span class="comment">// 新增：顶点在地图中的坐标（x, y）</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">Vertex</span><span class="params">(<span class="keyword">int</span> id, <span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.id = id;</span><br><span class="line">    <span class="keyword">this</span>.x = x;</span><br><span class="line">    <span class="keyword">this</span>.y = y;</span><br><span class="line">    <span class="keyword">this</span>.f = Integer.MAX_VALUE;</span><br><span class="line">    <span class="keyword">this</span>.dist = Integer.MAX_VALUE;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Graph 类的成员变量，在构造函数中初始化</span></span><br><span class="line">Vertex[] vertexes = <span class="keyword">new</span> Vertex[<span class="keyword">this</span>.v];</span><br><span class="line"><span class="comment">// 新增一个方法，添加顶点的坐标</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addVetex</span><span class="params">(<span class="keyword">int</span> id, <span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line">  vertexes[id] = <span class="keyword">new</span> Vertex(id, x, y)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>A*</code> 算法的代码实现的主要逻辑是下面这段代码。它跟 <code>Dijkstra</code> 算法的代码实现，主要有 <code>3</code> 点区别：</p>
+<ul>
+<li><p>优先级队列构建的方式不同。<code>A*</code> 算法是根据 <code>f</code> 值（也就是刚刚讲到的 <code>f(i)=g(i)+h(i)</code>）来构建优先级队列，而 <code>Dijkstra</code> 算法是根据 <code>dist</code> 值（也就是刚刚讲到的 <code>g(i)</code>）来构建优先级队列；</p>
+</li>
+<li><p><code>A*</code> 算法在更新顶点 <code>dist</code> 值的时候，会同步更新 <code>f</code> 值；</p>
+</li>
+<li><p>循环结束的条件也不一样。<code>Dijkstra</code> 算法是在终点出队列的时候才结束，<code>A*</code> 算法是一旦遍历到终点就结束。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">astar</span><span class="params">(<span class="keyword">int</span> s, <span class="keyword">int</span> t)</span> </span>&#123; <span class="comment">// 从顶点 s 到顶点 t 的路径</span></span><br><span class="line">  <span class="keyword">int</span>[] predecessor = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="keyword">this</span>.v]; <span class="comment">// 用来还原路径</span></span><br><span class="line">  <span class="comment">// 按照 vertex 的 f 值构建的小顶堆，而不是按照 dist</span></span><br><span class="line">  PriorityQueue queue = <span class="keyword">new</span> PriorityQueue(<span class="keyword">this</span>.v);</span><br><span class="line">  <span class="keyword">boolean</span>[] inqueue = <span class="keyword">new</span> <span class="keyword">boolean</span>[<span class="keyword">this</span>.v]; <span class="comment">// 标记是否进入过队列</span></span><br><span class="line">  vertexes[s].dist = <span class="number">0</span>;</span><br><span class="line">  vertexes[s].f = <span class="number">0</span>;</span><br><span class="line">  queue.add(vertexes[s]);</span><br><span class="line">  inqueue[s] = <span class="keyword">true</span>;</span><br><span class="line">  <span class="keyword">while</span> (!queue.isEmpty()) &#123;</span><br><span class="line">    Vertex minVertex = queue.poll(); <span class="comment">// 取堆顶元素并删除</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; adj[minVertex.id].size(); ++i) &#123;</span><br><span class="line">      Edge e = adj[minVertex.id].get(i); <span class="comment">// 取出一条 minVetex 相连的边</span></span><br><span class="line">      Vertex nextVertex = vertexes[e.tid]; <span class="comment">// minVertex--&gt;nextVertex</span></span><br><span class="line">      <span class="keyword">if</span> (minVertex.dist + e.w &lt; nextVertex.dist) &#123; <span class="comment">// 更新 next 的 dist,f</span></span><br><span class="line">        nextVertex.dist = minVertex.dist + e.w;</span><br><span class="line">        nextVertex.f </span><br><span class="line">           = nextVertex.dist+hManhattan(nextVertex, vertexes[t]);</span><br><span class="line">        predecessor[nextVertex.id] = minVertex.id;</span><br><span class="line">        <span class="keyword">if</span> (inqueue[nextVertex.id] == <span class="keyword">true</span>) &#123;</span><br><span class="line">          queue.update(nextVertex);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          queue.add(nextVertex);</span><br><span class="line">          inqueue[nextVertex.id] = <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (nextVertex.id == t) &#123; <span class="comment">// 只要到达 t 就可以结束 while 了</span></span><br><span class="line">        queue.clear(); <span class="comment">// 清空 queue，才能推出 while 循环</span></span><br><span class="line">        <span class="keyword">break</span>; </span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 输出路径</span></span><br><span class="line">  System.out.print(s);</span><br><span class="line">  print(s, t, predecessor); <span class="comment">// print 函数请参看 Dijkstra 算法的实现</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p><strong>尽管 <code>A*</code> 算法可以更加快速的找到从起点到终点的路线，但是它并不能像 <code>Dijkstra</code> 算法那样，找到最短路线。这是为什么呢？</strong></p>
+<p>要找出起点 <code>s</code> 到终点 <code>t</code> 的最短路径，最简单的方法是，通过回溯穷举所有从 <code>s</code> 到达 <code>t</code> 的不同路径，然后对比找出最短的那个。不过很显然，回溯算法的执行效率非常低，是指数级的。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/22/486d8280-c48d-11e9-808b-1970743a43bb.png" alt="image.png"><br><code>Dijkstra</code> 算法在此基础之上，利用动态规划的思想，对回溯搜索进行了剪枝，只保留起点到某个顶点的最短路径，继续往外扩展搜索。动态规划相较于回溯搜索，只是换了一个实现思路，但它实际上也考察到了所有从起点到终点的路线，所以才能得到最优解。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/22/60f829e0-c48d-11e9-808b-1970743a43bb.png" alt="image.png"><br><code>A*</code> 算法之所以不能像 <code>Dijkstra</code> 算法那样，找到最短路径，主要原因是两者的 <code>while</code> 循环结束条件不一样。刚刚提到，<code>Dijkstra</code> 算法是在终点出队列的时候才结束，<code>A*</code> 算法是一旦遍历到终点就结束。对于 <code>Dijkstra</code> 算法来说，当终点出队列的时候，终点的 <code>dist</code> 值是优先级队列中所有顶点的最小值，即便再运行下去，终点的 <code>dist</code> 值也不会再被更新了。对于 <code>A*</code> 算法来说，一旦遍历到终点，就结束 <code>while</code> 循环，这个时候，终点的 <code>dist</code> 值未必是最小值。</p>
+<p><code>A*</code> 算法利用贪心算法的思路，每次都找 <code>f</code> 值最小的顶点出队列，一旦搜索到终点就不在继续考察其他顶点和路线了。所以，它并没有考察所有的路线，也就不可能找出最短路径了。</p>
+<p>搞懂了 <code>A*</code> 算法，再来看下，<strong>如何借助 A* 算法解决游戏寻路问题？</strong></p>
+<p>要利用 <code>A*</code> 算法解决这个问题，只需要把地图，抽象成图就可以了。不过，游戏中的地图跟<a href="https://muchen.fun/passages/41/">第 41 篇</a>中讲的平常用的地图是不一样的。因为游戏中的地图并不像现实生活中那样，存在规划非常清晰的道路，更多的是宽阔的荒野、草坪等。所以，没法利用 41 篇中讲到的抽象方法，把岔路口抽象成顶点，把道路抽象成边。</p>
+<p>实际上，可以换一种抽象的思路，把整个地图分割成一个一个的小方块。在某一个方块上的人物，只能往上下左右四个方向的方块上移动。可以把每个方块看作一个顶点。两个方块相邻，就在它们之间，连两条有向边，并且边的权值都是 <code>1</code>。所以，这个问题就转化成了，在一个有向有权图中，找某个顶点到另一个顶点的路径问题。将地图抽象成边权值为 <code>1</code> 的有向图之后，就可以套用 <code>A*</code> 算法，来实现游戏中人物的自动寻路功能了。</p>
+<h2 id="总结引申"><a href="#总结引申" class="headerlink" title="总结引申"></a>总结引申</h2><p><code>A*</code> 算法属于一种<strong>启发式搜索算法</strong>（<code>Heuristically Search Algorithm</code>）。实际上，启发式搜索算法并不仅仅只有 <code>A*</code> 算法，还有很多其他算法，比如 <code>IDA*</code> 算法、蚁群算法、遗传算法、模拟退火算法等。</p>
+<p>启发式搜索算法利用估价函数，避免“跑偏”，贪心地朝着最有可能到达终点的方向前进。这种算法找出的路线，并不是最短路线。但是，实际的软件开发中的路线规划问题，往往并不需要非得找最短路线。所以，鉴于启发式搜索算法能很好地平衡路线质量和执行效率，它在实际的软件开发中的应用更加广泛。实际上，在<a href="https://muchen.fun/passages/41/">第 41 篇</a>中，讲到的地图 <code>App</code> 中的出行路线规划问题，也可以利用启发式搜索算法来实现。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>之前讲的“迷宫问题”是否可以借助 <code>A*</code> 算法来更快速地找到一个走出去的路线呢？如果可以，请具体讲讲该怎么来做；如果不可以，请说说原因。欢迎留言和我分享。</p>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#算法解析"><span class="toc-text">算法解析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结引申"><span class="toc-text">总结引申</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#思考"><span class="toc-text">思考</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: 沐晨</div>
+      
+        <div>
+          原文链接:
+          <a style="word-break: break-word;" href="" target="_blank">https://muchen.fun/passages/46/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+    
+      <a style="word-break: break-word;" href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
+    
+      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+    
+    </div>
+  
+</div>
+
+<div class="left_prev_arrow_div">
+    <div class="left_prev_arrow arrow_div">
+        <a href="/passages/45/" data-enable="true">
+            <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        </a>
+    </div>
+</div>
+<div class="right_prev_arrow_div">
+    <div class="right_prev_arrow arrow_div">
+        <a href="javascript:void(0);" data-enable="false">
+            <i class="fa fa-chevron-right" aria-hidden="true"></i>
+        </a>
+    </div>
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      
+        <div class="site-footer-col">
+          <h5 class="site-footer-title">博客推荐</h5>
+          
+            <span class="site-footer-item">
+              <a href="https://muchen.fun/" target="_blank">沐晨</a>
+            </span>
+          
+            <span class="site-footer-item">
+              <a href="http://www.wangdabo.com" target="_blank">王大博</a>
+            </span>
+          
+        </div>
+      
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: lcoder@qq.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://fanciercoder.github.io/" target="_blank">沐晨</a>.
+      All rights reserved.
+    </div>
+    <div class="site-footer-info">
+        <span style="position: relative;">
+        <a style=" position: absolute;
+            white-space: nowrap;" id="colorPrint">
+        </a>
+        </span>
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+        <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+          
+            <div>
+              <img src="/images/wechat.png" alt="WeChat">
+              
+                <p>WeChat</p>
+              
+            </div>
+          
+            <div>
+              <img src="/images/alipay.png" alt="AliPay">
+              
+                <p>AliPay</p>
+              
+            </div>
+          
+            <div>
+              <img src="/images/BitCoin.jpg" alt="BitCoin">
+              
+                <p>BitCoin</p>
+              
+            </div>
+          
+        </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="javascript:void(0);" data-enable="false">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/45/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+      <a href="javascript:void(0);" id="site-reward">
+        <i class="fa fa-thumbs-up"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-144841374-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-144841374-1');
+  </script>
+
+
+
+
+  <script async>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+
+
+
+
+ <script>
+ //const element =  document.querySelector('.home-article-wrapper')
+ //element.classList.add('animated', 'bounceInLeft')
+ function testAnim(x) {
+     $('.home-article-wrapper').removeClass('animate').addClass(x + ' animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+       $(this).removeClass('animate');
+     });
+   };
+
+   testAnim('flipInX');
+ </script>
+
+    
+      <script src="/js/footer.js"></script>
+    
+  </body>
+</html>
