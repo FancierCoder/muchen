@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://muchen.fun/about/index.html</loc>
+    
+    <lastmod>2019-08-24T08:53:14.965Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://muchen.fun/passages/48/</loc>
     
     <lastmod>2019-08-24T07:16:42.947Z</lastmod>
@@ -341,13 +348,6 @@
     <loc>https://muchen.fun/passages/Kafka/</loc>
     
     <lastmod>2019-07-16T01:35:28.098Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://muchen.fun/about/index.html</loc>
-    
-    <lastmod>2019-07-12T06:24:45.476Z</lastmod>
     
   </url>
   
