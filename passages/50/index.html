@@ -259,14 +259,13 @@
 <p>经过这一系列查询，就得到了一组排好序的网页编号。拿着网页编号，去 <code>doc_id.bin</code> 文件中查找对应的网页链接，分页显示给用户就可以了。</p>
 <h2 id="总结引申"><a href="#总结引申" class="headerlink" title="总结引申"></a>总结引申</h2><p>上面展示了一个小型搜索引擎的设计思路。这只是一个搜索引擎设计的基本原理，有很多优化、细节并未涉及，比如计算网页权重的 <code>PageRank</code> 算法、计算查询结果排名的 <code>tf-idf</code> 模型等等。</p>
 <p>在讲解的过程中，涉及的数据结构和算法有：图、散列表、<code>Trie</code> 树、布隆过滤器、单模式字符串匹配算法、<code>AC</code> 自动机、广度优先遍历、归并排序等。如果对其中哪些内容不清楚，你可以回到对应的章节进行复习。</p>
-<p>最后，如果有时间的话，强烈建议你，按照我的思路，自己写代码实现一个简单的搜索引擎。这样写出来的，即便只是一个 <code>demo</code>，但对于你深入理解数据结构和算法，也是很有帮助的。</p>
+<p>最后，如果有时间的话，强烈建议你，按照上面的思路，自己写代码实现一个简单的搜索引擎。这样写出来的，即便只是一个 <code>demo</code>，但对于你深入理解数据结构和算法，也是很有帮助的。</p>
 <h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ul>
 <li><p>图的遍历方法有两种，深度优先和广度优先。搜索引擎中的爬虫是通过广度优先策略来爬取网页的。搜索引擎为什么选择广度优先策略，而不是深度优先策略呢？</p>
 </li>
 <li><p>大部分搜索引擎在结果显示的时候，都支持摘要信息和网页快照。实际上，只需要对上面的设计思路，稍加改造，就可以支持这两项功能。你知道如何改造吗？欢迎留言和我分享。</p>
 </li>
 </ul>
-
   </article>
   <aside class="table-content" id="site-toc">
   <div class="table-content-title">
@@ -309,7 +308,7 @@
 </div>
 <div class="right_prev_arrow_div">
     <div class="right_prev_arrow arrow_div">
-        <a href="javascript:void(0);" data-enable="false">
+        <a href="/passages/reverse-single-list/" data-enable="true">
             <i class="fa fa-angle-right" aria-hidden="true"></i>
         </a>
     </div>
@@ -430,7 +429,7 @@
 
 <div class="bottom-bar">
   <div class="bottom-bar-left">
-    <a href="javascript:void(0);" data-enable="false">
+    <a href="/passages/reverse-single-list/" data-enable="true">
       <i class="fa fa-arrow-left"></i>
     </a>
     <a href="/passages/49/" data-enable="true">
