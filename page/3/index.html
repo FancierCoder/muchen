@@ -70,10 +70,35 @@
 
   <link href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/animate-3.7.2.min.css" rel="stylesheet">
 
-  <link rel="stylesheet" href="/css/index.css">
-<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+  <link rel="stylesheet" href="/styles/components/highlight/highlight.css">
 
   
+
+  <script type="text/javascript">
+      function getCSS() {
+          let dateToday = new Date();
+          let timeNow = dateToday.getTime();
+          dateToday.setTime(timeNow);
+          let theHour = dateToday.getHours();
+          let display;
+          if (theHour < 5)
+          display = "/css/index-night.css";
+          else if (theHour > 19)
+            display = "/css/index-night.css";
+          else if (theHour > 5)
+            display = "/css/index.css";
+          else if (theHour < 19)
+            display = "/css/index.css";
+          let css = '<';
+          css += 'link rel="stylesheet" href=' + display + ' \/';
+          css += '>';
+          document.write(css);
+      }
+  </script>
+  <script type="text/javascript">
+      window.onload = getCSS();
+  </script>
+
 </head>
   <body>
     <div class="preloader">
@@ -290,9 +315,9 @@
           
             <div class="passage-tags">
              
-              <a href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
-             
               <a href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+             
+              <a href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
             
             </div>
           
@@ -333,9 +358,9 @@
           
             <div class="passage-tags">
              
-              <a href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
-             
               <a href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+             
+              <a href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
              
               <a href="/tags/时间复杂度/"><i class="fa fa-tags"></i>时间复杂度</a>
             
@@ -419,9 +444,9 @@
           
             <div class="passage-tags">
              
-              <a href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
-             
               <a href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+             
+              <a href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
             
             </div>
           
@@ -462,9 +487,9 @@
           
             <div class="passage-tags">
              
-              <a href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
-             
               <a href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+             
+              <a href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
             
             </div>
           
@@ -505,9 +530,9 @@
           
             <div class="passage-tags">
              
-              <a href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
-             
               <a href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+             
+              <a href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
             
             </div>
           
@@ -548,9 +573,9 @@
           
             <div class="passage-tags">
              
-              <a href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
-             
               <a href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+             
+              <a href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
             
             </div>
           
@@ -591,9 +616,9 @@
           
             <div class="passage-tags">
              
-              <a href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
-             
               <a href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+             
+              <a href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
             
             </div>
           
@@ -634,9 +659,9 @@
           
             <div class="passage-tags">
              
-              <a href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
-             
               <a href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+             
+              <a href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
             
             </div>
           
