@@ -1561,4 +1561,18 @@ main {
     border-bottom-color: #4c4a4a !important;
 }
 
+*::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 1px 1px 0 rgba(0,0,0,0.1), inset 0 -1px 0 rgba(0,0,0,0.07);
+    background-clip: padding-box;
+    background-color: #696969;
+    min-height: 40px;
+    padding-top: 100px;
+    border-radius: 4px;
+}
+
 /*# sourceMappingURL=index.css.map */
