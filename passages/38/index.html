@@ -81,14 +81,15 @@
           dateToday.setTime(timeNow);
           let theHour = dateToday.getHours();
           let display;
-          if (theHour < 5)
-          display = "/css/index-night.css";
-          else if (theHour > 19)
-            display = "/css/index-night.css";
-          else if (theHour > 5)
-            display = "/css/index.css";
-          else if (theHour < 19)
-            display = "/css/index.css";
+          if (theHour <= 5) {
+			  display = "/css/index-night.css";
+		  } else if (theHour >= 19) {
+              display = "/css/index-night.css";
+		  } else if (theHour > 5) {
+              display = "/css/index.css";
+		  } else if (theHour < 19) {
+              display = "/css/index.css";
+		  }
           let css = '<';
           css += 'link rel="stylesheet" href=' + display + ' \/';
           css += '>';
