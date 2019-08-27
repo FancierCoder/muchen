@@ -187,7 +187,7 @@ main {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #fff;
+    background-color: rgba(52,50,50);
     border: 0;
     border-radius: 4px;
     background-clip: padding-box;
@@ -196,7 +196,7 @@ main {
 
 .site-layer-header {
     padding: 15px 25px;
-    border-bottom: 1px solid #E0E0E0;
+    border-bottom: 1px solid #555555;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -248,16 +248,16 @@ main {
     display: inline-block;
     line-height: 1.5;
     padding: 5px 30px 5px 10px;
-    color: #212121;
-    background-color: #FAFAFA;
+    color: #bcbcbc;
+    background-color: rgba(72,70,70,0.97);
     background-image: none;
-    border: 1px solid #EEEEEE;
+    border: 1px solid rgba(52,50,50);
     border-radius: 4px;
     transition: all .3s;
 }
 
 .site-layer-input input:focus {
-    border-color: #64B5F6;
+    border-color: #555555;
     outline: 0;
     box-shadow: 0 0 0 2px rgba(100, 181, 246, 0.2);
 }
@@ -280,6 +280,24 @@ main {
 .site-layer-reward {
     width: 100%;
     overflow: auto;
+}
+
+.site-layer-reward::-webkit-scrollbar {/*滚动条整体样式*/
+	width: 5px;     /*高宽分别对应横竖滚动条的尺寸*/
+	height: 5px;
+	scrollbar-arrow-color:red;
+
+}
+.site-layer-reward::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+	border-radius: 5px;
+	-webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+	background: #696969;
+	scrollbar-arrow-color:red;
+}
+.site-layer-reward::-webkit-scrollbar-track {/*滚动条里面轨道*/
+	-webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+	border-radius: 0;
+	background: rgba(0,0,0,0.1);
 }
 
 .site-layer-reward div {
@@ -1573,6 +1591,12 @@ body::-webkit-scrollbar-thumb {
     min-height: 40px;
     padding-top: 100px;
     border-radius: 4px;
+}
+
+body::-webkit-scrollbar-track {/*滚动条里面轨道*/
+	-webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+	border-radius: 0;
+	background: #2c2a2a;
 }
 
 
