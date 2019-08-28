@@ -6,12 +6,12 @@
   <meta name="author" content="MuChen">
   
   
-  <title>2.浅析最好、最坏、平均、均摊时间复杂度 | MuChen&#39;s Blog</title>
+  <title>标签: 数据结构 | 第4页 | MuChen&#39;s Blog</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="数据结构与算法(入门),算法,">
+    <meta name="keywords" content="MuChen&#39;s Blog">
   
 
   
@@ -46,7 +46,7 @@
     welcome: {"enable":false,"interval":30},
     start_time: "2019-07-12",
     passwords: ["0e31be4bd24c14e65633d11633fe616ee3d93b4f31d07726fdbe113fa98a391a", ],
-    is_post: true,
+    is_post: false,
     lock: false,
     author: "MuChen",
     share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
@@ -198,121 +198,34 @@
 </nav>
 <div id="site-process"></div>
     <main>
-      
-  <div class="passage">
-  <div class="passage-meta">
-
-    
-      <span style="margin-right: 24px;">
-        <a href="/categories/数据结构与算法-入门/"><i class="fa fa-bookmark"></i>数据结构与算法(入门)</a>
-      </span>
-    
-    
-      <span style="margin-right: 24px;">
-         <i class="fa fa-unlock-alt"></i>UNLOCK
-      </span>
-    
-
-  </div>
-  <div class="passage-title-wrap">
-      <h1 class="passage-title">
-        2.浅析最好、最坏、平均、均摊时间复杂度
-      </h1>
-      <div class="passage-meta">
-        <span style="margin-right: 24px;">
-          <i class="fa fa-calendar"></i>2019.07.13 11:19
-        </span>
-        <span id="article-visit-info" style="margin-right: 24px;">
-            <i class="fa fa-eye"></i> 0
-        </span>
-      </div>
-  </div>
+      <div class="timeline">
+  <h2 class="timeline-title">标签: 数据结构</h2>
   
-  <article class="passage-article">
-    <h2 id="一、复杂度分析的4个概念"><a href="#一、复杂度分析的4个概念" class="headerlink" title="一、复杂度分析的4个概念"></a>一、复杂度分析的4个概念</h2><ul>
-<li>最坏情况时间复杂度：代码在最理想情况下执行的时间复杂度。</li>
-<li>最好情况时间复杂度：代码在最坏情况下执行的时间复杂度。</li>
-<li>平均时间复杂度：用代码在所有情况下执行的次数的加权平均值表示。</li>
-<li>均摊时间复杂度：在代码执行的所有复杂度情况中绝大部分是低级别的复杂度，个别情况是高级别复杂度且发生具有时序关系时，可以将个别高级别复杂度均摊到低级别复杂度上。基本上均摊结果就等于低级别复杂度。</li>
-</ul>
-<h2 id="二、为什么要引入这4个概念"><a href="#二、为什么要引入这4个概念" class="headerlink" title="二、为什么要引入这4个概念"></a>二、为什么要引入这4个概念</h2><ul>
-<li>同一段代码在不同情况下时间复杂度会出现量级差异，为了更全面，更准确的描述代码的时间复杂度，所以引入这4个概念。</li>
-<li>代码复杂度在不同情况下出现量级差别时才需要区别这四种复杂度。大多数情况下，是不需要区别分析它们的。</li>
-</ul>
-<h2 id="三、如何分析平均、均摊时间复杂度"><a href="#三、如何分析平均、均摊时间复杂度" class="headerlink" title="三、如何分析平均、均摊时间复杂度"></a>三、如何分析平均、均摊时间复杂度</h2><ul>
-<li>平均时间复杂度<blockquote>
-<p>代码在不同情况下复杂度出现量级差别，则用代码所有可能情况下执行次数的加权平均值表示。</p>
-</blockquote>
-</li>
-<li>均摊时间复杂度<blockquote>
-<p>两个条件满足时使用：</p>
-<ul>
-<li>代码在绝大多数情况下是低级别复杂度，只有极少数情况是高级别复杂度；</li>
-<li>低级别和高级别复杂度出现具有时序规律。均摊结果一般都等于低级别复杂度。</li>
-</ul>
-</blockquote>
-</li>
-</ul>
-  </article>
-  <aside class="table-content" id="site-toc">
-  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
-  <div class="table-content-title">
-    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
-    <span>目录</span>
-  </div>
-  <div class="table-content-main" id="table-toc">
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、复杂度分析的4个概念"><span class="toc-text">一、复杂度分析的4个概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、为什么要引入这4个概念"><span class="toc-text">二、为什么要引入这4个概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三、如何分析平均、均摊时间复杂度"><span class="toc-text">三、如何分析平均、均摊时间复杂度</span></a></li></ol>
-  </div>
-</aside>
-  
-    <aside class="passage-copyright">
-      <div>本文作者: 沐晨</div>
-      
-        <div>
-          原文链接:
-          <a style="word-break: break-word;" href="" target="_blank">https://muchen.fun/passages/2/</a>
-        </div>
-      
-      <div>
-        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
-      </div>
-    </aside>
-  
-  
-    <div class="passage-tags">
     
-      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+      <h3 class="timeline-subtitle">2019</h3>
     
+    <div class="timeline-item">
+      <time>2019-07-12</time>
+      <a target="_self" href="/passages/1/">1.复杂度分析</a>
     </div>
   
 </div>
 
 <div class="left_prev_arrow_div">
-    <div class="left_prev_arrow arrow_div">
-        <a href="/passages/1/" data-enable="true">
-            <i class="fa fa-angle-left" aria-hidden="true"></i>
-        </a>
-    </div>
+  <div class="left_prev_arrow arrow_div">
+    <a href="/tags/数据结构/page/3/" data-enable="true">
+      <i class="fa fa-angle-left" aria-hidden="true"></i>
+    </a>
+  </div>
 </div>
 <div class="right_prev_arrow_div">
-    <div class="right_prev_arrow arrow_div">
-        <a href="/passages/3/" data-enable="true">
-            <i class="fa fa-angle-right" aria-hidden="true"></i>
-        </a>
-    </div>
+  <div class="right_prev_arrow arrow_div">
+    <a href="javascript:void(0);" data-enable="false">
+      <i class="fa fa-angle-right" aria-hidden="true"></i>
+    </a>
+  </div>
 </div>
-
     </main>
-    
-      
-<div class="site-comment-contanier" data-plateform="leancloud">
-  
-    <p id="site-comment-info">
-      <i class="fa fa-spinner fa-spin"></i> 评论加载中
-    </p>
-    <div id="site-comment"></div>
-  
-</div>
     
     <div class="site-footer-wrapper">
   <footer class="site-footer">
@@ -417,19 +330,19 @@
 
 <div class="bottom-bar">
   <div class="bottom-bar-left">
-    <a href="/passages/3/" data-enable="true">
+    <a href="/tags/数据结构/page/3/" data-enable="true">
       <i class="fa fa-arrow-left"></i>
     </a>
-    <a href="/passages/1/" data-enable="true">
+    <a href="javascript:void(0);" data-enable="false">
       <i class="fa fa-arrow-right"></i>
     </a>
   </div>
   <div class="bottom-bar-right">
-    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+    <a href="javascript:void(0);" data-enable="false" id="site-toc-show-btn">
       <i class="fa fa-bars"></i>
     </a>
     
-      <a href="#site-comment" data-enable="true">
+      <a href="javascript:void(0);" data-enable="false">
         <i class="fa fa-commenting"></i>
       </a>
     

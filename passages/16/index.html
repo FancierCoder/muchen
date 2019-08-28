@@ -308,11 +308,12 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> var1 = <span class="keyword">this</span>.hash;</span><br><span class="line">  <span class="keyword">if</span>(var1 == <span class="number">0</span> &amp;&amp; <span class="keyword">this</span>.value.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">char</span>[] var2 = <span class="keyword">this</span>.value;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> var3 = <span class="number">0</span>; var3 &lt; <span class="keyword">this</span>.value.length; ++var3) &#123;</span><br><span class="line">      var1 = <span class="number">31</span> * var1 + var2[var3];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">this</span>.hash = var1;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> var1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
   </article>
   <aside class="table-content" id="site-toc">
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
   <div class="table-content-title">
     <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
     <span>目录</span>
   </div>
-  <div class="table-content-main">
+  <div class="table-content-main" id="table-toc">
     <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、如何设计散列函数？"><span class="toc-text">一、如何设计散列函数？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、如何根据装载因子动态扩容？"><span class="toc-text">二、如何根据装载因子动态扩容？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三、如何选择散列冲突解决方法？"><span class="toc-text">三、如何选择散列冲突解决方法？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#思考"><span class="toc-text">思考</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#工业级散列表举例分析"><span class="toc-text">工业级散列表举例分析</span></a></li></ol>
   </div>
 </aside>

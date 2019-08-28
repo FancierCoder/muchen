@@ -334,11 +334,12 @@
 <p>第三点，<strong>插入操作的平衡调整比较简单，但是删除操作就比较复杂</strong>。针对删除操作，有两次调整，第一次是针对要删除的节点做初步调整，让调整后的红黑树继续满足第四条定义，“每个节点到可达叶子节点的路径都包含相同个数的黑色节点”。但是这个时候，第三条定义就不满足了，有可能会存在两个红色节点相邻的情况。第二次调整就是解决这个问题，让红黑树不存在相邻的红色节点。</p>
   </article>
   <aside class="table-content" id="site-toc">
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
   <div class="table-content-title">
     <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
     <span>目录</span>
   </div>
-  <div class="table-content-main">
+  <div class="table-content-main" id="table-toc">
     <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#实现红黑树的基本思想"><span class="toc-text">实现红黑树的基本思想</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#插入操作的平衡调整"><span class="toc-text">插入操作的平衡调整</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#删除操作的平衡调整"><span class="toc-text">删除操作的平衡调整</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#针对删除节点初步调整"><span class="toc-text">针对删除节点初步调整</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#针对关注节点进行二次调整"><span class="toc-text">针对关注节点进行二次调整</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#思考"><span class="toc-text">思考</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
   </div>
 </aside>

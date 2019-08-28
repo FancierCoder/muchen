@@ -179,7 +179,7 @@ main {
     right: 0;
     top: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.4);
 }
 
 .site-layer-content {
@@ -282,6 +282,24 @@ main {
     overflow: auto;
 }
 
+.site-layer-reward::-webkit-scrollbar {/*滚动条整体样式*/
+    width: 5px;     /*高宽分别对应横竖滚动条的尺寸*/
+    height: 5px;
+    scrollbar-arrow-color:red;
+
+}
+.site-layer-reward::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: #42A5F5;
+    scrollbar-arrow-color:red;
+}
+.site-layer-reward::-webkit-scrollbar-track {/*滚动条里面轨道*/
+    /*-webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);*/
+    border-radius: 0;
+    background: rgba(0,0,0,0.1);
+}
+
 .site-layer-reward div {
     width: 100%;
     padding: 10px calc(50% - 128px);
@@ -376,14 +394,14 @@ main {
 .table-content {
     display: block;
     position: fixed;
-    right: -25%;
+    right: -350px;
     top: 0;
     height: 100vh;
-    width: 25%;
+    width: 350px;
     background: #F5F5F5;
     overflow-y: auto;
     z-index: 900;
-    transition: right .3s ease;
+    transition: right 0.5s ease;
 }
 
 .table-content-title {
@@ -391,7 +409,7 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 60px;
+    height: 62px;
     border-bottom: 2px dotted #42A5F5;
 }
 
@@ -404,7 +422,7 @@ main {
     line-height: 58px;
     color: #03A9F4;
     cursor: pointer;
-    transition: all .3s ease;
+    transition: all 0.5s ease;
 }
 
 .table-content-title #site-toc-hide-btn:hover {
@@ -437,6 +455,10 @@ main {
 
 .table-content-main ol, .table-content-main ul, .table-content-main li {
     list-style: none;
+}
+
+#table-toc .toc {
+    margin-left: 1.5rem;
 }
 
 .table-content-main .toc-item {
@@ -592,9 +614,9 @@ main {
 }
 
 #site-nav {
-    z-index: 900;
-    right: -200px;
-    width: 200px;
+    z-index: 950;
+    right: -180px;
+    width: 180px;
 }
 
 #site-nav .table-content-main {
@@ -1527,6 +1549,102 @@ body::-webkit-scrollbar-track {/*滚动条里面轨道*/
 	/*-webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);*/
 	border-radius: 0;
 	background: #FAFAFA;
+}
+
+body a#toggle-menu-tree {
+    background-color: #F1F1F1;
+    border: 0.0625rem solid #F5F5F5;
+}
+
+a#toggle-menu-tree {
+    top: 0;
+    bottom: 0;
+    font-size: 1.375rem;
+    position: fixed;
+    right: 0;
+    margin-right: -5rem;
+    margin-bottom: auto;
+    margin-top: auto;
+    padding-left: .35rem;
+    color: #999;
+    width: 6.25rem;
+    height: 6.25rem;
+    background-color: rgba(255,255,255,0.9);
+    cursor: pointer;
+    line-height: 6.25rem;
+    border-radius: 6.25rem;
+    border: .0625rem solid #f0f0f0;
+    opacity: 1;
+    font-family: -apple-system, sans-serif;
+    z-index: 890;
+    -webkit-transition: 0.5s ease all;
+    -moz-transition: 0.5s ease all;
+    -ms-transition: 0.5s ease all;
+    -o-transition: 0.5s ease all;
+    transition: 0.5s ease all;
+    -webkit-box-shadow: 0 0.125rem 0.3125rem rgba(0,0,0,0.117);
+    -moz-box-shadow: 0 0.125rem 0.3125rem rgba(0,0,0,0.117);
+    box-shadow: 0 0.125rem 0.3125rem rgba(0,0,0,0.117);
+}
+
+a#toggle-menu-tree i {
+    -webkit-transition: 0.5s ease all;
+    -moz-transition: 0.5s ease all;
+    -ms-transition: 0.5s ease all;
+    -o-transition: 0.5s ease all;
+    transition: 0.5s ease all
+}
+
+a#toggle-menu-tree:hover {
+    background: #fafafa;
+    -webkit-transform: translateX(-1.25rem);
+    -moz-transform: translateX(-1.25rem);
+    -ms-transform: translateX(-1.25rem);
+    -o-transform: translateX(-1.25rem);
+    transform: translateX(-1.25rem)
+}
+
+a#toggle-menu-tree.revert {
+    background: #333
+}
+
+body a#toggle-menu-tree.revert {
+    background: #ccc
+}
+
+a#toggle-menu-tree.show {
+    right: 0
+}
+
+a#toggle-menu-tree.hide {
+    right: -5.3125rem
+}
+
+#site-toc.display-menu-tree a#toggle-menu-tree {
+    background: #fafafa;
+    padding-left: 0;
+    width: 3.125rem;
+    height: 3.125rem;
+    line-height: 3.125rem;
+    text-align: center;
+    margin-right: 2.6375rem;
+    -webkit-transform: translateX(-17.5rem);
+    -moz-transform: translateX(-17.5rem);
+    -ms-transform: translateX(-17.5rem);
+    -o-transform: translateX(-17.5rem);
+    transform: translateX(-17.5rem)
+}
+
+#site-toc.display-menu-tree a#toggle-menu-tree i {
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    transform: rotate(180deg)
+}
+
+#site-toc.display-menu-tree a#toggle-menu-tree.hide {
+    right: 0
 }
 
 /*# sourceMappingURL=index.css.map */
