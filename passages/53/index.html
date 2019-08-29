@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta name="author" content="MuChen">
+  
+  
+  <title>53.算法实战（五） | MuChen&#39;s Blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="算法实战,数据结构,算法,">
+  
+
+  
+  <meta name="description" content="如何用数据结构和算法实现一个短网址系统？">
+
+  <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/jquery-3.4.1.min.js"></script>
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.14.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/Valine-1.3.9.min.js" async></script>
+  
+
+  
+
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8" async></script>
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI","appkey":"5Rl3Rhl9zc8BJNvrPcncKWFy","comment":true,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2019-07-12",
+    passwords: ["0e31be4bd24c14e65633d11633fe616ee3d93b4f31d07726fdbe113fa98a391a", ],
+    is_post: true,
+    lock: false,
+    author: "MuChen",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/animate-3.7.2.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+
+  <script type="text/javascript">
+      function getCSS() {
+          let dateToday = new Date();
+          let timeNow = dateToday.getTime();
+          dateToday.setTime(timeNow);
+          let theHour = dateToday.getHours();
+          let display;
+          if (theHour <= 5) {
+			  display = "/css/index-night.css";
+		  } else if (theHour >= 19) {
+              display = "/css/index-night.css";
+		  } else if (theHour > 5) {
+              display = "/css/index.css";
+		  } else if (theHour < 19) {
+              display = "/css/index.css";
+		  }
+          let css = '<';
+          css += 'link rel="stylesheet" href=' + display + ' \/';
+          css += '>';
+          document.write(css);
+      }
+  </script>
+  <script type="text/javascript">
+      window.onload = getCSS();
+  </script>
+
+</head>
+  <body>
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">沐晨</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | Learn To Learn</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+        <a href="/friends/" target="_self">友链</a>
+      
+        <a href="/about/" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/FancierCoder" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/friends/" target="_self">
+            友链
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/about/" target="_self">
+            关于
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+
+    
+      <span style="margin-right: 24px;">
+        <a href="/categories/算法实战/"><i class="fa fa-bookmark"></i>算法实战</a>
+      </span>
+    
+    
+      <span style="margin-right: 24px;">
+         <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+
+  </div>
+  <div class="passage-title-wrap">
+      <h1 class="passage-title">
+        53.算法实战（五）
+      </h1>
+      <div class="passage-meta">
+        <span style="margin-right: 24px;">
+          <i class="fa fa-calendar"></i>2019.08.29 13:11
+        </span>
+        <span id="article-visit-info" style="margin-right: 24px;">
+            <i class="fa fa-eye"></i> 0
+        </span>
+      </div>
+  </div>
+  
+  <article class="passage-article">
+    <p>短网址服务你用过吗？如果在微博里发布一条带网址的信息，微博会把里面的网址转化成一个更短的网址。只要访问这个短网址，就相当于访问原始的网址。比如下面这两个网址，尽管长度不同，但是都可以跳转到我的 <code>GitHub</code> 里。其中，第二个网址就是通过新浪提供的短网址服务生成的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">原始网址：https:<span class="comment">//github.com/FancierCoder</span></span><br><span class="line">短网址：http:<span class="comment">//t.cn/Ai8EY5h7</span></span><br></pre></td></tr></table></figure>
+
+<p>从功能上讲，短网址服务其实非常简单，就是把一个长的网址转化成一个短的网址。作为一名软件工程师，你是否思考过，这样一个简单的功能，是如何实现的呢？底层都依赖了哪些数据结构和算法呢？</p>
+<h2 id="短网址服务整体介绍"><a href="#短网址服务整体介绍" class="headerlink" title="短网址服务整体介绍"></a>短网址服务整体介绍</h2><p>刚刚讲了短网址服务的一个核心功能，就是把原始的长网址转化成短网址。除了这个功能之外，短网址服务还有另外一个必不可少的功能。那就是，当用户点击短网址的时候，短网址服务会将浏览器重定向为原始网址。这个过程是如何实现的呢？</p>
+<p>为了方便理解，下面有一张对比图，你可以看下。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/29/1ebff400-ca0e-11e9-9613-1df66a9dd690.png" alt="image.png"><br>从图中可以看出，浏览器会先访问短网址服务，通过短网址获取到原始网址，再通过原始网址访问到页面。不过这部分功能并不是要讲的重点。重点来看，如何将长网址转化成短网址？</p>
+<h2 id="如何通过哈希算法生成短网址？"><a href="#如何通过哈希算法生成短网址？" class="headerlink" title="如何通过哈希算法生成短网址？"></a>如何通过哈希算法生成短网址？</h2><p>哈希算法可以将一个不管多长的字符串，转化成一个长度固定的哈希值。可以利用哈希算法，来生成短网址。</p>
+<p>前面已经提过一些哈希算法了，比如 <code>MD5</code>、<code>SHA</code> 等。但是，实际上，并不需要这些复杂的哈希算法。在生成短网址这个问题上，毕竟不需要考虑反向解密的难度，所以只需要关心哈希算法的计算速度和冲突概率。</p>
+<p>能够满足这样要求的哈希算法有很多，其中比较著名并且应用广泛的一个哈希算法，那就是 <code>MurmurHash</code> 算法。尽管这个哈希算法在 <code>2008</code> 年才被发明出来，但现在它已经广泛应用到 <code>Redis</code>、<code>MemCache</code>、<code>Cassandra</code>、<code>HBase</code>、<code>Lucene</code> 等众多著名的软件中。</p>
+<p><code>MurmurHash</code> 算法提供了两种长度的哈希值，一种是 <code>32bits</code>，一种是 <code>128bits</code>。为了让最终生成的短网址尽可能短，可以选择 <code>32bits</code> 的哈希值。对于开头那个 <code>GitHub</code> 网址，假设经过 <code>MurmurHash</code> 计算后，得到的哈希值就是 <code>181338494</code>。再拼上短网址服务的域名，就变成了最终的短网址 <code>http://t.cn/181338494</code>（其中，<code>http://t.cn</code> 是短网址服务的域名）。</p>
+<h3 id="1-如何让短网址更短？"><a href="#1-如何让短网址更短？" class="headerlink" title="1. 如何让短网址更短？"></a>1. 如何让短网址更短？</h3><p>不过，你可能已经看出来了，通过 <code>MurmurHash</code> 算法得到的短网址还是很长啊，而且跟开头那个网址的格式好像也不一样。别着急，只需要稍微改变一个哈希值的表示方法，就可以轻松把短网址变得更短些。</p>
+<p>可以将 <code>10</code> 进制的哈希值，转化成更高进制的哈希值，这样哈希值就变短了。<code>16</code> 进制中，用 <code>A～F</code>，来表示 <code>10～15</code>。在网址 <code>URL</code> 中，常用的合法字符有 <code>0～9</code>、<code>a～z</code>、<code>A～Z</code> 这样 <code>62</code> 个字符。为了让哈希值表示起来尽可能短，可以将 <code>10</code> 进制的哈希值转化成 <code>62</code> 进制。具体的计算过程，写在下面了。最终用 <code>62</code> 进制表示的短网址就是 <code>http://t.cn/cgSqq</code>。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/29/fee4c830-ca0e-11e9-9613-1df66a9dd690.png" alt="image.png"></p>
+<h3 id="2-如何解决哈希冲突问题？"><a href="#2-如何解决哈希冲突问题？" class="headerlink" title="2. 如何解决哈希冲突问题？"></a>2. 如何解决哈希冲突问题？</h3><p>不过，前面讲过，哈希算法无法避免的一个问题，就是哈希冲突。尽管 <code>MurmurHash</code> 算法冲突的概率非常低。但是，一旦冲突，就会导致两个原始网址被转化成同一个短网址。当用户访问短网址的时候，就无从判断，用户想要访问的是哪一个原始网址了。这个问题该如何解决呢？</p>
+<p>一般情况下，会保存短网址跟原始网址之间的对应关系，以便后续用户在访问短网址的时候，可以根据对应关系，查找到原始网址。存储这种对应关系的方式有很多，比如自己设计存储系统或者利用现成的数据库。前面讲到的数据库有 <code>MySQL</code>、<code>Redis</code>。就拿 <code>MySQL</code> 来举例。假设短网址与原始网址之间的对应关系，就存储在 <code>MySQL</code> 数据库中。</p>
+<p>当有一个新的原始网址需要生成短网址的时候，先利用 <code>MurmurHash</code> 算法，生成短网址。然后，拿这个新生成的短网址，在 <code>MySQL</code> 数据库中查找。</p>
+<p>如果没有找到相同的短网址，这也就表明，这个新生成的短网址没有冲突。于是就将这个短网址返回给用户（请求生成短网址的用户），然后将这个短网址与原始网址之间的对应关系，存储到 <code>MySQL</code> 数据库中。</p>
+<p>如果在数据库中，找到了相同的短网址，那也并不一定说明就冲突了。从数据库中，将这个短网址对应的原始网址也取出来。如果数据库中的原始网址，跟现在正在处理的原始网址是一样的，这就说明已经有人请求过这个原始网址的短网址了。就可以拿这个短网址直接用。如果数据库中记录的原始网址，跟正在处理的原始网址不一样，那就说明哈希算法发生了冲突。不同的原始网址，经过计算，得到的短网址重复了。这个时候，该怎么办呢？</p>
+<p>可以给原始网址拼接一串特殊字符，比如“[DUPLICATED]”，然后跟再重新计算哈希值，两次哈希计算都冲突的概率，显然是非常低的。假设出现非常极端的情况，又发生冲突了，可以再换一个拼接字符串，比如“[OHMYGOD]”，再计算哈希值。然后把计算得到的哈希值，跟原始网址拼接了特殊字符串之后的文本，一并存储在 <code>MySQL</code> 数据库中。</p>
+<p>当用户访问短网址的时候，短网址服务先通过短网址，在数据库中查找到对应的原始网址。如果原始网址有拼接特殊字符（这个很容易通过字符串匹配算法找到），就先将特殊字符去掉，然后再将不包含特殊字符的原始网址返回给浏览器。</p>
+<h3 id="3-如何优化哈希算法生成短网址的性能？"><a href="#3-如何优化哈希算法生成短网址的性能？" class="headerlink" title="3. 如何优化哈希算法生成短网址的性能？"></a>3. 如何优化哈希算法生成短网址的性能？</h3><p>为了判断生成的短网址是否冲突，需要拿生成的短网址，在数据库中查找。如果数据库中存储的数据非常多，那查找起来就会非常慢，势必影响短网址服务的性能。那有没有什么优化的手段呢？</p>
+<p>还记得之前讲的 <code>MySQL</code> 数据库索引吗？可以给短网址字段添加 <code>B+</code> 树索引。这样通过短网址查询原始网址的速度就提高了很多。实际上，在真实的软件开发中，还可以通过一个小技巧，来进一步提高速度。</p>
+<p>在短网址生成的过程中，会跟数据库打两次交道，也就是会执行两条 <code>SQL</code> 语句。第一个 <code>SQL</code> 语句是通过短网址查询短网址与原始网址的对应关系，第二个 <code>SQL</code> 语句是将新生成的短网址和原始网址之间的对应关系存储到数据库。</p>
+<p>一般情况下，数据库和应用服务（只做计算不存储数据的业务逻辑部分）会部署在两个独立的服务器或者虚拟服务器上。那两条 <code>SQL</code> 语句的执行就需要两次网络通信。这种 <code>IO</code> 通信耗时以及 <code>SQL</code> 语句的执行，才是整个短网址服务的性能瓶颈所在。所以，为了提高性能，需要尽量减少 <code>SQL</code> 语句。那又该如何减少 <code>SQL</code> 语句呢？</p>
+<p>可以给数据库中的短网址字段，添加一个唯一索引（不止是索引，还要求表中不能有重复的数据）。当有新的原始网址需要生成短网址的时候，并不会先拿生成的短网址，在数据库中查找判重，而是直接将生成的短网址与对应的原始网址，尝试存储到数据库中。如果数据库能够将数据正常写入，那说明并没有违反唯一索引，也就是说，这个新生成的短网址并没有冲突。</p>
+<p>当然，如果数据库反馈违反唯一性索引异常，那还得重新执行刚刚讲过的“查询、写入”过程，<code>SQL</code> 语句执行的次数不减反增。但是，在大部分情况下，把新生成的短网址和对应的原始网址，插入到数据库的时候，并不会出现冲突。所以，大部分情况下，只需要执行一条写入的 <code>SQL</code> 语句就可以了。所以，从整体上看，总的 <code>SQL</code> 语句执行次数会大大减少。</p>
+<p>实际上，还有另外一个优化 <code>SQL</code> 语句次数的方法，那就是借助布隆过滤器。</p>
+<p>把已经生成的短网址，构建成布隆过滤器。布隆过滤器是比较节省内存的一种存储结构，长度是 <code>10</code> 亿的布隆过滤器，也只需要 <code>125MB</code> 左右的内存空间。</p>
+<p>当有新的短网址生成的时候，先拿这个新生成的短网址，在布隆过滤器中查找。如果查找的结果是不存在，那就说明这个新生成的短网址并没有冲突。这个时候，只需要再执行写入短网址和对应原始网页的 <code>SQL</code> 语句就可以了。通过先查询布隆过滤器，总的 <code>SQL</code> 语句的执行次数减少了。</p>
+<p>到此，利用哈希算法来生成短网址的思路，就讲完了。实际上，这种解决思路已经完全满足需求了，已经可以直接用到真实的软件开发中。不过，还有另外一种短网址的生成算法，那就是利用自增的 <code>ID</code> 生成器来生成短网址。接下来就看一下，这种算法是如何工作的？对于哈希算法生成短网址来说，它又有什么优势和劣势？</p>
+<h2 id="如何通过-ID-生成器生成短网址？"><a href="#如何通过-ID-生成器生成短网址？" class="headerlink" title="如何通过 ID 生成器生成短网址？"></a>如何通过 ID 生成器生成短网址？</h2><p>可以维护一个 <code>ID</code> 自增生成器。它可以生成 <code>1</code>、<code>2</code>、<code>3</code>…这样自增的整数 <code>ID</code>。当短网址服务接收到一个原始网址转化成短网址的请求之后，它先从 <code>ID</code> 生成器中取一个号码，然后将其转化成 <code>62</code> 进制表示法，拼接到短网址服务的域名（比如<code>http://t.cn/</code>）后面，就形成了最终的短网址。最后，还是会把生成的短网址和对应的原始网址存储到数据库中。</p>
+<p>理论非常简单好理解。不过，这里有几个细节问题需要处理。</p>
+<h3 id="1-相同的原始网址可能会对应不同的短网址"><a href="#1-相同的原始网址可能会对应不同的短网址" class="headerlink" title="1. 相同的原始网址可能会对应不同的短网址"></a>1. 相同的原始网址可能会对应不同的短网址</h3><p>每次新来一个原始网址，就生成一个新的短网址，这种做法就会导致两个相同的原始网址生成了不同的短网址。这个该如何处理呢？实际上，有两种处理思路。</p>
+<p>第一种处理思路是<strong>不做处理</strong>。听起来有点无厘头，稍微解释下就明白了。实际上，相同的原始网址对应不同的短网址，用户是可以接受的。在大部分短网址的应用场景里，用户只关心短网址能否正确地跳转到原始网址。至于短网址长什么样子，其实根本就不关心。所以，即便是同一个原始网址，两次生成的短网址不一样，也并不会影响到用户的使用。</p>
+<p>第二种处理思路是<strong>借助哈希算法生成短网址的处理思想</strong>，当要给一个原始网址生成短网址的时候，要先拿原始网址在数据库中查找，看数据库中是否已经存在相同的原始网址了。如果数据库中存在，那就取出对应的短网址，直接返回给用户。</p>
+<p>不过，这种处理思路有个问题，需要给数据库中的短网址和原始网址这两个字段，都添加索引。短网址上加索引是为了提高用户查询短网址对应的原始网页的速度，原始网址上加索引是为了加快刚刚讲的通过原始网址查询短网址的速度。这种解决思路虽然能满足“相同原始网址对应相同短网址”这样一个需求，但是是有代价的：一方面两个索引会占用更多的存储空间，另一方面索引还会导致插入、删除等操作性能的下降。</p>
+<h3 id="2-如何实现高性能的-ID-生成器？"><a href="#2-如何实现高性能的-ID-生成器？" class="headerlink" title="2. 如何实现高性能的 ID 生成器？"></a>2. 如何实现高性能的 ID 生成器？</h3><p>实现 <code>ID</code> 生成器的方法有很多，比如利用数据库自增字段。当然也可以自己维护一个计数器，不停地加一加一。但是，一个计数器来应对频繁的短网址生成请求，显然是有点吃力的（因为计数器必须保证生成的 <code>ID</code> 不重复，笼统概念上讲，就是需要加锁）。如何提高 <code>ID</code> 生成器的性能呢？关于这个问题，实际上，有很多解决思路。这里给出两种思路。</p>
+<p>第一种思路是借助<a href="../52/">第 52 篇</a>中讲的方法。可以给 <code>ID</code> 生成器装多个前置发号器。批量地给每个前置发号器发送 <code>ID</code> 号码。当接受到短网址生成请求的时候，就选择一个前置发号器来取号码。这样通过多个前置发号器，明显提高了并发发号的能力。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/29/0c55d430-ca1b-11e9-9613-1df66a9dd690.png" alt="image.png"><br>第二种思路跟第一种差不多。不过，不再使用一个 <code>ID</code> 生成器和多个前置发号器这样的架构，而是，直接实现多个 <code>ID</code> 生成器同时服务。为了保证每个 <code>ID</code> 生成器生成的 <code>ID</code> 不重复。要求每个 <code>ID</code> 生成器按照一定的规则，来生成 <code>ID</code> 号码。比如，第一个 <code>ID</code> 生成器只能生成尾号为 <code>0</code> 的，第二个只能生成尾号为 <code>1</code> 的，以此类推。这样通过多个 <code>ID</code> 生成器同时工作，也提高了 <code>ID</code> 生成的效率。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/29/2f6ed070-ca1b-11e9-9613-1df66a9dd690.png" alt="image.png"></p>
+<h2 id="总结引申"><a href="#总结引申" class="headerlink" title="总结引申"></a>总结引申</h2><p>上面讲了短网址服务的两种实现方法。现在来稍微总结一下。</p>
+<p>第一种实现思路是通过哈希算法生成短网址。采用计算速度快、冲突概率小的 <code>MurmurHash</code> 算法，并将计算得到的 <code>10</code> 进制数，转化成 <code>62</code> 进制表示法，进一步缩短短网址的长度。对于哈希算法的哈希冲突问题，通过给原始网址添加特殊前缀字符，重新计算哈希值的方法来解决。</p>
+<p>第二种实现思路是通过 <code>ID</code> 生成器来生成短网址。维护一个 <code>ID</code> 自增的 <code>ID</code> 生成器，给每个原始网址分配一个 <code>ID</code> 号码，并且同样转成 <code>62</code> 进制表示法，拼接到短网址服务的域名之后，形成最终的短网址。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ul>
+<li><p>如果还要额外支持用户自定义短网址功能（<code>http//t.cn/{用户自定部分}</code>），又该如何改造刚刚的算法呢?</p>
+</li>
+<li><p>在讲通过 <code>ID</code> 生成器生成短网址这种实现思路的时候，讲到相同的原始网址可能会对应不同的短网址。针对这个问题，其中一个解决思路就是，不做处理。但是，如果每个请求都生成一个短网址，并且存储在数据库中，那这样会不会撑爆数据库呢？又该如何解决呢？</p>
+</li>
+</ul>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main" id="table-toc">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#短网址服务整体介绍"><span class="toc-text">短网址服务整体介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何通过哈希算法生成短网址？"><span class="toc-text">如何通过哈希算法生成短网址？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-如何让短网址更短？"><span class="toc-text">1. 如何让短网址更短？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-如何解决哈希冲突问题？"><span class="toc-text">2. 如何解决哈希冲突问题？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-如何优化哈希算法生成短网址的性能？"><span class="toc-text">3. 如何优化哈希算法生成短网址的性能？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何通过-ID-生成器生成短网址？"><span class="toc-text">如何通过 ID 生成器生成短网址？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-相同的原始网址可能会对应不同的短网址"><span class="toc-text">1. 相同的原始网址可能会对应不同的短网址</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-如何实现高性能的-ID-生成器？"><span class="toc-text">2. 如何实现高性能的 ID 生成器？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结引申"><span class="toc-text">总结引申</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#思考"><span class="toc-text">思考</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: 沐晨</div>
+      
+        <div>
+          原文链接:
+          <a style="word-break: break-word;" href="" target="_blank">https://muchen.fun/passages/53/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+    
+      <a style="word-break: break-word;" href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
+    
+      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+    
+    </div>
+  
+</div>
+
+<div class="left_prev_arrow_div">
+    <div class="left_prev_arrow arrow_div">
+        <a href="/passages/the-common-oper-of-single-list/" data-enable="true">
+            <i class="fa fa-angle-left" aria-hidden="true"></i>
+        </a>
+    </div>
+</div>
+<div class="right_prev_arrow_div">
+    <div class="right_prev_arrow arrow_div">
+        <a href="javascript:void(0);" data-enable="false">
+            <i class="fa fa-angle-right" aria-hidden="true"></i>
+        </a>
+    </div>
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      
+        <div class="site-footer-col">
+          <h5 class="site-footer-title">博客推荐</h5>
+          
+            <span class="site-footer-item">
+              <a href="https://muchen.fun/" target="_blank">沐晨</a>
+            </span>
+          
+            <span class="site-footer-item">
+              <a href="http://www.wangdabo.com" target="_blank">王大博</a>
+            </span>
+          
+        </div>
+      
+        <div class="site-footer-col">
+          <h5 class="site-footer-title">系列教程</h5>
+          
+            <span class="site-footer-item">
+              <a href="https://muchen.fun/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/" target="_blank">数据结构与算法(中级)</a>
+            </span>
+          
+        </div>
+      
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: lcoder@qq.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://fanciercoder.github.io/" target="_blank">沐晨</a>.
+      All rights reserved.
+    </div>
+    <div class="site-footer-info">
+        <span style="position: relative;">
+        <a style=" position: absolute;
+            white-space: nowrap;" id="colorPrint">
+        </a>
+        </span>
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+        <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+          
+            <div>
+              <img src="/images/wechat.png" alt="WeChat">
+              
+                <p>WeChat</p>
+              
+            </div>
+          
+            <div>
+              <img src="/images/alipay.png" alt="AliPay">
+              
+                <p>AliPay</p>
+              
+            </div>
+          
+            <div>
+              <img src="/images/BitCoin.jpg" alt="BitCoin">
+              
+                <p>BitCoin</p>
+              
+            </div>
+          
+        </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="javascript:void(0);" data-enable="false">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/the-common-oper-of-single-list/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+      <a href="javascript:void(0);" id="site-reward">
+        <i class="fa fa-thumbs-up"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-144841374-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-144841374-1');
+  </script>
+
+
+
+
+  <script async>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+
+
+
+
+ <script>
+ //const element =  document.querySelector('.home-article-wrapper')
+ //element.classList.add('animated', 'bounceInLeft')
+ function testAnim(x) {
+     $('.home-article-wrapper').removeClass('animate').addClass(x + ' animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+       $(this).removeClass('animate');
+     });
+   };
+
+   testAnim('flipInX');
+ </script>
+
+    
+      <script src="/js/footer.js"></script>
+    
+  </body>
+</html>

@@ -394,15 +394,22 @@ main {
 .table-content {
     display: block;
     position: fixed;
-    right: -350px;
+    right: -300px;
     top: 0;
     height: 100vh;
-    width: 350px;
+    width: 300px;
     /*min-width: 300px;*/
     background: rgba(52,50,50,0.97);
     overflow-y: auto;
     z-index: 900;
     transition: right 0.5s ease;
+}
+
+@media screen and (max-width: 768px) {
+    .table-content {
+        right: -250px;
+        width: 250px;
+    }
 }
 
 .table-content-title {
@@ -1685,6 +1692,13 @@ a#toggle-menu-tree.hide {
     -ms-transform: translateX(-17.5rem);
     -o-transform: translateX(-17.5rem);
     transform: translateX(-17.5rem)
+}
+
+
+@media screen and (max-width: 768px) {
+    #site-toc.display-menu-tree a#toggle-menu-tree {
+        margin-right: -3.3625rem;
+    }
 }
 
 #site-toc.display-menu-tree a#toggle-menu-tree i {

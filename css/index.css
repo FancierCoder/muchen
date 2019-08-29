@@ -404,6 +404,13 @@ main {
     transition: right 0.5s ease;
 }
 
+@media screen and (max-width: 768px) {
+    .table-content {
+        right: -250px;
+        width: 250px;
+    }
+}
+
 .table-content-title {
     position: relative;
     display: flex;
@@ -1633,6 +1640,12 @@ a#toggle-menu-tree.hide {
     -ms-transform: translateX(-17.5rem);
     -o-transform: translateX(-17.5rem);
     transform: translateX(-17.5rem)
+}
+
+@media screen and (max-width: 768px) {
+    #site-toc.display-menu-tree a#toggle-menu-tree {
+        margin-right: -3.3625rem;
+    }
 }
 
 #site-toc.display-menu-tree a#toggle-menu-tree i {
