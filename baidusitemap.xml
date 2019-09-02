@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://muchen.fun/passages/4/</loc>
+    <lastmod>2019-09-02</lastmod>
+  </url>  <url>
+    <loc>https://muchen.fun/passages/3/</loc>
+    <lastmod>2019-09-02</lastmod>
+  </url>  <url>
     <loc>https://muchen.fun/passages/leetcode-sort-binary-search/</loc>
     <lastmod>2019-09-02</lastmod>
   </url>  <url>
@@ -60,9 +66,6 @@
   </url>  <url>
     <loc>https://muchen.fun/passages/41/</loc>
     <lastmod>2019-08-17</lastmod>
-  </url>  <url>
-    <loc>https://muchen.fun/passages/3/</loc>
-    <lastmod>2019-08-16</lastmod>
   </url>  <url>
     <loc>https://muchen.fun/passages/1/</loc>
     <lastmod>2019-08-16</lastmod>
@@ -134,9 +137,6 @@
     <lastmod>2019-08-16</lastmod>
   </url>  <url>
     <loc>https://muchen.fun/passages/26/</loc>
-    <lastmod>2019-08-16</lastmod>
-  </url>  <url>
-    <loc>https://muchen.fun/passages/4/</loc>
     <lastmod>2019-08-16</lastmod>
   </url>  <url>
     <loc>https://muchen.fun/passages/11/</loc>
