@@ -187,7 +187,7 @@ main {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: rgba(52,50,50);
+    background-color: rgba(52,50,50, 1);
     border: 0;
     border-radius: 4px;
     background-clip: padding-box;
@@ -251,7 +251,7 @@ main {
     color: #bcbcbc;
     background-color: rgba(72,70,70,0.97);
     background-image: none;
-    border: 1px solid rgba(52,50,50);
+    border: 1px solid rgba(52,50,50, 1);
     border-radius: 4px;
     transition: all .3s;
 }
@@ -935,9 +935,9 @@ main {
 .passage-article blockquote {
     margin: 15px 0;
     padding: 1px 12px;
-    border-left: 3px solid #757575;
-    color: #424242;
-    background: #F5F5F5;
+    border-left: 3px solid #5a5a5a;
+    color: #CCCCCC;
+    background: #3c2b2b;
 }
 
 .passage-article a {
@@ -971,7 +971,7 @@ main {
 .passage-article code {
     font-family: Consolas, Microsoft Jhenghei, Hiragino Sans GB, Microsoft YaHei, serif, sans-serif;
     background: rgba(40, 38, 38, 0.97);
-    color: rgb(186, 113, 114);
+    color: rgb(65, 158, 233);
     word-wrap: break-word;
     margin: 0 3px;
 }
@@ -1409,7 +1409,7 @@ main {
     top: 0;
     position: fixed;
     z-index: 99999;
-    background: rgba(52,50,50)
+    background: rgba(52,50,50, 1)
 }
 
 .lds-ripple {
@@ -1711,6 +1711,87 @@ a#toggle-menu-tree.hide {
 
 #site-toc.display-menu-tree a#toggle-menu-tree.hide {
     right: 0
+}
+
+.pagination {
+    margin: 10px;
+    padding: 0px 0 56px 0;
+    border-bottom: 1px solid rgba(52,50,50,0.97);
+}
+
+.pagination ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    height: 13px;
+}
+
+.pagination ul li {
+    margin: 0 2px 0 2px;
+    display: inline;
+    line-height: 1;
+}
+
+.pagination ul li a {
+    text-decoration: none;
+}
+
+.pagination .pre {
+    float: left;
+}
+
+.pagination .next {
+    float: right;
+}
+
+.pagination a[data-enable="false"] {
+    display: none;
+    cursor: not-allowed;
+}
+
+.btn {
+    display: inline-block;
+    position: relative;
+    outline: 0;
+    color: rgba(188, 188, 188, 0.84);
+    background: rgba(55, 53, 53, 0.97);
+    font-size: 14px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid rgba(52,50,50,0.97);
+    white-space: nowrap;
+    font-weight: 400;
+    font-style: normal;
+    border-radius: 999em;
+}
+
+.btn[data-enable="false"]:hover {
+    background: #90CAF9;
+    border: 1px solid #90CAF9;
+}
+
+[role="navigation"] {
+    padding: 0.5em 1.25em;
+    line-height: 1.666em;
+}
+
+.btn:hover {
+    display: inline-block;
+    position: relative;
+    outline: 0;
+    color: white;
+    background: #42A5F5;
+    font-size: 14px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid #42A5F5;
+    white-space: nowrap;
+    font-weight: 400;
+    font-style: normal;
+    border-radius: 999em;
+    transition: all .15s linear;
 }
 
 /*# sourceMappingURL=index.css.map */
