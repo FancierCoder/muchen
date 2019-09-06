@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://muchen.fun/passages/6/</loc>
+    
+    <lastmod>2019-09-06T13:46:54.101Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://muchen.fun/passages/leetcode-graph/</loc>
     
     <lastmod>2019-09-06T06:54:38.284Z</lastmod>
@@ -250,13 +257,6 @@
     <loc>https://muchen.fun/passages/24/</loc>
     
     <lastmod>2019-08-16T05:38:04.965Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://muchen.fun/passages/6/</loc>
-    
-    <lastmod>2019-08-16T05:34:59.660Z</lastmod>
     
   </url>
   
