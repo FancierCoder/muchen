@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="数据结构与算法(中级),数据结构,算法,">
+    <meta name="keywords" content="数据结构与算法(中级),算法,数据结构,">
   
 
   
@@ -56,14 +56,14 @@
   };
 </script>
 
-  <script src="/vendor/sha256.min.js"></script>
-<script src="/js/auth.js"></script>
-<script src="/js/index.js"></script>
-<script src="/vendor/qrcode.min.js"></script>
+  <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/sha256.min.js"></script>
+<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/auth.js"></script>
+<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/index.js"></script>
+<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/qrcode.min.js"></script>
 
   
-    <link rel="icon" href="/images/favicon.ico">
-    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+    <link rel="icon" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/favicon.ico">
+    <link rel="apple-touch-icon" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/touch-icon.png">
   
 
   <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -82,13 +82,13 @@
           let theHour = dateToday.getHours();
           let display;
           if (theHour <= 5) {
-			  display = "/css/index-night.css";
+			  display = "https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/index-night.css";
 		  } else if (theHour >= 19) {
-              display = "/css/index-night.css";
+              display = "https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/index-night.css";
 		  } else if (theHour > 5) {
-              display = "/css/index.css";
+              display = "https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/index.css";
 		  } else if (theHour < 19) {
-              display = "/css/index.css";
+              display = "https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/index.css";
 		  }
           let css = '<';
           css += 'link rel="stylesheet" href=' + display + ' \/';
@@ -271,7 +271,7 @@
 <ul>
 <li>最好情况（满有序度）：$O(n)$。</li>
 <li>最坏情况（满逆序度）：$O(n^2)$。</li>
-<li>平均情况：<br> “有序度”和“逆序度”：对于一个不完全有序的数组，如<code>4，5，6，3，2，1</code>，有序元素对为<code>3</code>个<code>（4，5），（4，6），（5，6）</code>，有序度为<code>3</code>，逆序度为<code>12</code>；<br> 对于一个完全有序的数组，如<code>1，2，3，4，5，6</code>，有序度就是<code>n*(n-1)/2</code>，也就是<code>15</code>，称作<strong>满有序度</strong>；<br> <code>逆序度=满有序度-有序度</code>；<br> 冒泡排序、插入排序交换（或移动）次数=逆序度。<br> 最好情况下初始有序度为<code>n*(n-1)/2</code>，最坏情况下初始有序度为<code>0</code>，则平均初始有序度为<code>n*(n-1)/4</code>，即交换次数为<code>n*(n-1)/4</code>，因交换次数<code>&lt;</code>比较次数<code>&lt;</code>最坏情况时间复杂度，所以平均时间复杂度为$O(n^2)$。<br> <img src="/muchen/images/b0f4f83a.png" alt></li>
+<li>平均情况：<br> “有序度”和“逆序度”：对于一个不完全有序的数组，如<code>4，5，6，3，2，1</code>，有序元素对为<code>3</code>个<code>（4，5），（4，6），（5，6）</code>，有序度为<code>3</code>，逆序度为<code>12</code>；<br> 对于一个完全有序的数组，如<code>1，2，3，4，5，6</code>，有序度就是<code>n*(n-1)/2</code>，也就是<code>15</code>，称作<strong>满有序度</strong>；<br> <code>逆序度=满有序度-有序度</code>；<br> 冒泡排序、插入排序交换（或移动）次数=逆序度。<br> 最好情况下初始有序度为<code>n*(n-1)/2</code>，最坏情况下初始有序度为<code>0</code>，则平均初始有序度为<code>n*(n-1)/4</code>，即交换次数为<code>n*(n-1)/4</code>，因交换次数<code>&lt;</code>比较次数<code>&lt;</code>最坏情况时间复杂度，所以平均时间复杂度为$O(n^2)$。<br> <img src="/images/b0f4f83a.png" alt></li>
 </ul>
 </blockquote>
 <blockquote>
@@ -293,7 +293,7 @@
 <ul>
 <li>最好情况：$O(n)$</li>
 <li>最坏情况：$O(n^2)$</li>
-<li>平均情况：$O(n^2)$（往数组中插入一个数的平均时间复杂度是$O(n)$，一共重复<code>n</code>次）。<br> <img src="/muchen/images/b4d027e6.png" alt></li>
+<li>平均情况：$O(n^2)$（往数组中插入一个数的平均时间复杂度是$O(n)$，一共重复<code>n</code>次）。<br> <img src="/images/b4d027e6.png" alt></li>
 </ul>
 </blockquote>
 <blockquote>
@@ -315,7 +315,7 @@
 <ul>
 <li>最好情况：$O(n^2)$</li>
 <li>最坏情况：$O(n^2)$</li>
-<li>平均情况：$O(n^2)$<br> <img src="/muchen/images/dafdff62.png" alt></li>
+<li>平均情况：$O(n^2)$<br> <img src="/images/dafdff62.png" alt></li>
 </ul>
 </blockquote>
 <blockquote>
@@ -323,7 +323,7 @@
 </blockquote>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 选择排序</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> a 待排序数组</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> n 数组长度</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">selectSort</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (n &lt;= <span class="number">0</span>) <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        <span class="keyword">int</span> min = i;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = i; j &lt; n; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (a[j] &lt; a[min]) min = j;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (min != i) &#123;</span><br><span class="line">            <span class="keyword">int</span> temp = a[i];</span><br><span class="line">            a[i] = a[min];</span><br><span class="line">            a[min] = temp;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><img src="/muchen/images/948eb886.png" alt></p>
+<p><img src="/images/948eb886.png" alt></p>
 <h2 id="六、思考"><a href="#六、思考" class="headerlink" title="六、思考"></a>六、思考</h2><blockquote>
 <p>选择排序和插入排序的时间复杂度相同，都是$O(n^2)$，在实际的软件开发中，为什么更倾向于使用插入排序而不是冒泡排序算法呢？</p>
 <ul>
@@ -358,9 +358,9 @@
   
     <div class="passage-tags">
     
-      <a style="word-break: break-word;" href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
-    
       <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+    
+      <a style="word-break: break-word;" href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
     
     </div>
   
@@ -466,21 +466,21 @@
         <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
           
             <div>
-              <img src="/images/wechat.png" alt="WeChat">
+              <img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/wechat.png" alt="WeChat">
               
                 <p>WeChat</p>
               
             </div>
           
             <div>
-              <img src="/images/alipay.png" alt="AliPay">
+              <img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/alipay.png" alt="AliPay">
               
                 <p>AliPay</p>
               
             </div>
           
             <div>
-              <img src="/images/BitCoin.jpg" alt="BitCoin">
+              <img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/BitCoin.jpg" alt="BitCoin">
               
                 <p>BitCoin</p>
               
@@ -596,7 +596,7 @@
  </script>
 
     
-      <script src="/js/footer.js"></script>
+      <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/footer.js"></script>
     
   </body>
 </html>

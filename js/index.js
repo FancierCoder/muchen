@@ -35,7 +35,7 @@
       exists = true;
       // 开始加载
       let script = document.createElement('script');
-      script.src = src;
+      script.src = "https://muchen-img.oss-cn-hongkong.aliyuncs.com" + src;
       script.type = 'text/javascript';
       script.async = 'async';
       script.onerror = (ev) => {
