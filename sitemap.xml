@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://muchen.fun/passages/9/</loc>
+    
+    <lastmod>2019-09-11T03:59:17.191Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://muchen.fun/passages/recursion/</loc>
     
     <lastmod>2019-09-10T09:53:18.170Z</lastmod>
@@ -425,13 +432,6 @@
     <loc>https://muchen.fun/passages/21/</loc>
     
     <lastmod>2019-08-16T05:34:58.351Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://muchen.fun/passages/9/</loc>
-    
-    <lastmod>2019-08-16T05:34:58.215Z</lastmod>
     
   </url>
   
