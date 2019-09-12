@@ -969,11 +969,19 @@ main {
 }
 
 .passage-article code {
-    font-family: Consolas, Microsoft Jhenghei, Hiragino Sans GB, Microsoft YaHei, serif, sans-serif;
-    background: rgba(40, 38, 38, 0.97);
+    font-family: Consolas, Microsoft Jhenghei, Hiragino Sans GB, Microsoft YaHei, operator mono ssm a,operator mono ssm b,operator mono,source code pro,Menlo,Consolas,Monaco,monospace;
+    /*background: rgba(40, 38, 38, 0.97);*/
     color: rgb(65, 158, 233);
     word-wrap: break-word;
     margin: 0 3px;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    background: -webkit-gradient(linear,left top,right top,from(#514347),to(#392f2f));
+    background: linear-gradient(to right, #514347, #403535);
+    font-size: 90%;
+    overflow-wrap: break-word;
+    padding: .1rem .3rem .2rem;
+    border-radius: .2rem;
 }
 
 .passage-article img {
@@ -1081,6 +1089,31 @@ main {
     background-size: contain;
     background-repeat: no-repeat;
     background-attachment: fixed;
+}
+
+.highlight .code pre,.highlight {
+    background-color: rgba(32,28,41,1);
+}
+
+pre {
+    font-family: operator mono ssm a,operator mono ssm b,operator mono,source code pro,Menlo,Consolas,Monaco,monospace;
+    clear: both;
+    color: #d4d4d4;
+    background: rgba(32,28,41,.75);
+    padding: 0;
+    -moz-tab-size: 2;
+    -o-tab-size: 2;
+    tab-size: 2;
+    -ms-word-break: normal;
+    word-break: normal;
+    -webkit-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+    position: relative;
+    line-height: 28px;
+    border-radius: 8px;
+    max-width: 100%;
+    overflow: hidden;
 }
 
 .passage-copyright {
