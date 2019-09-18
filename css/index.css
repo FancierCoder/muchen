@@ -1810,14 +1810,15 @@ figure::-webkit-scrollbar-track {/*滚动条里面轨道*/
     padding: 0 .5rem 0 2rem;
     outline: none;
     transition: all .2s ease;
-    background: #fff url(https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/search.83621669.svg) .6rem .5rem no-repeat;
+    background: #fafafa url(https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/search.83621669.svg) .6rem .5rem no-repeat;
     background-size: 1rem;
     margin-bottom: 5px;
 }
 
 .search-box input:focus {
     cursor: auto;
-    border-color: #3eaf7c
+    border-color: #3eaf7c;
+    background-color: #fff;
 }
 
 .search-box .suggestions {
@@ -1848,7 +1849,8 @@ figure::-webkit-scrollbar-track {/*滚动条里面轨道*/
 }
 
 .search-box .suggestion a.page-title, .search-result-title {
-    font-weight: 600
+    font-weight: 600;
+    font-size: 16px;
 }
 
 .search-box .suggestion a .header, .search-result {
@@ -1919,4 +1921,28 @@ figure::-webkit-scrollbar-track {/*滚动条里面轨道*/
     }
 }
 
+.suggestions{
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.suggestions::-webkit-scrollbar {
+    height: 4px;
+    width: 4px;
+}
+
+.suggestions::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 1px 1px 0 rgba(250,250,250,0.1), inset 0 -1px 0 rgba(250,250,250,0.07);
+    background-clip: padding-box;
+    background-color: #42A5F5;
+    min-height: 40px;
+    padding-top: 100px;
+    border-radius: 4px;
+}
+
+.suggestions::-webkit-scrollbar-track {/*滚动条里面轨道*/
+    /*-webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);*/
+    border-radius: 0;
+    background: #fafafa;
+}
 /*# sourceMappingURL=index.css.map */

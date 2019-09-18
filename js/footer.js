@@ -60,18 +60,14 @@ var searchFunc = function(path, search_id, content_id, size) {
             var $input = document.getElementById(search_id);
             var $resultContent = document.getElementById(content_id);
             $input.addEventListener('input', function(){
-                var str='<ul class=\"search-result-list suggestions\">';
+                var str= "<ul class='search-result-list suggestions'>";
                 var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
                 $resultContent.innerHTML = "";
                 if (this.value.trim().length <= 0) {
                     return;
                 }
                 // 本地搜索主要部分
-                let i = 0;
                 datas.forEach(function(data, index) {
-                    if ((size > 0) && (i > size)) {
-                        return;
-                    }
                     var isMatch = true;
                     var content_index = [];
                     var data_title = data.title.trim().toLowerCase();
@@ -99,7 +95,6 @@ var searchFunc = function(path, search_id, content_id, size) {
                     }
                     // 返回搜索结果
                     if (isMatch) {
-                        i ++;
                         //结果标签
                         str += "<li><a href='"+ data_url +"' class='search-result-title page-title' target=" + (/^(http\:|https\:)/.test(data_url) ? "_blank" : "_self") + ">" + data_title + "</a>";
                         var content = data.content.trim().replace(/<[^>]+>/g,"");
@@ -116,13 +111,14 @@ var searchFunc = function(path, search_id, content_id, size) {
                             if(end > content.length){
                                 end = content.length;
                             }
-                            var match_content = content.substr(start, end);
+                            var match_content = content.substr(start, 50);
                             // 列出搜索关键字，定义class加高亮
-                            keywords.forEach(function(keyword){
+                            let len = 3;
+                            keywords.forEach(function(keyword, index) {
                                 var regS = new RegExp(keyword, "gi");
-                                match_content = match_content.replace(regS, "<em class=\"search-keyword\">"+keyword+"</em>");
+                                match_content = match_content.replace(regS, "<em class='search-keyword'>"+keyword+"</em>");
                             })
-                            str += "<p class=\"search-result\">" + match_content.substr(0, 100) +"...</p>";
+                            str += "<p class='search-result'>" + match_content + "...</p>";
                         }
                     }
                 })
