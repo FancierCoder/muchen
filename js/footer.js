@@ -135,5 +135,5 @@ $("#local-search-input").focus(function(){
 $("#local-search-input").blur(function(){
     setTimeout(function () {
         $('.suggestions').hide();
-    }, 150);
+    }, 150)
 });
