@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="数据结构与算法(中级),数据结构,算法,">
+    <meta name="keywords" content="数据结构与算法(中级),数据结构,算法,红黑树,">
   
 
   
@@ -237,9 +237,10 @@
   </div>
   
   <article class="passage-article">
-    <p>红黑树是一个让人又爱又恨的数据结构，“爱”是因为它稳定、高效的性能，“恨”是因为实现起来实在太难了。今天写的红黑树的实现，理解起来可能会有些困难。但是，我觉得没必要去死磕它。</p>
-<p>因为，即便你将左右旋背得滚瓜烂熟，我保证你过不几天就忘光了。因为，学习红黑树的代码实现，对于你平时做项目开发没有太大帮助。对于绝大部分开发工程师来说，这辈子你可能都用不着亲手写一个红黑树。除此之外，它对于算法面试也几乎没什么用，一般情况下，靠谱的面试官也不会让你手写红黑树的。</p>
+    <p>红黑树是一个让人又爱又恨的数据结构，“爱”是因为它稳定、高效的性能，“恨”是因为实现起来实在太难了。下面的红黑树的实现，理解起来可能会有些困难。但是，我觉得没必要去死磕它。</p>
+<p>因为，即便你将左右旋背得滚瓜烂熟，保证你过不几天就忘光了。因为，学习红黑树的代码实现，对于你平时做项目开发没有太大帮助。对于绝大部分开发工程师来说，这辈子你可能都用不着亲手写一个红黑树。除此之外，它对于算法面试也几乎没什么用，一般情况下，靠谱的面试官也不会让你手写红黑树的。</p>
 <p>如果你对数据结构和算法很感兴趣，想要开拓眼界、训练思维，还是很推荐你看一看这篇的内容。但是如果学完今天的内容你还觉得懵懵懂懂的话，也不要纠结。要有的放矢去学习。你先把平时要用的、基础的东西都搞会了，如果有余力了，再来深入地研究这节内容。</p>
+<p><font color="green">上一篇讲到红黑树定义的时候，提到红黑树的叶子节点都是黑色的空节点。当时只是粗略地解释了，这是为了代码实现方便，那更加确切的原因是什么呢？</font></p>
 <h2 id="实现红黑树的基本思想"><a href="#实现红黑树的基本思想" class="headerlink" title="实现红黑树的基本思想"></a>实现红黑树的基本思想</h2><p>实际上，红黑树的平衡过程跟魔方复原非常神似，大致过程就是：<strong>遇到什么样的节点排布，就对应怎么去调整</strong>。只要按照这些固定的调整规则来操作，就能将一个非平衡的红黑树调整成平衡的。</p>
 <p>还记得红黑树的定义吗？回顾一下。一棵合格的红黑树需要满足这样几个要求：</p>
 <ul>
@@ -248,13 +249,15 @@
 <li>任何相邻的节点都不能同时为红色，也就是说，红色节点是被黑色节点隔开的；</li>
 <li>每个节点，从该节点到达其可达叶子节点的所有路径，都包含相同数目的黑色节点。</li>
 </ul>
-<p>在插入、删除节点的过程中，第三、第四点要求可能会被破坏，而“平衡调整”，实际上就是要把被破坏的第三、第四点恢复过来。<br>有两个非常重要的操作，左旋（<code>rotate left</code>）、右旋（<code>rotate right</code>）。左旋全称其实是叫围绕某个节点的左旋，那右旋的就叫围绕某个节点的右旋。<br><img src="./66e9b4c5.png" alt="image"></p>
+<p>在插入、删除节点的过程中，第三、第四点要求可能会被破坏，而“平衡调整”，实际上就是要把被破坏的第三、第四点恢复过来。<br>有两个非常重要的操作，<strong>左旋</strong>（<code>rotate left</code>）、<strong>右旋</strong>（<code>rotate right</code>）。左旋全称其实是叫<strong>围绕某个节点的左旋</strong>，那右旋的就叫<strong>围绕某个节点的右旋</strong>。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/d6d78f90-ddae-11e9-9c38-2bb533c1f573.png" alt="image.png"><br>红黑树的插入、删除操作会破坏红黑树的定义，具体来说就是会破坏红黑树的平衡，所以，现在就来看下，红黑树在插入、删除数据之后，如何调整平衡，继续当一棵合格的红黑树的。</p>
 <h2 id="插入操作的平衡调整"><a href="#插入操作的平衡调整" class="headerlink" title="插入操作的平衡调整"></a>插入操作的平衡调整</h2><p>红黑树规定，<strong>插入的节点必须是红色的</strong>。而且，<strong>二叉查找树中新插入的节点都是放在叶子节点上</strong>。所以，关于插入操作的平衡调整，有这样两种特殊情况:</p>
 <ul>
-<li>如果插入节点的父节点是黑色的，那就什么都不用做，它仍然满足红黑树的定义。</li>
-<li>如果插入的节点是根节点，那就直接改变它的颜色，把它变成黑色就可以了。</li>
+<li><p>如果插入节点的父节点是黑色的，那就什么都不用做，它仍然满足红黑树的定义。</p>
+</li>
+<li><p>如果插入的节点是根节点，那就直接改变它的颜色，把它变成黑色就可以了。</p>
+</li>
 </ul>
-<p>除此之外，其他情况都会违背红黑树的定义，于是就需要进行调整，调整的过程包含两种基础的操作：左右旋转和改变颜色。</p>
+<p>除此之外，其他情况都会违背红黑树的定义，于是就需要进行调整，调整的过程包含两种基础的操作：<strong>左右旋转</strong>和<strong>改变颜色</strong>。</p>
 <p>红黑树的平衡调整过程是一个迭代的过程。把正在处理的节点叫作<strong>关注节点</strong>。关注节点会随着不停地迭代处理，而不断发生变化。最开始的关注节点就是新插入的节点。</p>
 <p>新节点插入之后，如果红黑树的平衡被打破，那一般会有下面三种情况:</p>
 <p><strong>CASE 1：如果关注节点是 <code>a</code>，它的叔叔节点 <code>d</code> 是红色</strong>，就依次执行下面的操作：</p>
@@ -262,34 +265,35 @@
 <li>将关注节点 <code>a</code> 的父节点 <code>b</code>、叔叔节点 <code>d</code> 的颜色都设置成黑色；</li>
 <li>将关注节点 <code>a</code> 的祖父节点 <code>c</code> 的颜色设置成红色；</li>
 <li>关注节点变成 <code>a</code> 的祖父节点 <code>c</code>；</li>
-<li>跳到 <code>CASE 2</code> 或者 <code>CASE 3</code>。<br><img src="./26249f19.png" alt="image"></li>
+<li>跳到 <code>CASE 2</code> 或者 <code>CASE 3</code>。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/04379e80-ddaf-11e9-9c38-2bb533c1f573.png" alt="image.png"></li>
 </ul>
 <p><strong>CASE 2：如果关注节点是 <code>a</code>，它的叔叔节点 <code>d</code> 是黑色，关注节点 <code>a</code> 是其父节点 <code>b</code> 的右子节点</strong>，就依次执行下面的操作：</p>
 <ul>
 <li>关注节点变成节点 <code>a</code> 的父节点 <code>b</code>；</li>
 <li>围绕新的关注节点 <code>b</code> 左旋；</li>
-<li>跳到 <code>CASE 3</code>。<br><img src="./e8c8b416.png" alt="image"></li>
+<li>跳到 <code>CASE 3</code>。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/0756b8d0-ddaf-11e9-9c38-2bb533c1f573.png" alt="image.png"></li>
 </ul>
 <p><strong>CASE 3：如果关注节点是 <code>a</code>，它的叔叔节点 <code>d</code> 是黑色，关注节点 <code>a</code> 是其父节点 <code>b</code> 的左子节点</strong>，就依次执行下面的操作：</p>
 <ul>
 <li>围绕关注节点 <code>a</code> 的祖父节点 <code>c</code> 右旋；</li>
 <li>将关注节点 <code>a</code> 的父节点 <code>b</code>、兄弟节点 <code>c</code> 的颜色互换。</li>
-<li>调整结束。<br><img src="./b4a626e8.png" alt="image"></li>
+<li>调整结束。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/0afb56d0-ddaf-11e9-9c38-2bb533c1f573.png" alt="image.png"></li>
 </ul>
 <h2 id="删除操作的平衡调整"><a href="#删除操作的平衡调整" class="headerlink" title="删除操作的平衡调整"></a>删除操作的平衡调整</h2><p>删除操作的平衡调整分为两步，第一步是<strong>针对删除节点初步调整</strong>。初步调整只是保证整棵红黑树在一个节点删除之后，仍然满足最后一条定义的要求，也就是说，每个节点，从该节点到达其可达叶子节点的所有路径，都包含相同数目的黑色节点；第二步是<strong>针对关注节点进行二次调整</strong>，让它满足红黑树的第三条定义，即不存在相邻的两个红色节点。</p>
-<h3 id="针对删除节点初步调整"><a href="#针对删除节点初步调整" class="headerlink" title="针对删除节点初步调整"></a>针对删除节点初步调整</h3><p>这里需要注意一下，红黑树的定义中“只包含红色节点和黑色节点”，经过初步调整之后，为了保证满足红黑树定义的最后一条要求，有些节点会被标记成两种颜色，“红 - 黑”或者“黑 - 黑”。如果一个节点被标记为了“黑 - 黑”，那在计算黑色节点个数的时候，要算成两个黑色节点。</p>
+<p><strong>1. 针对删除节点初步调整</strong></p>
+<p>这里需要注意一下，红黑树的定义中“只包含红色节点和黑色节点”，经过初步调整之后，为了保证满足红黑树定义的最后一条要求，有些节点会被标记成两种颜色，“红 - 黑”或者“黑 - 黑”。如果一个节点被标记为了“黑 - 黑”，那在计算黑色节点个数的时候，要算成两个黑色节点。</p>
 <p><strong>CASE 1：如果要删除的节点是 <code>a</code>，它只有一个子节点 <code>b</code></strong>，那就依次进行下面的操作：</p>
 <ul>
 <li>删除节点 <code>a</code>，并且把节点 <code>b</code> 替换到节点 <code>a</code> 的位置，这一部分操作跟普通的二叉查找树的删除操作一样；</li>
 <li>节点 <code>a</code> 只能是黑色，节点 <code>b</code> 也只能是红色，其他情况均不符合红黑树的定义。这种情况下，把节点 <code>b</code> 改为黑色；</li>
-<li>调整结束，不需要进行二次调整。<br><img src="./7ca053fa.png" alt="image"></li>
+<li>调整结束，不需要进行二次调整。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/2eb41580-ddaf-11e9-9c38-2bb533c1f573.png" alt="image.png"></li>
 </ul>
 <p><strong>CASE 2：如果要删除的节点 <code>a</code> 有两个非空子节点，并且它的后继节点就是节点 <code>a</code> 的右子节点 <code>c</code></strong>。就依次进行下面的操作：</p>
 <ul>
 <li>如果节点 <code>a</code> 的后继节点就是右子节点 <code>c</code>，那右子节点 <code>c</code> 肯定没有左子树。把节点 <code>a</code> 删除，并且将节点 <code>c</code> 替换到节点 <code>a</code> 的位置。这一部分操作跟普通的二叉查找树的删除操作无异；</li>
 <li>然后把节点 <code>c</code> 的颜色设置为跟节点 a 相同的颜色；</li>
 <li>如果节点 <code>c</code> 是黑色，为了不违反红黑树的最后一条定义，给节点 <code>c</code> 的右子节点 <code>d</code> 多加一个黑色，这个时候节点 <code>d</code> 就成了“红 - 黑”或者“黑 - 黑”；</li>
-<li>这个时候，关注节点变成了节点 <code>d</code>，第二步的调整操作就会针对关注节点来做。<br><img src="./f52f4ef5.png" alt="image"></li>
+<li>这个时候，关注节点变成了节点 <code>d</code>，第二步的调整操作就会针对关注节点来做。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/32812310-ddaf-11e9-9c38-2bb533c1f573.png" alt="image.png"></li>
 </ul>
 <p><strong>CASE 3：如果要删除的是节点 <code>a</code>，它有两个非空子节点，并且节点 <code>a</code> 的后继节点不是右子节点</strong>，就依次进行下面的操作：</p>
 <ul>
@@ -297,15 +301,16 @@
 <li>将节点 <code>a</code> 替换成后继节点 <code>d</code>；</li>
 <li>把节点 <code>d</code> 的颜色设置为跟节点 <code>a</code> 相同的颜色；</li>
 <li>如果节点 <code>d</code> 是黑色，为了不违反红黑树的最后一条定义，给节点 <code>d</code> 的右子节点 <code>c</code> 多加一个黑色，这个时候节点 <code>c</code> 就成了“红 - 黑”或者“黑 - 黑”；</li>
-<li>这个时候，关注节点变成了节点 <code>c</code>，第二步的调整操作就会针对关注节点来做。<br><img src="./54d07426.png" alt="image"></li>
+<li>这个时候，关注节点变成了节点 <code>c</code>，第二步的调整操作就会针对关注节点来做。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/35ed4bf0-ddaf-11e9-9c38-2bb533c1f573.png" alt="image.png"></li>
 </ul>
-<h3 id="针对关注节点进行二次调整"><a href="#针对关注节点进行二次调整" class="headerlink" title="针对关注节点进行二次调整"></a>针对关注节点进行二次调整</h3><p>经过初步调整之后，关注节点变成了“红 - 黑”或者“黑 - 黑”节点。针对这个关注节点，再分四种情况来进行二次调整。二次调整是为了让红黑树中不存在相邻的红色节点。</p>
+<p><strong>2. 针对关注节点进行二次调整</strong></p>
+<p>经过初步调整之后，关注节点变成了“红 - 黑”或者“黑 - 黑”节点。针对这个关注节点，再分四种情况来进行二次调整。二次调整是为了让红黑树中不存在相邻的红色节点。</p>
 <p><strong>CASE 1：如果关注节点是 <code>a</code>，它的兄弟节点 <code>c</code> 是红色的</strong>，就依次进行下面的操作：</p>
 <ul>
 <li>围绕关注节点 <code>a</code> 的父节点 <code>b</code> 左旋；</li>
 <li>关注节点 <code>a</code> 的父节点 <code>b</code> 和祖父节点 <code>c</code> 交换颜色；</li>
 <li>关注节点不变；</li>
-<li>继续从四种情况中选择适合的规则来调整。<br><img src="./6b577eb9.png" alt="image"></li>
+<li>继续从四种情况中选择适合的规则来调整。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/3a52f000-ddaf-11e9-9c38-2bb533c1f573.png" alt="image.png"></li>
 </ul>
 <p><strong>CASE 2：如果关注节点是 <code>a</code>，它的兄弟节点 <code>c</code> 是黑色的，并且节点 <code>c</code> 的左右子节点 <code>d</code>、<code>e</code> 都是黑色的</strong>，就依次进行下面的操作：</p>
 <ul>
@@ -313,14 +318,14 @@
 <li>从关注节点 <code>a</code> 中去掉一个黑色，这个时候节点 <code>a</code> 就是单纯的红色或者黑色；</li>
 <li>给关注节点 <code>a</code> 的父节点 <code>b</code> 添加一个黑色，这个时候节点 <code>b</code> 就变成了“红 - 黑”或者“黑 - 黑”；</li>
 <li>关注节点从 <code>a</code> 变成其父节点 <code>b</code>；</li>
-<li>继续从四种情况中选择符合的规则来调整。<br><img src="./2eb7ac04.png" alt="image"></li>
+<li>继续从四种情况中选择符合的规则来调整。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/3f19c6e0-ddaf-11e9-9c38-2bb533c1f573.png" alt="image.png"></li>
 </ul>
 <p><strong>CASE 3：如果关注节点是 <code>a</code>，它的兄弟节点 <code>c</code> 是黑色，<code>c</code> 的左子节点 <code>d</code> 是红色，<code>c</code> 的右子节点 <code>e</code> 是黑色</strong>，就依次进行下面的操作：</p>
 <ul>
 <li>围绕关注节点 <code>a</code> 的兄弟节点 <code>c</code> 右旋；</li>
 <li>节点 <code>c</code> 和节点 <code>d</code> 交换颜色；</li>
 <li>关注节点不变；</li>
-<li>跳转到 <code>CASE 4</code>，继续调整。<br><img src="./af10b4f4.png" alt="image"></li>
+<li>跳转到 <code>CASE 4</code>，继续调整。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/428b46f0-ddaf-11e9-9c38-2bb533c1f573.png" alt="image.png"></li>
 </ul>
 <p><strong>CASE 4：如果关注节点 <code>a</code> 的兄弟节点 <code>c</code> 是黑色的，并且 <code>c</code> 的右子节点是红色的</strong>，就依次进行下面的操作：</p>
 <ul>
@@ -329,17 +334,25 @@
 <li>将关注节点 <code>a</code> 的父节点 <code>b</code> 的颜色设置为黑色；</li>
 <li>从关注节点 <code>a</code> 中去掉一个黑色，节点 <code>a</code> 就变成了单纯的红色或者黑色；</li>
 <li>将关注节点 <code>a</code> 的叔叔节点 <code>e</code> 设置为黑色；</li>
-<li>调整结束。<br><img src="./748c6993.png" alt="image"></li>
+<li>调整结束。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/46d26680-ddaf-11e9-9c38-2bb533c1f573.png" alt="image.png"></li>
 </ul>
-<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>为什么红黑树的定义中，要求叶子节点是黑色的空节点？</p>
-<blockquote>
-<p>之所以有这么奇怪的要求，其实就是为了实现起来方便。只要满足这一条要求，那在任何时刻，红黑树的平衡操作都可以归结为刚刚讲的那几种情况。</p>
-<p>还是有点不好理解，通过一个例子来解释一下。假设红黑树的定义中不包含刚刚提到的那一条“叶子节点必须是黑色的空节点”，往一棵红黑树中插入一个数据，新插入节点的父节点也是红色的，两个红色的节点相邻，这个时候，红黑树的定义就被破坏了。那应该如何调整呢？<br><img src="./a0eee3ab.png" alt="image"><br>你会发现，这个时候，前面讲的插入时，三种情况下的平衡调整规则，没有一种是适用的。但是，如果把黑色的空节点都给它加上，变成下面这样，你会发现，它满足 <code>CASE 2</code> 了。<br><img src="./e3fa75d5.png" alt="image"><br>你可能会说，可以调整一下平衡调整规则啊。比如把 <code>CASE 2</code> 改为“如果关注节点 <code>a</code> 的叔叔节点 <code>b</code> 是黑色或者不存在，<code>a</code> 是父节点的右子节点，就进行某某操作”。当然可以，但是这样的话规则就没有原来简洁了。</p>
-<p>你可能还会想，这样给红黑树添加黑色的空的叶子节点，会不会比较浪费存储空间呢？答案是不会的。实际上，在具体实现的时候，只需要像下面这样，共用一个黑色的、空的叶子节点就行了。<br><img src="./96805288.png" alt="image"></p>
-</blockquote>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>第一点，<strong>把红黑树的平衡调整的过程比作魔方复原，不要过于深究这个算法的正确性</strong>。只需要明白，只要按照固定的操作步骤，保持插入、删除的过程，不破坏平衡树的定义就行了。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>“红黑树一向都很难学”，有这种想法的人很多。但其实主要原因是，很多人试图去记忆它的平衡调整策略。实际上，只需要能看懂上面的过程，没有知识盲点，就算是掌握了这部分内容了。毕竟实际的软件开发并不是闭卷考试，当你真的需要实现一个红黑树的时候，可以对照着上面的步骤，一点一点去实现。</p>
+<p>现在就来总结一下，如何比较轻松地看懂上面的操作过程。</p>
+<p>第一点，<strong>把红黑树的平衡调整的过程比作魔方复原，不要过于深究这个算法的正确性</strong>。只需要明白，只要按照固定的操作步骤，保持插入、删除的过程，不破坏平衡树的定义就行了。</p>
 <p>第二点，<strong>找准关注节点，不要搞丢、搞错关注节点</strong>。因为每种操作规则，都是基于关注节点来做的，只有弄对了关注节点，才能对应到正确的操作规则中。在迭代的调整过程中，关注节点在不停地改变，所以，这个过程一定要注意，不要弄丢了关注节点。</p>
 <p>第三点，<strong>插入操作的平衡调整比较简单，但是删除操作就比较复杂</strong>。针对删除操作，有两次调整，第一次是针对要删除的节点做初步调整，让调整后的红黑树继续满足第四条定义，“每个节点到可达叶子节点的路径都包含相同个数的黑色节点”。但是这个时候，第三条定义就不满足了，有可能会存在两个红色节点相邻的情况。第二次调整就是解决这个问题，让红黑树不存在相邻的红色节点。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ul>
+<li><p>为什么红黑树的定义中，要求叶子节点是黑色的空节点？</p>
+<blockquote>
+<p>之所以有这么奇怪的要求，其实就是为了实现起来方便。只要满足这一条要求，那在任何时刻，红黑树的平衡操作都可以归结为刚刚讲的那几种情况。</p>
+<p>还是有点不好理解，通过一个例子来解释一下。假设红黑树的定义中不包含刚刚提到的那一条“叶子节点必须是黑色的空节点”，往一棵红黑树中插入一个数据，新插入节点的父节点也是红色的，两个红色的节点相邻，这个时候，红黑树的定义就被破坏了。那应该如何调整呢？<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/5a9ec280-ddaf-11e9-9c38-2bb533c1f573.png" alt="image.png"><br>你会发现，这个时候，前面讲的插入时，三种情况下的平衡调整规则，没有一种是适用的。但是，如果把黑色的空节点都给它加上，变成下面这样，你会发现，它满足 <code>CASE 2</code> 了。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/5e3d1ef0-ddaf-11e9-9c38-2bb533c1f573.png" alt="image.png"><br>你可能会说，可以调整一下平衡调整规则啊。比如把 <code>CASE 2</code> 改为“如果关注节点 <code>a</code> 的叔叔节点 <code>b</code> 是黑色或者不存在，<code>a</code> 是父节点的右子节点，就进行某某操作”。当然可以，但是这样的话规则就没有原来简洁了。</p>
+<p>你可能还会想，这样给红黑树添加黑色的空的叶子节点，会不会比较浪费存储空间呢？答案是不会的。实际上，在具体实现的时候，只需要像下面这样，共用一个黑色的、空的叶子节点就行了。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/61c77e30-ddaf-11e9-9c38-2bb533c1f573.png" alt="image.png"></p>
+</blockquote>
+</li>
+<li><p>如果你以前了解或者学习过红黑树，关于红黑树的实现，你是怎样来学习的？在学习的过程中，有过什么样的心得体会？有没有什么好的学习方法？</p>
+</li>
+</ul>
+<p>欢迎留言和我分享。</p>
   </article>
   <aside class="table-content" id="site-toc">
   <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
@@ -348,7 +361,7 @@
     <span>目录</span>
   </div>
   <div class="table-content-main" id="table-toc">
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#实现红黑树的基本思想"><span class="toc-text">实现红黑树的基本思想</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#插入操作的平衡调整"><span class="toc-text">插入操作的平衡调整</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#删除操作的平衡调整"><span class="toc-text">删除操作的平衡调整</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#针对删除节点初步调整"><span class="toc-text">针对删除节点初步调整</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#针对关注节点进行二次调整"><span class="toc-text">针对关注节点进行二次调整</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#思考"><span class="toc-text">思考</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#实现红黑树的基本思想"><span class="toc-text">实现红黑树的基本思想</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#插入操作的平衡调整"><span class="toc-text">插入操作的平衡调整</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#删除操作的平衡调整"><span class="toc-text">删除操作的平衡调整</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#思考"><span class="toc-text">思考</span></a></li></ol>
   </div>
 </aside>
   
@@ -371,6 +384,8 @@
       <a style="word-break: break-word;" href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
     
       <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+    
+      <a style="word-break: break-word;" href="/tags/红黑树/"><i class="fa fa-tags"></i>红黑树</a>
     
     </div>
   
