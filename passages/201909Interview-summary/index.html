@@ -237,7 +237,8 @@
   </div>
   
   <article class="passage-article">
-    <p>面试的问题都记录在下面，以及问题的一些解答。</p>
+    <!-- more -->
+<p>面试的问题都记录在下面，以及问题的一些解答。</p>
 <h2 id="Java-基础"><a href="#Java-基础" class="headerlink" title="Java 基础"></a>Java 基础</h2><p><strong>谈谈你对 <code>HashMap</code> 的理解</strong></p>
 <ul>
 <li><p><code>HashMap</code> 是以数组+链表的方式存储的;</p>
@@ -474,6 +475,117 @@
 <li><p>避免的方法：在缓存失效后，通过加锁或者队列来控制读数据库写缓存的线程数量。比如对某个 <code>key</code> 只允许一个线程查询数据和写缓存，其他线程等待；做二级缓存，<code>A1</code>为原始缓存，<code>A2</code>为拷贝缓存，<code>A1</code>失效时，可以访问<code>A2</code>，<code>A1</code>缓存失效时间设置为短期，<code>A2</code>设置为长期；不同的 <code>key</code>，设置不同的过期时间，让缓存失效的时间点尽量均匀。</p>
 </li>
 </ul>
+<h2 id="MySQL"><a href="#MySQL" class="headerlink" title="MySQL"></a>MySQL</h2><p><strong>数据库事务的四个特性</strong></p>
+<ul>
+<li><p><code>ACID</code></p>
+</li>
+<li><p>原子性(<code>Atomicity</code>)：指的是事务中所有操作，要么全做，要么全不做。事务在执行过程中如果出现差错会全部回滚到最初的状态</p>
+</li>
+<li><p>一致性(<code>Correspondence</code>)：在事务开始之前以及结束之后，数据库的完整性约束不会被破坏</p>
+</li>
+<li><p>隔离性(<code>Isolation</code>)：隔离状态下执行事务，使他们好像是系统在给定时间内执行的唯一操作</p>
+</li>
+<li><p>持久性(<code>Durability</code>)：在事务完成后，该事务对数据库所做的操作都会全部持久的保存在数据库中，不会被回滚</p>
+</li>
+</ul>
+<p><strong><code>MySQL</code>中 <code>MyISAM</code> 与 <code>InnoDB</code> 的区别</strong></p>
+<ul>
+<li><p><code>InnoDB</code>支持事务，而<code>MyISAM</code>不支持事务</p>
+</li>
+<li><p><code>InnoDB</code>支持行级锁，而<code>MyISAM</code>支持表级锁</p>
+</li>
+<li><p><code>InnoDB</code>支持<code>MVCC</code>, 而<code>MyISAM</code>不支持</p>
+</li>
+<li><p><code>InnoDB</code>支持外键，而<code>MyISAM</code>不支持</p>
+</li>
+<li><p><code>InnoDB</code>不支持全文索引，而<code>MyISAM</code>支持。</p>
+</li>
+<li><p><code>InnoDB</code>不能通过直接拷贝表文件的方法拷贝表到另外一台机器，<code>MyISAM</code> 支持</p>
+</li>
+<li><p><code>InnoDB</code>表支持多种行格式，<code>MyISAM</code>不支持</p>
+</li>
+<li><p><code>InnoDB</code>是索引组织表，<code>MyISAM</code> 是堆表</p>
+</li>
+</ul>
+<p><strong><code>InnoDB</code>引擎的4大特性</strong></p>
+<ul>
+<li><p>插入缓冲（<code>insert buffer</code>)</p>
+</li>
+<li><p>二次写(<code>double write</code>)</p>
+</li>
+<li><p>自适应哈希索引(<code>ahi</code>)</p>
+</li>
+<li><p>预读(<code>read ahead</code>)</p>
+</li>
+</ul>
+<p><strong><code>MyISAM</code> 与 <code>InnoDB</code>两者<code>select count(*)</code>哪个更快，为什么</strong></p>
+<ul>
+<li><code>MyISAM</code>更快，因为<code>MyISAM</code>内部维护了一个计数器，可以直接调取</li>
+</ul>
+<p><strong><code>InnoDB</code>的事务与日志的存放形式</strong></p>
+<ul>
+<li><p><code>redo</code>：在页修改的时候，先写到 <code>redo log buffer</code> 里面，然后写到 <code>redo log</code> 的文件系统缓存里面(<code>fwrite</code>)，然后再同步到磁盘文件（<code>fsync</code>）</p>
+</li>
+<li><p><code>undo</code>：在 <code>MySQL5.5</code> 之前，<code>undo</code> 只能存放在 <code>ibdata*</code> 文件里面，<code>5.6</code> 之后，可以通过设置 <code>innodb_undo_tablespaces</code> 参数把 <code>undo log</code> 存放在 <code>ibdata*</code> 之外</p>
+</li>
+</ul>
+<p><strong><code>InnoDB</code>的事务是如何通过日志来实现的</strong></p>
+<ul>
+<li><p>事务在修改页时，要先记 <code>undo</code>，在记 <code>undo</code> 之前要记 <code>undo</code> 的 <code>redo</code>，然后修改数据页，再记数据页修改的 <code>redo</code>。</p>
+</li>
+<li><p><code>redo</code>（里面包括 <code>undo</code> 的修改） 一定要比数据页先持久化到磁盘。</p>
+</li>
+<li><p>当事务需要回滚时，因为有 <code>undo</code>，可以把数据页回滚到前镜像的状态，崩溃恢复时，如果 <code>redo log</code> 中事务没有对应的 <code>commit</code> 记录，那么需要用 <code>undo</code> 把该事务的修改回滚到事务开始之前。</p>
+</li>
+<li><p>如果有 <code>commit</code> 记录，就用 <code>redo</code> 前滚到该事务完成时并提交掉。</p>
+</li>
+</ul>
+<p><strong><code>explain</code> 中的索引问题</strong></p>
+<ul>
+<li><p><code>explain</code> 结果中，一般来说，要看到尽量用 <code>index</code>(<code>type</code> 为 <code>const</code>、<code>ref</code> 等，<code>key</code> 列有值)，避免使用全表扫描(<code>type</code> 显式为 <code>ALL</code>)。</p>
+</li>
+<li><p>比如说有 <code>where</code> 条件且选择性不错的列，需要建立索引。</p>
+</li>
+<li><p>被驱动表的连接列，也需要建立索引。被驱动表的连接列也可能会跟 <code>where</code> 条件列一起建立联合索引。</p>
+</li>
+<li><p>当有排序或者 <code>group by</code> 的需求时，也可以考虑建立索引来达到直接排序和汇总的需求。</p>
+</li>
+</ul>
+<p><strong><code>MySQL</code>中<code>InnoDB</code>引擎的行锁是通过加在什么上完成(或称实现)的？</strong></p>
+<ul>
+<li><p><code>InnoDB</code>是基于索引来完成行锁</p>
+</li>
+<li><p>例如，<code>select * from tab_with_index where id = 1 for update;</code><br><code>for update</code> 可以根据条件来完成行锁锁定,并且 <code>id</code> 是有索引键的列, 如果 <code>id</code> 不是索引键那么<code>InnoDB</code>将加上表锁</p>
+</li>
+</ul>
+<p><strong>描述下 <code>MySQL</code> 中 <code>InnoDB</code> 支持的四种事务隔离级别名称，以及逐级之间的区别？</strong></p>
+<ul>
+<li><p>读未提交(<code>read uncommitted</code>)<br>读已提交(<code>read committed</code>)<br>可重复读(<code>repeatable read</code>)<br>串行(<code>serializable</code>)</p>
+</li>
+<li><p><code>Read Uncommitted</code>:可以读取其他 <code>session</code> 未提交的脏数据。<br><code>Read Committed</code>:允许不可重复读取，但不允许脏读取。提交后，其他会话可以看到提交的数据。<br><code>Repeatable Read</code>: 禁止不可重复读取和脏读取、以及幻读(<code>innodb</code> 独有)。<br><code>Serializable</code>: 事务只能一个接着一个地执行，但不能并发执行。事务隔离级别最高。<br>不同的隔离级别有不同的现象，并有不同的锁定/并发机制，隔离级别越高，数据库的并发性就越差。</p>
+</li>
+</ul>
+<h2 id="Kafka"><a href="#Kafka" class="headerlink" title="Kafka"></a>Kafka</h2><p><strong>为什么要使用 <code>kafka</code>，为什么要使用消息队列</strong></p>
+<ul>
+<li><p>缓冲和削峰：上游数据时有突发流量，下游可能扛不住，或者下游没有足够多的机器来保证冗余，<code>kafka</code> 在中间可以起到一个缓冲的作用，把消息暂存在 <code>kafka</code> 中，下游服务就可以按照自己的节奏进行慢慢处理。</p>
+</li>
+<li><p>解耦和扩展性：项目开始的时候，并不能确定具体需求。消息队列可以作为一个接口层，解耦重要的业务流程。只需要遵守约定，针对数据编程即可获取扩展能力。</p>
+</li>
+<li><p>冗余：可以采用一对多的方式，一个生产者发布消息，可以被多个订阅<code>topic</code>的服务消费到，供多个毫无关联的业务使用。</p>
+</li>
+<li><p>健壮性：消息队列可以堆积请求，所以消费端业务即使短时间死掉，也不会影响主要业务的正常进行。</p>
+</li>
+<li><p>异步通信：很多时候，用户不想也不需要立即处理消息。消息队列提供了异步处理机制，允许用户把一个消息放入队列，但并不立即处理它。想向队列中放入多少消息就放多少，然后在需要的时候再去处理它们。</p>
+</li>
+</ul>
+<p><strong><code>Kafka</code>中的 <code>broker</code> 是干什么的</strong></p>
+<ul>
+<li><code>broker</code> 是消息的代理，<code>Producers</code> 往 <code>Brokers</code> 里面的指定 <code>Topic</code> 中写消息，<code>Consumers</code> 从 <code>Brokers</code> 里面拉取指定 <code>Topic</code> 的消息，然后进行业务处理，<code>broker</code> 在中间起到一个代理保存消息的中转站。</li>
+</ul>
+<p><strong>Kafka中是怎么体现消息顺序性的？</strong></p>
+<ul>
+<li><code>kafka</code>每个 <code>partition</code> 中的消息在写入时都是有序的，消费时，每个<code>partition</code>只能被每一个<code>group</code>中的一个消费者消费，保证了消费时也是有序的。整个<code>topic</code>不保证有序。如果为了保证<code>topic</code>整个有序，那么将<code>partition</code>调整为1.</li>
+</ul>
   </article>
   <aside class="table-content" id="site-toc">
   <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
@@ -482,7 +594,7 @@
     <span>目录</span>
   </div>
   <div class="table-content-main" id="table-toc">
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Java-基础"><span class="toc-text">Java 基础</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-框架"><span class="toc-text">Spring 框架</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-Boot-框架"><span class="toc-text">Spring Boot 框架</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mybatis-框架"><span class="toc-text">Mybatis 框架</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis"><span class="toc-text">Redis</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Java-基础"><span class="toc-text">Java 基础</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-框架"><span class="toc-text">Spring 框架</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-Boot-框架"><span class="toc-text">Spring Boot 框架</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mybatis-框架"><span class="toc-text">Mybatis 框架</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis"><span class="toc-text">Redis</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MySQL"><span class="toc-text">MySQL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka"><span class="toc-text">Kafka</span></a></li></ol>
   </div>
 </aside>
   
