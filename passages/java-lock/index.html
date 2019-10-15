@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta name="author" content="MuChen">
+  
+  
+  <title>Java锁机制 | MuChen&#39;s Blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="后端,Java锁机制,">
+  
+
+  
+  <meta name="description" content="一起了解一下Java中的锁机制">
+
+  <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/jquery-3.4.1.min.js"></script>
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.14.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/Valine-1.3.9.min.js" async></script>
+  
+
+  
+
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8" async></script>
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI","appkey":"5Rl3Rhl9zc8BJNvrPcncKWFy","comment":true,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2019-07-12",
+    passwords: ["0e31be4bd24c14e65633d11633fe616ee3d93b4f31d07726fdbe113fa98a391a", ],
+    is_post: true,
+    lock: false,
+    author: "MuChen",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/sha256.min.js"></script>
+<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/auth.js"></script>
+<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/index.js"></script>
+<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/favicon.ico">
+    <link rel="apple-touch-icon" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/animate-3.7.2.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+
+  <script type="text/javascript">
+      function getCSS() {
+          let dateToday = new Date();
+          let timeNow = dateToday.getTime();
+          dateToday.setTime(timeNow);
+          let theHour = dateToday.getHours();
+          let display = "/css/index-night.css";
+          if (theHour <= 5) {
+			  display = "https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/index-night.css";
+		  } else if (theHour >= 19) {
+              display = "https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/index-night.css";
+		  } else if (theHour > 5) {
+              display = "https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/index.css";
+		  } else if (theHour < 19) {
+              display = "https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/index.css";
+		  }
+          let css = '<';
+          css += 'link rel="stylesheet" href=' + display + ' \/';
+          css += '>';
+          document.write(css);
+      }
+  </script>
+  <script type="text/javascript">
+      window.onload = getCSS();
+  </script>
+
+</head>
+  <body>
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">沐晨</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | Learn To Learn</span>
+    
+  </div>
+  <div class="site-header-right">
+      <div class="search-box">
+          <section>
+              <div id="site_search">
+                  <input type="text" id="local-search-input" results="0"/>
+                  <div id="local-search-result"></div>
+              </div>
+          </section>
+      </div>
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+        <a href="/friends/" target="_self">友链</a>
+      
+        <a href="/about/" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/FancierCoder" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search" style="display: none">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/friends/" target="_self">
+            友链
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/about/" target="_self">
+            关于
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+
+    
+      <span style="margin-right: 24px;">
+        <a href="/categories/后端/"><i class="fa fa-bookmark"></i>后端</a>
+      </span>
+    
+    
+      <span style="margin-right: 24px;">
+         <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+
+  </div>
+  <div class="passage-title-wrap">
+      <h1 class="passage-title">
+        Java锁机制
+      </h1>
+      <div class="passage-meta">
+        <span style="margin-right: 24px;">
+          <i class="fa fa-calendar"></i>2019.10.15 16:07
+        </span>
+        <span id="article-visit-info" style="margin-right: 24px;">
+            <i class="fa fa-eye"></i> 0
+        </span>
+      </div>
+  </div>
+  
+  <article class="passage-article">
+    <p>锁机制是用来保证对象的一致性以及操作的原子性，另一方面也是实现线程安全的重要手段。</p>
+<h2 id="公平锁-非公平锁"><a href="#公平锁-非公平锁" class="headerlink" title="公平锁/非公平锁"></a>公平锁/非公平锁</h2><p>公平锁是指多个线程按照申请锁的顺序来获取锁。</p>
+<p>非公平锁是指多个线程获取锁的顺序并不是按照申请锁的顺序，有可能后申请的线程比先申请的线程优先获取锁，有可能会造成优先级反转或者饥饿现象。</p>
+<p><code>ReentrantReadWriteLock</code> 实现了公平锁和非公平锁两种模式。<br>在公平锁模式下线程按照请求的顺序来获得锁，而非公平模式下则可以插队。我们的期望是所有的锁都是公平的，毕竟插队是一种不好的行为。但实际上非公平锁比公平锁有着更高的并发效率。假设线程 <code>A</code> 持有一个锁，并且线程 <code>B</code> 也请求这个锁，由于该锁被线程 <code>A</code> 占有，所以 <code>B</code>线 程挂起，当 <code>A</code> 使用结束时释放锁，此时唤醒 <code>B</code>，<code>B</code> 需要重新申请获得锁。如果同时线程 <code>C</code> 也请求这个锁，并且 <code>C</code> 很可能在 <code>B</code> 获得锁之前已经获得、使用并释放了锁。这样就实现了双赢，<code>B</code> 线程获得的锁没有延迟同时线程 <code>C</code> 也得到了执行，这提高了程序的吞吐率。</p>
+<h2 id="可重入锁"><a href="#可重入锁" class="headerlink" title="可重入锁"></a>可重入锁</h2><p>可重入锁又名递归锁，是指在同一个线程在外层方法获取锁的时候，在进入内层方法会自动获取锁。</p>
+<h3 id="ReentrantLock"><a href="#ReentrantLock" class="headerlink" title="ReentrantLock"></a>ReentrantLock</h3><p><code>ReentrantLock</code> 是一个可重入的互斥锁，继承自 <code>Lock</code> 接口。如果说 <code>synchronized</code> 是隐式锁的话，那么 <code>ReentrentLock</code> 就是显式锁。锁的申请、使用、释放都必须显式的申明。<code>Lock</code>接口提供了以下方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Lock</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">lock</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">lockInterruptibly</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException</span>;</span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">tryLock</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">tryLock</span><span class="params">(<span class="keyword">long</span> time,TimeUnit unit)</span> <span class="keyword">throws</span> InterruptedException</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">unLock</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function">Condition <span class="title">newCondition</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>ReentrantLock</code> 实现了 <code>Lock</code> 接口，并提供了与 <code>synchronized</code> 相同的互斥性和内存可见性。<br>那既然如此，为什么还要创建一个类似的锁机制呢？<br>内置锁虽然好用，但是缺乏一些灵活性，而<code>ReentrantLock</code>则可以弥补这些不足。</p>
+<ul>
+<li><p>第一，轮询锁与定时锁。<code>tryLock</code> 方法实现了可定时的与可轮询的锁实现。<br>与 <code>synchronized</code> 相比它有更完善的错误恢复机制。内置锁中死锁是一类严重的错误，只能重启程序。而 <code>ReentrantLock</code> 可以使用可定时或者轮询的锁，它会释放已获得的锁，然后再尝试获得所有的锁。在实现具有时间限制的操作时，定时锁也非常也用。如果操作在给定时间内不能给出结果那么就会使程序提前结束。</p>
+</li>
+<li><p>第二，可中断锁获取操作。<br><code>lockInterruptibly</code> 方法能够在获得锁的同时保持对中断的响应。而且由于它包含在 <code>Lock</code> 中，因此无需创建其他类型的不可中断阻塞机制。</p>
+</li>
+</ul>
+<h2 id="独享锁-共享锁"><a href="#独享锁-共享锁" class="headerlink" title="独享锁/共享锁"></a>独享锁/共享锁</h2><p>独享锁是指该锁一次只能被一个线程所持有。</p>
+<p>共享锁是指该锁可被多个线程所持有。</p>
+<h2 id="互斥锁-读写锁"><a href="#互斥锁-读写锁" class="headerlink" title="互斥锁/读写锁"></a>互斥锁/读写锁</h2><p>独享锁/共享锁就是一种广义的说法，互斥锁/读写锁就是具体的实现。</p>
+<h3 id="ReadWriteLock"><a href="#ReadWriteLock" class="headerlink" title="ReadWriteLock"></a>ReadWriteLock</h3><p><code>ReentrantReadWriteLock</code> 实现了一种标准的互斥读写锁，继承自 <code>ReadWriteLock</code>。<code>ReadWriteLock</code> 接口包含以下方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ReadWriteLock</span></span>&#123;</span><br><span class="line">    <span class="function">Lock <span class="title">readLock</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function">Lock <span class="title">WriteLock</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>ReentrantReadWriteLock</code> 可以这样理解：当执行读操作的时候可以多个线程并发访问；当执行写操作的时候，只可以同时被一个线程访问。所以它使用的场景是<strong>读操作多而写操作少的并发场景</strong>。<br>此外，<code>ReentrantReadWriteLock</code> 还可以设置是否为公平锁，是公平锁的话则可以按照排队的顺序获取锁，非公平锁的话则是随机获得。</p>
+<h2 id="偏向锁-轻量级锁-重量级锁"><a href="#偏向锁-轻量级锁-重量级锁" class="headerlink" title="偏向锁/轻量级锁/重量级锁"></a>偏向锁/轻量级锁/重量级锁</h2><p><strong>偏向锁的适用场景</strong></p>
+<p>始终只有一个线程在执行同步块，在它没有执行完释放锁之前，没有其它线程去执行同步块，在锁无竞争的情况下使用，一旦有了竞争就升级为轻量级锁，升级为轻量级锁的时候需要撤销偏向锁，撤销偏向锁的时候会导致 <code>stop the word(stw)</code>操作；</p>
+<p>在有锁的竞争时，偏向锁会多做很多额外操作，尤其是撤销偏向所的时候会导致进入安全点，安全点会导致 <code>stw</code>，导致性能下降，这种情况下应当禁用；</p>
+<p>轻量级锁是指当锁是偏向锁的时候，被另一个线程所访问，偏向锁就会升级为轻量级锁，其他线程会通过自旋的形式尝试获取锁，不会阻塞，提高性能。</p>
+<p>重量级锁是指当锁为轻量级锁的时候，另一个线程虽然是自旋，但自旋不会一直持续下去，当自旋一定次数的时候，还没有获取到锁，就会进入阻塞，该锁膨胀为重量级锁。重量级锁会让其他申请的线程进入阻塞，性能降低。</p>
+<h3 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h3><p><code>synchronized</code>用来形容方法或者代码块，是 <code>Java</code> 提供的最早的锁机制，支持重入锁。</p>
+<p>列举几个注意事项：</p>
+<ul>
+<li><p>第一，使用 <code>synchronized</code> 关键字时一定要尽可能的缩小范围，尽可能的在方法块里需要锁的地方使用，而不是直接用来修饰整个方法。<br>这需要对方法里面的操作进行分析，哪些需要加锁，哪些不需要加锁，只在需要锁的地方加锁，这样即可以提高程序的效率，同时开放调用方法也减少了线程安全的隐患。</p>
+</li>
+<li><p>第二，<code>synchronized</code> 提供的锁机制是粗粒度的，当有线程访问当前对象的 <code>synchronized</code> 方法或代码块时，其他线程只能等待当前操作结束才可以访问。<br>这听上去似乎存在一定的性能问题，但 <code>java 1.6</code> 以后 <code>synchronized</code> 在并发环境下性能得到了大幅提升，因此建议尽可能的使用<code>synchronized</code>，除非 <code>synchronized</code> 满足不了业务需求。<br>而且 <code>synchronized</code> 使用时无需释放锁，而且 <code>JVM</code> 还提供了专门的优化支持，因此即使 <code>synchronized</code> 是古老的锁，但是它依然适用于绝大多数场景。</p>
+</li>
+</ul>
+<h3 id="volatile"><a href="#volatile" class="headerlink" title="volatile"></a>volatile</h3><p><code>volatile</code> 用来修饰变量保证其可见性。可见性是一种复杂的属性，<code>volatile</code> 变量不会被缓存在寄存器或者其他处理器不可见的地方，在读取<code>volatile</code> 变量时返回的一定是最新写入的值。<br><code>volatile</code> <strong>不是线程安全的</strong>，不能替代锁，它只在特定的场景下使用，使用时要非常小心。</p>
+<p>以下场景可以使用 <code>volatile</code>：</p>
+<ul>
+<li><p>第一，对变量的写入不依赖于变量当前的值，或者你能确保只有单个线程更新变量的值；</p>
+</li>
+<li><p>第二，该变量不会与其它状态变量一起纳入不变性条件中；</p>
+</li>
+<li><p>第三，在访问变量时不需要加锁。</p>
+</li>
+</ul>
+<h2 id="自旋锁"><a href="#自旋锁" class="headerlink" title="自旋锁"></a>自旋锁</h2><p>在 <code>Java</code> 中，自旋锁是指尝试获取锁的线程不会立即阻塞，而是采用循环的方式去尝试获取锁，这样的好处是减少线程上下文切换的消耗，缺点是循环会消耗 <code>CPU</code>。</p>
+<p>自旋锁原理非常简单，如果持有锁的线程能在很短时间内释放锁资源，那么那些等待竞争锁的线程就不需要做内核态和用户态之间的切换进入阻塞挂起状态，它们只需要等一等（自旋），等持有锁的线程释放锁后即可立即获取锁，这样就避免用户线程和内核的切换的消耗。</p>
+<p>自旋锁尽可能的减少线程的阻塞，适用于锁的竞争不激烈，且占用锁时间非常短的代码块来说性能能大幅度的提升，因为自旋的消耗会小于线程阻塞挂起再唤醒的操作的消耗</p>
+<p>但是如果锁的竞争激烈，或者持有锁的线程需要长时间占用锁执行同步块，这时候就不适合使用自旋锁了，因为自旋锁在获取锁前一直都是占用 <code>cpu</code> 做无用功，同时有大量线程在竞争一个锁，会导致获取锁的时间很长，线程自旋的消耗大于线程阻塞挂起操作的消耗，其它需要<code>cpu</code> 的线程又不能获取到 <code>cpu</code> ，造成 <code>cpu</code> 的浪费。</p>
+<h2 id="分段锁"><a href="#分段锁" class="headerlink" title="分段锁"></a>分段锁</h2><p>分段锁是一种锁的设计，并不是具体的一种锁，对于 <code>ConcurrentHashMap</code> 而言，其并发的实现就是通过分段锁的形式来实现高效的并发操作。</p>
+<p>以 <code>ConcurrentHashMap</code> 来说一下分段锁的含义以及设计思想，<code>ConcurrentHashMap</code> 中的分段锁称为 <code>Segment</code>，它即类似于<code>HashMap</code>（ <code>JDK7</code> 与 <code>JDK8</code> 中 <code>HashMap</code> 的实现）的结构，即内部拥有一个 <code>Entry</code> 数组，数组中的每个元素又是一个链表；同时又是一个 <code>ReentrantLock</code>（ <code>Segment</code> 继承了 <code>ReentrantLock</code>)。</p>
+<p>当需要 <code>put</code> 元素的时候，并不是对整个 <code>hashmap</code> 进行加锁，而是先通过 <code>hashcode</code> 来知道他要放在那一个分段中，然后对这个分段进行加锁，所以当多线程 <code>put</code> 的时候，只要不是放在一个分段中，就实现了真正的并行的插入。<br>但是，在统计 <code>size</code> 的时候，可就是获取 <code>hashmap</code> 全局信息的时候，就需要获取所有的分段锁才能统计。</p>
+<p>分段锁的设计目的是细化锁的粒度，当操作不需要更新整个数组的时候，就仅仅针对数组中的一项进行加锁操作。</p>
+<h2 id="乐观锁-悲观锁"><a href="#乐观锁-悲观锁" class="headerlink" title="乐观锁/悲观锁"></a>乐观锁/悲观锁</h2><p>乐观锁与悲观锁不是指具体的什么类型的锁，而是指看待并发同步的角度。</p>
+<p>悲观锁认为对于同一个数据的并发操作，一定是会发生修改的，哪怕没有修改，也会认为修改。<br>因此对于同一个数据的并发操作，悲观锁采取加锁的形式。悲观的认为，不加锁的并发操作一定会出问题。</p>
+<p>乐观锁则认为对于同一个数据的并发操作，是不会发生修改的。<br>在更新数据的时候，会采用尝试更新，不断重新的方式更新数据。乐观的认为，不加锁的并发操作是没有事情的。</p>
+<p>从上面的描述可以看出，<strong>悲观锁适合写操作非常多的场景，乐观锁适合读操作非常多的场景</strong>，不加锁会带来大量的性能提升。</p>
+<p>悲观锁在 <code>Java</code> 中的使用，就是利用各种锁。<br>乐观锁在 <code>Java</code> 中的使用，是无锁编程，常常采用的是 <code>CAS</code> 算法，典型的例子就是原子类，通过 <code>CAS</code> 自旋实现原子操作的更新。</p>
+<p>重量级锁是悲观锁的一种，自旋锁、轻量级锁与偏向锁属于乐观锁。</p>
+<p><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/10/15/a5ef69b0-ef25-11e9-9152-99732114d9f7.png" alt="Java锁机制.png"></p>
+<p>参考博客：<br><a href="https://blog.csdn.net/qq_41181619/article/details/81407289" target="_blank" rel="noopener">浅谈Java锁机制</a></p>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main" id="table-toc">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#公平锁-非公平锁"><span class="toc-text">公平锁/非公平锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#可重入锁"><span class="toc-text">可重入锁</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ReentrantLock"><span class="toc-text">ReentrantLock</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#独享锁-共享锁"><span class="toc-text">独享锁/共享锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#互斥锁-读写锁"><span class="toc-text">互斥锁/读写锁</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ReadWriteLock"><span class="toc-text">ReadWriteLock</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#偏向锁-轻量级锁-重量级锁"><span class="toc-text">偏向锁/轻量级锁/重量级锁</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#synchronized"><span class="toc-text">synchronized</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#volatile"><span class="toc-text">volatile</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自旋锁"><span class="toc-text">自旋锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分段锁"><span class="toc-text">分段锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#乐观锁-悲观锁"><span class="toc-text">乐观锁/悲观锁</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: 沐晨</div>
+      
+        <div>
+          原文链接:
+          <a style="word-break: break-word;" href="" target="_blank">https://muchen.fun/passages/java-lock/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+    
+      <a style="word-break: break-word;" href="/tags/Java锁机制/"><i class="fa fa-tags"></i>Java锁机制</a>
+    
+    </div>
+  
+</div>
+
+<div class="left_prev_arrow_div">
+    <div class="left_prev_arrow arrow_div">
+        <a href="/passages/201909Interview-summary/" data-enable="true">
+            <i class="fa fa-angle-left" aria-hidden="true"></i>
+        </a>
+    </div>
+</div>
+<div class="right_prev_arrow_div">
+    <div class="right_prev_arrow arrow_div">
+        <a href="javascript:void(0);" data-enable="false">
+            <i class="fa fa-angle-right" aria-hidden="true"></i>
+        </a>
+    </div>
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      
+        <div class="site-footer-col">
+          <h5 class="site-footer-title">博客推荐</h5>
+          
+            <span class="site-footer-item">
+              <a href="https://muchen.fun/" target="_blank">沐晨</a>
+            </span>
+          
+            <span class="site-footer-item">
+              <a href="http://www.wangdabo.com" target="_blank">王大博</a>
+            </span>
+          
+        </div>
+      
+        <div class="site-footer-col">
+          <h5 class="site-footer-title">系列教程</h5>
+          
+            <span class="site-footer-item">
+              <a href="https://muchen.fun/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/" target="_blank">数据结构与算法(中级)</a>
+            </span>
+          
+        </div>
+      
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: lcoder@qq.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://fanciercoder.github.io/" target="_blank">沐晨</a>.
+      All rights reserved.
+    </div>
+    <div class="site-footer-info">
+        <span style="position: relative;">
+        <a style=" position: absolute;
+            white-space: nowrap;" id="colorPrint">
+        </a>
+        </span>
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+        <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+          
+            <div>
+              <img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/wechat.png" alt="WeChat">
+              
+                <p>WeChat</p>
+              
+            </div>
+          
+            <div>
+              <img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/alipay.png" alt="AliPay">
+              
+                <p>AliPay</p>
+              
+            </div>
+          
+            <div>
+              <img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/BitCoin.jpg" alt="BitCoin">
+              
+                <p>BitCoin</p>
+              
+            </div>
+          
+        </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="javascript:void(0);" data-enable="false">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/201909Interview-summary/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+      <a href="javascript:void(0);" id="site-reward">
+        <i class="fa fa-thumbs-up"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-144841374-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-144841374-1');
+  </script>
+
+
+
+
+  <script async>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+
+
+
+
+ <script>
+ //const element =  document.querySelector('.home-article-wrapper')
+ //element.classList.add('animated', 'bounceInLeft')
+ function testAnim(x) {
+     $('.home-article-wrapper').removeClass('animate').addClass(x + ' animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+       $(this).removeClass('animate');
+     });
+   };
+
+   testAnim('flipInX');
+ </script>
+
+    
+      <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/footer.js"></script>
+    
+  </body>
+</html>
