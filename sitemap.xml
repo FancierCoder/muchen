@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://muchen.fun/passages/java-atomic-introduction/</loc>
+    
+    <lastmod>2019-10-16T08:09:11.089Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://muchen.fun/passages/java-lock/</loc>
     
     <lastmod>2019-10-15T08:27:44.486Z</lastmod>
