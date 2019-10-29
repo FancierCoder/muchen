@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   
-<head><meta name="generator" content="Hexo 3.9.0">
+<head>
   <meta charset="utf-8">
-  <meta name="author" content="MuChen">
+  <meta name="author" content="MuChen" />
   
   
   <title>Java锁机制 | MuChen&#39;s Blog</title>
@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="后端,Java锁机制,">
+    <meta name="keywords" content="后端,Java锁机制," />
   
 
   
@@ -149,10 +149,10 @@
           <i class="fa fa-github-alt"></i>
         </a>
       
-      <a href="javascript:void(0);" id="site-search" style="display: none">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-search" style="display: none">
         <i class="fa fa-search"></i>
       </a>
-      <a href="javascript:void(0);" id="site-nav-btn">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-nav-btn">
         <i class="fa fa-ellipsis-v"></i>
       </a>
     </div>
@@ -212,7 +212,7 @@
 
     
       <span style="margin-right: 24px;">
-        <a href="/categories/后端/"><i class="fa fa-bookmark"></i>后端</a>
+        <a href="/categories/%E5%90%8E%E7%AB%AF/"><i class="fa fa-bookmark"></i>后端</a>
       </span>
     
     
@@ -257,7 +257,6 @@
 <h2 id="互斥锁-读写锁"><a href="#互斥锁-读写锁" class="headerlink" title="互斥锁/读写锁"></a>互斥锁/读写锁</h2><p>独享锁/共享锁就是一种广义的说法，互斥锁/读写锁就是具体的实现。</p>
 <h3 id="ReadWriteLock"><a href="#ReadWriteLock" class="headerlink" title="ReadWriteLock"></a>ReadWriteLock</h3><p><code>ReentrantReadWriteLock</code> 实现了一种标准的互斥读写锁，继承自 <code>ReadWriteLock</code>。<code>ReadWriteLock</code> 接口包含以下方法：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ReadWriteLock</span></span>&#123;</span><br><span class="line">    <span class="function">Lock <span class="title">readLock</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function">Lock <span class="title">WriteLock</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p><code>ReentrantReadWriteLock</code> 可以这样理解：当执行读操作的时候可以多个线程并发访问；当执行写操作的时候，只可以同时被一个线程访问。所以它使用的场景是<strong>读操作多而写操作少的并发场景</strong>。<br>此外，<code>ReentrantReadWriteLock</code> 还可以设置是否为公平锁，是公平锁的话则可以按照排队的顺序获取锁，非公平锁的话则是随机获得。</p>
 <h2 id="偏向锁-轻量级锁-重量级锁"><a href="#偏向锁-轻量级锁-重量级锁" class="headerlink" title="偏向锁/轻量级锁/重量级锁"></a>偏向锁/轻量级锁/重量级锁</h2><p><strong>偏向锁的适用场景</strong></p>
 <p>始终只有一个线程在执行同步块，在它没有执行完释放锁之前，没有其它线程去执行同步块，在锁无竞争的情况下使用，一旦有了竞争就升级为轻量级锁，升级为轻量级锁的时候需要撤销偏向锁，撤销偏向锁的时候会导致 <code>stop the word(stw)</code>操作；</p>
@@ -300,7 +299,7 @@
 <p>参考博客：<br><a href="https://blog.csdn.net/qq_41181619/article/details/81407289" target="_blank" rel="noopener">浅谈Java锁机制</a></p>
   </article>
   <aside class="table-content" id="site-toc">
-  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);" target="_blank" rel="noopener"><i class="fa fa-angle-left"></i></a>
   <div class="table-content-title">
     <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
     <span>目录</span>
@@ -319,14 +318,14 @@
         </div>
       
       <div>
-        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
       </div>
     </aside>
   
   
     <div class="passage-tags">
     
-      <a style="word-break: break-word;" href="/tags/Java锁机制/"><i class="fa fa-tags"></i>Java锁机制</a>
+      <a style="word-break: break-word;" href="/tags/Java%E9%94%81%E6%9C%BA%E5%88%B6/"><i class="fa fa-tags"></i>Java锁机制</a>
     
     </div>
   
@@ -423,7 +422,7 @@
     <div class="site-layer-body" id="site-layer-container">
       <div class="site-layer-input" id="site-layer-search" style="display: none;">
         <div class="site-layer-input-choose">
-          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+          <a href="javascript:void(0);" target="_blank" rel="noopener" title="Change Search Engine">Google</a>
         </div>
         <input type="text">
         <i class="fa fa-search"></i>
@@ -470,7 +469,7 @@
     </a>
   </div>
   <div class="bottom-bar-right">
-    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" data-enable="true" id="site-toc-show-btn">
       <i class="fa fa-bars"></i>
     </a>
     
@@ -478,15 +477,15 @@
         <i class="fa fa-commenting"></i>
       </a>
     
-    <a href="javascript:void(0);" id="site-toggle-share-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-toggle-share-btn">
       <i class="fa fa-share-alt"></i>
     </a>
     
-      <a href="javascript:void(0);" id="site-reward">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-reward">
         <i class="fa fa-thumbs-up"></i>
       </a>
     
-    <a href="javascript:void(0);" id="back-top-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="back-top-btn">
       <i class="fa fa-chevron-up"></i>
     </a>
   </div>

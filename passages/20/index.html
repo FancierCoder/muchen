@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   
-<head><meta name="generator" content="Hexo 3.9.0">
+<head>
   <meta charset="utf-8">
-  <meta name="author" content="MuChen">
+  <meta name="author" content="MuChen" />
   
   
   <title>20.二叉树（上） | MuChen&#39;s Blog</title>
@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="数据结构与算法(中级),数据结构,算法,二叉树,">
+    <meta name="keywords" content="数据结构与算法(中级),数据结构,算法,二叉树," />
   
 
   
@@ -149,10 +149,10 @@
           <i class="fa fa-github-alt"></i>
         </a>
       
-      <a href="javascript:void(0);" id="site-search" style="display: none">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-search" style="display: none">
         <i class="fa fa-search"></i>
       </a>
-      <a href="javascript:void(0);" id="site-nav-btn">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-nav-btn">
         <i class="fa fa-ellipsis-v"></i>
       </a>
     </div>
@@ -212,7 +212,7 @@
 
     
       <span style="margin-right: 24px;">
-        <a href="/categories/数据结构与算法-中级/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
+        <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
       </span>
     
     
@@ -237,7 +237,7 @@
   </div>
   
   <article class="passage-article">
-    <p><font color="green">二叉树有哪几种存储方式？什么样的二叉树适合用数组来存储？</font></p>
+    <p><font color='green'>二叉树有哪几种存储方式？什么样的二叉树适合用数组来存储？</font></p>
 <h2 id="树（Tree）"><a href="#树（Tree）" class="headerlink" title="树（Tree）"></a>树（Tree）</h2><p>首先来看，什么是“树”？再完备的定义，都没有图直观。所以在下图中画了几棵“树”。你来看看，这些“树”都有什么特征？<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/20/5f1ea5b0-db88-11e9-b03e-bd9724e985f2.png" alt="image.png"><br>你有没有发现，“树”这种数据结构真的很像现实生活中的“树”，这里面每个元素叫作“节点”；用来连线相邻节点之间的关系，叫作“父子关系”。</p>
 <p>比如下面这幅图，<code>A</code> 节点就是 <code>B</code> 节点的<strong>父节点</strong>，<code>B</code> 节点是 <code>A</code> 节点的<strong>子节点</strong>。<code>B</code>、<code>C</code>、<code>D</code> 这三个节点的父节点是同一个节点，所以它们之间互称为<strong>兄弟节点</strong>。把没有父节点的节点叫作<strong>根节点</strong>，也就是图中的节点 <code>E</code>。把没有子节点的节点叫作<strong>叶子节点</strong>或者<strong>叶节点</strong>，比如图中的 <code>G</code>、<code>H</code>、<code>I</code>、<code>J</code>、<code>K</code>、<code>L</code> 都是叶子节点。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/20/99a3e100-db88-11e9-b03e-bd9724e985f2.png" alt="image.png"><br>除此之外，关于“树”，还有三个比较相似的概念：<strong>高度</strong>（<code>Height</code>）、<strong>深度</strong>（<code>Depth</code>）、<strong>层</strong>（<code>Level</code>）。它们的定义是这样的：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/20/ad719c90-db88-11e9-b03e-bd9724e985f2.png" alt="image.png"><br>这三个概念的定义比较容易混淆，描述起来也比较空洞。举个例子说明一下，你一看应该就能明白。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/20/b6f75b10-db88-11e9-b03e-bd9724e985f2.png" alt="image.png"><br>记这几个概念，还有一个小窍门，就是类比“高度”“深度”“层”这几个名词在生活中的含义。</p>
 <p>在生活中，“高度”这个概念，其实就是从下往上度量，比如要度量第 <code>10</code> 层楼的高度、第 <code>13</code> 层楼的高度，起点都是地面。所以，树这种数据结构的高度也是一样，从最底层开始计数，并且计数的起点是 <code>0</code>。</p>
@@ -266,10 +266,8 @@
 </ul>
 <p>写递归代码的关键，就是看能不能写出递推公式，而写递推公式的关键就是，如果要解决问题 <code>A</code>，就假设子问题 <code>B</code>、<code>C</code> 已经解决，然后再来看如何利用 <code>B</code>、<code>C</code> 来解决 <code>A</code>。所以，可以把前、中、后序遍历的递推公式都写出来。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">前序遍历的递推公式：</span><br><span class="line">preOrder(r) = print r-&gt;preOrder(r-&gt;left)-&gt;preOrder(r-&gt;right)</span><br><span class="line"></span><br><span class="line">中序遍历的递推公式：</span><br><span class="line">inOrder(r) = inOrder(r-&gt;left)-&gt;print r-&gt;inOrder(r-&gt;right)</span><br><span class="line"></span><br><span class="line">后序遍历的递推公式：</span><br><span class="line">postOrder(r) = postOrder(r-&gt;left)-&gt;postOrder(r-&gt;right)-&gt;print r</span><br></pre></td></tr></table></figure>
-
 <p>有了递推公式，代码写起来就简单多了。这三种遍历方式的代码，下面都写出来了，你可以看看。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">preOrder</span><span class="params">(Node* root)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (root == null) <span class="keyword">return</span>;</span><br><span class="line">  print root <span class="comment">// 此处为伪代码，表示打印 root 节点</span></span><br><span class="line">  preOrder(root-&gt;left);</span><br><span class="line">  preOrder(root-&gt;right);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">inOrder</span><span class="params">(Node* root)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (root == null) <span class="keyword">return</span>;</span><br><span class="line">  inOrder(root-&gt;left);</span><br><span class="line">  print root <span class="comment">// 此处为伪代码，表示打印 root 节点</span></span><br><span class="line">  inOrder(root-&gt;right);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">postOrder</span><span class="params">(Node* root)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (root == null) <span class="keyword">return</span>;</span><br><span class="line">  postOrder(root-&gt;left);</span><br><span class="line">  postOrder(root-&gt;right);</span><br><span class="line">  print root <span class="comment">// 此处为伪代码，表示打印 root 节点</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>二叉树的前、中、后序遍历的递归实现是不是很简单？你知道<strong>二叉树遍历的时间复杂度是多少</strong>吗？一起来看看。</p>
 <p>从前面画的前、中、后序遍历的顺序图，可以看出来，每个节点最多会被访问两次，所以遍历操作的时间复杂度，跟节点的个数 <code>n</code> 成正比，也就是说二叉树遍历的时间复杂度是 $O(n)$。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本篇讲了一种非线性表数据结构，树。关于树，有几个比较常用的概念需要掌握，那就是：根节点、叶子节点、父节点、子节点、兄弟节点，还有节点的高度、深度、层数，以及树的高度。</p>
@@ -284,7 +282,7 @@
 <p>欢迎留言和我分享。</p>
   </article>
   <aside class="table-content" id="site-toc">
-  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);" target="_blank" rel="noopener"><i class="fa fa-angle-left"></i></a>
   <div class="table-content-title">
     <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
     <span>目录</span>
@@ -303,18 +301,18 @@
         </div>
       
       <div>
-        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
       </div>
     </aside>
   
   
     <div class="passage-tags">
     
-      <a style="word-break: break-word;" href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
+      <a style="word-break: break-word;" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><i class="fa fa-tags"></i>数据结构</a>
     
-      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+      <a style="word-break: break-word;" href="/tags/%E7%AE%97%E6%B3%95/"><i class="fa fa-tags"></i>算法</a>
     
-      <a style="word-break: break-word;" href="/tags/二叉树/"><i class="fa fa-tags"></i>二叉树</a>
+      <a style="word-break: break-word;" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/"><i class="fa fa-tags"></i>二叉树</a>
     
     </div>
   
@@ -411,7 +409,7 @@
     <div class="site-layer-body" id="site-layer-container">
       <div class="site-layer-input" id="site-layer-search" style="display: none;">
         <div class="site-layer-input-choose">
-          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+          <a href="javascript:void(0);" target="_blank" rel="noopener" title="Change Search Engine">Google</a>
         </div>
         <input type="text">
         <i class="fa fa-search"></i>
@@ -458,7 +456,7 @@
     </a>
   </div>
   <div class="bottom-bar-right">
-    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" data-enable="true" id="site-toc-show-btn">
       <i class="fa fa-bars"></i>
     </a>
     
@@ -466,15 +464,15 @@
         <i class="fa fa-commenting"></i>
       </a>
     
-    <a href="javascript:void(0);" id="site-toggle-share-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-toggle-share-btn">
       <i class="fa fa-share-alt"></i>
     </a>
     
-      <a href="javascript:void(0);" id="site-reward">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-reward">
         <i class="fa fa-thumbs-up"></i>
       </a>
     
-    <a href="javascript:void(0);" id="back-top-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="back-top-btn">
       <i class="fa fa-chevron-up"></i>
     </a>
   </div>

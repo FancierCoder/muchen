@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   
-<head><meta name="generator" content="Hexo 3.9.0">
+<head>
   <meta charset="utf-8">
-  <meta name="author" content="MuChen">
+  <meta name="author" content="MuChen" />
   
   
   <title>7.队列 | MuChen&#39;s Blog</title>
@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="数据结构与算法(中级),数据结构,队列,">
+    <meta name="keywords" content="数据结构与算法(中级),数据结构,队列," />
   
 
   
@@ -149,10 +149,10 @@
           <i class="fa fa-github-alt"></i>
         </a>
       
-      <a href="javascript:void(0);" id="site-search" style="display: none">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-search" style="display: none">
         <i class="fa fa-search"></i>
       </a>
-      <a href="javascript:void(0);" id="site-nav-btn">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-nav-btn">
         <i class="fa fa-ellipsis-v"></i>
       </a>
     </div>
@@ -212,7 +212,7 @@
 
     
       <span style="margin-right: 24px;">
-        <a href="/categories/数据结构与算法-中级/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
+        <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
       </span>
     
     
@@ -238,7 +238,7 @@
   
   <article class="passage-article">
     <p><code>CPU</code> 资源是有限的，任务的处理速度与线程个数并不是线性正相关。相反，过多的线程反而会导致 <code>CPU</code> 频繁切换，处理性能下降。所以，线程池的大小一般都是综合考虑要处理任务的特点和硬件环境，来事先设置的。</p>
-<p><font color="green">当向固定大小的线程池中请求一个线程时，如果线程池中没有空闲资源了，这个时候线程池如何处理这个请求？是拒绝请求还是排队请求？各种处理策略又是怎么实现的呢？</font></p>
+<p><font color='green'>当向固定大小的线程池中请求一个线程时，如果线程池中没有空闲资源了，这个时候线程池如何处理这个请求？是拒绝请求还是排队请求？各种处理策略又是怎么实现的呢？</font></p>
 <h2 id="如何理解“队列”？"><a href="#如何理解“队列”？" class="headerlink" title="如何理解“队列”？"></a>如何理解“队列”？</h2><p>队列这个概念非常好理解。你可以把它想象成排队买票，先来的先买，后来的人只能站末尾，不允许插队。<strong>先进者先出，这就是典型的“队列”。</strong></p>
 <p>栈只支持两个基本操作：<strong>入栈 <code>push()</code> 和出栈 <code>pop()</code></strong>。队列跟栈非常相似，支持的操作也很有限，最基本的操作也是两个：<strong>入队 <code>enqueue()</code></strong>，放一个数据到队列尾部；<strong>出队 <code>dequeue()</code></strong>，从队列头部取一个元素。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/ce9ec840-d38e-11e9-b66f-d76c8c3e613a.png" alt="image.png"><br>所以，队列跟栈一样，也是一种<strong>操作受限的线性表数据结构。</strong></p>
 <p>队列的概念很好理解，基本操作也很容易掌握。作为一种非常基础的数据结构，队列的应用也非常广泛，特别是一些具有某些额外特性的队列，比如循环队列、阻塞队列、并发队列。它们在很多偏底层系统、框架、中间件的开发中，起着关键性的作用。比如高性能队列 <code>Disruptor</code>、<code>Linux</code> 环形缓存，都用到了循环并发队列；<code>Java concurrent</code> 并发包利用 <code>ArrayBlockingQueue</code> 来实现公平锁等。</p>
@@ -246,14 +246,12 @@
 <p>跟栈一样，队列可以用数组来实现，也可以用链表来实现。用数组实现的栈叫作<strong>顺序栈</strong>，用链表实现的栈叫作<strong>链式栈</strong>。同样，用数组实现的队列叫作<strong>顺序队列</strong>，用链表实现的队列叫作<strong>链式队列</strong>。</p>
 <p>先来看下基于数组的实现方法。下面用 <code>Java</code> 语言实现了一下，不过并不包含 <code>Java</code> 语言的高级语法，而且做了比较详细的注释，你应该可以看懂。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 用数组实现的队列</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ArrayQueue</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 数组：items，数组大小：n</span></span><br><span class="line">  <span class="keyword">private</span> String[] items;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span> n = <span class="number">0</span>;</span><br><span class="line">  <span class="comment">// head 表示队头下标，tail 表示队尾下标</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span> head = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span> tail = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 申请一个大小为 capacity 的数组</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">ArrayQueue</span><span class="params">(<span class="keyword">int</span> capacity)</span> </span>&#123;</span><br><span class="line">    items = <span class="keyword">new</span> String[capacity];</span><br><span class="line">    n = capacity;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 入队</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">enqueue</span><span class="params">(String item)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 如果 tail == n 表示队列已经满了</span></span><br><span class="line">    <span class="keyword">if</span> (tail == n) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    items[tail] = item;</span><br><span class="line">    ++tail;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 出队</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> String <span class="title">dequeue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 如果 head == tail 表示队列为空</span></span><br><span class="line">    <span class="keyword">if</span> (head == tail) <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    <span class="comment">// 为了让其他语言的同学看的更加明确，把 -- 操作放到单独一行来写了</span></span><br><span class="line">    String ret = items[head];</span><br><span class="line">    ++head;</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>比起栈的数组实现，队列的数组实现稍微有点儿复杂，但是没关系。稍微解释一下实现思路，很容易就能明白了。</p>
 <p>对于栈来说，只需要一个栈顶指针就可以了。但是队列需要两个指针：一个是 <code>head</code> 指针，指向队头；一个是 <code>tail</code> 指针，指向队尾。</p>
 <p>你可以结合下面这幅图来理解。当 <code>a</code>、<code>b</code>、<code>c</code>、<code>d</code> 依次入队之后，队列中的 <code>head</code> 指针指向下标为 <code>0</code> 的位置，<code>tail</code> 指针指向下标为 <code>4</code> 的位置。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/78401340-d38f-11e9-b66f-d76c8c3e613a.png" alt="image.png"><br>当调用两次出队操作之后，队列中 <code>head</code> 指针指向下标为 <code>2</code> 的位置，<code>tail</code> 指针仍然指向下标为 <code>4</code> 的位置。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/88a687f0-d38f-11e9-b66f-d76c8c3e613a.png" alt="image.png"><br>你肯定已经发现了，随着不停地进行入队、出队操作，<code>head</code> 和 <code>tail</code> 都会持续往后移动。当 <code>tail</code> 移动到最右边，即使数组中还有空闲空间，也无法继续往队列中添加数据了。这个问题该如何解决呢？</p>
 <p>你是否还记得，在数组那一篇，也遇到过类似的问题，就是数组的删除操作会导致数组中的数据不连续。你还记得当时是怎么解决的吗？对，用<strong>数据搬移</strong>！但是，每次进行出队操作都相当于删除数组下标为 <code>0</code> 的数据，要搬移整个队列中的数据，这样出队操作的时间复杂度就会从原来的 $O(1)$ 变为 $O(n)$。能不能优化一下呢？</p>
 <p>实际上，在出队时可以不用搬移数据。如果没有空闲空间了，只需要在入队时，再集中触发一次数据的搬移操作。借助这个思想，出队函数 <code>dequeue()</code> 保持不变，稍加改造一下入队函数 <code>enqueue()</code> 的实现，就可以轻松解决刚才的问题了。下面是具体的代码：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">// 入队操作，将 item 放入队尾</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">enqueue</span><span class="params">(String item)</span> </span>&#123;</span><br><span class="line">  <span class="comment">// tail == n 表示队列末尾没有空间了</span></span><br><span class="line">  <span class="keyword">if</span> (tail == n) &#123;</span><br><span class="line">    <span class="comment">// tail ==n &amp;&amp; head==0，表示整个队列都占满了</span></span><br><span class="line">    <span class="keyword">if</span> (head == <span class="number">0</span>) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    <span class="comment">// 数据搬移</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = head; i &lt; tail; ++i) &#123;</span><br><span class="line">      items[i-head] = items[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 搬移完之后重新更新 head 和 tail</span></span><br><span class="line">    tail -= head;</span><br><span class="line">    head = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  items[tail] = item;</span><br><span class="line">  ++tail;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>从代码中看到，当队列的 <code>tail</code> 指针移动到数组的最右边后，如果有新的数据入队，可以将 <code>head</code> 到 <code>tail</code> 之间的数据，整体搬移到数组中 <code>0</code> 到 <code>tail-head</code> 的位置。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/f105bd20-d38f-11e9-b66f-d76c8c3e613a.png" alt="image.png"><br>这种实现思路中，出队操作的时间复杂度仍然是 $O(1)$，但入队操作的时间复杂度还是 $O(1)$ 吗？你可以用算法复杂度分析方法，自己试着分析一下。</p>
 <p>接下来，再来看下基于链表的队列实现方法。</p>
 <p>基于链表的实现，同样需要两个指针：<code>head</code> 指针和 <code>tail</code> 指针。它们分别指向链表的第一个结点和最后一个结点。如图所示，入队时，<code>tail-&gt;next= new_node</code>, <code>tail = tail-&gt;next</code>；出队时，<code>head = head-&gt;next</code>。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/200af090-d390-11e9-b66f-d76c8c3e613a.png" alt="image.png"></p>
@@ -299,7 +297,7 @@
 </ul>
   </article>
   <aside class="table-content" id="site-toc">
-  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);" target="_blank" rel="noopener"><i class="fa fa-angle-left"></i></a>
   <div class="table-content-title">
     <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
     <span>目录</span>
@@ -318,16 +316,16 @@
         </div>
       
       <div>
-        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
       </div>
     </aside>
   
   
     <div class="passage-tags">
     
-      <a style="word-break: break-word;" href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
+      <a style="word-break: break-word;" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><i class="fa fa-tags"></i>数据结构</a>
     
-      <a style="word-break: break-word;" href="/tags/队列/"><i class="fa fa-tags"></i>队列</a>
+      <a style="word-break: break-word;" href="/tags/%E9%98%9F%E5%88%97/"><i class="fa fa-tags"></i>队列</a>
     
     </div>
   
@@ -424,7 +422,7 @@
     <div class="site-layer-body" id="site-layer-container">
       <div class="site-layer-input" id="site-layer-search" style="display: none;">
         <div class="site-layer-input-choose">
-          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+          <a href="javascript:void(0);" target="_blank" rel="noopener" title="Change Search Engine">Google</a>
         </div>
         <input type="text">
         <i class="fa fa-search"></i>
@@ -471,7 +469,7 @@
     </a>
   </div>
   <div class="bottom-bar-right">
-    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" data-enable="true" id="site-toc-show-btn">
       <i class="fa fa-bars"></i>
     </a>
     
@@ -479,15 +477,15 @@
         <i class="fa fa-commenting"></i>
       </a>
     
-    <a href="javascript:void(0);" id="site-toggle-share-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-toggle-share-btn">
       <i class="fa fa-share-alt"></i>
     </a>
     
-      <a href="javascript:void(0);" id="site-reward">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-reward">
         <i class="fa fa-thumbs-up"></i>
       </a>
     
-    <a href="javascript:void(0);" id="back-top-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="back-top-btn">
       <i class="fa fa-chevron-up"></i>
     </a>
   </div>

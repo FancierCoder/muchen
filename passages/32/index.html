@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   
-<head><meta name="generator" content="Hexo 3.9.0">
+<head>
   <meta charset="utf-8">
-  <meta name="author" content="MuChen">
+  <meta name="author" content="MuChen" />
   
   
   <title>32.`Trie`树 | MuChen&#39;s Blog</title>
@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="数据结构与算法(中级),数据结构,">
+    <meta name="keywords" content="数据结构与算法(中级),数据结构," />
   
 
   
@@ -149,10 +149,10 @@
           <i class="fa fa-github-alt"></i>
         </a>
       
-      <a href="javascript:void(0);" id="site-search" style="display: none">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-search" style="display: none">
         <i class="fa fa-search"></i>
       </a>
-      <a href="javascript:void(0);" id="site-nav-btn">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-nav-btn">
         <i class="fa fa-ellipsis-v"></i>
       </a>
     </div>
@@ -212,7 +212,7 @@
 
     
       <span style="margin-right: 24px;">
-        <a href="/categories/数据结构与算法-中级/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
+        <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
       </span>
     
     
@@ -248,14 +248,11 @@
 <p>了解了 <code>Trie</code> 树的两个主要操作之后，再来看下，如何存储一个 <code>Trie</code> 树？</p>
 <p>从前面的图中，可以看出，<code>Trie</code> 树是一个多叉树。二叉树中，一个节点的左右子节点是通过两个指针来存储的，如下所示 <code>Java</code> 代码。那对于多叉树来说，怎么存储一个节点的所有子节点的指针呢？</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BinaryTreeNode</span> </span>&#123;</span><br><span class="line">  <span class="keyword">char</span> data;</span><br><span class="line">  BinaryTreeNode left;</span><br><span class="line">  BinaryTreeNode right;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>先介绍其中一种存储方式，也是经典的存储方式，大部分数据结构和算法书籍中都是这么讲的。还记得散列表吗？借助散列表的思想，通过一个下标与字符一一映射的数组，来存储子节点的指针。这句话稍微有点抽象，不怎么好懂，下面有一张图可以看看。<br><img src="./218b1201.jpeg" alt="image"><br>假设字符串中只有从 <code>a</code> 到 <code>z</code> 这 <code>26</code> 个小写字母，在数组中下标为 <code>0</code> 的位置，存储指向子节点 <code>a</code> 的指针，下标为 <code>1</code> 的位置存储指向子节点 <code>b</code> 的指针，以此类推，下标为 <code>25</code> 的位置，存储的是指向的子节点 <code>z</code> 的指针。如果某个字符的子节点不存在，就在对应的下标的位置存储 <code>null</code>。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TrieNode</span> </span>&#123;</span><br><span class="line">  <span class="keyword">char</span> data;</span><br><span class="line">  TrieNode children[<span class="number">26</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>当在 <code>Trie</code> 树中查找字符串的时候，就可以通过字符的 <code>ASCII</code> 码减去<code>a</code>的 <code>ASCII</code> 码，迅速找到匹配的子节点的指针。比如，<code>d</code> 的 <code>ASCII</code> 码减去 <code>a</code> 的 <code>ASCII</code> 码就是 <code>3</code>，那子节点 <code>d</code> 的指针就存储在数组中下标为 <code>3</code> 的位置中。</p>
 <p>把上面的描述翻译成了代码，可以结合着一块看下，应该有助于理解。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Trie</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> TrieNode root = <span class="keyword">new</span> TrieNode(<span class="string">'/'</span>); <span class="comment">// 存储无意义字符</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 往 Trie 树中插入一个字符串</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insert</span><span class="params">(<span class="keyword">char</span>[] text)</span> </span>&#123;</span><br><span class="line">    TrieNode p = root;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; text.length; ++i) &#123;</span><br><span class="line">      <span class="keyword">int</span> index = text[i] - <span class="string">'a'</span>;</span><br><span class="line">      <span class="keyword">if</span> (p.children[index] == <span class="keyword">null</span>) &#123;</span><br><span class="line">        TrieNode newNode = <span class="keyword">new</span> TrieNode(text[i]);</span><br><span class="line">        p.children[index] = newNode;</span><br><span class="line">      &#125;</span><br><span class="line">      p = p.children[index];</span><br><span class="line">    &#125;</span><br><span class="line">    p.isEndingChar = <span class="keyword">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 在 Trie 树中查找一个字符串</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">find</span><span class="params">(<span class="keyword">char</span>[] pattern)</span> </span>&#123;</span><br><span class="line">    TrieNode p = root;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; pattern.length; ++i) &#123;</span><br><span class="line">      <span class="keyword">int</span> index = pattern[i] - <span class="string">'a'</span>;</span><br><span class="line">      <span class="keyword">if</span> (p.children[index] == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>; <span class="comment">// 不存在 pattern</span></span><br><span class="line">      &#125;</span><br><span class="line">      p = p.children[index];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (p.isEndingChar == <span class="keyword">false</span>) <span class="keyword">return</span> <span class="keyword">false</span>; <span class="comment">// 不能完全匹配，只是前缀</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">return</span> <span class="keyword">true</span>; <span class="comment">// 找到 pattern</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TrieNode</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">char</span> data;</span><br><span class="line">    <span class="keyword">public</span> TrieNode[] children = <span class="keyword">new</span> TrieNode[<span class="number">26</span>];</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">boolean</span> isEndingChar = <span class="keyword">false</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TrieNode</span><span class="params">(<span class="keyword">char</span> data)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.data = data;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>现在，再来看下，<strong>在 Trie 树中，查找某个字符串的时间复杂度是多少？</strong></p>
 <p>如果要在一组字符串中，频繁地查询某些字符串，用 <code>Trie</code> 树会非常高效。构建 <code>Trie</code> 树的过程，需要扫描所有的字符串，时间复杂度是 $O(n)$（<code>n</code> 表示所有字符串的长度和）。但是一旦构建成功之后，后续的查询操作会非常高效。</p>
 <p>每次查询时，如果要查询的字符串长度是 <code>k</code>，那只需要比对大约 <code>k</code> 个节点，就能完成查询操作。跟原本那组字符串的长度和个数没有任何关系。所以说，构建好 <code>Trie</code> 树后，在其中查找字符串的时间复杂度是 $O(k)$，<code>k</code> 表示要查找的字符串的长度。</p>
@@ -299,7 +296,7 @@
 </ol>
   </article>
   <aside class="table-content" id="site-toc">
-  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);" target="_blank" rel="noopener"><i class="fa fa-angle-left"></i></a>
   <div class="table-content-title">
     <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
     <span>目录</span>
@@ -318,14 +315,14 @@
         </div>
       
       <div>
-        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
       </div>
     </aside>
   
   
     <div class="passage-tags">
     
-      <a style="word-break: break-word;" href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
+      <a style="word-break: break-word;" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><i class="fa fa-tags"></i>数据结构</a>
     
     </div>
   
@@ -422,7 +419,7 @@
     <div class="site-layer-body" id="site-layer-container">
       <div class="site-layer-input" id="site-layer-search" style="display: none;">
         <div class="site-layer-input-choose">
-          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+          <a href="javascript:void(0);" target="_blank" rel="noopener" title="Change Search Engine">Google</a>
         </div>
         <input type="text">
         <i class="fa fa-search"></i>
@@ -469,7 +466,7 @@
     </a>
   </div>
   <div class="bottom-bar-right">
-    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" data-enable="true" id="site-toc-show-btn">
       <i class="fa fa-bars"></i>
     </a>
     
@@ -477,15 +474,15 @@
         <i class="fa fa-commenting"></i>
       </a>
     
-    <a href="javascript:void(0);" id="site-toggle-share-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-toggle-share-btn">
       <i class="fa fa-share-alt"></i>
     </a>
     
-      <a href="javascript:void(0);" id="site-reward">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-reward">
         <i class="fa fa-thumbs-up"></i>
       </a>
     
-    <a href="javascript:void(0);" id="back-top-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="back-top-btn">
       <i class="fa fa-chevron-up"></i>
     </a>
   </div>

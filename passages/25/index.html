@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   
-<head><meta name="generator" content="Hexo 3.9.0">
+<head>
   <meta charset="utf-8">
-  <meta name="author" content="MuChen">
+  <meta name="author" content="MuChen" />
   
   
   <title>25.堆和堆排序 | MuChen&#39;s Blog</title>
@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="数据结构与算法(中级),数据结构,算法,堆,时间复杂度,">
+    <meta name="keywords" content="数据结构与算法(中级),数据结构,算法,堆,时间复杂度," />
   
 
   
@@ -149,10 +149,10 @@
           <i class="fa fa-github-alt"></i>
         </a>
       
-      <a href="javascript:void(0);" id="site-search" style="display: none">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-search" style="display: none">
         <i class="fa fa-search"></i>
       </a>
-      <a href="javascript:void(0);" id="site-nav-btn">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-nav-btn">
         <i class="fa fa-ellipsis-v"></i>
       </a>
     </div>
@@ -212,7 +212,7 @@
 
     
       <span style="margin-right: 24px;">
-        <a href="/categories/数据结构与算法-中级/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
+        <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
       </span>
     
     
@@ -262,7 +262,6 @@
 <p>这里有一个分解图。不过这种方法有点问题，就是最后堆化出来的堆并不满足完全二叉树的特性。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/aa873b90-ddb1-11e9-9c38-2bb533c1f573.png" alt="image.png"><br>实际上，稍微改变一下思路，就可以解决这个问题。你看下面这幅图。把最后一个节点放到堆顶，然后利用同样的父子节点对比方法。对于不满足父子节点大小关系的，互换两个节点，并且重复进行这个过程，直到父子节点之间满足大小关系为止。这就是<strong>从上往下的堆化方法</strong>。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/addc5a00-ddb1-11e9-9c38-2bb533c1f573.png" alt="image.png"><br>因为移除的是数组中的最后一个元素，而在堆化的过程中，都是交换操作，不会出现数组中的“空洞”，所以这种方法堆化之后的结果，肯定满足完全二叉树的特性。</p>
 <p>代码如下：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">removeMax</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (count == <span class="number">0</span>) <span class="keyword">return</span> -<span class="number">1</span>; <span class="comment">// 堆中没有数据</span></span><br><span class="line">  a[<span class="number">1</span>] = a[count];</span><br><span class="line">  --count;</span><br><span class="line">  heapify(a, count, <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">heapify</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> n, <span class="keyword">int</span> i)</span> </span>&#123; <span class="comment">// 自上往下堆化</span></span><br><span class="line">  <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">    <span class="keyword">int</span> maxPos = i;</span><br><span class="line">    <span class="keyword">if</span> (i*<span class="number">2</span> &lt;= n &amp;&amp; a[i] &lt; a[i*<span class="number">2</span>]) maxPos = i*<span class="number">2</span>;</span><br><span class="line">    <span class="keyword">if</span> (i*<span class="number">2</span>+<span class="number">1</span> &lt;= n &amp;&amp; a[maxPos] &lt; a[i*<span class="number">2</span>+<span class="number">1</span>]) maxPos = i*<span class="number">2</span>+<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (maxPos == i) <span class="keyword">break</span>;</span><br><span class="line">    swap(a, i, maxPos);</span><br><span class="line">    i = maxPos;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>我们知道，一个包含 $n$ 个节点的完全二叉树，树的高度不会超过 $log_2⁡n$。堆化的过程是顺着节点所在路径比较交换的，所以堆化的时间复杂度跟树的高度成正比，也就是 $O(log⁡n)$。插入数据和删除堆顶元素的主要逻辑就是堆化，所以，往堆中插入一个元素和删除堆顶元素的时间复杂度都是 $O(log⁡n)$。</p>
 <h2 id="如何基于堆实现排序？"><a href="#如何基于堆实现排序？" class="headerlink" title="如何基于堆实现排序？"></a>如何基于堆实现排序？</h2><p>前面文章讲过好几种排序算法，回忆一下，有时间复杂度是 $O(n^2)$ 的冒泡排序、插入排序、选择排序，有时间复杂度是 $O(nlog⁡n)$ 的归并排序、快速排序，还有线性排序。</p>
 <p>这里借助于堆这种数据结构实现的排序算法，就叫作堆排序。这种排序方法的时间复杂度非常稳定，是 $O(nlog⁡n)$，并且它还是原地排序算法。如此优秀，它是怎么做到的呢？</p>
@@ -271,9 +270,8 @@
 <p>首先将数组原地建成一个堆。所谓“原地”就是，不借助另一个数组，就在原数组上操作。建堆的过程，有两种思路。</p>
 <p>第一种是借助我们前面讲的，在堆中插入一个元素的思路。尽管数组中包含 $n$ 个数据，但是我们可以假设，起初堆中只包含一个数据，就是下标为 $1$ 的数据。然后，我们调用前面讲的插入操作，将下标从 $2$ 到 $n$ 的数据依次插入到堆中。这样我们就将包含 $n$ 个数据的数组，组织成了堆。</p>
 <p>第二种实现思路，跟第一种截然相反，也是这里要详细讲的。第一种建堆思路的处理过程是从前往后处理数组数据，并且每个数据插入堆中时，都是从下往上堆化。而第二种实现思路，是从后往前处理数组，并且每个数据都是从上往下堆化。</p>
-<p>下图画了一个第二种实现思路的建堆分解步骤图。因为叶子节点往下堆化只能自己跟自己比较，所以直接从第一个非叶子节点开始，依次堆化就行了。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/c71087d0-ddb1-11e9-9c38-2bb533c1f573.png" alt="image.png"><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/cdd9e570-ddb1-11e9-9c38-2bb533c1f573.png" alt="image.png"><br>对于程序员来说，看代码可能更好理解一些，代码如下：</p>
+<p>下图画了一个第二种实现思路的建堆分解步骤图。因为叶子节点往下堆化只能自己跟自己比较，所以直接从第一个非叶子节点开始，依次堆化就行了。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/c71087d0-ddb1-11e9-9c38-2bb533c1f573.png" alt="image.png">)<img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/cdd9e570-ddb1-11e9-9c38-2bb533c1f573.png" alt="image.png"><br>对于程序员来说，看代码可能更好理解一些，代码如下：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">buildHeap</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = n/<span class="number">2</span>; i &gt;= <span class="number">1</span>; --i) &#123;</span><br><span class="line">    heapify(a, n, i);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">heapify</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> n, <span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">    <span class="keyword">int</span> maxPos = i;</span><br><span class="line">    <span class="keyword">if</span> (i*<span class="number">2</span> &lt;= n &amp;&amp; a[i] &lt; a[i*<span class="number">2</span>]) maxPos = i*<span class="number">2</span>;</span><br><span class="line">    <span class="keyword">if</span> (i*<span class="number">2</span>+<span class="number">1</span> &lt;= n &amp;&amp; a[maxPos] &lt; a[i*<span class="number">2</span>+<span class="number">1</span>]) maxPos = i*<span class="number">2</span>+<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (maxPos == i) <span class="keyword">break</span>;</span><br><span class="line">    swap(a, i, maxPos);</span><br><span class="line">    i = maxPos;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>在这段代码中，对下标从 $\frac n 2$ 开始到 $1$ 的数据进行堆化，下标是 $\frac n 2 +1$ 到 $n$ 的节点是叶子节点，我们不需要堆化。实际上，对于完全二叉树来说，下标从 $\frac n 2 +1$ 到 $n$ 的节点都是叶子节点。</p>
 <p>建堆操作的时间复杂度是多少呢？</p>
 <p>每个节点堆化的时间复杂度是 $O(log⁡n)$，那 $\frac n 2+1$ 个节点堆化的总时间复杂度是不是就是 $O(nlog⁡n)$ 呢？这个答案虽然也没错，但是这个值还是不够精确。实际上，堆排序的建堆过程的时间复杂度是 $O(n)$。</p>
@@ -283,7 +281,6 @@
 <p>建堆结束之后，数组中的数据已经是按照大顶堆的特性来组织的。数组中的第一个元素就是堆顶，也就是最大的元素。把它跟最后一个元素交换，那最大元素就放到了下标为 $n$ 的位置。</p>
 <p>这个过程有点类似上面的“删除堆顶元素”的操作，当堆顶元素移除之后，把下标为 $n$ 的元素放到堆顶，然后再通过堆化的方法，将剩下的 $n−1$ 个元素重新构建成堆。堆化完成之后，再取堆顶的元素，放到下标是 $n−1$ 的位置，一直重复这个过程，直到最后堆中只剩下标为 $1$ 的一个元素，排序工作就完成了。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/edeb6e10-ddb1-11e9-9c38-2bb533c1f573.png" alt="image.png"><br>代码如下：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// n 表示数据的个数，数组 a 中的数据从下标 1 到 n 的位置。</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">  buildHeap(a, n);</span><br><span class="line">  <span class="keyword">int</span> k = n;</span><br><span class="line">  <span class="keyword">while</span> (k &gt; <span class="number">1</span>) &#123;</span><br><span class="line">    swap(a, <span class="number">1</span>, k);</span><br><span class="line">    --k;</span><br><span class="line">    heapify(a, k, <span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>现在分析一下堆排序的时间复杂度、空间复杂度以及稳定性。</p>
 <p>整个堆排序的过程，都只需要极个别临时存储空间，所以堆排序是原地排序算法。堆排序包括建堆和排序两个操作，建堆过程的时间复杂度是 $O(n)$，排序过程的时间复杂度是 $O(nlog⁡n)$，所以，堆排序整体的时间复杂度是 $O(nlog⁡n)$。</p>
 <p>堆排序不是稳定的排序算法，因为在排序的过程，存在将堆的最后一个节点跟堆顶节点互换的操作，所以就有可能改变值相同数据的原始相对顺序。</p>
@@ -320,7 +317,7 @@
 </ul>
   </article>
   <aside class="table-content" id="site-toc">
-  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);" target="_blank" rel="noopener"><i class="fa fa-angle-left"></i></a>
   <div class="table-content-title">
     <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
     <span>目录</span>
@@ -339,20 +336,20 @@
         </div>
       
       <div>
-        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
       </div>
     </aside>
   
   
     <div class="passage-tags">
     
-      <a style="word-break: break-word;" href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
+      <a style="word-break: break-word;" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><i class="fa fa-tags"></i>数据结构</a>
     
-      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+      <a style="word-break: break-word;" href="/tags/%E7%AE%97%E6%B3%95/"><i class="fa fa-tags"></i>算法</a>
     
-      <a style="word-break: break-word;" href="/tags/堆/"><i class="fa fa-tags"></i>堆</a>
+      <a style="word-break: break-word;" href="/tags/%E5%A0%86/"><i class="fa fa-tags"></i>堆</a>
     
-      <a style="word-break: break-word;" href="/tags/时间复杂度/"><i class="fa fa-tags"></i>时间复杂度</a>
+      <a style="word-break: break-word;" href="/tags/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/"><i class="fa fa-tags"></i>时间复杂度</a>
     
     </div>
   
@@ -449,7 +446,7 @@
     <div class="site-layer-body" id="site-layer-container">
       <div class="site-layer-input" id="site-layer-search" style="display: none;">
         <div class="site-layer-input-choose">
-          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+          <a href="javascript:void(0);" target="_blank" rel="noopener" title="Change Search Engine">Google</a>
         </div>
         <input type="text">
         <i class="fa fa-search"></i>
@@ -496,7 +493,7 @@
     </a>
   </div>
   <div class="bottom-bar-right">
-    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" data-enable="true" id="site-toc-show-btn">
       <i class="fa fa-bars"></i>
     </a>
     
@@ -504,15 +501,15 @@
         <i class="fa fa-commenting"></i>
       </a>
     
-    <a href="javascript:void(0);" id="site-toggle-share-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-toggle-share-btn">
       <i class="fa fa-share-alt"></i>
     </a>
     
-      <a href="javascript:void(0);" id="site-reward">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-reward">
         <i class="fa fa-thumbs-up"></i>
       </a>
     
-    <a href="javascript:void(0);" id="back-top-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="back-top-btn">
       <i class="fa fa-chevron-up"></i>
     </a>
   </div>

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   
-<head><meta name="generator" content="Hexo 3.9.0">
+<head>
   <meta charset="utf-8">
-  <meta name="author" content="MuChen">
+  <meta name="author" content="MuChen" />
   
   
   <title>53.算法实战（五） | MuChen&#39;s Blog</title>
@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="算法实战,数据结构,算法,">
+    <meta name="keywords" content="算法实战,数据结构,算法," />
   
 
   
@@ -149,10 +149,10 @@
           <i class="fa fa-github-alt"></i>
         </a>
       
-      <a href="javascript:void(0);" id="site-search" style="display: none">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-search" style="display: none">
         <i class="fa fa-search"></i>
       </a>
-      <a href="javascript:void(0);" id="site-nav-btn">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-nav-btn">
         <i class="fa fa-ellipsis-v"></i>
       </a>
     </div>
@@ -212,7 +212,7 @@
 
     
       <span style="margin-right: 24px;">
-        <a href="/categories/算法实战/"><i class="fa fa-bookmark"></i>算法实战</a>
+        <a href="/categories/%E7%AE%97%E6%B3%95%E5%AE%9E%E6%88%98/"><i class="fa fa-bookmark"></i>算法实战</a>
       </span>
     
     
@@ -239,7 +239,6 @@
   <article class="passage-article">
     <p>短网址服务你用过吗？如果在微博里发布一条带网址的信息，微博会把里面的网址转化成一个更短的网址。只要访问这个短网址，就相当于访问原始的网址。比如下面这两个网址，尽管长度不同，但是都可以跳转到我的 <code>GitHub</code> 里。其中，第二个网址就是通过新浪提供的短网址服务生成的。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">原始网址：https:<span class="comment">//github.com/FancierCoder</span></span><br><span class="line">短网址：http:<span class="comment">//t.cn/Ai8EY5h7</span></span><br></pre></td></tr></table></figure>
-
 <p>从功能上讲，短网址服务其实非常简单，就是把一个长的网址转化成一个短的网址。作为一名软件工程师，你是否思考过，这样一个简单的功能，是如何实现的呢？底层都依赖了哪些数据结构和算法呢？</p>
 <h2 id="短网址服务整体介绍"><a href="#短网址服务整体介绍" class="headerlink" title="短网址服务整体介绍"></a>短网址服务整体介绍</h2><p>刚刚讲了短网址服务的一个核心功能，就是把原始的长网址转化成短网址。除了这个功能之外，短网址服务还有另外一个必不可少的功能。那就是，当用户点击短网址的时候，短网址服务会将浏览器重定向为原始网址。这个过程是如何实现的呢？</p>
 <p>为了方便理解，下面有一张对比图，你可以看下。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/29/1ebff400-ca0e-11e9-9613-1df66a9dd690.png" alt="image.png"><br>从图中可以看出，浏览器会先访问短网址服务，通过短网址获取到原始网址，再通过原始网址访问到页面。不过这部分功能并不是要讲的重点。重点来看，如何将长网址转化成短网址？</p>
@@ -285,7 +284,7 @@
 </ul>
   </article>
   <aside class="table-content" id="site-toc">
-  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);" target="_blank" rel="noopener"><i class="fa fa-angle-left"></i></a>
   <div class="table-content-title">
     <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
     <span>目录</span>
@@ -304,16 +303,16 @@
         </div>
       
       <div>
-        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
       </div>
     </aside>
   
   
     <div class="passage-tags">
     
-      <a style="word-break: break-word;" href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
+      <a style="word-break: break-word;" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><i class="fa fa-tags"></i>数据结构</a>
     
-      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+      <a style="word-break: break-word;" href="/tags/%E7%AE%97%E6%B3%95/"><i class="fa fa-tags"></i>算法</a>
     
     </div>
   
@@ -410,7 +409,7 @@
     <div class="site-layer-body" id="site-layer-container">
       <div class="site-layer-input" id="site-layer-search" style="display: none;">
         <div class="site-layer-input-choose">
-          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+          <a href="javascript:void(0);" target="_blank" rel="noopener" title="Change Search Engine">Google</a>
         </div>
         <input type="text">
         <i class="fa fa-search"></i>
@@ -457,7 +456,7 @@
     </a>
   </div>
   <div class="bottom-bar-right">
-    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" data-enable="true" id="site-toc-show-btn">
       <i class="fa fa-bars"></i>
     </a>
     
@@ -465,15 +464,15 @@
         <i class="fa fa-commenting"></i>
       </a>
     
-    <a href="javascript:void(0);" id="site-toggle-share-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-toggle-share-btn">
       <i class="fa fa-share-alt"></i>
     </a>
     
-      <a href="javascript:void(0);" id="site-reward">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-reward">
         <i class="fa fa-thumbs-up"></i>
       </a>
     
-    <a href="javascript:void(0);" id="back-top-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="back-top-btn">
       <i class="fa fa-chevron-up"></i>
     </a>
   </div>

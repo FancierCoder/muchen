@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   
-<head><meta name="generator" content="Hexo 3.9.0">
+<head>
   <meta charset="utf-8">
-  <meta name="author" content="MuChen">
+  <meta name="author" content="MuChen" />
   
   
   <title>31.字符串匹配基础（下） | MuChen&#39;s Blog</title>
@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="数据结构与算法(中级),算法,时间复杂度,">
+    <meta name="keywords" content="数据结构与算法(中级),算法,时间复杂度," />
   
 
   
@@ -149,10 +149,10 @@
           <i class="fa fa-github-alt"></i>
         </a>
       
-      <a href="javascript:void(0);" id="site-search" style="display: none">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-search" style="display: none">
         <i class="fa fa-search"></i>
       </a>
-      <a href="javascript:void(0);" id="site-nav-btn">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-nav-btn">
         <i class="fa fa-ellipsis-v"></i>
       </a>
     </div>
@@ -212,7 +212,7 @@
 
     
       <span style="margin-right: 24px;">
-        <a href="/categories/数据结构与算法-中级/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
+        <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
       </span>
     
     
@@ -245,14 +245,12 @@
 <p>类似 <code>BM</code> 算法中的 <code>bc</code>、<code>suffix</code>、<code>prefix</code> 数组，<code>KMP</code> 算法也可以提前构建一个数组，用来存储模式串中每个前缀（这些前缀都有可能是好前缀）的最长可匹配前缀子串的结尾字符下标。把这个数组定义为<code>next</code> 数组，很多书中还给这个数组起了一个名字，叫<strong>失效函数</strong>（<code>failure function</code>）。</p>
 <p>数组的下标是每个前缀结尾字符下标，数组的值是这个前缀的最长可以匹配前缀子串的结尾字符下标。这句话有点拗口，举一个例子。<br><img src="./376ed5f4.jpeg" alt="image"><br>有了 <code>next</code> 数组，很容易就可以实现 <code>KMP</code> 算法了。先假设 <code>next</code> 数组已经计算好了，先给出 <code>KMP</code> 算法的框架代码。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// a, b 分别是主串和模式串；n, m 分别是主串和模式串的长度。</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">kmp</span><span class="params">(<span class="keyword">char</span>[] a, <span class="keyword">int</span> n, <span class="keyword">char</span>[] b, <span class="keyword">int</span> m)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span>[] next = getNexts(b, m);</span><br><span class="line">  <span class="keyword">int</span> j = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">    <span class="keyword">while</span> (j &gt; <span class="number">0</span> &amp;&amp; a[i] != b[j]) &#123; <span class="comment">// 一直找到 a[i] 和 b[j]</span></span><br><span class="line">      j = next[j - <span class="number">1</span>] + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (a[i] == b[j]) &#123;</span><br><span class="line">      ++j;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (j == m) &#123; <span class="comment">// 找到匹配模式串的了</span></span><br><span class="line">      <span class="keyword">return</span> i - m + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <h3 id="失效函数计算方法"><a href="#失效函数计算方法" class="headerlink" title="失效函数计算方法"></a>失效函数计算方法</h3><p><code>KMP</code> 算法的基本原理讲完了，现在来看最复杂的部分，也就是 <code>next</code> 数组是如何计算出来的？</p>
 <p>当然，可以用非常笨的方法，比如要计算下面这个模式串 <code>b</code> 的 <code>next[4]</code>，就把 <code>b[0, 4]</code> 的所有后缀子串，从长到短找出来，依次看看，是否能跟模式串的前缀子串匹配。很显然，这个方法也可以计算得到 <code>next</code> 数组，但是效率非常低。有没有更加高效的方法呢？<br><img src="./01f88da8.jpeg" alt="image"><br>这里的处理非常有技巧，类似于动态规划。</p>
 <p>按照下标从小到大，依次计算 <code>next</code> 数组的值。当要计算 <code>next[i]</code> 的时候，前面的 <code>next[0]</code>，<code>next[1]</code>，……，<code>next[i-1]</code> 应该已经计算出来了。利用已经计算出来的 <code>next</code> 值，是否可以快速推导出 <code>next[i]</code> 的值呢？</p>
 <p>如果 <code>next[i-1] = k-1</code>，也就是说，子串 <code>b[0, k-1]</code> 是 <code>b[0, i-1]</code> 的最长可匹配前缀子串。如果子串 <code>b[0, k-1]</code> 的下一个字符 <code>b[k]</code>，与 <code>b[0, i-1]</code> 的下一个字符 <code>b[i]</code> 匹配，那子串 <code>b[0, k]</code> 就是 <code>b[0, i]</code> 的最长可匹配前缀子串。所以，<code>next[i]</code> 等于 <code>k</code>。但是，如果 <code>b[0, k-1]</code> 的下一字符 <code>b[k]</code> 跟 <code>b[0, i-1]</code> 的下一个字符 <code>b[i]</code> 不相等呢？这个时候就不能简单地通过 <code>next[i-1]</code> 得到 <code>next[i]</code> 了。这个时候该怎么办呢？<br><img src="./3d23880f.jpeg" alt="image"><br>假设 <code>b[0, i]</code> 的最长可匹配后缀子串是 <code>b[r, i]</code>。如果把最后一个字符去掉，那 <code>b[r, i-1]</code> 肯定是 <code>b[0, i-1]</code> 的可匹配后缀子串，但不一定是最长可匹配后缀子串。所以，既然 <code>b[0, i-1]</code> 最长可匹配后缀子串对应的模式串的前缀子串的下一个字符并不等于 <code>b[i]</code>，那么就可以考察 <code>b[0, i-1]</code> 的次长可匹配后缀子串 <code>b[x, i-1]</code> 对应的可匹配前缀子串 <code>b[0, i-1-x]</code> 的下一个字符 <code>b[i-x]</code> 是否等于 <code>b[i]</code>。如果等于，那 <code>b[x, i]</code> 就是 <code>b[0, i]</code> 的最长可匹配后缀子串。<br><img src="./6a85f16a.jpeg" alt="image"><br>可是，如何求得 <code>b[0, i-1]</code> 的次长可匹配后缀子串呢？次长可匹配后缀子串肯定被包含在最长可匹配后缀子串中，而最长可匹配后缀子串又对应最长可匹配前缀子串 <code>b[0, y]</code>。于是，查找 <code>b[0, i-1]</code> 的次长可匹配后缀子串，这个问题就变成，查找 <code>b[0, y]</code> 的最长匹配后缀子串的问题了。<br><img src="./144a094c.jpeg" alt="image"><br>按照这个思路，可以考察完所有的 <code>b[0, i-1]</code> 的可匹配后缀子串 <code>b[y, i-1]</code>，直到找到一个可匹配的后缀子串，它对应的前缀子串的下一个字符等于 <code>b[i]</code>，那这个 <code>b[y, i]</code> 就是 <code>b[0, i]</code> 的最长可匹配后缀子串。</p>
 <p>前面已经给出 <code>KMP</code> 算法的框架代码了，现在把这部分的代码也写出来了。这两部分代码合在一起，就是整个 <code>KMP</code> 算法的代码实现。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// b 表示模式串，m 表示模式串的长度</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span>[] getNexts(<span class="keyword">char</span>[] b, <span class="keyword">int</span> m) &#123;</span><br><span class="line">  <span class="keyword">int</span>[] next = <span class="keyword">new</span> <span class="keyword">int</span>[m];</span><br><span class="line">  next[<span class="number">0</span>] = -<span class="number">1</span>;</span><br><span class="line">  <span class="keyword">int</span> k = -<span class="number">1</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; m; ++i) &#123;</span><br><span class="line">    <span class="keyword">while</span> (k != -<span class="number">1</span> &amp;&amp; b[k + <span class="number">1</span>] != b[i]) &#123;</span><br><span class="line">      k = next[k];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (b[k + <span class="number">1</span>] == b[i]) &#123;</span><br><span class="line">      ++k;</span><br><span class="line">    &#125;</span><br><span class="line">    next[i] = k;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> next;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <h2 id="KMP-算法复杂度分析"><a href="#KMP-算法复杂度分析" class="headerlink" title="KMP 算法复杂度分析"></a>KMP 算法复杂度分析</h2><p>空间复杂度很容易分析，<code>KMP</code> 算法只需要一个额外的 <code>next</code> 数组，数组的大小跟模式串相同。所以空间复杂度是 $O(m)$，<code>m</code> 表示模式串的长度。</p>
 <p><code>KMP</code> 算法包含两部分，第一部分是构建 <code>next</code> 数组，第二部分才是借助 <code>next</code> 数组匹配。所以，关于时间复杂度，要分别从这两部分来分析。</p>
 <p>先来分析第一部分的时间复杂度。</p>
@@ -267,7 +265,7 @@
 <h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p><code>BF</code> 算法、<code>RK</code> 算法、<code>BM</code> 算法和 <code>KMP</code> 算法，关于这些算法，你觉得什么地方最难理解呢？欢迎留言和我分享。</p>
   </article>
   <aside class="table-content" id="site-toc">
-  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);" target="_blank" rel="noopener"><i class="fa fa-angle-left"></i></a>
   <div class="table-content-title">
     <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
     <span>目录</span>
@@ -286,16 +284,16 @@
         </div>
       
       <div>
-        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
       </div>
     </aside>
   
   
     <div class="passage-tags">
     
-      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+      <a style="word-break: break-word;" href="/tags/%E7%AE%97%E6%B3%95/"><i class="fa fa-tags"></i>算法</a>
     
-      <a style="word-break: break-word;" href="/tags/时间复杂度/"><i class="fa fa-tags"></i>时间复杂度</a>
+      <a style="word-break: break-word;" href="/tags/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/"><i class="fa fa-tags"></i>时间复杂度</a>
     
     </div>
   
@@ -392,7 +390,7 @@
     <div class="site-layer-body" id="site-layer-container">
       <div class="site-layer-input" id="site-layer-search" style="display: none;">
         <div class="site-layer-input-choose">
-          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+          <a href="javascript:void(0);" target="_blank" rel="noopener" title="Change Search Engine">Google</a>
         </div>
         <input type="text">
         <i class="fa fa-search"></i>
@@ -439,7 +437,7 @@
     </a>
   </div>
   <div class="bottom-bar-right">
-    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" data-enable="true" id="site-toc-show-btn">
       <i class="fa fa-bars"></i>
     </a>
     
@@ -447,15 +445,15 @@
         <i class="fa fa-commenting"></i>
       </a>
     
-    <a href="javascript:void(0);" id="site-toggle-share-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-toggle-share-btn">
       <i class="fa fa-share-alt"></i>
     </a>
     
-      <a href="javascript:void(0);" id="site-reward">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-reward">
         <i class="fa fa-thumbs-up"></i>
       </a>
     
-    <a href="javascript:void(0);" id="back-top-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="back-top-btn">
       <i class="fa fa-chevron-up"></i>
     </a>
   </div>

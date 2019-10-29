@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   
-<head><meta name="generator" content="Hexo 3.9.0">
+<head>
   <meta charset="utf-8">
-  <meta name="author" content="MuChen">
+  <meta name="author" content="MuChen" />
   
   
   <title>39.动态规划实战 | MuChen&#39;s Blog</title>
@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="数据结构与算法(中级),算法,">
+    <meta name="keywords" content="数据结构与算法(中级),算法," />
   
 
   
@@ -149,10 +149,10 @@
           <i class="fa fa-github-alt"></i>
         </a>
       
-      <a href="javascript:void(0);" id="site-search" style="display: none">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-search" style="display: none">
         <i class="fa fa-search"></i>
       </a>
-      <a href="javascript:void(0);" id="site-nav-btn">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-nav-btn">
         <i class="fa fa-ellipsis-v"></i>
       </a>
     </div>
@@ -212,7 +212,7 @@
 
     
       <span style="margin-right: 24px;">
-        <a href="/categories/数据结构与算法-中级/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
+        <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
       </span>
     
     
@@ -260,15 +260,12 @@
 </ul>
 <p>将上面的回溯算法的处理思路，翻译成代码，就是下面这个样子：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">char</span>[] a = <span class="string">"mitcmu"</span>.toCharArray();</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">char</span>[] b = <span class="string">"mtacnu"</span>.toCharArray();</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> n = <span class="number">6</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> m = <span class="number">6</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> minDist = Integer.MAX_VALUE; <span class="comment">// 存储结果</span></span><br><span class="line"><span class="comment">// 调用方式 lwstBT(0, 0, 0);</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">lwstBT</span><span class="params">(<span class="keyword">int</span> i, <span class="keyword">int</span> j, <span class="keyword">int</span> edist)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (i == n || j == m) &#123;</span><br><span class="line">    <span class="keyword">if</span> (i &lt; n) edist += (n - i);</span><br><span class="line">    <span class="keyword">if</span> (j &lt; m) edist += (m - j);</span><br><span class="line">    <span class="keyword">if</span> (edist &lt; minDist) minDist = edist;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (a[i] == b[j]) &#123; <span class="comment">// 两个字符匹配</span></span><br><span class="line">    lwstBT(i+<span class="number">1</span>, j+<span class="number">1</span>, edist);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123; <span class="comment">// 两个字符不匹配</span></span><br><span class="line">    lwstBT(i + <span class="number">1</span>, j, edist + <span class="number">1</span>); <span class="comment">// 删除 a[i] 或者 b[j] 前添加一个字符</span></span><br><span class="line">    lwstBT(i, j + <span class="number">1</span>, edist + <span class="number">1</span>); <span class="comment">// 删除 b[j] 或者 a[i] 前添加一个字符</span></span><br><span class="line">    lwstBT(i + <span class="number">1</span>, j + <span class="number">1</span>, edist + <span class="number">1</span>); <span class="comment">// 将 a[i] 和 b[j] 替换为相同字符</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>根据回溯算法的代码实现，可以画出递归树，看是否存在重复子问题。如果存在重复子问题，那就可以考虑能否用动态规划来解决；如果不存在重复子问题，那回溯就是最好的解决方法。<br><img src="./79d5874b.jpeg" alt="image"><br>在递归树中，每个节点代表一个状态，状态包含三个变量 <code>(i, j, edist)</code>，其中，<code>edist</code> 表示处理到 <code>a[i]</code> 和 <code>b[j]</code> 时，已经执行的编辑操作的次数。</p>
 <p>在递归树中，<code>(i, j)</code> 两个变量重复的节点很多，比如 <code>(3, 2)</code> 和 <code>(2, 3)</code>。对于 <code>(i, j)</code> 相同的节点，只需要保留 <code>edist</code> 最小的，继续递归处理就可以了，剩下的节点都可以舍弃。所以，状态就从 <code>(i, j, edist)</code> 变成了 <code>(i, j, min_edist)</code>，其中 <code>min_edist</code> 表示处理到 <code>a[i]</code> 和 <code>b[j]</code>，已经执行的最少编辑次数。</p>
 <p>看到这里，有没有觉得，这个问题跟上两篇的动态规划例子非常相似？不过，这个问题的状态转移方式，要比之前的例子都要复杂很多。上一篇的矩阵最短路径问题中，到达状态 <code>(i, j)</code> 只能通过 <code>(i-1, j)</code> 或 <code>(i, j-1)</code> 两个状态转移过来，而这个问题，状态 <code>(i, j)</code> 可能从 <code>(i-1, j)</code>，<code>(i, j-1)</code>，<code>(i-1, j-1)</code> 三个状态中的任意一个转移过来。<br><img src="./9b87cf29.jpeg" alt="image"><br>基于刚刚的分析，可以尝试着将把状态转移的过程，用公式写出来。这就是前面讲的状态转移方程。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">如果：a[i]!=b[j]，那么：min_edist(i, j) 就等于：</span><br><span class="line">min(min_edist(i-<span class="number">1</span>,j)+<span class="number">1</span>, min_edist(i,j-<span class="number">1</span>)+<span class="number">1</span>, min_edist(i-<span class="number">1</span>,j-<span class="number">1</span>)+<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">如果：a[i]==b[j]，那么：min_edist(i, j) 就等于：</span><br><span class="line">min(min_edist(i-<span class="number">1</span>,j)+<span class="number">1</span>, min_edist(i,j-<span class="number">1</span>)+<span class="number">1</span>，min_edist(i-<span class="number">1</span>,j-<span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">其中，min 表示求三数中的最小值。</span><br></pre></td></tr></table></figure>
-
 <p>了解了状态与状态之间的递推关系，画出一个二维的状态表，按行依次来填充状态表中的每个值。<br><img src="./f68d773e.jpeg" alt="image"><br>现在既有状态转移方程，又理清了完整的填表过程，代码实现就非常简单了。代码贴在下面，你可以对比着文字解释，一起看下。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">lwstDP</span><span class="params">(<span class="keyword">char</span>[] a, <span class="keyword">int</span> n, <span class="keyword">char</span>[] b, <span class="keyword">int</span> m)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span>[][] minDist = <span class="keyword">new</span> <span class="keyword">int</span>[n][m];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; m; ++j) &#123; <span class="comment">// 初始化第 0 行:a[0..0] 与 b[0..j] 的编辑距离</span></span><br><span class="line">    <span class="keyword">if</span> (a[<span class="number">0</span>] == b[j]) minDist[<span class="number">0</span>][j] = j;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (j != <span class="number">0</span>) minDist[<span class="number">0</span>][j] = minDist[<span class="number">0</span>][j-<span class="number">1</span>]+<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">else</span> minDist[<span class="number">0</span>][j] = <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123; <span class="comment">// 初始化第 0 列:a[0..i] 与 b[0..0] 的编辑距离</span></span><br><span class="line">    <span class="keyword">if</span> (a[i] == b[<span class="number">0</span>]) minDist[i][<span class="number">0</span>] = i;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (i != <span class="number">0</span>) minDist[i][<span class="number">0</span>] = minDist[i-<span class="number">1</span>][<span class="number">0</span>]+<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">else</span> minDist[i][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; n; ++i) &#123; <span class="comment">// 按行填表</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt; m; ++j) &#123;</span><br><span class="line">      <span class="keyword">if</span> (a[i] == b[j]) minDist[i][j] = min(</span><br><span class="line">          minDist[i-<span class="number">1</span>][j]+<span class="number">1</span>, minDist[i][j-<span class="number">1</span>]+<span class="number">1</span>, minDist[i-<span class="number">1</span>][j-<span class="number">1</span>]);</span><br><span class="line">      <span class="keyword">else</span> minDist[i][j] = min(</span><br><span class="line">          minDist[i-<span class="number">1</span>][j]+<span class="number">1</span>, minDist[i][j-<span class="number">1</span>]+<span class="number">1</span>, minDist[i-<span class="number">1</span>][j-<span class="number">1</span>]+<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> minDist[n-<span class="number">1</span>][m-<span class="number">1</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">min</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y, <span class="keyword">int</span> z)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> minv = Integer.MAX_VALUE;</span><br><span class="line">  <span class="keyword">if</span> (x &lt; minv) minv = x;</span><br><span class="line">  <span class="keyword">if</span> (y &lt; minv) minv = y;</span><br><span class="line">  <span class="keyword">if</span> (z &lt; minv) minv = z;</span><br><span class="line">  <span class="keyword">return</span> minv;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>你可能会说，虽然能看懂思路，但是遇到新的问题的时候，还是会感觉到无从下手。这种感觉是非常正常的。关于复杂算法问题的解决思路，有一些经验、小技巧，可以分享给你。</p>
 <p>当拿到一个问题的时候，<strong>可以先不思考计算机会如何实现这个问题，而是单纯考虑“人脑”会如何去解决这个问题</strong>。人脑比较倾向于思考具象化的、摸得着看得见的东西，不适合思考过于抽象的问题。所以，需要把抽象问题具象化。那如何具象化呢？可以实例化几个测试数据，通过人脑去分析具体实例的解，然后总结规律，再尝试套用学过的算法，看是否能够解决。</p>
 <p>除此之外，还有一个非常有效、但也算不上技巧的东西，那就是<strong>多练</strong>。实际上，等你做多了题目之后，自然就会有感觉，看到问题，立马就能想到能否用动态规划解决，然后直接就可以寻找最优子结构，写出动态规划方程，然后将状态转移方程翻译成代码。</p>
@@ -292,7 +289,6 @@
 <p><code>(i, j-1, max_lcs)</code>，其中 <code>max_lcs</code> 表示 <code>a[0…i]</code> 和 <code>b[0…j-1]</code> 的最长公共子串长度。</p>
 <p>如果把这个转移过程，用状态转移方程写出来，就是下面这个样子：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">如果：a[i]==b[j]，那么：max_lcs(i, j) 就等于：</span><br><span class="line">max(max_lcs(i-<span class="number">1</span>,j-<span class="number">1</span>)+<span class="number">1</span>, max_lcs(i-<span class="number">1</span>, j), max_lcs(i, j-<span class="number">1</span>))；</span><br><span class="line"></span><br><span class="line">如果：a[i]!=b[j]，那么：max_lcs(i, j) 就等于：</span><br><span class="line">max(max_lcs(i-<span class="number">1</span>,j-<span class="number">1</span>), max_lcs(i-<span class="number">1</span>, j), max_lcs(i, j-<span class="number">1</span>))；</span><br><span class="line"></span><br><span class="line">其中 max 表示求三数中的最大值。</span><br></pre></td></tr></table></figure>
-
 <p>有了状态转移方程，代码实现就简单多了。代码贴到了下面，你可以对比着文字一块儿看。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">lcs</span><span class="params">(<span class="keyword">char</span>[] a, <span class="keyword">int</span> n, <span class="keyword">char</span>[] b, <span class="keyword">int</span> m)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span>[][] maxlcs = <span class="keyword">new</span> <span class="keyword">int</span>[n][m];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; m; ++j) &#123;<span class="comment">// 初始化第 0 行：a[0..0] 与 b[0..j] 的 maxlcs</span></span><br><span class="line">    <span class="keyword">if</span> (a[<span class="number">0</span>] == b[j]) maxlcs[<span class="number">0</span>][j] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (j != <span class="number">0</span>) maxlcs[<span class="number">0</span>][j] = maxlcs[<span class="number">0</span>][j-<span class="number">1</span>];</span><br><span class="line">    <span class="keyword">else</span> maxlcs[<span class="number">0</span>][j] = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;<span class="comment">// 初始化第 0 列：a[0..i] 与 b[0..0] 的 maxlcs</span></span><br><span class="line">    <span class="keyword">if</span> (a[i] == b[<span class="number">0</span>]) maxlcs[i][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (i != <span class="number">0</span>) maxlcs[i][<span class="number">0</span>] = maxlcs[i-<span class="number">1</span>][<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">else</span> maxlcs[i][<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; n; ++i) &#123; <span class="comment">// 填表</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt; m; ++j) &#123;</span><br><span class="line">      <span class="keyword">if</span> (a[i] == b[j]) maxlcs[i][j] = max(</span><br><span class="line">          maxlcs[i-<span class="number">1</span>][j], maxlcs[i][j-<span class="number">1</span>], maxlcs[i-<span class="number">1</span>][j-<span class="number">1</span>]+<span class="number">1</span>);</span><br><span class="line">      <span class="keyword">else</span> maxlcs[i][j] = max(</span><br><span class="line">          maxlcs[i-<span class="number">1</span>][j], maxlcs[i][j-<span class="number">1</span>], maxlcs[i-<span class="number">1</span>][j-<span class="number">1</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> maxlcs[n-<span class="number">1</span>][m-<span class="number">1</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">max</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y, <span class="keyword">int</span> z)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> maxv = Integer.MIN_VALUE;</span><br><span class="line">  <span class="keyword">if</span> (x &gt; maxv) maxv = x;</span><br><span class="line">  <span class="keyword">if</span> (y &gt; maxv) maxv = y;</span><br><span class="line">  <span class="keyword">if</span> (z &gt; maxv) maxv = z;</span><br><span class="line">  <span class="keyword">return</span> maxv;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -330,7 +326,7 @@
 
   </article>
   <aside class="table-content" id="site-toc">
-  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);" target="_blank" rel="noopener"><i class="fa fa-angle-left"></i></a>
   <div class="table-content-title">
     <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
     <span>目录</span>
@@ -349,14 +345,14 @@
         </div>
       
       <div>
-        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
       </div>
     </aside>
   
   
     <div class="passage-tags">
     
-      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+      <a style="word-break: break-word;" href="/tags/%E7%AE%97%E6%B3%95/"><i class="fa fa-tags"></i>算法</a>
     
     </div>
   
@@ -453,7 +449,7 @@
     <div class="site-layer-body" id="site-layer-container">
       <div class="site-layer-input" id="site-layer-search" style="display: none;">
         <div class="site-layer-input-choose">
-          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+          <a href="javascript:void(0);" target="_blank" rel="noopener" title="Change Search Engine">Google</a>
         </div>
         <input type="text">
         <i class="fa fa-search"></i>
@@ -500,7 +496,7 @@
     </a>
   </div>
   <div class="bottom-bar-right">
-    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" data-enable="true" id="site-toc-show-btn">
       <i class="fa fa-bars"></i>
     </a>
     
@@ -508,15 +504,15 @@
         <i class="fa fa-commenting"></i>
       </a>
     
-    <a href="javascript:void(0);" id="site-toggle-share-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-toggle-share-btn">
       <i class="fa fa-share-alt"></i>
     </a>
     
-      <a href="javascript:void(0);" id="site-reward">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-reward">
         <i class="fa fa-thumbs-up"></i>
       </a>
     
-    <a href="javascript:void(0);" id="back-top-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="back-top-btn">
       <i class="fa fa-chevron-up"></i>
     </a>
   </div>

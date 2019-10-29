@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   
-<head><meta name="generator" content="Hexo 3.9.0">
+<head>
   <meta charset="utf-8">
-  <meta name="author" content="MuChen">
+  <meta name="author" content="MuChen" />
   
   
   <title>10.线性排序 | MuChen&#39;s Blog</title>
@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="数据结构与算法(中级),数据结构,算法,排序,">
+    <meta name="keywords" content="数据结构与算法(中级),数据结构,算法,排序," />
   
 
   
@@ -149,10 +149,10 @@
           <i class="fa fa-github-alt"></i>
         </a>
       
-      <a href="javascript:void(0);" id="site-search" style="display: none">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-search" style="display: none">
         <i class="fa fa-search"></i>
       </a>
-      <a href="javascript:void(0);" id="site-nav-btn">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-nav-btn">
         <i class="fa fa-ellipsis-v"></i>
       </a>
     </div>
@@ -212,7 +212,7 @@
 
     
       <span style="margin-right: 24px;">
-        <a href="/categories/数据结构与算法-中级/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
+        <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
       </span>
     
     
@@ -264,7 +264,6 @@
 <p>从后到前依次扫描数组 <code>A</code>。比如，当扫描到 <code>3</code> 时，可以从数组 <code>C</code> 中取出下标为 <code>3</code> 的值 <code>7</code>，也就是说，到目前为止，包括自己在内，分数小于等于 <code>3</code> 的考生有 <code>7</code> 个，也就是说 <code>3</code> 是数组 <code>R</code> 中的第 <code>7</code> 个元素（也就是数组 <code>R</code> 中下标为 <code>6</code> 的位置）。当 <code>3</code> 放入到数组 <code>R</code> 中后，小于等于 <code>3</code> 的元素就只剩下了 <code>6</code> 个了，所以相应的 <code>C[3]</code> 要减 <code>1</code>，变成 <code>6</code>。</p>
 <p>以此类推，当扫描到第 <code>2</code> 个分数为 <code>3</code> 的考生的时候，就会把它放入数组 <code>R</code> 中的第 <code>6</code> 个元素的位置（也就是下标为 <code>5</code> 的位置）。当扫描完整个数组 <code>A</code> 后，数组 <code>R</code> 内的数据就是按照分数从小到大有序排列的了。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/12/1a03d7f0-d545-11e9-98af-f301859595e1.png" alt="image.png"><br>上面的过程有点复杂，写成了代码，你可以对照着看下。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 计数排序，a 是数组，n 是数组大小。假设数组中存储的都是非负整数。</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">countingSort</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (n &lt;= <span class="number">1</span>) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 查找数组中数据的范围</span></span><br><span class="line">  <span class="keyword">int</span> max = a[<span class="number">0</span>];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; n; ++i) &#123;</span><br><span class="line">    <span class="keyword">if</span> (max &lt; a[i]) &#123;</span><br><span class="line">      max = a[i];</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">int</span>[] c = <span class="keyword">new</span> <span class="keyword">int</span>[max + <span class="number">1</span>]; <span class="comment">// 申请一个计数数组 c，下标大小 [0,max]</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= max; ++i) &#123;</span><br><span class="line">    c[i] = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 计算每个元素的个数，放入 c 中</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">    c[a[i]]++;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 依次累加</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= max; ++i) &#123;</span><br><span class="line">    c[i] = c[i-<span class="number">1</span>] + c[i];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 临时数组 r，存储排序之后的结果</span></span><br><span class="line">  <span class="keyword">int</span>[] r = <span class="keyword">new</span> <span class="keyword">int</span>[n];</span><br><span class="line">  <span class="comment">// 计算排序的关键步骤，有点难理解</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = n - <span class="number">1</span>; i &gt;= <span class="number">0</span>; --i) &#123;</span><br><span class="line">    <span class="keyword">int</span> index = c[a[i]]-<span class="number">1</span>;</span><br><span class="line">    r[index] = a[i];</span><br><span class="line">    c[a[i]]--;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 将结果拷贝给 a 数组</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">    a[i] = r[i];</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>这种利用另外一个数组来计数的实现方式是不是很巧妙呢？这也是为什么这种排序算法叫计数排序的原因。不过，你千万不要死记硬背上面的排序过程，重要的是理解和会用。</p>
 <p>总结一下，<strong>计数排序只能用在数据范围不大的场景中，如果数据范围 <code>k</code> 比要排序的数据 <code>n</code> 大很多，就不适合用计数排序了。而且，计数排序只能给非负整数排序，如果要排序的数据是其他类型的，要将其在不改变相对大小的情况下，转化为非负整数。</strong></p>
 <p>比如，还是拿考生这个例子。如果考生成绩精确到小数后一位，就需要将所有的分数都先乘以 <code>10</code>，转化成整数，然后再放到 <code>9010</code> 个桶内。再比如，如果要排序的数据中有负数，数据的范围是 <code>[-1000, 1000]</code>，那就需要先对每个数据都加 <code>1000</code>，转化成非负整数。</p>
@@ -293,7 +292,7 @@
 </ul>
   </article>
   <aside class="table-content" id="site-toc">
-  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);" target="_blank" rel="noopener"><i class="fa fa-angle-left"></i></a>
   <div class="table-content-title">
     <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
     <span>目录</span>
@@ -312,18 +311,18 @@
         </div>
       
       <div>
-        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
       </div>
     </aside>
   
   
     <div class="passage-tags">
     
-      <a style="word-break: break-word;" href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
+      <a style="word-break: break-word;" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><i class="fa fa-tags"></i>数据结构</a>
     
-      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+      <a style="word-break: break-word;" href="/tags/%E7%AE%97%E6%B3%95/"><i class="fa fa-tags"></i>算法</a>
     
-      <a style="word-break: break-word;" href="/tags/排序/"><i class="fa fa-tags"></i>排序</a>
+      <a style="word-break: break-word;" href="/tags/%E6%8E%92%E5%BA%8F/"><i class="fa fa-tags"></i>排序</a>
     
     </div>
   
@@ -420,7 +419,7 @@
     <div class="site-layer-body" id="site-layer-container">
       <div class="site-layer-input" id="site-layer-search" style="display: none;">
         <div class="site-layer-input-choose">
-          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+          <a href="javascript:void(0);" target="_blank" rel="noopener" title="Change Search Engine">Google</a>
         </div>
         <input type="text">
         <i class="fa fa-search"></i>
@@ -467,7 +466,7 @@
     </a>
   </div>
   <div class="bottom-bar-right">
-    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" data-enable="true" id="site-toc-show-btn">
       <i class="fa fa-bars"></i>
     </a>
     
@@ -475,15 +474,15 @@
         <i class="fa fa-commenting"></i>
       </a>
     
-    <a href="javascript:void(0);" id="site-toggle-share-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-toggle-share-btn">
       <i class="fa fa-share-alt"></i>
     </a>
     
-      <a href="javascript:void(0);" id="site-reward">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-reward">
         <i class="fa fa-thumbs-up"></i>
       </a>
     
-    <a href="javascript:void(0);" id="back-top-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="back-top-btn">
       <i class="fa fa-chevron-up"></i>
     </a>
   </div>

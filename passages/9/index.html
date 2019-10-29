@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   
-<head><meta name="generator" content="Hexo 3.9.0">
+<head>
   <meta charset="utf-8">
-  <meta name="author" content="MuChen">
+  <meta name="author" content="MuChen" />
   
   
   <title>9.排序（下） | MuChen&#39;s Blog</title>
@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="数据结构与算法(中级),数据结构,算法,排序,">
+    <meta name="keywords" content="数据结构与算法(中级),数据结构,算法,排序," />
   
 
   
@@ -149,10 +149,10 @@
           <i class="fa fa-github-alt"></i>
         </a>
       
-      <a href="javascript:void(0);" id="site-search" style="display: none">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-search" style="display: none">
         <i class="fa fa-search"></i>
       </a>
-      <a href="javascript:void(0);" id="site-nav-btn">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-nav-btn">
         <i class="fa fa-ellipsis-v"></i>
       </a>
     </div>
@@ -212,7 +212,7 @@
 
     
       <span style="margin-right: 24px;">
-        <a href="/categories/数据结构与算法-中级/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
+        <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
       </span>
     
     
@@ -243,7 +243,6 @@
 <p>前面通过举例对归并有了一个感性的认识，归并排序用的是分治思想，可以用递归来实现。现在就来看看如何用递归代码来实现归并排序。</p>
 <p>递归代码的编写技巧你还记得吗？写递归代码的技巧就是，分析得出递推公式，然后找到终止条件，最后将递推公式翻译成递归代码。所以，要想写出归并排序的代码，先写出归并排序的递推公式。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">递推公式：</span><br><span class="line">merge_sort(p…r) = merge(merge_sort(p…q), merge_sort(q+1…r))</span><br><span class="line"></span><br><span class="line">终止条件：</span><br><span class="line">p &gt;= r 不用再继续分解</span><br></pre></td></tr></table></figure>
-
 <p>解释一下这个递推公式。</p>
 <p><code>merge_sort(p…r)</code> 表示，给下标从 <code>p</code> 到 <code>r</code> 之间的数组排序。将这个排序问题转化为了两个子问题，<code>merge_sort(p…q)</code> 和 <code>merge_sort(q+1…r)</code>，其中下标 <code>q</code> 等于 <code>p</code> 和 <code>r</code> 的中间位置，也就是 <code>(p+r)/2</code>。当下标从 <code>p</code> 到 <code>q</code> 和从 <code>q+1</code> 到 <code>r</code> 这两个子数组都排好序之后，再将两个有序的子数组合并在一起，这样下标从 <code>p</code> 到 <code>r</code> 之间的数据就也排好序了。</p>
 <p>有了递推公式，转化成代码就简单多了。为了阅读方便，这里只给出伪代码，你可以翻译成你熟悉的编程语言。</p>
@@ -253,7 +252,6 @@
 <p>如图所示，申请一个临时数组 <code>tmp</code>，大小与 <code>A[p…r]</code> 相同。用两个游标 <code>i</code> 和 <code>j</code>，分别指向 <code>A[p…q]</code> 和 <code>A[q+1…r]</code> 的第一个元素。比较这两个元素 <code>A[i]</code> 和 <code>A[j]</code>，如果 <code>A[i]&lt;=A[j]</code>，就把 <code>A[i]</code> 放入到临时数组 <code>tmp</code>，并且 <code>i</code> 后移一位，否则将 <code>A[j]</code> 放入到数组 <code>tmp</code>，<code>j</code> 后移一位。</p>
 <p>继续上述比较过程，直到其中一个子数组中的所有数据都放入临时数组中，再把另一个数组中的数据依次加入到临时数组的末尾，这个时候，临时数组中存储的就是两个子数组合并之后的结果了。最后再把临时数组 <code>tmp</code> 中的数据拷贝到原数组 <code>A[p…r]</code> 中。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/11/deb72ca0-d441-11e9-8ff2-7340a5031e46.png" alt="image.png"><br>把 <code>merge()</code> 函数写成伪代码，就是下面这样：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">merge(A[p...r], A[p...q], A[q+<span class="number">1.</span>..r]) &#123;</span><br><span class="line">  var i := p，j := q+<span class="number">1</span>，k := <span class="number">0</span> <span class="comment">// 初始化变量 i, j, k</span></span><br><span class="line">  var tmp := <span class="keyword">new</span> <span class="built_in">array</span>[<span class="number">0.</span>..r-p] <span class="comment">// 申请一个大小跟 A[p...r] 一样的临时数组</span></span><br><span class="line">  <span class="keyword">while</span> i&lt;=q AND j&lt;=r <span class="keyword">do</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> A[i] &lt;= A[j] &#123;</span><br><span class="line">      tmp[k++] = A[i++] <span class="comment">// i++ 等于 i:=i+1</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      tmp[k++] = A[j++]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 判断哪个子数组中有剩余的数据</span></span><br><span class="line">  var start := i，end := q</span><br><span class="line">  <span class="keyword">if</span> j&lt;=r then start := j, end:=r</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 将剩余的数据拷贝到临时数组 tmp</span></span><br><span class="line">  <span class="keyword">while</span> start &lt;= end <span class="keyword">do</span> &#123;</span><br><span class="line">    tmp[k++] = A[start++]</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 将 tmp 中的数组拷贝回 A[p...r]</span></span><br><span class="line">  <span class="keyword">for</span> i:=<span class="number">0</span> to r-p <span class="keyword">do</span> &#123;</span><br><span class="line">    A[p+i] = tmp[i]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>还记得利用哨兵简化编程的处理技巧吗？<code>merge()</code> 合并函数如果借助哨兵，代码就会简洁很多，这个问题留你可以思考一下。</p>
 <h2 id="归并排序的性能分析"><a href="#归并排序的性能分析" class="headerlink" title="归并排序的性能分析"></a>归并排序的性能分析</h2><p>接下来，来看归并排序的三个问题。</p>
 <p><strong>第一，归并排序是稳定的排序算法吗？</strong></p>
@@ -264,16 +262,13 @@
 <p>在递归那一节讲过，递归的适用场景是，一个问题 <code>a</code> 可以分解为多个子问题 <code>b</code>、<code>c</code>，那求解问题 <code>a</code> 就可以分解为求解问题 <code>b</code>、<code>c</code>。问题 <code>b</code>、<code>c</code> 解决之后，再把 <code>b</code>、<code>c</code> 的结果合并成 <code>a</code> 的结果。</p>
 <p>如果定义求解问题 <code>a</code> 的时间是 $T(a)$，求解问题 <code>b</code>、<code>c</code> 的时间分别是 $T(b)$ 和 $T(c)$，那就可以得到这样的递推关系式：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">T(a) = T(b) + T(c) + K</span><br></pre></td></tr></table></figure>
-
 <p>其中 <code>K</code> 等于将两个子问题 <code>b</code>、<code>c</code> 的结果合并成问题 <code>a</code> 的结果所消耗的时间。</p>
 <p>从刚刚的分析，可以得到一个重要的结论：<strong>不仅递归求解的问题可以写成递推公式，递归代码的时间复杂度也可以写成递推公式。</strong></p>
 <p>套用这个公式，来分析一下归并排序的时间复杂度。</p>
 <p>假设对 <code>n</code> 个元素进行归并排序需要的时间是 $T(n)$，那分解成两个子数组排序的时间都是 $T(\frac n 2)$。<code>merge()</code> 函数合并两个有序子数组的时间复杂度是 $O(n)$。所以，套用前面的公式，归并排序的时间复杂度的计算公式就是：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">T(1) = C；   n=1 时，只需要常量级的执行时间，所以表示为 C。</span><br><span class="line">T(n) = 2*T(n/2) + n； n&gt;1</span><br></pre></td></tr></table></figure>
-
 <p>通过这个公式，如何来求解 $T(n)$ 呢？还不够直观？那再进一步分解一下计算过程。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">T(n) = 2*T(n/2) + n</span><br><span class="line">     = 2*(2*T(n/4) + n/2) + n = 4*T(n/4) + 2*n</span><br><span class="line">     = 4*(2*T(n/8) + n/4) + 2*n = 8*T(n/8) + 3*n</span><br><span class="line">     = 8*(2*T(n/16) + n/8) + 3*n = 16*T(n/16) + 4*n</span><br><span class="line">     ......</span><br><span class="line">     = 2^k * T(n/2^k) + k * n</span><br><span class="line">     ......</span><br></pre></td></tr></table></figure>
-
 <p>通过这样一步一步分解推导，可以得到 $T(n) = 2^kT(\frac n {2^k}) + kn$。当 $T(\frac n {2^k})=T(1)$ 时，也就是 $\frac n {2^k}=1$，可以得到 $k=log_2n$ 。将 <code>k</code> 值代入上面的公式，得到 $T(n)=Cn+nlog_2n$ 。如果用大 $O$ 标记法来表示的话，$T(n)$ 就等于 $O(nlogn)$。所以归并排序的时间复杂度是 $O(nlogn)$。</p>
 <p>从上面的原理分析和伪代码可以看出，归并排序的执行效率与要排序的原始数组的有序程度无关，所以其时间复杂度是非常稳定的，不管是最好情况、最坏情况，还是平均情况，时间复杂度都是 $O(nlogn)$。</p>
 <p><strong>第三，归并排序的空间复杂度是多少？</strong></p>
@@ -286,15 +281,12 @@
 <p>遍历 <code>p</code> 到 <code>r</code> 之间的数据，将小于 <code>pivot</code> 的放到左边，将大于 <code>pivot</code> 的放到右边，将 <code>pivot</code> 放到中间。经过这一步骤之后，数组 <code>p</code> 到 <code>r</code> 之间的数据就被分成了三个部分，前面 <code>p</code> 到 <code>q-1</code> 之间都是小于 <code>pivot</code> 的，中间是 <code>pivot</code>，后面的 <code>q+1</code> 到 <code>r</code> 之间是大于 <code>pivot</code> 的。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/11/cc2317a0-d443-11e9-8ff2-7340a5031e46.png" alt="image.png"><br>根据分治、递归的处理思想，可以用递归排序下标从 <code>p</code> 到 <code>q-1</code> 之间的数据和下标从 <code>q+1</code> 到 <code>r</code> 之间的数据，直到区间缩小为 <code>1</code>，就说明所有的数据都有序了。</p>
 <p>如果用递推公式来将上面的过程写出来的话，就是这样：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">递推公式：</span><br><span class="line">quick_sort(p…r) = quick_sort(p…q-1) + quick_sort(q+1, r)</span><br><span class="line"></span><br><span class="line">终止条件：</span><br><span class="line">p &gt;= r</span><br></pre></td></tr></table></figure>
-
 <p>将递推公式转化成递归代码。跟归并排序一样，还是用伪代码来实现，你可以翻译成你熟悉的任何语言。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 快速排序，A 是数组，n 表示数组的大小</span></span><br><span class="line">quick_sort(A, n) &#123;</span><br><span class="line">  quick_sort_c(A, <span class="number">0</span>, n<span class="number">-1</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 快速排序递归函数，p,r 为下标</span></span><br><span class="line">quick_sort_c(A, p, r) &#123;</span><br><span class="line">  <span class="keyword">if</span> p &gt;= r then <span class="keyword">return</span></span><br><span class="line">  </span><br><span class="line">  q = partition(A, p, r) <span class="comment">// 获取分区点</span></span><br><span class="line">  quick_sort_c(A, p, q<span class="number">-1</span>)</span><br><span class="line">  quick_sort_c(A, q+<span class="number">1</span>, r)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>归并排序中有一个 <code>merge()</code> 合并函数，这里有一个 <code>partition()</code> 分区函数。<code>partition()</code> 分区函数实际上前面已经讲过了，就是随机选择一个元素作为 <code>pivot</code>（一般情况下，可以选择 <code>p</code> 到 <code>r</code> 区间的最后一个元素），然后对 <code>A[p…r]</code> 分区，函数返回 <code>pivot</code> 的下标。</p>
 <p>如果不考虑空间消耗的话，<code>partition()</code> 分区函数可以写得非常简单。申请两个临时数组 <code>X</code> 和 <code>Y</code>，遍历 <code>A[p…r]</code>，将小于 <code>pivot</code> 的元素都拷贝到临时数组 <code>X</code>，将大于 <code>pivot</code> 的元素都拷贝到临时数组 <code>Y</code>，最后再将数组 <code>X</code> 和数组 <code>Y</code> 中数据顺序拷贝到 <code>A[p…r]</code>。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/11/392791f0-d444-11e9-8ff2-7340a5031e46.png" alt="image.png"><br>但是，如果按照这种思路实现的话，<code>partition()</code> 函数就需要很多额外的内存空间，所以快排就不是原地排序算法了。如果希望快排是原地排序算法，那它的空间复杂度得是 $O(1)$，那 <code>partition()</code> 分区函数就不能占用太多额外的内存空间，就需要在 <code>A[p…r]</code> 的原地完成分区操作。</p>
 <p>原地分区函数的实现思路非常巧妙，写成了伪代码，一起来看一下。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">partition(A, p, r) &#123;</span><br><span class="line">  pivot := A[r]</span><br><span class="line">  i := p</span><br><span class="line">  <span class="keyword">for</span> j := p to r<span class="number">-1</span> <span class="keyword">do</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> A[j] &lt; pivot &#123;</span><br><span class="line">      swap A[i] with A[j]</span><br><span class="line">      i := i+<span class="number">1</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  swap A[i] with A[r]</span><br><span class="line">  <span class="keyword">return</span> i</span><br></pre></td></tr></table></figure>
-
 <p>这里的处理有点类似选择排序。通过游标 <code>i</code> 把 <code>A[p…r-1]</code> 分成两部分。<code>A[p…i-1]</code> 的元素都是小于 <code>pivot</code> 的，暂且叫它“已处理区间”，<code>A[i…r-1]</code> 是“未处理区间”。每次都从未处理的区间 <code>A[i…r-1]</code> 中取一个元素 <code>A[j]</code>，与 <code>pivot</code> 对比，如果小于 <code>pivot</code>，则将其加入到已处理区间的尾部，也就是 <code>A[i]</code> 的位置。</p>
 <p>数组的插入操作还记得吗？在数组某个位置插入元素，需要搬移数据，非常耗时。当时也讲了一种处理技巧，就是交换，在 $O(1)$ 的时间复杂度内完成插入操作。这里也借助这个思想，只需要将 <code>A[i]</code> 与 <code>A[j]</code> 交换，就可以在 $O(1)$ 时间复杂度内将 <code>A[j]</code> 放到下标为 <code>i</code> 的位置。</p>
 <p>文字不如图直观，所以下面有一张图来展示分区的整个过程。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/11/c4a8c410-d444-11e9-8ff2-7340a5031e46.png" alt="image.png"><br>因为分区的过程涉及交换操作，如果数组中有两个相同的元素，比如序列 <code>6，8，7，6，3，5，9，4</code>，在经过第一次分区操作之后，两个 <code>6</code> 的相对先后顺序就会改变。所以，快速排序并不是一个稳定的排序算法。</p>
@@ -302,13 +294,11 @@
 <h2 id="快速排序的性能分析"><a href="#快速排序的性能分析" class="headerlink" title="快速排序的性能分析"></a>快速排序的性能分析</h2><p>现在来分析一下快速排序的性能。在讲解快排的实现原理的时候，已经分析了稳定性和空间复杂度。快排是一种原地、不稳定的排序算法。现在，集中精力来看快排的时间复杂度。</p>
 <p>快排也是用递归来实现的。对于递归代码的时间复杂度，前面总结的公式，这里也还是适用的。如果每次分区操作，都能正好把数组分成大小接近相等的两个小区间，那快排的时间复杂度递推求解公式跟归并是相同的。所以，快排的时间复杂度也是 $O(nlogn)$。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">T(1) = C；   n=1 时，只需要常量级的执行时间，所以表示为 C。</span><br><span class="line">T(n) = 2*T(n/2) + n； n&gt;1</span><br></pre></td></tr></table></figure>
-
 <p>但是，公式成立的前提是每次分区操作，选择的 <code>pivot</code> 都很合适，正好能将大区间对等地一分为二。但实际上这种情况是很难实现的。</p>
 <p>举一个比较极端的例子。如果数组中的数据原来已经是有序的了，比如 <code>1，3，5，6，8</code>。如果每次选择最后一个元素作为 <code>pivot</code>，那每次分区得到的两个区间都是不均等的。需要进行大约 <code>n</code> 次分区操作，才能完成快排的整个过程。每次分区平均要扫描大约 <code>n/2</code> 个元素，这种情况下，快排的时间复杂度就从 $O(nlogn)$ 退化成了 $O(n^2)$。</p>
 <p>刚刚讲了两个极端情况下的时间复杂度，一个是分区极其均衡，一个是分区极其不均衡。它们分别对应快排的最好情况时间复杂度和最坏情况时间复杂度。那快排的平均情况时间复杂度是多少呢？</p>
 <p>假设每次分区操作都将区间分成大小为 <code>9:1</code> 的两个小区间。继续套用递归时间复杂度的递推公式，就会变成这样：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">T(1) = C；   n=1 时，只需要常量级的执行时间，所以表示为 C。</span><br><span class="line"></span><br><span class="line">T(n) = T(n/10) + T(9*n/10) + n； n&gt;1</span><br></pre></td></tr></table></figure>
-
 <p>这个公式的递推求解的过程非常复杂，虽然可以求解，但不推荐用这种方法。实际上，递归的时间复杂度的求解方法除了递推公式之外，还有递归树，这里暂时不说。这里直接给你结论：$T(n)$ 在大部分情况下的时间复杂度都可以做到 $O(nlogn)$，只有在极端情况下，才会退化到 $O(n^2)$。而且，也有很多方法将这个概率降到很低，如何来做？后面再讲。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>归并排序和快速排序是两种稍微复杂的排序算法，它们用的都是分治的思想，代码都通过递归来实现，过程非常相似。理解归并排序的重点是理解递推公式和 <code>merge()</code> 合并函数。同理，理解快排的重点也是理解递推公式，还有 <code>partition()</code> 分区函数。</p>
 <p>归并排序算法是一种在任何情况下时间复杂度都比较稳定的排序算法，这也使它存在致命的缺点，即归并排序不是原地排序算法，空间复杂度比较高，是 $O(n)$。正因为此，它也没有快排应用广泛。</p>
@@ -332,13 +322,12 @@
 </li>
 </ul>
 <h2 id="归并排序-Java-实现代码："><a href="#归并排序-Java-实现代码：" class="headerlink" title="归并排序 Java 实现代码："></a>归并排序 Java 实现代码：</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MergeSort</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 归并排序算法, a是数组，n表示数组大小</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">mergeSort</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    mergeSortInternally(a, <span class="number">0</span>, n-<span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 递归调用函数</span></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">mergeSortInternally</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> p, <span class="keyword">int</span> r)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 递归终止条件</span></span><br><span class="line">    <span class="keyword">if</span> (p &gt;= r) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 取p到r之间的中间位置q,防止（p+r）的和超过int类型最大值</span></span><br><span class="line">    <span class="keyword">int</span> q = p + (r - p)/<span class="number">2</span>;</span><br><span class="line">    <span class="comment">// 分治递归</span></span><br><span class="line">    mergeSortInternally(a, p, q);</span><br><span class="line">    mergeSortInternally(a, q+<span class="number">1</span>, r);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将A[p...q]和A[q+1...r]合并为A[p...r]</span></span><br><span class="line">    merge(a, p, q, r);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> p, <span class="keyword">int</span> q, <span class="keyword">int</span> r)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i = p;</span><br><span class="line">    <span class="keyword">int</span> j = q+<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> k = <span class="number">0</span>; <span class="comment">// 初始化变量i, j, k</span></span><br><span class="line">    <span class="keyword">int</span>[] tmp = <span class="keyword">new</span> <span class="keyword">int</span>[r-p+<span class="number">1</span>]; <span class="comment">// 申请一个大小跟a[p...r]一样的临时数组</span></span><br><span class="line">    <span class="keyword">while</span> (i&lt;=q &amp;&amp; j&lt;=r) &#123;</span><br><span class="line">      <span class="keyword">if</span> (a[i] &lt;= a[j]) &#123;</span><br><span class="line">        tmp[k++] = a[i++]; <span class="comment">// i++等于i:=i+1</span></span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        tmp[k++] = a[j++];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 判断哪个子数组中有剩余的数据</span></span><br><span class="line">    <span class="keyword">int</span> start = i;</span><br><span class="line">    <span class="keyword">int</span> end = q;</span><br><span class="line">    <span class="keyword">if</span> (j &lt;= r) &#123;</span><br><span class="line">      start = j;</span><br><span class="line">      end = r;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将剩余的数据拷贝到临时数组tmp</span></span><br><span class="line">    <span class="keyword">while</span> (start &lt;= end) &#123;</span><br><span class="line">      tmp[k++] = a[start++];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将tmp中的数组拷贝回a[p...r]</span></span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt;= r-p; ++i) &#123;</span><br><span class="line">      a[p+i] = tmp[i];</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 合并(哨兵)</span></span><br><span class="line"><span class="comment">   *</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@param</span> arr</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@param</span> p</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@param</span> q</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@param</span> r</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">mergeBySentry</span><span class="params">(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> p, <span class="keyword">int</span> q, <span class="keyword">int</span> r)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span>[] leftArr = <span class="keyword">new</span> <span class="keyword">int</span>[q - p + <span class="number">2</span>];</span><br><span class="line">    <span class="keyword">int</span>[] rightArr = <span class="keyword">new</span> <span class="keyword">int</span>[r - q + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= q - p; i++) &#123;</span><br><span class="line">      leftArr[i] = arr[p + i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 第一个数组添加哨兵（最大值）</span></span><br><span class="line">    leftArr[q - p + <span class="number">1</span>] = Integer.MAX_VALUE;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; r - q; i++) &#123;</span><br><span class="line">      rightArr[i] = arr[q + <span class="number">1</span> + i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 第二个数组添加哨兵（最大值）</span></span><br><span class="line">    rightArr[r-q] = Integer.MAX_VALUE;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> k = p;</span><br><span class="line">    <span class="keyword">while</span> (k &lt;= r) &#123;</span><br><span class="line">      <span class="comment">// 当左边数组到达哨兵值时，i不再增加，直到右边数组读取完剩余值，同理右边数组也一样</span></span><br><span class="line">      <span class="keyword">if</span> (leftArr[i] &lt;= rightArr[j]) &#123;</span><br><span class="line">        arr[k++] = leftArr[i++];</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        arr[k++] = rightArr[j++];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <h2 id="快速排序-Java-实现代码："><a href="#快速排序-Java-实现代码：" class="headerlink" title="快速排序 Java 实现代码："></a>快速排序 Java 实现代码：</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">QuickSort</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 快速排序，a是数组，n表示数组的大小</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">quickSort</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    quickSortInternally(a, <span class="number">0</span>, n-<span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 快速排序递归函数，p,r为下标</span></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">quickSortInternally</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> p, <span class="keyword">int</span> r)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (p &gt;= r) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> q = partition(a, p, r); <span class="comment">// 获取分区点</span></span><br><span class="line">    quickSortInternally(a, p, q-<span class="number">1</span>);</span><br><span class="line">    quickSortInternally(a, q+<span class="number">1</span>, r);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">partition</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> p, <span class="keyword">int</span> r)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> pivot = a[r];</span><br><span class="line">    <span class="keyword">int</span> i = p;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> j = p; j &lt; r; ++j) &#123;</span><br><span class="line">      <span class="keyword">if</span> (a[j] &lt; pivot) &#123;</span><br><span class="line">        <span class="keyword">if</span> (i == j) &#123;</span><br><span class="line">          ++i;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          <span class="keyword">int</span> tmp = a[i];</span><br><span class="line">          a[i++] = a[j];</span><br><span class="line">          a[j] = tmp;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> tmp = a[i];</span><br><span class="line">    a[i] = a[r];</span><br><span class="line">    a[r] = tmp;</span><br><span class="line"></span><br><span class="line">    System.out.println(<span class="string">"i="</span> + i);</span><br><span class="line">    <span class="keyword">return</span> i;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>欢迎留言和我分享。</p>
   </article>
   <aside class="table-content" id="site-toc">
-  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);" target="_blank" rel="noopener"><i class="fa fa-angle-left"></i></a>
   <div class="table-content-title">
     <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
     <span>目录</span>
@@ -357,18 +346,18 @@
         </div>
       
       <div>
-        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
       </div>
     </aside>
   
   
     <div class="passage-tags">
     
-      <a style="word-break: break-word;" href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
+      <a style="word-break: break-word;" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><i class="fa fa-tags"></i>数据结构</a>
     
-      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+      <a style="word-break: break-word;" href="/tags/%E7%AE%97%E6%B3%95/"><i class="fa fa-tags"></i>算法</a>
     
-      <a style="word-break: break-word;" href="/tags/排序/"><i class="fa fa-tags"></i>排序</a>
+      <a style="word-break: break-word;" href="/tags/%E6%8E%92%E5%BA%8F/"><i class="fa fa-tags"></i>排序</a>
     
     </div>
   
@@ -465,7 +454,7 @@
     <div class="site-layer-body" id="site-layer-container">
       <div class="site-layer-input" id="site-layer-search" style="display: none;">
         <div class="site-layer-input-choose">
-          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+          <a href="javascript:void(0);" target="_blank" rel="noopener" title="Change Search Engine">Google</a>
         </div>
         <input type="text">
         <i class="fa fa-search"></i>
@@ -512,7 +501,7 @@
     </a>
   </div>
   <div class="bottom-bar-right">
-    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" data-enable="true" id="site-toc-show-btn">
       <i class="fa fa-bars"></i>
     </a>
     
@@ -520,15 +509,15 @@
         <i class="fa fa-commenting"></i>
       </a>
     
-    <a href="javascript:void(0);" id="site-toggle-share-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-toggle-share-btn">
       <i class="fa fa-share-alt"></i>
     </a>
     
-      <a href="javascript:void(0);" id="site-reward">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-reward">
         <i class="fa fa-thumbs-up"></i>
       </a>
     
-    <a href="javascript:void(0);" id="back-top-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="back-top-btn">
       <i class="fa fa-chevron-up"></i>
     </a>
   </div>

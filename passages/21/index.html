@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   
-<head><meta name="generator" content="Hexo 3.9.0">
+<head>
   <meta charset="utf-8">
-  <meta name="author" content="MuChen">
+  <meta name="author" content="MuChen" />
   
   
   <title>21.二叉树（下） | MuChen&#39;s Blog</title>
@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="数据结构与算法(中级),数据结构,算法,二叉树,">
+    <meta name="keywords" content="数据结构与算法(中级),数据结构,算法,二叉树," />
   
 
   
@@ -149,10 +149,10 @@
           <i class="fa fa-github-alt"></i>
         </a>
       
-      <a href="javascript:void(0);" id="site-search" style="display: none">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-search" style="display: none">
         <i class="fa fa-search"></i>
       </a>
-      <a href="javascript:void(0);" id="site-nav-btn">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-nav-btn">
         <i class="fa fa-ellipsis-v"></i>
       </a>
     </div>
@@ -212,7 +212,7 @@
 
     
       <span style="margin-right: 24px;">
-        <a href="/categories/数据结构与算法-中级/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
+        <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
       </span>
     
     
@@ -238,7 +238,7 @@
   
   <article class="passage-article">
     <p>上一篇学习了树、二叉树以及二叉树的遍历，下面再来学习一种特殊的的二叉树，二叉查找树。二叉查找树最大的特点就是，支持动态数据集合的快速插入、删除、查找操作。</p>
-<p>之前说过，散列表也是支持这些操作的，并且散列表的这些操作比二叉查找树更高效，时间复杂度是 $O(1)$。<font color="green">既然有了这么高效的散列表，使用二叉树的地方是不是都可以替换成散列表呢？有没有哪些地方是散列表做不了，必须要用二叉树来做的呢？</font></p>
+<p>之前说过，散列表也是支持这些操作的，并且散列表的这些操作比二叉查找树更高效，时间复杂度是 $O(1)$。<font color='green'>既然有了这么高效的散列表，使用二叉树的地方是不是都可以替换成散列表呢？有没有哪些地方是散列表做不了，必须要用二叉树来做的呢？</font></p>
 <h2 id="二叉查找树（Binary-Search-Tree）"><a href="#二叉查找树（Binary-Search-Tree）" class="headerlink" title="二叉查找树（Binary Search Tree）"></a>二叉查找树（Binary Search Tree）</h2><p>二叉查找树是二叉树中最常用的一种类型，也叫二叉搜索树。顾名思义，二叉查找树是为了实现快速查找而生的。不过，它不仅仅支持快速查找一个数据，还支持快速插入、删除一个数据。它是怎么做到这些的呢？</p>
 <p>这些都依赖于二叉查找树的特殊结构。<strong>二叉查找树要求，在树中的任意一个节点，其左子树中的每个节点的值，都要小于这个节点的值，而右子树节点的值都大于这个节点的值</strong>。下面画了几个二叉查找树的例子，你一看应该就清楚了。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/21/ba87d4f0-dc71-11e9-ae1c-9de23c38e7aa.png" alt="image.png"><br>前面讲到，二叉查找树支持快速查找、插入、删除操作，现在就依次来看下，这三个操作是如何实现的。</p>
 <p><strong>1. 二叉查找树的查找操作</strong><br>首先看如何在二叉查找树中查找一个节点。先取根节点，如果它等于要查找的数据，那就返回。如果要查找的数据比根节点的值小，那就在左子树中递归查找；如果要查找的数据比根节点的值大，那就在右子树中递归查找。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/21/dedd48d0-dc71-11e9-ae1c-9de23c38e7aa.png" alt="image.png"><br>这里把查找的代码实现了一下，贴在下面了，结合代码，理解起来会更加容易。</p>
@@ -271,7 +271,6 @@
 <p>树的高度就等于最大层数减一，为了方便计算，转换成层来表示。从图中可以看出，包含 <code>n</code> 个节点的完全二叉树中，第一层包含 <code>1</code> 个节点，第二层包含 <code>2</code> 个节点，第三层包含 <code>4</code> 个节点，依次类推，下面一层节点个数是上一层的 <code>2</code> 倍，第 <code>K</code> 层包含的节点个数就是 $2^{K-1}$。</p>
 <p>不过，对于完全二叉树来说，最后一层的节点个数有点儿不遵守上面的规律了。它包含的节点个数在 <code>1</code> 个到 $2^{L-1}$ 个之间（假设最大层数是 <code>L</code>）。如果把每一层的节点个数加起来就是总的节点个数 <code>n</code>。也就是说，如果节点的个数是 <code>n</code>，那么 <code>n</code> 满足这样一个关系：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">n &gt;= 1+2+4+8+...+2^(L-2)+1</span><br><span class="line">n &lt;= 1+2+4+8+...+2^(L-2)+2^(L-1)</span><br></pre></td></tr></table></figure>
-
 <p>借助等比数列的求和公式，可以计算出，<code>L</code> 的范围是 [$log_2(n+1)$, $log_2n + 1$]。完全二叉树的层数小于等于 $log_2n + 1$，也就是说，完全二叉树的高度小于等于 $log_2n$。</p>
 <p>显然，极度不平衡的二叉查找树，它的查找性能肯定不能满足需求。需要构建一种不管怎么删除、插入数据，在任何时候，都能保持任意节点左右子树都比较平衡的二叉查找树，这就是下一篇要详细讲的，一种特殊的二叉查找树，平衡二叉查找树。平衡二叉查找树的高度接近 <code>logn</code>，所以插入、删除、查找操作的时间复杂度也比较稳定，是 $O(logn)$。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>上面学习了一种特殊的二叉树，二叉查找树。它支持快速地查找、插入、删除操作。</p>
@@ -299,7 +298,7 @@
 <h2 id="二叉查找树的完整实现"><a href="#二叉查找树的完整实现" class="headerlink" title="二叉查找树的完整实现"></a>二叉查找树的完整实现</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BinarySearchTree</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> Node tree;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> Node <span class="title">find</span><span class="params">(<span class="keyword">int</span> data)</span> </span>&#123;</span><br><span class="line">    Node p = tree;</span><br><span class="line">    <span class="keyword">while</span> (p != <span class="keyword">null</span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (data &lt; p.data) p = p.left;</span><br><span class="line">      <span class="keyword">else</span> <span class="keyword">if</span> (data &gt; p.data) p = p.right;</span><br><span class="line">      <span class="keyword">else</span> <span class="keyword">return</span> p;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insert</span><span class="params">(<span class="keyword">int</span> data)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (tree == <span class="keyword">null</span>) &#123;</span><br><span class="line">      tree = <span class="keyword">new</span> Node(data);</span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Node p = tree;</span><br><span class="line">    <span class="keyword">while</span> (p != <span class="keyword">null</span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (data &gt; p.data) &#123;</span><br><span class="line">        <span class="keyword">if</span> (p.right == <span class="keyword">null</span>) &#123;</span><br><span class="line">          p.right = <span class="keyword">new</span> Node(data);</span><br><span class="line">          <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        p = p.right;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123; <span class="comment">// data &lt; p.data</span></span><br><span class="line">        <span class="keyword">if</span> (p.left == <span class="keyword">null</span>) &#123;</span><br><span class="line">          p.left = <span class="keyword">new</span> Node(data);</span><br><span class="line">          <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        p = p.left;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delete</span><span class="params">(<span class="keyword">int</span> data)</span> </span>&#123;</span><br><span class="line">    Node p = tree; <span class="comment">// p指向要删除的节点，初始化指向根节点</span></span><br><span class="line">    Node pp = <span class="keyword">null</span>; <span class="comment">// pp记录的是p的父节点</span></span><br><span class="line">    <span class="keyword">while</span> (p != <span class="keyword">null</span> &amp;&amp; p.data != data) &#123;</span><br><span class="line">      pp = p;</span><br><span class="line">      <span class="keyword">if</span> (data &gt; p.data) p = p.right;</span><br><span class="line">      <span class="keyword">else</span> p = p.left;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (p == <span class="keyword">null</span>) <span class="keyword">return</span>; <span class="comment">// 没有找到</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 要删除的节点有两个子节点</span></span><br><span class="line">    <span class="keyword">if</span> (p.left != <span class="keyword">null</span> &amp;&amp; p.right != <span class="keyword">null</span>) &#123; <span class="comment">// 查找右子树中最小节点</span></span><br><span class="line">      Node minP = p.right;</span><br><span class="line">      Node minPP = p; <span class="comment">// minPP表示minP的父节点</span></span><br><span class="line">      <span class="keyword">while</span> (minP.left != <span class="keyword">null</span>) &#123;</span><br><span class="line">        minPP = minP;</span><br><span class="line">        minP = minP.left;</span><br><span class="line">      &#125;</span><br><span class="line">      p.data = minP.data; <span class="comment">// 将minP的数据替换到p中</span></span><br><span class="line">      p = minP; <span class="comment">// 下面就变成了删除minP了</span></span><br><span class="line">      pp = minPP;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 删除节点是叶子节点或者仅有一个子节点</span></span><br><span class="line">    Node child; <span class="comment">// p的子节点</span></span><br><span class="line">    <span class="keyword">if</span> (p.left != <span class="keyword">null</span>) child = p.left;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (p.right != <span class="keyword">null</span>) child = p.right;</span><br><span class="line">    <span class="keyword">else</span> child = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (pp == <span class="keyword">null</span>) tree = child; <span class="comment">// 删除的是根节点</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (pp.left == p) pp.left = child;</span><br><span class="line">    <span class="keyword">else</span> pp.right = child;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> Node <span class="title">findMin</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (tree == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    Node p = tree;</span><br><span class="line">    <span class="keyword">while</span> (p.left != <span class="keyword">null</span>) &#123;</span><br><span class="line">      p = p.left;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> p;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> Node <span class="title">findMax</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (tree == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    Node p = tree;</span><br><span class="line">    <span class="keyword">while</span> (p.right != <span class="keyword">null</span>) &#123;</span><br><span class="line">      p = p.right;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> p;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> data;</span><br><span class="line">    <span class="keyword">private</span> Node left;</span><br><span class="line">    <span class="keyword">private</span> Node right;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Node</span><span class="params">(<span class="keyword">int</span> data)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.data = data;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
   </article>
   <aside class="table-content" id="site-toc">
-  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);" target="_blank" rel="noopener"><i class="fa fa-angle-left"></i></a>
   <div class="table-content-title">
     <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
     <span>目录</span>
@@ -318,18 +317,18 @@
         </div>
       
       <div>
-        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
       </div>
     </aside>
   
   
     <div class="passage-tags">
     
-      <a style="word-break: break-word;" href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
+      <a style="word-break: break-word;" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><i class="fa fa-tags"></i>数据结构</a>
     
-      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+      <a style="word-break: break-word;" href="/tags/%E7%AE%97%E6%B3%95/"><i class="fa fa-tags"></i>算法</a>
     
-      <a style="word-break: break-word;" href="/tags/二叉树/"><i class="fa fa-tags"></i>二叉树</a>
+      <a style="word-break: break-word;" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/"><i class="fa fa-tags"></i>二叉树</a>
     
     </div>
   
@@ -426,7 +425,7 @@
     <div class="site-layer-body" id="site-layer-container">
       <div class="site-layer-input" id="site-layer-search" style="display: none;">
         <div class="site-layer-input-choose">
-          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+          <a href="javascript:void(0);" target="_blank" rel="noopener" title="Change Search Engine">Google</a>
         </div>
         <input type="text">
         <i class="fa fa-search"></i>
@@ -473,7 +472,7 @@
     </a>
   </div>
   <div class="bottom-bar-right">
-    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" data-enable="true" id="site-toc-show-btn">
       <i class="fa fa-bars"></i>
     </a>
     
@@ -481,15 +480,15 @@
         <i class="fa fa-commenting"></i>
       </a>
     
-    <a href="javascript:void(0);" id="site-toggle-share-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-toggle-share-btn">
       <i class="fa fa-share-alt"></i>
     </a>
     
-      <a href="javascript:void(0);" id="site-reward">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-reward">
         <i class="fa fa-thumbs-up"></i>
       </a>
     
-    <a href="javascript:void(0);" id="back-top-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="back-top-btn">
       <i class="fa fa-chevron-up"></i>
     </a>
   </div>

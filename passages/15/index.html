@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   
-<head><meta name="generator" content="Hexo 3.9.0">
+<head>
   <meta charset="utf-8">
-  <meta name="author" content="MuChen">
+  <meta name="author" content="MuChen" />
   
   
   <title>15.散列表（上） | MuChen&#39;s Blog</title>
@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="数据结构与算法(中级),数据结构,算法,散列表,">
+    <meta name="keywords" content="数据结构与算法(中级),数据结构,算法,散列表," />
   
 
   
@@ -149,10 +149,10 @@
           <i class="fa fa-github-alt"></i>
         </a>
       
-      <a href="javascript:void(0);" id="site-search" style="display: none">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-search" style="display: none">
         <i class="fa fa-search"></i>
       </a>
-      <a href="javascript:void(0);" id="site-nav-btn">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-nav-btn">
         <i class="fa fa-ellipsis-v"></i>
       </a>
     </div>
@@ -212,7 +212,7 @@
 
     
       <span style="margin-right: 24px;">
-        <a href="/categories/数据结构与算法-中级/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
+        <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
       </span>
     
     
@@ -252,7 +252,6 @@
 <p>散列函数，顾名思义，它是一个函数。可以把它定义成<code>hash(key)</code>，其中 <code>key</code> 表示元素的键值，<code>hash(key)</code> 的值表示经过散列函数计算得到的散列值。</p>
 <p>那第一个例子中，编号就是数组下标，所以 <code>hash(key)</code> 就等于 <code>key</code>。改造后的例子，写成散列函数稍微有点复杂。用伪代码将它写成函数就是下面这样：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">hash</span><span class="params">(String key)</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 获取后两位字符</span></span><br><span class="line">  <span class="built_in">string</span> lastTwoChars = key.substr(length<span class="number">-2</span>, length);</span><br><span class="line">  <span class="comment">// 将后两位字符转换为整数</span></span><br><span class="line">  <span class="keyword">int</span> hashValue = convert lastTwoChas to <span class="keyword">int</span>-type;</span><br><span class="line">  <span class="keyword">return</span> hashValue;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>刚刚举的学校运动会的例子，散列函数比较简单，也比较容易想到。但是，如果参赛选手的编号是随机生成的 <code>6</code> 位数字，又或者用的是 <code>a</code> 到 <code>z</code> 之间的字符串，<strong>该如何构造散列函数呢？总结了三点散列函数设计的基本要求：</strong></p>
 <ul>
 <li><p>散列函数计算得到的散列值是一个非负整数；</p>
@@ -278,7 +277,6 @@
 <p>不管采用哪种探测方法，当散列表中空闲位置不多的时候，散列冲突的概率就会大大提高。为了尽可能保证散列表的操作效率，一般情况下，会尽可能保证散列表中有一定比例的空闲槽位。用<strong>装载因子</strong>（<code>load factor</code>）来表示空位的多少。</p>
 <p>装载因子的计算公式是：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">散列表的装载因子 = 填入表中的元素个数 / 散列表的长度</span><br></pre></td></tr></table></figure>
-
 <p>装载因子越大，说明空闲位置越少，冲突越多，散列表的性能会下降。</p>
 <h3 id="链表法"><a href="#链表法" class="headerlink" title="链表法"></a>链表法</h3><p>链表法是一种更加常用的散列冲突解决办法，相比开放寻址法，它要简单很多。来看这个图，在散列表中，每个“桶（<code>bucket</code>）”或者“槽（<code>slot</code>）”会对应一条链表，所有散列值相同的元素都放到相同槽位对应的链表中。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/19/879f05d0-da9c-11e9-aeb5-dd57c0620d4c.png" alt="image.png"><br>当插入的时候，只需要通过散列函数计算出对应的散列槽位，将其插入到对应链表中即可，所以插入的时间复杂度是 $O(1)$。当查找、删除一个元素时，同样通过散列函数计算出对应的槽，然后遍历链表查找或者删除。那查找或删除操作的时间复杂度是多少呢？</p>
 <p>实际上，这两个操作的时间复杂度跟链表的长度 <code>k</code> 成正比，也就是 $O(k)$。对于散列比较均匀的散列函数来说，理论上讲，<code>k=n/m</code>，其中 <code>n</code> 表示散列中数据的个数，<code>m</code> 表示散列表中“槽”的个数。</p>
@@ -305,7 +303,7 @@
 </ul>
   </article>
   <aside class="table-content" id="site-toc">
-  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);" target="_blank" rel="noopener"><i class="fa fa-angle-left"></i></a>
   <div class="table-content-title">
     <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
     <span>目录</span>
@@ -324,18 +322,18 @@
         </div>
       
       <div>
-        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
       </div>
     </aside>
   
   
     <div class="passage-tags">
     
-      <a style="word-break: break-word;" href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
+      <a style="word-break: break-word;" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><i class="fa fa-tags"></i>数据结构</a>
     
-      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+      <a style="word-break: break-word;" href="/tags/%E7%AE%97%E6%B3%95/"><i class="fa fa-tags"></i>算法</a>
     
-      <a style="word-break: break-word;" href="/tags/散列表/"><i class="fa fa-tags"></i>散列表</a>
+      <a style="word-break: break-word;" href="/tags/%E6%95%A3%E5%88%97%E8%A1%A8/"><i class="fa fa-tags"></i>散列表</a>
     
     </div>
   
@@ -432,7 +430,7 @@
     <div class="site-layer-body" id="site-layer-container">
       <div class="site-layer-input" id="site-layer-search" style="display: none;">
         <div class="site-layer-input-choose">
-          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+          <a href="javascript:void(0);" target="_blank" rel="noopener" title="Change Search Engine">Google</a>
         </div>
         <input type="text">
         <i class="fa fa-search"></i>
@@ -479,7 +477,7 @@
     </a>
   </div>
   <div class="bottom-bar-right">
-    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" data-enable="true" id="site-toc-show-btn">
       <i class="fa fa-bars"></i>
     </a>
     
@@ -487,15 +485,15 @@
         <i class="fa fa-commenting"></i>
       </a>
     
-    <a href="javascript:void(0);" id="site-toggle-share-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-toggle-share-btn">
       <i class="fa fa-share-alt"></i>
     </a>
     
-      <a href="javascript:void(0);" id="site-reward">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-reward">
         <i class="fa fa-thumbs-up"></i>
       </a>
     
-    <a href="javascript:void(0);" id="back-top-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="back-top-btn">
       <i class="fa fa-chevron-up"></i>
     </a>
   </div>

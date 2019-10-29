@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   
-<head><meta name="generator" content="Hexo 3.9.0">
+<head>
   <meta charset="utf-8">
-  <meta name="author" content="MuChen">
+  <meta name="author" content="MuChen" />
   
   
   <title>12.二分查找（上） | MuChen&#39;s Blog</title>
@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="数据结构与算法(中级),数据结构,算法,二分查找,">
+    <meta name="keywords" content="数据结构与算法(中级),数据结构,算法,二分查找," />
   
 
   
@@ -149,10 +149,10 @@
           <i class="fa fa-github-alt"></i>
         </a>
       
-      <a href="javascript:void(0);" id="site-search" style="display: none">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-search" style="display: none">
         <i class="fa fa-search"></i>
       </a>
-      <a href="javascript:void(0);" id="site-nav-btn">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-nav-btn">
         <i class="fa fa-ellipsis-v"></i>
       </a>
     </div>
@@ -212,7 +212,7 @@
 
     
       <span style="margin-right: 24px;">
-        <a href="/categories/数据结构与算法-中级/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
+        <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
       </span>
     
     
@@ -255,7 +255,6 @@
 <h2 id="二分查找的递归与非递归实现"><a href="#二分查找的递归与非递归实现" class="headerlink" title="二分查找的递归与非递归实现"></a>二分查找的递归与非递归实现</h2><p>实际上，简单的二分查找并不难写，注意这里的“简单”二字。下一篇，会讲到二分查找的变体问题，那才是真正烧脑的。今天，来看如何来写最简单的二分查找。</p>
 <p><strong>最简单的情况就是有序数组中不存在重复元素</strong>，在其中用二分查找值等于给定值的数据。用 <code>Java</code> 代码实现了一个最简单的二分查找算法。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">bsearch</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> n, <span class="keyword">int</span> value)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> low = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">int</span> high = n - <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">while</span> (low &lt;= high) &#123;</span><br><span class="line">    <span class="keyword">int</span> mid = (low + high) / <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">if</span> (a[mid] == value) &#123;</span><br><span class="line">      <span class="keyword">return</span> mid;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (a[mid] &lt; value) &#123;</span><br><span class="line">      low = mid + <span class="number">1</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      high = mid - <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>这个代码稍微解释一下，<code>low</code>、<code>high</code>、<code>mid</code> 都是指数组下标，其中 <code>low</code> 和 <code>high</code> 表示当前查找的区间范围，初始 <code>low=0</code>，<code>high=n-1</code>。<code>mid</code> 表示 <code>[low, high]</code> 的中间位置。通过对比 <code>a[mid]</code> 与 <code>value</code> 的大小，来更新接下来要查找的区间范围，直到找到或者区间缩小为 <code>0</code>，就退出。如果你有一些编程基础，看懂这些应该不成问题。现在，就着重强调一下<strong>容易出错的 <code>3</code> 个地方</strong>。</p>
 <p><strong>1. 循环退出条件</strong></p>
 <p>注意是 low&lt;=high，而不是 low&lt;high。</p>
@@ -300,7 +299,7 @@
 </ul>
   </article>
   <aside class="table-content" id="site-toc">
-  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);" target="_blank" rel="noopener"><i class="fa fa-angle-left"></i></a>
   <div class="table-content-title">
     <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
     <span>目录</span>
@@ -319,18 +318,18 @@
         </div>
       
       <div>
-        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
       </div>
     </aside>
   
   
     <div class="passage-tags">
     
-      <a style="word-break: break-word;" href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
+      <a style="word-break: break-word;" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><i class="fa fa-tags"></i>数据结构</a>
     
-      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+      <a style="word-break: break-word;" href="/tags/%E7%AE%97%E6%B3%95/"><i class="fa fa-tags"></i>算法</a>
     
-      <a style="word-break: break-word;" href="/tags/二分查找/"><i class="fa fa-tags"></i>二分查找</a>
+      <a style="word-break: break-word;" href="/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/"><i class="fa fa-tags"></i>二分查找</a>
     
     </div>
   
@@ -427,7 +426,7 @@
     <div class="site-layer-body" id="site-layer-container">
       <div class="site-layer-input" id="site-layer-search" style="display: none;">
         <div class="site-layer-input-choose">
-          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+          <a href="javascript:void(0);" target="_blank" rel="noopener" title="Change Search Engine">Google</a>
         </div>
         <input type="text">
         <i class="fa fa-search"></i>
@@ -474,7 +473,7 @@
     </a>
   </div>
   <div class="bottom-bar-right">
-    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" data-enable="true" id="site-toc-show-btn">
       <i class="fa fa-bars"></i>
     </a>
     
@@ -482,15 +481,15 @@
         <i class="fa fa-commenting"></i>
       </a>
     
-    <a href="javascript:void(0);" id="site-toggle-share-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-toggle-share-btn">
       <i class="fa fa-share-alt"></i>
     </a>
     
-      <a href="javascript:void(0);" id="site-reward">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-reward">
         <i class="fa fa-thumbs-up"></i>
       </a>
     
-    <a href="javascript:void(0);" id="back-top-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="back-top-btn">
       <i class="fa fa-chevron-up"></i>
     </a>
   </div>

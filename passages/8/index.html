@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   
-<head><meta name="generator" content="Hexo 3.9.0">
+<head>
   <meta charset="utf-8">
-  <meta name="author" content="MuChen">
+  <meta name="author" content="MuChen" />
   
   
   <title>8.排序（上） | MuChen&#39;s Blog</title>
@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="数据结构与算法(中级),数据结构,算法,排序,">
+    <meta name="keywords" content="数据结构与算法(中级),数据结构,算法,排序," />
   
 
   
@@ -149,10 +149,10 @@
           <i class="fa fa-github-alt"></i>
         </a>
       
-      <a href="javascript:void(0);" id="site-search" style="display: none">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-search" style="display: none">
         <i class="fa fa-search"></i>
       </a>
-      <a href="javascript:void(0);" id="site-nav-btn">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-nav-btn">
         <i class="fa fa-ellipsis-v"></i>
       </a>
     </div>
@@ -212,7 +212,7 @@
 
     
       <span style="margin-right: 24px;">
-        <a href="/categories/数据结构与算法-中级/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
+        <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
       </span>
     
     
@@ -239,7 +239,7 @@
   <article class="passage-article">
     <p>排序对于任何一个程序员来说，可能都不会陌生。你学的第一个算法，可能就是排序。大部分编程语言中，也都提供了排序函数。在平常的项目中，也经常会用到排序。排序非常重要，所以会花多一点时间来详细讲一讲经典的排序算法。</p>
 <p>排序算法太多了，有很多可能连名字都没听说过，比如猴子排序、睡眠排序、面条排序等。只讲众多排序算法中的一小撮，也是最经典的、最常用的：冒泡排序、插入排序、选择排序、归并排序、快速排序、计数排序、基数排序、桶排序。</p>
-<p>带着问题去学习，是最有效的学习方法。先给出一个思考题：<font color="green">插入排序和冒泡排序的时间复杂度相同，都是 $O(n^2)$，在实际的软件开发里，为什么更倾向于使用插入排序算法而不是冒泡排序算法呢？</font></p>
+<p>带着问题去学习，是最有效的学习方法。先给出一个思考题：<font color='green'>插入排序和冒泡排序的时间复杂度相同，都是 $O(n^2)$，在实际的软件开发里，为什么更倾向于使用插入排序算法而不是冒泡排序算法呢？</font></p>
 <h2 id="如何分析一个“排序算法”？"><a href="#如何分析一个“排序算法”？" class="headerlink" title="如何分析一个“排序算法”？"></a>如何分析一个“排序算法”？</h2><p>学习排序算法，除了学习它的算法原理、代码实现之外，更重要的是要学会如何评价、分析一个排序算法。那分析一个排序算法，要从哪几个方面入手呢？</p>
 <h3 id="排序算法的执行效率"><a href="#排序算法的执行效率" class="headerlink" title="排序算法的执行效率"></a>排序算法的执行效率</h3><p>对于排序算法执行效率的分析，一般会从这几个方面来衡量：</p>
 <p><strong>1. 最好情况、最坏情况、平均情况时间复杂度</strong></p>
@@ -262,7 +262,6 @@
 <h2 id="冒泡排序（Bubble-Sort）"><a href="#冒泡排序（Bubble-Sort）" class="headerlink" title="冒泡排序（Bubble Sort）"></a>冒泡排序（Bubble Sort）</h2><p>冒泡排序只会操作相邻的两个数据。每次冒泡操作都会对相邻的两个元素进行比较，看是否满足大小关系要求。如果不满足就让它俩互换。一次冒泡会让至少一个元素移动到它应该在的位置，重复 <code>n</code> 次，就完成了 <code>n</code> 个数据的排序工作。</p>
 <p>用一个例子，看下冒泡排序的整个过程。要对一组数据 <code>4，5，6，3，2，1</code>，从小到到大进行排序。第一次冒泡操作的详细过程就是这样：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/f4e52e50-d39c-11e9-b66f-d76c8c3e613a.png" alt="image.png"><br>可以看出，经过一次冒泡操作之后，<code>6</code> 这个元素已经存储在正确的位置上。要想完成所有数据的排序，只要进行 <code>6</code> 次这样的冒泡操作就行了。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/040d2f90-d39d-11e9-b66f-d76c8c3e613a.png" alt="image.png"><br>实际上，刚讲的冒泡过程还可以优化。当某次冒泡操作已经没有数据交换时，说明已经达到完全有序，不用再继续执行后续的冒泡操作。这里还有另外一个例子，这里面给 <code>6</code> 个元素排序，只需要 <code>4</code> 次冒泡操作就可以了。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/155e0440-d39d-11e9-b66f-d76c8c3e613a.png" alt="image.png"><br>冒泡排序算法的原理比较容易理解，具体的代码贴到下面，你可以结合着代码来看前面讲的原理。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 冒泡排序，a 表示数组，n 表示数组大小</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">bubbleSort</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (n &lt;= <span class="number">1</span>) <span class="keyword">return</span>;</span><br><span class="line"> </span><br><span class="line"> <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">    <span class="comment">// 提前退出冒泡循环的标志位</span></span><br><span class="line">    <span class="keyword">boolean</span> flag = <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n - i - <span class="number">1</span>; ++j) &#123;</span><br><span class="line">      <span class="keyword">if</span> (a[j] &gt; a[j+<span class="number">1</span>]) &#123; <span class="comment">// 交换</span></span><br><span class="line">        <span class="keyword">int</span> tmp = a[j];</span><br><span class="line">        a[j] = a[j+<span class="number">1</span>];</span><br><span class="line">        a[j+<span class="number">1</span>] = tmp;</span><br><span class="line">        flag = <span class="keyword">true</span>;  <span class="comment">// 表示有数据交换      </span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (!flag) <span class="keyword">break</span>;  <span class="comment">// 没有数据交换，提前退出</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>现在，结合刚才分析排序算法的三个方面，有三个问题。</p>
 <p><strong>第一，冒泡排序是原地排序算法吗？</strong></p>
 <p>冒泡的过程只涉及相邻数据的交换操作，只需要常量级的临时空间，所以它的空间复杂度为 $O(1)$，是一个原地排序算法。</p>
@@ -273,11 +272,9 @@
 <p>对于包含 <code>n</code> 个数据的数组，这 <code>n</code> 个数据就有 <code>n!</code> 种排列方式。不同的排列方式，冒泡排序执行的时间肯定是不同的。比如前面举的那两个例子，其中一个要进行 <code>6</code> 次冒泡，而另一个只需要 <code>4</code> 次。如果用概率论方法定量分析平均时间复杂度，涉及的数学推理和计算就会很复杂。这里还有一种思路，通过“<strong>有序度</strong>”和“<strong>逆序度</strong>”这两个概念来进行分析。</p>
 <p><strong>有序度</strong>是数组中具有有序关系的元素对的个数。有序元素对用数学表达式表示就是这样：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">有序元素对：a[i] &lt;= a[j], 如果 i &lt; j。</span><br></pre></td></tr></table></figure>
-
 <p><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/99cd8520-d39d-11e9-b66f-d76c8c3e613a.png" alt="image.png"><br>同理，对于一个倒序排列的数组，比如 <code>6，5，4，3，2，1</code>，有序度是 <code>0</code>；对于一个完全有序的数组，比如 <code>1，2，3，4，5，6</code>，有序度就是 <code>n*(n-1)/2</code>，也就是 <code>15</code>。把这种完全有序的数组的有序度叫作满有序度。</p>
 <p>逆序度的定义正好跟有序度相反（默认从小到大为有序），你应该已经想到了。关于逆序度，就不举例子了。可以对照上面讲的有序度的例子自己看下。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">逆序元素对：a[i] &gt; a[j], 如果 i &lt; j。</span><br></pre></td></tr></table></figure>
-
 <p>关于这三个概念，还可以得到一个公式：<strong>逆序度 = 满有序度 - 有序度</strong>。排序的过程就是一种增加有序度，减少逆序度的过程，最后达到满有序度，就说明排序完成了。</p>
 <p>还是拿前面举的那个冒泡排序的例子来说明。要排序的数组的初始状态是 <code>4，5，6，3，2，1</code> ，其中，有序元素对有 <code>(4，5)</code> <code>(4，6)</code> <code>(5，6)</code>，所以有序度是 <code>3</code>。<code>n=6</code>，所以排序完成之后终态的满有序度为 <code>n*(n-1)/2=15</code>。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/e92b3540-d39d-11e9-b66f-d76c8c3e613a.png" alt="image.png"><br>冒泡排序包含两个操作原子，<strong>比较</strong>和<strong>交换</strong>。每交换一次，有序度就加 <code>1</code>。不管算法怎么改进，交换次数总是确定的，即为逆序度，<strong>也就是 <code>n*(n-1)/2–初始有序度</code></strong>。此例中就是 <code>15–3=12</code>，要进行 <code>12</code> 次交换操作。</p>
 <p>对于包含 <code>n</code> 个数据的数组进行冒泡排序，平均交换次数是多少呢？最坏情况下，初始状态的有序度是 <code>0</code>，所以要进行 <code>n*(n-1)/2</code> 次交换。最好情况下，初始状态的有序度是 <code>n*(n-1)/2</code>，就不需要进行交换。可以取个中间值 <code>n*(n-1)/4</code>，来表示初始有序度既不是很高也不是很低的平均情况。</p>
@@ -310,26 +307,25 @@
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>要想分析、评价一个排序算法，需要从执行效率、内存消耗和稳定性三个方面来看。因此，上面分析了三种时间复杂度是 $O(n^2)$ 的排序算法，冒泡排序、插入排序、选择排序。需要重点掌握的是它们的分析方法。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/cef3c0e0-d3a0-11e9-b66f-d76c8c3e613a.png" alt="image.png"><br>这三种时间复杂度为 $O(n^2)$ 的排序算法中，冒泡排序、选择排序，可能就纯粹停留在理论的层面了，学习的目的也只是为了开拓思维，实际开发中应用并不多，但是插入排序还是挺有用的。有些编程语言中的排序函数的实现原理会用到插入排序算法。</p>
 <p>上面的这三种排序算法，实现代码都非常简单，对于小规模数据的排序，用起来非常高效。但是在大规模数据排序的时候，这个时间复杂度还是稍微有点高，所以更倾向于用下一篇的时间复杂度为 $O(nlogn)$ 的排序算法。</p>
 <h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ul>
-<li>选择排序和插入排序的时间复杂度相同，都是$O(n^2)$，在实际的软件开发中，为什么更倾向于使用插入排序而不是冒泡排序算法呢？<blockquote>
+<li><p>选择排序和插入排序的时间复杂度相同，都是$O(n^2)$，在实际的软件开发中，为什么更倾向于使用插入排序而不是冒泡排序算法呢？</p>
+<blockquote>
 <p>前面分析冒泡排序和插入排序的时候讲到，冒泡排序不管怎么优化，元素交换的次数是一个固定值，是原始数据的逆序度。插入排序是同样的，不管怎么优化，元素移动的次数也等于原始数据的逆序度。</p>
 <p>但是，从代码实现上来看，冒泡排序的数据交换要比插入排序的数据移动要复杂，冒泡排序需要 <code>3</code> 个赋值操作，而插入排序只需要 <code>1</code> 个。来看这段操作：</p>
 </blockquote>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">冒泡排序中数据的交换操作：</span><br><span class="line"><span class="keyword">if</span> (a[j] &gt; a[j+<span class="number">1</span>]) &#123; <span class="comment">// 交换</span></span><br><span class="line">   <span class="keyword">int</span> tmp = a[j];</span><br><span class="line">   a[j] = a[j+<span class="number">1</span>];</span><br><span class="line">   a[j+<span class="number">1</span>] = tmp;</span><br><span class="line">   flag = <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">插入排序中数据的移动操作：</span><br><span class="line"><span class="keyword">if</span> (a[j] &gt; value) &#123;</span><br><span class="line">  a[j+<span class="number">1</span>] = a[j];  <span class="comment">// 数据移动</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
 <blockquote>
 <p>把执行一个赋值语句的时间粗略地计为单位时间（<code>unit_time</code>），然后分别用冒泡排序和插入排序对同一个逆序度是 <code>K</code> 的数组进行排序。用冒泡排序，需要 <code>K</code> 次交换操作，每次需要 <code>3</code> 个赋值语句，所以交换操&gt; 作总耗时就是 <code>3*K</code> 单位时间。而插入排序中数据移动操作只需要 <code>K</code> 个单位时间。</p>
 <p>这个只是非常理论的分析，为了实验，针对上面的冒泡排序和插入排序的 <code>Java</code> 代码，写了一个性能对比测试程序，随机生成 <code>10000</code> 个数组，每个数组中包含 <code>200</code> 个数据，然后在机器上分别用冒泡和插入排序算&gt; 法来排序，冒泡排序算法大约 <code>700ms</code> 才能执行完成，而插入排序只需要 <code>100ms</code> 左右就能搞定！</p>
 <p>所以，虽然冒泡排序和插入排序在时间复杂度上是一样的，都是 $O(n^2)$，但是如果希望把性能优化做到极致，那肯定首选插入排序。插入排序的算法思路也有很大的优化空间，只是讲了最基础的一种。如果你对插入排&gt; 序的优化感兴趣，可以自行学习一下希尔排序。</p>
 </blockquote>
-<ul>
-<li>特定算法是依赖特定的数据结构的。上面的几种排序算法，都是基于数组实现的。如果数据存储在链表中，这三种排序算法还能工作吗？如果能，那相应的时间、空间复杂度又是多少呢？</li>
+</li>
+<li><p>特定算法是依赖特定的数据结构的。上面的几种排序算法，都是基于数组实现的。如果数据存储在链表中，这三种排序算法还能工作吗？如果能，那相应的时间、空间复杂度又是多少呢？</p>
+</li>
 </ul>
 <p>欢迎留言和我分享。</p>
   </article>
   <aside class="table-content" id="site-toc">
-  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);" target="_blank" rel="noopener"><i class="fa fa-angle-left"></i></a>
   <div class="table-content-title">
     <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
     <span>目录</span>
@@ -348,18 +344,18 @@
         </div>
       
       <div>
-        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
       </div>
     </aside>
   
   
     <div class="passage-tags">
     
-      <a style="word-break: break-word;" href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
+      <a style="word-break: break-word;" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><i class="fa fa-tags"></i>数据结构</a>
     
-      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+      <a style="word-break: break-word;" href="/tags/%E7%AE%97%E6%B3%95/"><i class="fa fa-tags"></i>算法</a>
     
-      <a style="word-break: break-word;" href="/tags/排序/"><i class="fa fa-tags"></i>排序</a>
+      <a style="word-break: break-word;" href="/tags/%E6%8E%92%E5%BA%8F/"><i class="fa fa-tags"></i>排序</a>
     
     </div>
   
@@ -456,7 +452,7 @@
     <div class="site-layer-body" id="site-layer-container">
       <div class="site-layer-input" id="site-layer-search" style="display: none;">
         <div class="site-layer-input-choose">
-          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+          <a href="javascript:void(0);" target="_blank" rel="noopener" title="Change Search Engine">Google</a>
         </div>
         <input type="text">
         <i class="fa fa-search"></i>
@@ -503,7 +499,7 @@
     </a>
   </div>
   <div class="bottom-bar-right">
-    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" data-enable="true" id="site-toc-show-btn">
       <i class="fa fa-bars"></i>
     </a>
     
@@ -511,15 +507,15 @@
         <i class="fa fa-commenting"></i>
       </a>
     
-    <a href="javascript:void(0);" id="site-toggle-share-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-toggle-share-btn">
       <i class="fa fa-share-alt"></i>
     </a>
     
-      <a href="javascript:void(0);" id="site-reward">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-reward">
         <i class="fa fa-thumbs-up"></i>
       </a>
     
-    <a href="javascript:void(0);" id="back-top-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="back-top-btn">
       <i class="fa fa-chevron-up"></i>
     </a>
   </div>

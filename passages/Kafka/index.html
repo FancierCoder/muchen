@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   
-<head><meta name="generator" content="Hexo 3.9.0">
+<head>
   <meta charset="utf-8">
-  <meta name="author" content="MuChen">
+  <meta name="author" content="MuChen" />
   
   
   <title>SpringBoot Kafka的配置 | MuChen&#39;s Blog</title>
@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="后端,消息中间件,">
+    <meta name="keywords" content="后端,消息中间件," />
   
 
   
@@ -149,10 +149,10 @@
           <i class="fa fa-github-alt"></i>
         </a>
       
-      <a href="javascript:void(0);" id="site-search" style="display: none">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-search" style="display: none">
         <i class="fa fa-search"></i>
       </a>
-      <a href="javascript:void(0);" id="site-nav-btn">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-nav-btn">
         <i class="fa fa-ellipsis-v"></i>
       </a>
     </div>
@@ -212,7 +212,7 @@
 
     
       <span style="margin-right: 24px;">
-        <a href="/categories/后端/"><i class="fa fa-bookmark"></i>后端</a>
+        <a href="/categories/%E5%90%8E%E7%AB%AF/"><i class="fa fa-bookmark"></i>后端</a>
       </span>
     
     
@@ -241,9 +241,9 @@
 <blockquote>
 <p>PS：此文是已在服务端安装好<code>Kafka</code>的前提下进行的。（请自行查找怎么安装<code>Kafka</code>及创建<code>Topic</code>等）</p>
 </blockquote>
-<h2 id="引入Maven依赖"><a href="#引入Maven依赖" class="headerlink" title="引入Maven依赖"></a>引入Maven依赖</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;org.springframework.kafka&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;spring-kafka&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="引入Maven依赖"><a href="#引入Maven依赖" class="headerlink" title="引入Maven依赖"></a>引入Maven依赖</h2><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&lt;dependency&gt;</span></span><br><span class="line">	<span class="attr">&lt;groupId&gt;org.springframework.kafka&lt;/groupId&gt;</span></span><br><span class="line">	<span class="attr">&lt;artifactId&gt;spring-kafka&lt;/artifactId&gt;</span></span><br><span class="line"><span class="attr">&lt;/dependency&gt;</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="配置文件配置Kafka"><a href="#配置文件配置Kafka" class="headerlink" title="配置文件配置Kafka"></a>配置文件配置Kafka</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">#============== kafka ===================</span><br><span class="line"># 指定kafka 代理地址，可以多个</span><br><span class="line">kafka.bootstrap.servers=xxxxxxx:9092</span><br><span class="line"></span><br><span class="line">#=============== provider  =======================</span><br><span class="line">kafka.producer.retries=2</span><br><span class="line"># 每次批量发送消息的数量</span><br><span class="line">kafka.producer.batch.size=16384</span><br><span class="line">kafka.producer.buffer.memory=33554432</span><br><span class="line">kafka.producer.linger=1</span><br><span class="line">kafka.producer.acks=all</span><br><span class="line"># 指定消息key和消息体的编解码方式</span><br><span class="line">producer.key-serializer=org.apache.kafka.common.serialization.StringSerializer</span><br><span class="line">producer.value-serializer=org.apache.kafka.common.serialization.StringSerializer</span><br><span class="line"></span><br><span class="line">#=============== consumer  =======================</span><br><span class="line"># 指定默认消费者group id</span><br><span class="line">kafka.consumer.group.id=dev-consumer-group</span><br><span class="line">#earliest 当分区下有已提交的offset时，从提交的offset开始消费；无提交的offset时，从头开始消费。</span><br><span class="line">#latest 当分区下有已提交的offset时，从提交的offset开始消费；无提交的offset时，消费新产生的该分区下的数据。</span><br><span class="line">#none 当该topic下所有分区中存在未提交的offset时，抛出异常。</span><br><span class="line">kafka.consumer.auto.offset.reset=earliest</span><br><span class="line">kafka.consumer.enable.auto.commit=true</span><br><span class="line">kafka.consumer.session.timeout=60000</span><br><span class="line">kafka.consumer.auto.commit.interval=1000</span><br><span class="line"># 指定listener 容器中的线程数，用于提高并发量</span><br><span class="line">kafka.consumer.concurrency=2</span><br><span class="line"># 指定消息key和消息体的编解码方式</span><br><span class="line">kafka.consumer.key-deserializer=org.apache.kafka.common.serialization.StringDeserializer</span><br><span class="line">kafka.consumer.value-deserializer=org.apache.kafka.common.serialization.StringDeserializer</span><br></pre></td></tr></table></figure>
+<h2 id="配置文件配置Kafka"><a href="#配置文件配置Kafka" class="headerlink" title="配置文件配置Kafka"></a>配置文件配置Kafka</h2><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#============== kafka ===================</span></span><br><span class="line"><span class="comment"># 指定kafka 代理地址，可以多个</span></span><br><span class="line"><span class="meta">kafka.bootstrap.servers</span>=<span class="string">xxxxxxx:9092</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#=============== provider  =======================</span></span><br><span class="line"><span class="meta">kafka.producer.retries</span>=<span class="string">2</span></span><br><span class="line"><span class="comment"># 每次批量发送消息的数量</span></span><br><span class="line"><span class="meta">kafka.producer.batch.size</span>=<span class="string">16384</span></span><br><span class="line"><span class="meta">kafka.producer.buffer.memory</span>=<span class="string">33554432</span></span><br><span class="line"><span class="meta">kafka.producer.linger</span>=<span class="string">1</span></span><br><span class="line"><span class="meta">kafka.producer.acks</span>=<span class="string">all</span></span><br><span class="line"><span class="comment"># 指定消息key和消息体的编解码方式</span></span><br><span class="line"><span class="meta">producer.key-serializer</span>=<span class="string">org.apache.kafka.common.serialization.StringSerializer</span></span><br><span class="line"><span class="meta">producer.value-serializer</span>=<span class="string">org.apache.kafka.common.serialization.StringSerializer</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#=============== consumer  =======================</span></span><br><span class="line"><span class="comment"># 指定默认消费者group id</span></span><br><span class="line"><span class="meta">kafka.consumer.group.id</span>=<span class="string">dev-consumer-group</span></span><br><span class="line"><span class="comment">#earliest 当分区下有已提交的offset时，从提交的offset开始消费；无提交的offset时，从头开始消费。</span></span><br><span class="line"><span class="comment">#latest 当分区下有已提交的offset时，从提交的offset开始消费；无提交的offset时，消费新产生的该分区下的数据。</span></span><br><span class="line"><span class="comment">#none 当该topic下所有分区中存在未提交的offset时，抛出异常。</span></span><br><span class="line"><span class="meta">kafka.consumer.auto.offset.reset</span>=<span class="string">earliest</span></span><br><span class="line"><span class="meta">kafka.consumer.enable.auto.commit</span>=<span class="string">true</span></span><br><span class="line"><span class="meta">kafka.consumer.session.timeout</span>=<span class="string">60000</span></span><br><span class="line"><span class="meta">kafka.consumer.auto.commit.interval</span>=<span class="string">1000</span></span><br><span class="line"><span class="comment"># 指定listener 容器中的线程数，用于提高并发量</span></span><br><span class="line"><span class="meta">kafka.consumer.concurrency</span>=<span class="string">2</span></span><br><span class="line"><span class="comment"># 指定消息key和消息体的编解码方式</span></span><br><span class="line"><span class="meta">kafka.consumer.key-deserializer</span>=<span class="string">org.apache.kafka.common.serialization.StringDeserializer</span></span><br><span class="line"><span class="meta">kafka.consumer.value-deserializer</span>=<span class="string">org.apache.kafka.common.serialization.StringDeserializer</span></span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <p>其中<code>kafka.bootstrap.servers</code>是<code>Kafka</code>的地址，如果是服务器地址，要确保打开对应端口的外网访问，如果多个可以用逗号隔开</p>
@@ -270,7 +270,7 @@
 </blockquote>
   </article>
   <aside class="table-content" id="site-toc">
-  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);" target="_blank" rel="noopener"><i class="fa fa-angle-left"></i></a>
   <div class="table-content-title">
     <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
     <span>目录</span>
@@ -289,14 +289,14 @@
         </div>
       
       <div>
-        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
       </div>
     </aside>
   
   
     <div class="passage-tags">
     
-      <a style="word-break: break-word;" href="/tags/消息中间件/"><i class="fa fa-tags"></i>消息中间件</a>
+      <a style="word-break: break-word;" href="/tags/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6/"><i class="fa fa-tags"></i>消息中间件</a>
     
     </div>
   
@@ -393,7 +393,7 @@
     <div class="site-layer-body" id="site-layer-container">
       <div class="site-layer-input" id="site-layer-search" style="display: none;">
         <div class="site-layer-input-choose">
-          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+          <a href="javascript:void(0);" target="_blank" rel="noopener" title="Change Search Engine">Google</a>
         </div>
         <input type="text">
         <i class="fa fa-search"></i>
@@ -440,7 +440,7 @@
     </a>
   </div>
   <div class="bottom-bar-right">
-    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" data-enable="true" id="site-toc-show-btn">
       <i class="fa fa-bars"></i>
     </a>
     
@@ -448,15 +448,15 @@
         <i class="fa fa-commenting"></i>
       </a>
     
-    <a href="javascript:void(0);" id="site-toggle-share-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-toggle-share-btn">
       <i class="fa fa-share-alt"></i>
     </a>
     
-      <a href="javascript:void(0);" id="site-reward">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-reward">
         <i class="fa fa-thumbs-up"></i>
       </a>
     
-    <a href="javascript:void(0);" id="back-top-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="back-top-btn">
       <i class="fa fa-chevron-up"></i>
     </a>
   </div>

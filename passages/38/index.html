@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   
-<head><meta name="generator" content="Hexo 3.9.0">
+<head>
   <meta charset="utf-8">
-  <meta name="author" content="MuChen">
+  <meta name="author" content="MuChen" />
   
   
   <title>38.动态规划理论 | MuChen&#39;s Blog</title>
@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="数据结构与算法(中级),算法,时间复杂度,">
+    <meta name="keywords" content="数据结构与算法(中级),算法,时间复杂度," />
   
 
   
@@ -149,10 +149,10 @@
           <i class="fa fa-github-alt"></i>
         </a>
       
-      <a href="javascript:void(0);" id="site-search" style="display: none">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-search" style="display: none">
         <i class="fa fa-search"></i>
       </a>
-      <a href="javascript:void(0);" id="site-nav-btn">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-nav-btn">
         <i class="fa fa-ellipsis-v"></i>
       </a>
     </div>
@@ -212,7 +212,7 @@
 
     
       <span style="margin-right: 24px;">
-        <a href="/categories/数据结构与算法-中级/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
+        <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
       </span>
     
     
@@ -262,19 +262,15 @@
 <p>从起点到终点，有很多种不同的走法。可以穷举所有走法，然后对比找出一个最短走法。不过如何才能无重复又不遗漏地穷举出所有走法呢？可以用回溯算法这个比较有规律的穷举算法。</p>
 <p>回溯算法的代码实现如下所示。代码很短，而且前面也分析过很多回溯算法的例题，这里就不多做解释了，你自己来看看。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> minDist = Integer.MAX_VALUE; <span class="comment">// 全局变量或者成员变量</span></span><br><span class="line"><span class="comment">// 调用方式：minDistBacktracing(0, 0, 0, w, n);</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">minDistBT</span><span class="params">(<span class="keyword">int</span> i, <span class="keyword">int</span> j, <span class="keyword">int</span> dist, <span class="keyword">int</span>[][] w, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 到达了 n-1, n-1 这个位置了，这里看着有点奇怪哈，你自己举个例子看下</span></span><br><span class="line">  <span class="keyword">if</span> (i == n &amp;&amp; j == n) &#123;</span><br><span class="line">    <span class="keyword">if</span> (dist &lt; minDist) minDist = dist;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (i &lt; n) &#123; <span class="comment">// 往下走，更新 i=i+1, j=j</span></span><br><span class="line">    minDistBT(i + <span class="number">1</span>, j, dist+w[i][j], w, n);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (j &lt; n) &#123; <span class="comment">// 往右走，更新 i=i, j=j+1</span></span><br><span class="line">    minDistBT(i, j+<span class="number">1</span>, dist+w[i][j], w, n);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>有了回溯代码之后，接下来，要画出递归树，以此来寻找重复子问题。在递归树中，一个状态（也就是一个节点）包含三个变量 <code>(i, j, dist)</code>，其中 <code>i</code>，<code>j</code> 分别表示行和列，<code>dist</code> 表示从起点到达 <code>(i, j)</code> 的路径长度。从图中可以看出，尽管 <code>(i, j, dist)</code> 不存在重复的，但是 <code>(i, j)</code> 重复的有很多。对于 <code>(i, j)</code> 重复的节点，只需要选择 <code>dist</code> 最小的节点，继续递归求解，其他节点就可以舍弃了。<br><img src="./fe36fce1.jpeg" alt="image"><br>既然存在重复子问题，就可以尝试看下，是否可以用动态规划来解决呢？</p>
 <p>画出一个二维状态表，表中的行、列表示棋子所在的位置，表中的数值表示从起点到这个位置的最短路径。按照决策过程，通过不断状态递推演进，将状态表填好。为了方便代码实现，按行来进行依次填充。<br><img src="./dcd08767.jpeg" alt="image"><br><img src="./a828813a.jpeg" alt="image"><br>弄懂了填表的过程，代码实现就简单多了。将上面的过程，翻译成代码，就是下面这个样子。结合着代码、图和文字描述，应该更容易理解讲的内容。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">minDistDP</span><span class="params">(<span class="keyword">int</span>[][] matrix, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span>[][] states = <span class="keyword">new</span> <span class="keyword">int</span>[n][n];</span><br><span class="line">  <span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; ++j) &#123; <span class="comment">// 初始化 states 的第一行数据</span></span><br><span class="line">    sum += matrix[<span class="number">0</span>][j];</span><br><span class="line">    states[<span class="number">0</span>][j] = sum;</span><br><span class="line">  &#125;</span><br><span class="line">  sum = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123; <span class="comment">// 初始化 states 的第一列数据</span></span><br><span class="line">    sum += matrix[i][<span class="number">0</span>];</span><br><span class="line">    states[i][<span class="number">0</span>] = sum;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; n; ++i) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt; n; ++j) &#123;</span><br><span class="line">      states[i][j] = </span><br><span class="line">            matrix[i][j] + Math.min(states[i][j-<span class="number">1</span>], states[i-<span class="number">1</span>][j]);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> states[n-<span class="number">1</span>][n-<span class="number">1</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <h3 id="2-状态转移方程法"><a href="#2-状态转移方程法" class="headerlink" title="2. 状态转移方程法"></a>2. 状态转移方程法</h3><p>状态转移方程法有点类似递归的解题思路。需要分析某个问题如何通过子问题来递归求解，也就是所谓的最优子结构。根据最优子结构，写出递归公式，也就是所谓的状态转移方程。有了状态转移方程，代码实现就非常简单了。一般情况下，有两种代码实现方法，一种是<strong>递归加“备忘录”</strong>，另一种是<strong>迭代递推</strong>。</p>
 <p>还是拿刚才的例子来举例。最优子结构前面已经分析过了，你可以回过头去再看下。为了方便你查看，把状态转移方程放到这里。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">min_dist(i, j) = w[i][j] + min(min_dist(i, j-<span class="number">1</span>), min_dist(i-<span class="number">1</span>, j))</span><br></pre></td></tr></table></figure>
-
 <p>这里强调一下，<strong>状态转移方程是解决动态规划的关键</strong>。如果能写出状态转移方程，那动态规划问题基本上就解决一大半了，而翻译成代码非常简单。但是很多动态规划问题的状态本身就不好定义，状态转移方程也就更不好想到。</p>
 <p>下面用递归加“备忘录”的方式，将状态转移方程翻译成来代码，你可以看看。对于另一种实现方式，跟状态转移表法的代码实现是一样的，只是思路不同。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">int</span>[][] matrix = &#123;&#123;<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">9</span>&#125;, &#123;<span class="number">2</span>,<span class="number">1</span>,<span class="number">3</span>,<span class="number">4</span>&#125;, &#123;<span class="number">5</span>,<span class="number">2</span>,<span class="number">6</span>,<span class="number">7</span>&#125;, &#123;<span class="number">6</span>,<span class="number">8</span>,<span class="number">4</span>,<span class="number">3</span>&#125;&#125;;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> n = <span class="number">4</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span>[][] mem = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">4</span>][<span class="number">4</span>];</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">minDist</span><span class="params">(<span class="keyword">int</span> i, <span class="keyword">int</span> j)</span> </span>&#123; <span class="comment">// 调用 minDist(n-1, n-1);</span></span><br><span class="line">  <span class="keyword">if</span> (i == <span class="number">0</span> &amp;&amp; j == <span class="number">0</span>) <span class="keyword">return</span> matrix[<span class="number">0</span>][<span class="number">0</span>];</span><br><span class="line">  <span class="keyword">if</span> (mem[i][j] &gt; <span class="number">0</span>) <span class="keyword">return</span> mem[i][j];</span><br><span class="line">  <span class="keyword">int</span> minLeft = Integer.MAX_VALUE;</span><br><span class="line">  <span class="keyword">if</span> (j-<span class="number">1</span> &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">    minLeft = minDist(i, j-<span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">int</span> minUp = Integer.MAX_VALUE;</span><br><span class="line">  <span class="keyword">if</span> (i-<span class="number">1</span> &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">    minUp = minDist(i-<span class="number">1</span>, j);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">int</span> currMinDist = matrix[i][j] + Math.min(minLeft, minUp);</span><br><span class="line">  mem[i][j] = currMinDist;</span><br><span class="line">  <span class="keyword">return</span> currMinDist;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>两种动态规划解题思路到这里就讲完了。强调一点，不是每个问题都同时适合这两种解题思路。有的问题可能用第一种思路更清晰，而有的问题可能用第二种思路更清晰，所以，你要结合具体的题目来看，到底选择用哪种解题思路。</p>
 <h2 id="四种算法思想比较分析"><a href="#四种算法思想比较分析" class="headerlink" title="四种算法思想比较分析"></a>四种算法思想比较分析</h2><p>到本篇为止，已经学习了四种算法思想，贪心、分治、回溯和动态规划。本篇的内容主要讲些理论知识，正好也分析一下这四种算法，看看它们之间有什么区别和联系。</p>
 <p>如果将这四种算法思想分一下类，那贪心、回溯、动态规划可以归为一类，而分治单独可以作为一类，因为它跟其他三个都不大一样。为什么这么说呢？前三个算法解决问题的模型，都可以抽象成上面的多阶段决策最优解模型，而分治算法解决的问题尽管大部分也是最优解问题，但是，大部分都不能抽象成多阶段决策模型。</p>
@@ -290,7 +286,7 @@
 </ul>
   </article>
   <aside class="table-content" id="site-toc">
-  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);" target="_blank" rel="noopener"><i class="fa fa-angle-left"></i></a>
   <div class="table-content-title">
     <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
     <span>目录</span>
@@ -309,16 +305,16 @@
         </div>
       
       <div>
-        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
       </div>
     </aside>
   
   
     <div class="passage-tags">
     
-      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+      <a style="word-break: break-word;" href="/tags/%E7%AE%97%E6%B3%95/"><i class="fa fa-tags"></i>算法</a>
     
-      <a style="word-break: break-word;" href="/tags/时间复杂度/"><i class="fa fa-tags"></i>时间复杂度</a>
+      <a style="word-break: break-word;" href="/tags/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/"><i class="fa fa-tags"></i>时间复杂度</a>
     
     </div>
   
@@ -415,7 +411,7 @@
     <div class="site-layer-body" id="site-layer-container">
       <div class="site-layer-input" id="site-layer-search" style="display: none;">
         <div class="site-layer-input-choose">
-          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+          <a href="javascript:void(0);" target="_blank" rel="noopener" title="Change Search Engine">Google</a>
         </div>
         <input type="text">
         <i class="fa fa-search"></i>
@@ -462,7 +458,7 @@
     </a>
   </div>
   <div class="bottom-bar-right">
-    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" data-enable="true" id="site-toc-show-btn">
       <i class="fa fa-bars"></i>
     </a>
     
@@ -470,15 +466,15 @@
         <i class="fa fa-commenting"></i>
       </a>
     
-    <a href="javascript:void(0);" id="site-toggle-share-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-toggle-share-btn">
       <i class="fa fa-share-alt"></i>
     </a>
     
-      <a href="javascript:void(0);" id="site-reward">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-reward">
         <i class="fa fa-thumbs-up"></i>
       </a>
     
-    <a href="javascript:void(0);" id="back-top-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="back-top-btn">
       <i class="fa fa-chevron-up"></i>
     </a>
   </div>

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   
-<head><meta name="generator" content="Hexo 3.9.0">
+<head>
   <meta charset="utf-8">
-  <meta name="author" content="MuChen">
+  <meta name="author" content="MuChen" />
   
   
   <title>51.算法实战（三） | MuChen&#39;s Blog</title>
@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="算法实战,数据结构,算法,消息队列,">
+    <meta name="keywords" content="算法实战,数据结构,算法,消息队列," />
   
 
   
@@ -149,10 +149,10 @@
           <i class="fa fa-github-alt"></i>
         </a>
       
-      <a href="javascript:void(0);" id="site-search" style="display: none">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-search" style="display: none">
         <i class="fa fa-search"></i>
       </a>
-      <a href="javascript:void(0);" id="site-nav-btn">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-nav-btn">
         <i class="fa fa-ellipsis-v"></i>
       </a>
     </div>
@@ -212,7 +212,7 @@
 
     
       <span style="margin-right: 24px;">
-        <a href="/categories/算法实战/"><i class="fa fa-bookmark"></i>算法实战</a>
+        <a href="/categories/%E7%AE%97%E6%B3%95%E5%AE%9E%E6%88%98/"><i class="fa fa-bookmark"></i>算法实战</a>
       </span>
     
     
@@ -263,7 +263,6 @@
 <p>因为第一个问题和第二个问题产生的原理是类似的。所以，着重讲解第一个问题是如何产生的以及该如何解决。对于第二个问题，你可以类比对第一个问题的解决思路自己来想一想。</p>
 <p>两个线程同时往队列中添加数据，也就相当于两个线程同时执行类 <code>Queue</code> 中的 <code>add()</code> 函数。假设队列的大小 <code>size</code> 是 <code>10</code>，当前的 <code>tail</code> 指向下标 <code>7</code>，<code>head</code> 指向下标 <code>3</code>，也就是说，队列中还有空闲空间。这个时候，线程 <code>1</code> 调用 <code>add()</code> 函数，往队列中添加一个值为 <code>12</code> 的数据；线程 <code>2</code> 调用 <code>add()</code> 函数，往队列中添加一个值为 <code>15</code> 的数据。在极端情况下，本来是往队列中添加了两个数据（<code>12</code> 和 <code>15</code>），最终可能只有一个数据添加成功，另一个数据会被覆盖。这是为什么呢？<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/27/3d641d00-c879-11e9-bbe3-f1168c942eb3.png" alt="image.png"><br>为了方便你查看队列 <code>Queue</code> 中的 <code>add()</code> 函数，这里把它从上面的代码中摘录出来，贴在这里。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(Long element)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> ((tail + <span class="number">1</span>) % size == head) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">  data[tail] = element;</span><br><span class="line">  tail = (tail + <span class="number">1</span>) % size;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>从这段代码中，可以看到，第 <code>3</code> 行给 <code>data[tail]</code> 赋值，然后第 <code>4</code> 行才给 <code>tail</code> 的值加一。赋值和 <code>tail</code> 加一两个操作，并非原子操作。这就会导致这样的情况发生：当线程 <code>1</code> 和线程 <code>2</code> 同时执行 <code>add()</code> 函数的时候，线程 <code>1</code> 先执行完了第 <code>3</code> 行语句，将 <code>data[7]</code>（<code>tail</code> 等于 <code>7</code>）的值设置为 <code>12</code>。在线程 <code>1</code> 还未执行到第 <code>4</code> 行语句之前，也就是还未将 <code>tail</code> 加一之前，线程 <code>2</code> 执行了第 <code>3</code> 行语句，又将 <code>data[7]</code> 的值设置为 <code>15</code>，也就是说，那线程 <code>2</code> 插入的数据覆盖了线程 <code>1</code> 插入的数据。原本应该插入两个数据（<code>12</code> 和 <code>15</code>）的，现在只插入了一个数据（<code>15</code>）。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/27/bda6bd10-c879-11e9-bbe3-f1168c942eb3.png" alt="image.png"><br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/27/c0361a80-c879-11e9-bbe3-f1168c942eb3.png" alt="image.png"><br>那如何解决这种线程并发往队列中添加数据时，导致的数据覆盖、运行不正确问题呢？</p>
 <p>最简单的处理方法就是给这段代码加锁，同一时间只允许一个线程执行 <code>add()</code> 函数。这就相当于将这段代码的执行，由并行改成了串行，也就不存在刚刚说的问题了。</p>
 <p>不过，天下没有免费的午餐，加锁将并行改成串行，必然导致多个生产者同时生产数据的时候，执行效率的下降。当然，可以继续优化代码，用 <code>CAS</code>（<code>compare and swap</code>，比较并交换）操作等减少加锁的粒度，但是，这不是这里的重点。直接看 <code>Disruptor</code> 的处理方法。</p>
@@ -284,7 +283,7 @@
 </ul>
   </article>
   <aside class="table-content" id="site-toc">
-  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);" target="_blank" rel="noopener"><i class="fa fa-angle-left"></i></a>
   <div class="table-content-title">
     <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
     <span>目录</span>
@@ -303,18 +302,18 @@
         </div>
       
       <div>
-        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
       </div>
     </aside>
   
   
     <div class="passage-tags">
     
-      <a style="word-break: break-word;" href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
+      <a style="word-break: break-word;" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><i class="fa fa-tags"></i>数据结构</a>
     
-      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+      <a style="word-break: break-word;" href="/tags/%E7%AE%97%E6%B3%95/"><i class="fa fa-tags"></i>算法</a>
     
-      <a style="word-break: break-word;" href="/tags/消息队列/"><i class="fa fa-tags"></i>消息队列</a>
+      <a style="word-break: break-word;" href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/"><i class="fa fa-tags"></i>消息队列</a>
     
     </div>
   
@@ -411,7 +410,7 @@
     <div class="site-layer-body" id="site-layer-container">
       <div class="site-layer-input" id="site-layer-search" style="display: none;">
         <div class="site-layer-input-choose">
-          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+          <a href="javascript:void(0);" target="_blank" rel="noopener" title="Change Search Engine">Google</a>
         </div>
         <input type="text">
         <i class="fa fa-search"></i>
@@ -458,7 +457,7 @@
     </a>
   </div>
   <div class="bottom-bar-right">
-    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" data-enable="true" id="site-toc-show-btn">
       <i class="fa fa-bars"></i>
     </a>
     
@@ -466,15 +465,15 @@
         <i class="fa fa-commenting"></i>
       </a>
     
-    <a href="javascript:void(0);" id="site-toggle-share-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-toggle-share-btn">
       <i class="fa fa-share-alt"></i>
     </a>
     
-      <a href="javascript:void(0);" id="site-reward">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-reward">
         <i class="fa fa-thumbs-up"></i>
       </a>
     
-    <a href="javascript:void(0);" id="back-top-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="back-top-btn">
       <i class="fa fa-chevron-up"></i>
     </a>
   </div>

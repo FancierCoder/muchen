@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   
-<head><meta name="generator" content="Hexo 3.9.0">
+<head>
   <meta charset="utf-8">
-  <meta name="author" content="MuChen">
+  <meta name="author" content="MuChen" />
   
   
   <title>28.深度和广度优先搜索 | MuChen&#39;s Blog</title>
@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="数据结构与算法(中级),算法,时间复杂度,">
+    <meta name="keywords" content="数据结构与算法(中级),算法,时间复杂度," />
   
 
   
@@ -149,10 +149,10 @@
           <i class="fa fa-github-alt"></i>
         </a>
       
-      <a href="javascript:void(0);" id="site-search" style="display: none">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-search" style="display: none">
         <i class="fa fa-search"></i>
       </a>
-      <a href="javascript:void(0);" id="site-nav-btn">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-nav-btn">
         <i class="fa fa-ellipsis-v"></i>
       </a>
     </div>
@@ -212,7 +212,7 @@
 
     
       <span style="margin-right: 24px;">
-        <a href="/categories/数据结构与算法-中级/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
+        <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
       </span>
     
     
@@ -243,11 +243,9 @@
 <p>图上的搜索算法，最直接的理解就是，在图中找出从一个顶点出发，到另一个顶点的路径。具体方法有很多，比如今天要讲的两种最简单、最“暴力”的深度优先、广度优先搜索，还有 <code>A*</code>、<code>IDA*</code> 等启发式搜索算法。</p>
 <p>先给出图的代码实现。需要说明一下，深度优先搜索算法和广度优先搜索算法，既可以用在无向图，也可以用在有向图上。在今天的文章中，都针对无向图来讲解。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Graph</span> </span>&#123; <span class="comment">// 无向图</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span> v; <span class="comment">// 顶点的个数</span></span><br><span class="line">  <span class="keyword">private</span> LinkedList&lt;Integer&gt; adj[]; <span class="comment">// 邻接表</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">Graph</span><span class="params">(<span class="keyword">int</span> v)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.v = v;</span><br><span class="line">    adj = <span class="keyword">new</span> LinkedList[v];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;v; ++i) &#123;</span><br><span class="line">      adj[i] = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addEdge</span><span class="params">(<span class="keyword">int</span> s, <span class="keyword">int</span> t)</span> </span>&#123; <span class="comment">// 无向图一条边存两次</span></span><br><span class="line">    adj[s].add(t);</span><br><span class="line">    adj[t].add(s);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <h2 id="广度优先搜索（BFS）"><a href="#广度优先搜索（BFS）" class="headerlink" title="广度优先搜索（BFS）"></a>广度优先搜索（BFS）</h2><p>广度优先搜索（<code>Breadth-First-Search</code>），平常都简称为 <code>BFS</code>。直观地讲，它其实就是一种“地毯式”层层推进的搜索策略，即先查找离起始顶点最近的，然后是次近的，依次往外搜索。理解起来并不难，所以这里有一张示意图，可以看下。<br><img src="./cc5e6398.png" alt="image"><br>尽管广度优先搜索的原理挺简单，但代码实现还是稍微有点复杂度。</p>
 <p>这里面，<code>bfs()</code> 函数就是基于之前定义的，图的广度优先搜索的代码实现。其中 <code>s</code> 表示起始顶点，<code>t</code> 表示终止顶点。搜索一条从 <code>s</code> 到 <code>t</code> 的路径。实际上，这样求得的路径就是从 <code>s</code> 到 <code>t</code> 的最短路径。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">bfs</span><span class="params">(<span class="keyword">int</span> s, <span class="keyword">int</span> t)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (s == t) <span class="keyword">return</span>;</span><br><span class="line">  <span class="keyword">boolean</span>[] visited = <span class="keyword">new</span> <span class="keyword">boolean</span>[v];</span><br><span class="line">  visited[s]=<span class="keyword">true</span>;</span><br><span class="line">  Queue&lt;Integer&gt; queue = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">  queue.add(s);</span><br><span class="line">  <span class="keyword">int</span>[] prev = <span class="keyword">new</span> <span class="keyword">int</span>[v];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; v; ++i) &#123;</span><br><span class="line">    prev[i] = -<span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">while</span> (queue.size() != <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">int</span> w = queue.poll();</span><br><span class="line">   <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; adj[w].size(); ++i) &#123;</span><br><span class="line">      <span class="keyword">int</span> q = adj[w].get(i);</span><br><span class="line">      <span class="keyword">if</span> (!visited[q]) &#123;</span><br><span class="line">        prev[q] = w;</span><br><span class="line">        <span class="keyword">if</span> (q == t) &#123;</span><br><span class="line">          print(prev, s, t);</span><br><span class="line">          <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        visited[q] = <span class="keyword">true</span>;</span><br><span class="line">        queue.add(q);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(<span class="keyword">int</span>[] prev, <span class="keyword">int</span> s, <span class="keyword">int</span> t)</span> </span>&#123; <span class="comment">// 递归打印 s-&gt;t 的路径</span></span><br><span class="line">  <span class="keyword">if</span> (prev[t] != -<span class="number">1</span> &amp;&amp; t != s) &#123;</span><br><span class="line">    print(prev, s, prev[t]);</span><br><span class="line">  &#125;</span><br><span class="line">  System.out.print(t + <span class="string">" "</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>这段代码不是很好理解，里面有三个重要的辅助变量 <code>visited</code>、<code>queue</code>、<code>prev</code>。只要理解这三个变量，读懂这段代码估计就没什么问题了。</p>
 <p><strong>visited</strong>是用来记录已经被访问的顶点，用来避免顶点被重复访问。如果顶点 <code>q</code> 被访问，那相应的 <code>visited[q]</code> 会被设置为 <code>true</code>。</p>
 <p><strong>queue</strong>是一个队列，用来存储已经被访问、但相连的顶点还没有被访问的顶点。因为广度优先搜索是逐层访问的，也就是说，只有把第 <code>k</code> 层的顶点都访问完成之后，才能访问第 <code>k+1</code> 层的顶点。当访问到第 <code>k</code> 层的顶点的时候，需要把第 <code>k</code> 层的顶点记录下来，稍后才能通过第 <code>k</code> 层的顶点来找第 <code>k+1</code> 层的顶点。所以，用这个队列来实现记录的功能。</p>
@@ -261,7 +259,6 @@
 <p>下面的图用深度递归算法，把整个搜索的路径标记出来了。这里面实线箭头表示遍历，虚线箭头表示回退。从图中可以看出，深度优先搜索找出来的路径，并不是顶点 <code>s</code> 到顶点 <code>t</code> 的最短路径。<br><img src="./134fe9f3.png" alt="image"><br>实际上，深度优先搜索用的是一种比较著名的算法思想，回溯思想。这种思想解决问题的过程，非常适合用递归来实现。</p>
 <p>把上面的过程用递归来翻译出来，就是下面这个样子。深度优先搜索代码实现也用到了 <code>prev</code>、<code>visited</code> 变量以及 <code>print()</code> 函数，它们跟广度优先搜索代码实现里的作用是一样的。不过，深度优先搜索代码实现里，有个比较特殊的变量 <code>found</code>，它的作用是，当已经找到终止顶点 <code>t</code> 之后，就不再递归地继续查找了。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">boolean</span> found = <span class="keyword">false</span>; <span class="comment">// 全局变量或者类成员变量</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span> s, <span class="keyword">int</span> t)</span> </span>&#123;</span><br><span class="line">  found = <span class="keyword">false</span>;</span><br><span class="line">  <span class="keyword">boolean</span>[] visited = <span class="keyword">new</span> <span class="keyword">boolean</span>[v];</span><br><span class="line">  <span class="keyword">int</span>[] prev = <span class="keyword">new</span> <span class="keyword">int</span>[v];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; v; ++i) &#123;</span><br><span class="line">    prev[i] = -<span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  recurDfs(s, t, visited, prev);</span><br><span class="line">  print(prev, s, t);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">recurDfs</span><span class="params">(<span class="keyword">int</span> w, <span class="keyword">int</span> t, <span class="keyword">boolean</span>[] visited, <span class="keyword">int</span>[] prev)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (found == <span class="keyword">true</span>) <span class="keyword">return</span>;</span><br><span class="line">  visited[w] = <span class="keyword">true</span>;</span><br><span class="line">  <span class="keyword">if</span> (w == t) &#123;</span><br><span class="line">    found = <span class="keyword">true</span>;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; adj[w].size(); ++i) &#123;</span><br><span class="line">    <span class="keyword">int</span> q = adj[w].get(i);</span><br><span class="line">    <span class="keyword">if</span> (!visited[q]) &#123;</span><br><span class="line">      prev[q] = w;</span><br><span class="line">      recurDfs(q, t, visited, prev);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>理解了深度优先搜索算法之后，深度度优先搜索的时、空间间复杂度是多少呢？</p>
 <p>从前面画的图可以看出，每条边最多会被访问两次，一次是遍历，一次是回退。所以，图上的深度优先搜索算法的时间复杂度是 $O(E)$，<code>E</code> 表示边的个数。</p>
 <p>深度优先搜索算法的消耗内存主要是 <code>visited</code>、<code>prev</code> 数组和递归调用栈。<code>visited</code>、<code>prev</code> 数组的大小跟顶点的个数 <code>V</code> 成正比，递归调用栈的最大深度不会超过顶点的个数，所以总的空间复杂度就是 $O(V)$。</p>
@@ -288,7 +285,7 @@
 
   </article>
   <aside class="table-content" id="site-toc">
-  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);" target="_blank" rel="noopener"><i class="fa fa-angle-left"></i></a>
   <div class="table-content-title">
     <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
     <span>目录</span>
@@ -307,16 +304,16 @@
         </div>
       
       <div>
-        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
       </div>
     </aside>
   
   
     <div class="passage-tags">
     
-      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+      <a style="word-break: break-word;" href="/tags/%E7%AE%97%E6%B3%95/"><i class="fa fa-tags"></i>算法</a>
     
-      <a style="word-break: break-word;" href="/tags/时间复杂度/"><i class="fa fa-tags"></i>时间复杂度</a>
+      <a style="word-break: break-word;" href="/tags/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/"><i class="fa fa-tags"></i>时间复杂度</a>
     
     </div>
   
@@ -413,7 +410,7 @@
     <div class="site-layer-body" id="site-layer-container">
       <div class="site-layer-input" id="site-layer-search" style="display: none;">
         <div class="site-layer-input-choose">
-          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+          <a href="javascript:void(0);" target="_blank" rel="noopener" title="Change Search Engine">Google</a>
         </div>
         <input type="text">
         <i class="fa fa-search"></i>
@@ -460,7 +457,7 @@
     </a>
   </div>
   <div class="bottom-bar-right">
-    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" data-enable="true" id="site-toc-show-btn">
       <i class="fa fa-bars"></i>
     </a>
     
@@ -468,15 +465,15 @@
         <i class="fa fa-commenting"></i>
       </a>
     
-    <a href="javascript:void(0);" id="site-toggle-share-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-toggle-share-btn">
       <i class="fa fa-share-alt"></i>
     </a>
     
-      <a href="javascript:void(0);" id="site-reward">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-reward">
         <i class="fa fa-thumbs-up"></i>
       </a>
     
-    <a href="javascript:void(0);" id="back-top-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="back-top-btn">
       <i class="fa fa-chevron-up"></i>
     </a>
   </div>

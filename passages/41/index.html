@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   
-<head><meta name="generator" content="Hexo 3.9.0">
+<head>
   <meta charset="utf-8">
-  <meta name="author" content="MuChen">
+  <meta name="author" content="MuChen" />
   
   
   <title>41.最短路径 | MuChen&#39;s Blog</title>
@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="数据结构与算法(高级),算法,">
+    <meta name="keywords" content="数据结构与算法(高级),算法," />
   
 
   
@@ -149,10 +149,10 @@
           <i class="fa fa-github-alt"></i>
         </a>
       
-      <a href="javascript:void(0);" id="site-search" style="display: none">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-search" style="display: none">
         <i class="fa fa-search"></i>
       </a>
-      <a href="javascript:void(0);" id="site-nav-btn">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-nav-btn">
         <i class="fa fa-ellipsis-v"></i>
       </a>
     </div>
@@ -212,7 +212,7 @@
 
     
       <span style="margin-right: 24px;">
-        <a href="/categories/数据结构与算法-高级/"><i class="fa fa-bookmark"></i>数据结构与算法(高级)</a>
+        <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%AB%98%E7%BA%A7/"><i class="fa fa-bookmark"></i>数据结构与算法(高级)</a>
       </span>
     
     
@@ -243,11 +243,9 @@
 <p>图这种数据结构的表达能力很强，显然，把地图抽象成图最合适不过了。把每个岔路口看作一个顶点，岔路口与岔路口之间的路看作一条边，路的长度就是边的权重。如果路是单行道，就在两个顶点之间画一条有向边；如果路是双行道，就在两个顶点之间画两条方向不同的边。这样，整个地图就被抽象成一个有向有权图。</p>
 <p>具体的代码实现如下。于是，要求解的问题就转化为，在一个有向有权图中，求两个顶点间的最短路径。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Graph</span> </span>&#123; <span class="comment">// 有向有权图的邻接表表示</span></span><br><span class="line">  <span class="keyword">private</span> LinkedList&lt;Edge&gt; adj[]; <span class="comment">// 邻接表</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span> v; <span class="comment">// 顶点个数</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">Graph</span><span class="params">(<span class="keyword">int</span> v)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.v = v;</span><br><span class="line">    <span class="keyword">this</span>.adj = <span class="keyword">new</span> LinkedList[v];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; v; ++i) &#123;</span><br><span class="line">      <span class="keyword">this</span>.adj[i] = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addEdge</span><span class="params">(<span class="keyword">int</span> s, <span class="keyword">int</span> t, <span class="keyword">int</span> w)</span> </span>&#123; <span class="comment">// 添加一条边</span></span><br><span class="line">    <span class="keyword">this</span>.adj[s].add(<span class="keyword">new</span> Edge(s, t, w));</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">Edge</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> sid; <span class="comment">// 边的起始顶点编号</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> tid; <span class="comment">// 边的终止顶点编号</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> w; <span class="comment">// 权重</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Edge</span><span class="params">(<span class="keyword">int</span> sid, <span class="keyword">int</span> tid, <span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.sid = sid;</span><br><span class="line">      <span class="keyword">this</span>.tid = tid;</span><br><span class="line">      <span class="keyword">this</span>.w = w;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 下面这个类是为了 dijkstra 实现用的</span></span><br><span class="line">  <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">Vertex</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> id; <span class="comment">// 顶点编号 ID</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> dist; <span class="comment">// 从起始顶点到这个顶点的距离</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Vertex</span><span class="params">(<span class="keyword">int</span> id, <span class="keyword">int</span> dist)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.id = id;</span><br><span class="line">      <span class="keyword">this</span>.dist = dist;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>想要解决这个问题，有一个非常经典的算法，最短路径算法，更加准确地说，是<strong>单源最短路径算法</strong>（一个顶点到一个顶点）。提到最短路径算法，最出名的莫过于 <code>Dijkstra</code> 算法了。所以，现在来看，<code>Dijkstra</code> 算法是怎么工作的。</p>
 <p>这个算法的原理稍微有点儿复杂，单纯的文字描述，不是很好懂。所以，还是结合代码来讲解。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 因为 Java 提供的优先级队列，没有暴露更新数据的接口，所以我们需要重新实现一个</span></span><br><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">PriorityQueue</span> </span>&#123; <span class="comment">// 根据 vertex.dist 构建小顶堆</span></span><br><span class="line">  <span class="keyword">private</span> Vertex[] nodes;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span> count;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">PriorityQueue</span><span class="params">(<span class="keyword">int</span> v)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.nodes = <span class="keyword">new</span> Vertex[v+<span class="number">1</span>];</span><br><span class="line">    <span class="keyword">this</span>.count = v;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> Vertex <span class="title">poll</span><span class="params">()</span> </span>&#123; <span class="comment">// <span class="doctag">TODO:</span> 留给读者实现... &#125;</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(Vertex vertex)</span> </span>&#123; <span class="comment">// <span class="doctag">TODO:</span> 留给读者实现...&#125;</span></span><br><span class="line">  <span class="comment">// 更新结点的值，并且从下往上堆化，重新符合堆的定义。时间复杂度 O(logn)。</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">update</span><span class="params">(Vertex vertex)</span> </span>&#123; <span class="comment">// <span class="doctag">TODO:</span> 留给读者实现...&#125; </span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span> </span>&#123; <span class="comment">// <span class="doctag">TODO:</span> 留给读者实现...&#125;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dijkstra</span><span class="params">(<span class="keyword">int</span> s, <span class="keyword">int</span> t)</span> </span>&#123; <span class="comment">// 从顶点 s 到顶点 t 的最短路径</span></span><br><span class="line">  <span class="keyword">int</span>[] predecessor = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="keyword">this</span>.v]; <span class="comment">// 用来还原最短路径</span></span><br><span class="line">  Vertex[] vertexes = <span class="keyword">new</span> Vertex[<span class="keyword">this</span>.v];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="keyword">this</span>.v; ++i) &#123;</span><br><span class="line">    vertexes[i] = <span class="keyword">new</span> Vertex(i, Integer.MAX_VALUE);</span><br><span class="line">  &#125;</span><br><span class="line">  PriorityQueue queue = <span class="keyword">new</span> PriorityQueue(<span class="keyword">this</span>.v);<span class="comment">// 小顶堆</span></span><br><span class="line">  <span class="keyword">boolean</span>[] inqueue = <span class="keyword">new</span> <span class="keyword">boolean</span>[<span class="keyword">this</span>.v]; <span class="comment">// 标记是否进入过队列</span></span><br><span class="line">  vertexes[s].dist = <span class="number">0</span>;</span><br><span class="line">  queue.add(vertexes[s]);</span><br><span class="line">  inqueue[s] = <span class="keyword">true</span>;</span><br><span class="line">  <span class="keyword">while</span> (!queue.isEmpty()) &#123;</span><br><span class="line">    Vertex minVertex= queue.poll(); <span class="comment">// 取堆顶元素并删除</span></span><br><span class="line">    <span class="keyword">if</span> (minVertex.id == t) <span class="keyword">break</span>; <span class="comment">// 最短路径产生了</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; adj[minVertex.id].size(); ++i) &#123;</span><br><span class="line">      Edge e = adj[minVertex.id].get(i); <span class="comment">// 取出一条 minVetex 相连的边</span></span><br><span class="line">      Vertex nextVertex = vertexes[e.tid]; <span class="comment">// minVertex--&gt;nextVertex</span></span><br><span class="line">      <span class="keyword">if</span> (minVertex.dist + e.w &lt; nextVertex.dist) &#123; <span class="comment">// 更新 next 的 dist</span></span><br><span class="line">        nextVertex.dist = minVertex.dist + e.w;</span><br><span class="line">        predecessor[nextVertex.id] = minVertex.id;</span><br><span class="line">        <span class="keyword">if</span> (inqueue[nextVertex.id] == <span class="keyword">true</span>) &#123;</span><br><span class="line">          queue.update(nextVertex); <span class="comment">// 更新队列中的 dist 值</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          queue.add(nextVertex);</span><br><span class="line">          inqueue[nextVertex.id] = <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 输出最短路径</span></span><br><span class="line">  System.out.print(s);</span><br><span class="line">  print(s, t, predecessor);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(<span class="keyword">int</span> s, <span class="keyword">int</span> t, <span class="keyword">int</span>[] predecessor)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (s == t) <span class="keyword">return</span>;</span><br><span class="line">  print(s, predecessor[t], predecessor);</span><br><span class="line">  System.out.print(<span class="string">"-&gt;"</span> + t);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>用 <code>vertexes</code> 数组，记录从起始顶点到每个顶点的距离（<code>dist</code>）。起初，把所有顶点的 <code>dist</code> 都初始化为无穷大（也就是代码中的 <code>Integer.MAX_VALUE</code>）。把起始顶点的 <code>dist</code> 值初始化为 <code>0</code>，然后将其放到优先级队列中。</p>
 <p>从优先级队列中取出 <code>dist</code> 最小的顶点 <code>minVertex</code>，然后考察这个顶点可达的所有顶点（代码中的 <code>nextVertex</code>）。如果 <code>minVertex</code> 的 <code>dist</code> 值加上 <code>minVertex</code> 与 <code>nextVertex</code> 之间边的权重 <code>w</code> 小于 <code>nextVertex</code> 当前的 <code>dist</code> 值，也就是说，存在另一条更短的路径，它经过 <code>minVertex</code> 到达 <code>nextVertex</code>。那就把 <code>nextVertex</code> 的 <code>dist</code> 更新为 <code>minVertex</code> 的 <code>dist</code> 值加上 <code>w</code>。然后把 <code>nextVertex</code> 加入到优先级队列中。重复这个过程，直到找到终止顶点 <code>t</code> 或者队列为空。</p>
 <p>以上就是 <code>Dijkstra</code> 算法的核心逻辑。除此之外，代码中还有两个额外的变量，<code>predecessor</code> 数组和 <code>inqueue</code> 数组。</p>
@@ -285,7 +283,7 @@
 
   </article>
   <aside class="table-content" id="site-toc">
-  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);" target="_blank" rel="noopener"><i class="fa fa-angle-left"></i></a>
   <div class="table-content-title">
     <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
     <span>目录</span>
@@ -304,14 +302,14 @@
         </div>
       
       <div>
-        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
       </div>
     </aside>
   
   
     <div class="passage-tags">
     
-      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+      <a style="word-break: break-word;" href="/tags/%E7%AE%97%E6%B3%95/"><i class="fa fa-tags"></i>算法</a>
     
     </div>
   
@@ -408,7 +406,7 @@
     <div class="site-layer-body" id="site-layer-container">
       <div class="site-layer-input" id="site-layer-search" style="display: none;">
         <div class="site-layer-input-choose">
-          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+          <a href="javascript:void(0);" target="_blank" rel="noopener" title="Change Search Engine">Google</a>
         </div>
         <input type="text">
         <i class="fa fa-search"></i>
@@ -455,7 +453,7 @@
     </a>
   </div>
   <div class="bottom-bar-right">
-    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" data-enable="true" id="site-toc-show-btn">
       <i class="fa fa-bars"></i>
     </a>
     
@@ -463,15 +461,15 @@
         <i class="fa fa-commenting"></i>
       </a>
     
-    <a href="javascript:void(0);" id="site-toggle-share-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-toggle-share-btn">
       <i class="fa fa-share-alt"></i>
     </a>
     
-      <a href="javascript:void(0);" id="site-reward">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-reward">
         <i class="fa fa-thumbs-up"></i>
       </a>
     
-    <a href="javascript:void(0);" id="back-top-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="back-top-btn">
       <i class="fa fa-chevron-up"></i>
     </a>
   </div>

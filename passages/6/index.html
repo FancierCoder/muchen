@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   
-<head><meta name="generator" content="Hexo 3.9.0">
+<head>
   <meta charset="utf-8">
-  <meta name="author" content="MuChen">
+  <meta name="author" content="MuChen" />
   
   
   <title>6.栈 | MuChen&#39;s Blog</title>
@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="数据结构与算法(初级),数据结构,栈,">
+    <meta name="keywords" content="数据结构与算法(初级),数据结构,栈," />
   
 
   
@@ -149,10 +149,10 @@
           <i class="fa fa-github-alt"></i>
         </a>
       
-      <a href="javascript:void(0);" id="site-search" style="display: none">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-search" style="display: none">
         <i class="fa fa-search"></i>
       </a>
-      <a href="javascript:void(0);" id="site-nav-btn">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-nav-btn">
         <i class="fa fa-ellipsis-v"></i>
       </a>
     </div>
@@ -212,7 +212,7 @@
 
     
       <span style="margin-right: 24px;">
-        <a href="/categories/数据结构与算法-初级/"><i class="fa fa-bookmark"></i>数据结构与算法(初级)</a>
+        <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E5%88%9D%E7%BA%A7/"><i class="fa fa-bookmark"></i>数据结构与算法(初级)</a>
       </span>
     
     
@@ -239,7 +239,7 @@
   <article class="passage-article">
     <p>浏览器的前进、后退功能，你肯定很熟悉吧？</p>
 <p>当你依次访问完一串页面 <code>a-b-c</code> 之后，点击浏览器的后退按钮，就可以查看之前浏览过的页面 <code>b</code> 和 <code>a</code>。当你后退到页面 <code>a</code>，点击前进按钮，就可以重新查看页面 <code>b</code> 和 <code>c</code>。但是，如果你后退到页面 <code>b</code> 后，点击了新的页面 <code>d</code>，那就无法再通过前进、后退功能查看页面 <code>c</code> 了。</p>
-<p><font color="green">假设你是 <code>Chrome</code> 浏览器的开发工程师，你会如何实现这个功能呢？</font></p>
+<p><font color='green'>假设你是 <code>Chrome</code> 浏览器的开发工程师，你会如何实现这个功能呢？</font></p>
 <h2 id="如何理解“栈”？"><a href="#如何理解“栈”？" class="headerlink" title="如何理解“栈”？"></a>如何理解“栈”？</h2><p>关于“栈”，有一个非常贴切的例子，就是一摞叠在一起的盘子。平时放盘子的时候，都是从下往上一个一个放；取的时候，也是从上往下一个一个地依次取，不能从中间任意抽出。<strong>后进者先出，先进者后出，这就是典型的“栈”结构。</strong><br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/06/c3929f00-d0a8-11e9-913b-a197b4ae75d3.png" alt="image.png"><br>从栈的操作特性上来看，<strong>栈是一种“操作受限”的线性表</strong>，只允许在一端插入和删除数据。</p>
 <p>第一次接触这种数据结构的时候，就对它存在的意义产生了很大的疑惑。因为我觉得，相比数组和链表，栈带给我的只有限制，并没有任何优势。那直接使用数组或者链表不就好了吗？为什么还要用这个“操作受限”的“栈”呢？</p>
 <p>事实上，从功能上来说，数组或链表确实可以替代栈，但你要知道，特定的数据结构是对特定场景的抽象，而且，数组或链表暴露了太多的操作接口，操作上的确灵活自由，但使用时就比较不可控，自然也就更容易出错。</p>
@@ -249,10 +249,8 @@
 <p>这里实现一个基于数组的顺序栈。基于链表实现的链式栈的代码，你可以自己试着写一下。</p>
 <p>下面这段代码是用 <code>Java</code> 来实现的，但是不涉及任何高级语法，并且还用中文做了详细的注释，所以你应该是可以看懂的。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 基于数组实现的顺序栈</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ArrayStack</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> String[] items;  <span class="comment">// 数组</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span> count;       <span class="comment">// 栈中元素个数</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span> n;           <span class="comment">// 栈的大小</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 初始化数组，申请一个大小为 n 的数组空间</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">ArrayStack</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.items = <span class="keyword">new</span> String[n];</span><br><span class="line">    <span class="keyword">this</span>.n = n;</span><br><span class="line">    <span class="keyword">this</span>.count = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 入栈操作</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">push</span><span class="params">(String item)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 数组空间不够了，直接返回 false，入栈失败。</span></span><br><span class="line">    <span class="keyword">if</span> (count == n) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    <span class="comment">// 将 item 放到下标为 count 的位置，并且 count 加一</span></span><br><span class="line">    items[count] = item;</span><br><span class="line">    ++count;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 出栈操作</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> String <span class="title">pop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 栈为空，则直接返回 null</span></span><br><span class="line">    <span class="keyword">if</span> (count == <span class="number">0</span>) <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    <span class="comment">// 返回下标为 count-1 的数组元素，并且栈中元素个数 count 减一</span></span><br><span class="line">    String tmp = items[count-<span class="number">1</span>];</span><br><span class="line">    --count;</span><br><span class="line">    <span class="keyword">return</span> tmp;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>链表实现</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StackOfLinked</span>&lt;<span class="title">Item</span>&gt; <span class="keyword">implements</span> <span class="title">Iterable</span>&lt;<span class="title">Item</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">//定义一个内部类，就可以直接使用类型参数</span></span><br><span class="line">    <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span> </span>&#123;</span><br><span class="line">        Item item;</span><br><span class="line">        Node next;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Node first;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> N;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//构造器</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">StackOfLinked</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//添加</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">push</span><span class="params">(Item item)</span> </span>&#123;</span><br><span class="line">        Node oldFirst = first;</span><br><span class="line">        first = <span class="keyword">new</span> Node();</span><br><span class="line">        first.item = item;</span><br><span class="line">        first.next = oldFirst;</span><br><span class="line">        N++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//删除</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Item <span class="title">pop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Item item = first.item;</span><br><span class="line">        first = first.next;</span><br><span class="line">        N--;</span><br><span class="line">        <span class="keyword">return</span> item;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//是否为空</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> N == <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//元素数量</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">size</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> N;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//返回栈中最近添加的元素而不删除它</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Item <span class="title">peek</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> first.item;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Iterator&lt;Item&gt; <span class="title">iterator</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> LinkedIterator();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//内部类：迭代器</span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">LinkedIterator</span> <span class="keyword">implements</span> <span class="title">Iterator</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> i = N;</span><br><span class="line">        Node t = first;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> i &gt; <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Item <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            Item item = t.item;</span><br><span class="line">            t = t.next;</span><br><span class="line">            i--;</span><br><span class="line">            <span class="keyword">return</span> item;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>了解了定义和基本操作，那它的操作的时间、空间复杂度是多少呢？</p>
 <p>不管是顺序栈还是链式栈，存储数据只需要一个大小为 <code>n</code> 的数组就够了。在入栈和出栈过程中，只需要一两个临时变量存储空间，所以空间复杂度是 $O(1)$。</p>
 <p>注意，这里存储数据需要一个大小为 <code>n</code> 的数组，并不是说空间复杂度就是 $O(n)$。因为，这 <code>n</code> 个空间是必须的，无法省掉。所以<strong>在说空间复杂度的时候，是指除了原本的数据存储空间外，算法运行还需要额外的存储空间。</strong></p>
@@ -277,7 +275,6 @@
 <h2 id="栈在函数调用中的应用"><a href="#栈在函数调用中的应用" class="headerlink" title="栈在函数调用中的应用"></a>栈在函数调用中的应用</h2><p>前面的都比较偏理论，现在来看下，栈在软件工程中的实际应用。栈作为一个比较基础的数据结构，应用场景还是蛮多的。其中，比较经典的一个应用场景就是<strong>函数调用栈</strong>。</p>
 <p>操作系统给每个线程分配了一块独立的内存空间，这块内存被组织成“栈”这种结构, 用来存储函数调用时的临时变量。每进入一个函数，就会将临时变量作为一个栈帧入栈，当被调用函数执行完成，返回之后，将这个函数对应的栈帧出栈。为了更好地理解，下面一块来看下这段代码的执行过程。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   <span class="keyword">int</span> a = <span class="number">1</span>; </span><br><span class="line">   <span class="keyword">int</span> ret = <span class="number">0</span>;</span><br><span class="line">   <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">   ret = add(<span class="number">3</span>, <span class="number">5</span>);</span><br><span class="line">   res = a + ret;</span><br><span class="line">   <span class="built_in">printf</span>(<span class="string">"%d"</span>, res);</span><br><span class="line">   reuturn <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line">   <span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line">   sum = x + y;</span><br><span class="line">   <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>从代码中可以看出，<code>main()</code> 函数调用了 <code>add()</code> 函数，获取计算结果，并且与临时变量 <code>a</code> 相加，最后打印 <code>res</code> 的值。为了清晰地看到这个过程对应的函数栈里出栈、入栈的操作，下面有一张图。图中显示的是，在执行到 <code>add()</code> 函数时，函数调用栈的情况。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/06/df55ca30-d0aa-11e9-913b-a197b4ae75d3.png" alt="image.png"></p>
 <h2 id="栈在表达式求值中的应用"><a href="#栈在表达式求值中的应用" class="headerlink" title="栈在表达式求值中的应用"></a>栈在表达式求值中的应用</h2><p>再来看栈的另一个常见的应用场景，编译器如何利用栈来实现<strong>表达式求值</strong>。</p>
 <p>为了方便解释，这里将算术表达式简化为只包含加减乘除四则运算，比如：<code>34 + 13 * 9 + 44 - 12 / 3</code>。对于这个四则运算，人脑可以很快求解出答案，但是对于计算机来说，理解这个表达式本身就是个挺难的事儿。如果换作你，让你来实现这样一个表达式求值的功能，你会怎么做呢？</p>
@@ -309,7 +306,7 @@
 </ul>
   </article>
   <aside class="table-content" id="site-toc">
-  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);" target="_blank" rel="noopener"><i class="fa fa-angle-left"></i></a>
   <div class="table-content-title">
     <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
     <span>目录</span>
@@ -328,16 +325,16 @@
         </div>
       
       <div>
-        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
       </div>
     </aside>
   
   
     <div class="passage-tags">
     
-      <a style="word-break: break-word;" href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
+      <a style="word-break: break-word;" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><i class="fa fa-tags"></i>数据结构</a>
     
-      <a style="word-break: break-word;" href="/tags/栈/"><i class="fa fa-tags"></i>栈</a>
+      <a style="word-break: break-word;" href="/tags/%E6%A0%88/"><i class="fa fa-tags"></i>栈</a>
     
     </div>
   
@@ -434,7 +431,7 @@
     <div class="site-layer-body" id="site-layer-container">
       <div class="site-layer-input" id="site-layer-search" style="display: none;">
         <div class="site-layer-input-choose">
-          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+          <a href="javascript:void(0);" target="_blank" rel="noopener" title="Change Search Engine">Google</a>
         </div>
         <input type="text">
         <i class="fa fa-search"></i>
@@ -481,7 +478,7 @@
     </a>
   </div>
   <div class="bottom-bar-right">
-    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" data-enable="true" id="site-toc-show-btn">
       <i class="fa fa-bars"></i>
     </a>
     
@@ -489,15 +486,15 @@
         <i class="fa fa-commenting"></i>
       </a>
     
-    <a href="javascript:void(0);" id="site-toggle-share-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-toggle-share-btn">
       <i class="fa fa-share-alt"></i>
     </a>
     
-      <a href="javascript:void(0);" id="site-reward">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-reward">
         <i class="fa fa-thumbs-up"></i>
       </a>
     
-    <a href="javascript:void(0);" id="back-top-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="back-top-btn">
       <i class="fa fa-chevron-up"></i>
     </a>
   </div>

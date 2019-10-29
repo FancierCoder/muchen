@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   
-<head><meta name="generator" content="Hexo 3.9.0">
+<head>
   <meta charset="utf-8">
-  <meta name="author" content="MuChen">
+  <meta name="author" content="MuChen" />
   
   
   <title>35.分治算法 | MuChen&#39;s Blog</title>
@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="数据结构与算法(中级),算法,时间复杂度,">
+    <meta name="keywords" content="数据结构与算法(中级),算法,时间复杂度," />
   
 
   
@@ -149,10 +149,10 @@
           <i class="fa fa-github-alt"></i>
         </a>
       
-      <a href="javascript:void(0);" id="site-search" style="display: none">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-search" style="display: none">
         <i class="fa fa-search"></i>
       </a>
-      <a href="javascript:void(0);" id="site-nav-btn">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-nav-btn">
         <i class="fa fa-ellipsis-v"></i>
       </a>
     </div>
@@ -212,7 +212,7 @@
 
     
       <span style="margin-right: 24px;">
-        <a href="/categories/数据结构与算法-中级/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
+        <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
       </span>
     
     
@@ -270,7 +270,6 @@
 <p>这里就要借助归并排序算法了。如何借助归并排序算法来解决呢？</p>
 <p>归并排序中有一个非常关键的操作，就是将两个有序的小数组，合并成一个有序的数组。实际上，在这个合并的过程中，就可以计算这两个小数组的逆序对个数了。每次合并操作，都计算逆序对个数，把这些计算出来的逆序对个数求和，就是这个数组的逆序对个数了。<br><img src="./fb7a9756.jpeg" alt="image"><br>翻译成了代码如下，可以结合着图和文字描述一起看下。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> num = <span class="number">0</span>; <span class="comment">// 全局变量或者成员变量</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">count</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">  num = <span class="number">0</span>;</span><br><span class="line">  mergeSortCounting(a, <span class="number">0</span>, n-<span class="number">1</span>);</span><br><span class="line">  <span class="keyword">return</span> num;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">mergeSortCounting</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> p, <span class="keyword">int</span> r)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (p &gt;= r) <span class="keyword">return</span>;</span><br><span class="line">  <span class="keyword">int</span> q = (p+r)/<span class="number">2</span>;</span><br><span class="line">  mergeSortCounting(a, p, q);</span><br><span class="line">  mergeSortCounting(a, q+<span class="number">1</span>, r);</span><br><span class="line">  merge(a, p, q, r);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> p, <span class="keyword">int</span> q, <span class="keyword">int</span> r)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> i = p, j = q+<span class="number">1</span>, k = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">int</span>[] tmp = <span class="keyword">new</span> <span class="keyword">int</span>[r-p+<span class="number">1</span>];</span><br><span class="line">  <span class="keyword">while</span> (i&lt;=q &amp;&amp; j&lt;=r) &#123;</span><br><span class="line">    <span class="keyword">if</span> (a[i] &lt;= a[j]) &#123;</span><br><span class="line">      tmp[k++] = a[i++];</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      num += (q-i+<span class="number">1</span>); <span class="comment">// 统计 p-q 之间，比 a[j] 大的元素个数</span></span><br><span class="line">      tmp[k++] = a[j++];</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">while</span> (i &lt;= q) &#123; <span class="comment">// 处理剩下的</span></span><br><span class="line">    tmp[k++] = a[i++];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">while</span> (j &lt;= r) &#123; <span class="comment">// 处理剩下的</span></span><br><span class="line">    tmp[k++] = a[j++];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt;= r-p; ++i) &#123; <span class="comment">// 从 tmp 拷贝回 a</span></span><br><span class="line">    a[p+i] = tmp[i];</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>有很多人经常说，某某算法思想如此巧妙，我是怎么也想不到的。实际上，确实是的。有些算法确实非常巧妙，并不是每个人短时间都能想到的。比如这个问题，并不是每个人都能想到可以借助归并排序算法来解决，不夸张地说，如果之前没接触过，绝大部分人都想不到。但是，如果告诉你可以借助归并排序算法来解决，那你就应该要想到如何改造归并排序，来求解这个问题了，只要你能做到这一点，就很棒了。</p>
 <p>关于分治算法，这还有两道比较经典的问题，你可以自己练习一下。</p>
 <ul>
@@ -301,7 +300,7 @@
 </ul>
   </article>
   <aside class="table-content" id="site-toc">
-  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);" target="_blank" rel="noopener"><i class="fa fa-angle-left"></i></a>
   <div class="table-content-title">
     <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
     <span>目录</span>
@@ -320,16 +319,16 @@
         </div>
       
       <div>
-        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
       </div>
     </aside>
   
   
     <div class="passage-tags">
     
-      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+      <a style="word-break: break-word;" href="/tags/%E7%AE%97%E6%B3%95/"><i class="fa fa-tags"></i>算法</a>
     
-      <a style="word-break: break-word;" href="/tags/时间复杂度/"><i class="fa fa-tags"></i>时间复杂度</a>
+      <a style="word-break: break-word;" href="/tags/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/"><i class="fa fa-tags"></i>时间复杂度</a>
     
     </div>
   
@@ -426,7 +425,7 @@
     <div class="site-layer-body" id="site-layer-container">
       <div class="site-layer-input" id="site-layer-search" style="display: none;">
         <div class="site-layer-input-choose">
-          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+          <a href="javascript:void(0);" target="_blank" rel="noopener" title="Change Search Engine">Google</a>
         </div>
         <input type="text">
         <i class="fa fa-search"></i>
@@ -473,7 +472,7 @@
     </a>
   </div>
   <div class="bottom-bar-right">
-    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" data-enable="true" id="site-toc-show-btn">
       <i class="fa fa-bars"></i>
     </a>
     
@@ -481,15 +480,15 @@
         <i class="fa fa-commenting"></i>
       </a>
     
-    <a href="javascript:void(0);" id="site-toggle-share-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-toggle-share-btn">
       <i class="fa fa-share-alt"></i>
     </a>
     
-      <a href="javascript:void(0);" id="site-reward">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-reward">
         <i class="fa fa-thumbs-up"></i>
       </a>
     
-    <a href="javascript:void(0);" id="back-top-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="back-top-btn">
       <i class="fa fa-chevron-up"></i>
     </a>
   </div>

@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://muchen.fun/passages/netty-understanding/</loc>
+    
+    <lastmod>2019-10-29T09:00:12.591Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://muchen.fun/passages/java-optional/</loc>
     
     <lastmod>2019-10-21T08:20:39.430Z</lastmod>

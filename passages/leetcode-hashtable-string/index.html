@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   
-<head><meta name="generator" content="Hexo 3.9.0">
+<head>
   <meta charset="utf-8">
-  <meta name="author" content="MuChen">
+  <meta name="author" content="MuChen" />
   
   
   <title>LeetCode刷题：散列表和字符串 | MuChen&#39;s Blog</title>
@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="LEETCODE,散列表,字符串,">
+    <meta name="keywords" content="LEETCODE,散列表,字符串," />
   
 
   
@@ -149,10 +149,10 @@
           <i class="fa fa-github-alt"></i>
         </a>
       
-      <a href="javascript:void(0);" id="site-search" style="display: none">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-search" style="display: none">
         <i class="fa fa-search"></i>
       </a>
-      <a href="javascript:void(0);" id="site-nav-btn">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-nav-btn">
         <i class="fa fa-ellipsis-v"></i>
       </a>
     </div>
@@ -269,12 +269,11 @@
 </blockquote>
 <p>代码</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">myAtoi</span><span class="params">(String str)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (str == <span class="keyword">null</span> || <span class="string">""</span>.equals(str)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    StringBuilder resultS = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">    <span class="keyword">boolean</span> isNegative = <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">boolean</span> isPositive = <span class="keyword">false</span>;</span><br><span class="line">    String newStr = str.trim();</span><br><span class="line">    <span class="keyword">if</span> (<span class="string">""</span>.equals(newStr)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> ((newStr.charAt(<span class="number">0</span>) &lt; <span class="string">'0'</span>) || (newStr.charAt(<span class="number">0</span>) &gt; <span class="string">'9'</span>)) &#123;</span><br><span class="line">        <span class="keyword">if</span> (newStr.charAt(<span class="number">0</span>) != <span class="string">'+'</span> &amp;&amp; newStr.charAt(<span class="number">0</span>) != <span class="string">'-'</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (newStr.charAt(<span class="number">0</span>) == <span class="string">'-'</span>) &#123;</span><br><span class="line">                isNegative = <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (newStr.charAt(<span class="number">0</span>) == <span class="string">'+'</span>) &#123;</span><br><span class="line">                isPositive = <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">char</span>[] chars = newStr.toCharArray();</span><br><span class="line">    <span class="keyword">int</span> i = isNegative | isPositive ? <span class="number">1</span> : <span class="number">0</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (; i &lt; chars.length; i++) &#123;</span><br><span class="line">        <span class="keyword">char</span> c = chars[i];</span><br><span class="line">        <span class="keyword">if</span> (c == <span class="string">'0'</span>) &#123;</span><br><span class="line">            chars[i] = <span class="string">'`'</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    i = isNegative | isPositive ? <span class="number">1</span> : <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (; i &lt; chars.length; i++) &#123;</span><br><span class="line">        <span class="keyword">char</span> c = chars[i];</span><br><span class="line">        <span class="keyword">if</span> (c == <span class="string">'`'</span>) &#123;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (resultS.length() &gt; <span class="number">10</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> isNegative ? Integer.MIN_VALUE : Integer.MAX_VALUE;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (c &gt;= <span class="string">'0'</span> &amp;&amp; c &lt;= <span class="string">'9'</span>) &#123;</span><br><span class="line">            resultS.append(c);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (resultS.length() == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">long</span> aLong = Long.parseLong(resultS.toString());</span><br><span class="line">    <span class="keyword">if</span> (isNegative) &#123;</span><br><span class="line">        aLong = - aLong;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (aLong &gt; Integer.MAX_VALUE) &#123;</span><br><span class="line">        <span class="keyword">return</span> Integer.MAX_VALUE;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (aLong &lt; Integer.MIN_VALUE) &#123;</span><br><span class="line">        <span class="keyword">return</span> Integer.MIN_VALUE;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (<span class="keyword">int</span>) aLong;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>精简版代码</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">myAtoi2</span><span class="params">(String str)</span> </span>&#123;</span><br><span class="line">    str = str.trim();</span><br><span class="line">    <span class="keyword">if</span> (str.length() == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">long</span> sum = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> first = <span class="number">0</span>, n = str.length();</span><br><span class="line">    <span class="keyword">int</span> flag = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (str.charAt(<span class="number">0</span>) == <span class="string">'+'</span>) &#123;</span><br><span class="line">        first++;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (str.charAt(<span class="number">0</span>) == <span class="string">'-'</span>) &#123;</span><br><span class="line">        first++;</span><br><span class="line">        flag = -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = first; i &lt; n; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!Character.isDigit(str.charAt(i))) &#123;</span><br><span class="line">            <span class="keyword">return</span> (<span class="keyword">int</span>) sum * flag;</span><br><span class="line">        &#125;</span><br><span class="line">        sum = <span class="number">10</span> * sum + str.charAt(i) - <span class="string">'0'</span>;</span><br><span class="line">        <span class="keyword">if</span> (flag == <span class="number">1</span> &amp;&amp; sum &gt; Integer.MAX_VALUE) &#123;</span><br><span class="line">            <span class="keyword">return</span> Integer.MAX_VALUE;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (flag == -<span class="number">1</span> &amp;&amp; (-<span class="number">1</span>) * sum &lt; Integer.MIN_VALUE) &#123;</span><br><span class="line">            <span class="keyword">return</span> Integer.MIN_VALUE;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> (<span class="keyword">int</span>) sum * flag;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
   </article>
   <aside class="table-content" id="site-toc">
-  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);" target="_blank" rel="noopener"><i class="fa fa-angle-left"></i></a>
   <div class="table-content-title">
     <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
     <span>目录</span>
@@ -293,16 +292,16 @@
         </div>
       
       <div>
-        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
       </div>
     </aside>
   
   
     <div class="passage-tags">
     
-      <a style="word-break: break-word;" href="/tags/散列表/"><i class="fa fa-tags"></i>散列表</a>
+      <a style="word-break: break-word;" href="/tags/%E6%95%A3%E5%88%97%E8%A1%A8/"><i class="fa fa-tags"></i>散列表</a>
     
-      <a style="word-break: break-word;" href="/tags/字符串/"><i class="fa fa-tags"></i>字符串</a>
+      <a style="word-break: break-word;" href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/"><i class="fa fa-tags"></i>字符串</a>
     
     </div>
   
@@ -399,7 +398,7 @@
     <div class="site-layer-body" id="site-layer-container">
       <div class="site-layer-input" id="site-layer-search" style="display: none;">
         <div class="site-layer-input-choose">
-          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+          <a href="javascript:void(0);" target="_blank" rel="noopener" title="Change Search Engine">Google</a>
         </div>
         <input type="text">
         <i class="fa fa-search"></i>
@@ -446,7 +445,7 @@
     </a>
   </div>
   <div class="bottom-bar-right">
-    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" data-enable="true" id="site-toc-show-btn">
       <i class="fa fa-bars"></i>
     </a>
     
@@ -454,15 +453,15 @@
         <i class="fa fa-commenting"></i>
       </a>
     
-    <a href="javascript:void(0);" id="site-toggle-share-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-toggle-share-btn">
       <i class="fa fa-share-alt"></i>
     </a>
     
-      <a href="javascript:void(0);" id="site-reward">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-reward">
         <i class="fa fa-thumbs-up"></i>
       </a>
     
-    <a href="javascript:void(0);" id="back-top-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="back-top-btn">
       <i class="fa fa-chevron-up"></i>
     </a>
   </div>

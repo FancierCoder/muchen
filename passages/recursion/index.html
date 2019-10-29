@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   
-<head><meta name="generator" content="Hexo 3.9.0">
+<head>
   <meta charset="utf-8">
-  <meta name="author" content="MuChen">
+  <meta name="author" content="MuChen" />
   
   
   <title>递归算法 | MuChen&#39;s Blog</title>
@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="数据结构与算法(中级),算法,递归,">
+    <meta name="keywords" content="数据结构与算法(中级),算法,递归," />
   
 
   
@@ -149,10 +149,10 @@
           <i class="fa fa-github-alt"></i>
         </a>
       
-      <a href="javascript:void(0);" id="site-search" style="display: none">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-search" style="display: none">
         <i class="fa fa-search"></i>
       </a>
-      <a href="javascript:void(0);" id="site-nav-btn">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-nav-btn">
         <i class="fa fa-ellipsis-v"></i>
       </a>
     </div>
@@ -212,7 +212,7 @@
 
     
       <span style="margin-right: 24px;">
-        <a href="/categories/数据结构与算法-中级/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
+        <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
       </span>
     
     
@@ -246,7 +246,6 @@
 <p>别忘了你是程序员，这个可难不倒你，递归就开始排上用场了。于是你就问前面一排的人他是第几排，你想只要在他的数字上加一，就知道自己在哪一排了。但是，前面的人也看不清啊，所以他也问他前面的人。就这样一排一排往前问，直到问到第一排的人，说我在第一排，然后再这样一排一排再把数字传回来。直到你前面的人告诉你他在哪一排，于是你就知道答案了。</p>
 <p>这就是一个非常标准的递归求解问题的分解过程，去的过程叫“递”，回来的过程叫“归”。基本上，所有的递归问题都可以用递推公式来表示。刚刚这个生活中的例子，用递推公式将它表示出来就是这样的：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f(n)=f(n-1)+1 其中，f(1)=1</span><br></pre></td></tr></table></figure>
-
 <p><code>f(n)</code> 表示你想知道自己在哪一排，<code>f(n-1)</code> 表示前面一排所在的排数，<code>f(1)=1</code> 表示第一排的人知道自己在第一排。有了这个递推公式，就可以很轻松地将它改为递归代码，如下：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (n == <span class="number">1</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">return</span> f(n<span class="number">-1</span>) + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -263,16 +262,13 @@
 <p>假如这里有 <code>n</code> 个台阶，每次可以跨 <code>1</code> 个台阶或者 <code>2</code> 个台阶，请问走这 <code>n</code> 个台阶有多少种走法？如果有 <code>7</code> 个台阶，可以 <code>2，2，2，1</code> 这样子上去，也可以 <code>1，2，1，1，2</code> 这样子上去，总之走法有很多，那如何用编程求得总共有多少种走法呢？</p>
 <p>仔细想下，实际上，可以根据第一步的走法把所有走法分为两类，第一类是第一步走了 <code>1</code> 个台阶，另一类是第一步走了 <code>2</code> 个台阶。所以 <code>n</code> 个台阶的走法就等于先走 <code>1</code> 阶后，<code>n-1</code> 个台阶的走法加上先走 <code>2</code> 阶后，<code>n-2</code> 个台阶的走法。用公式表示就是：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f(n) = f(n-1)+f(n-2)</span><br></pre></td></tr></table></figure>
-
 <p>有了递推公式，递归代码基本上就完成了一半。再来看下终止条件。当有一个台阶时，不需要再继续递归，就只有一种走法。所以 <code>f(1)=1</code>。这个递归终止条件足够吗？可以用 <code>n=2</code>，<code>n=3</code> 这样比较小的数试验一下。</p>
 <p><code>n=2</code> 时，<code>f(2)=f(1)+f(0)</code>。如果递归终止条件只有一个 <code>f(1)=1</code>，那 <code>f(2)</code> 就无法求解了。所以除了 <code>f(1)=1</code> 这一个递归终止条件外，还要有 <code>f(0)=1</code>，表示走 <code>0</code> 个台阶有一种走法，不过这样子看起来就不符合正常的逻辑思维了。所以，可以把 <code>f(2)=2</code> 作为一种终止条件，表示走 <code>2</code> 个台阶，有两种走法，一步走完或者分两步来走。</p>
 <p>所以，递归终止条件就是 <code>f(1)=1</code>，<code>f(2)=2</code>。这个时候，可以再拿 <code>n=3</code>，<code>n=4</code> 来验证一下，这个终止条件是否足够并且正确。</p>
 <p>把递归终止条件和刚刚得到的递推公式放到一起就是这样的：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">f(1) = 1;</span><br><span class="line">f(2) = 2;</span><br><span class="line">f(n) = f(n-1)+f(n-2)</span><br></pre></td></tr></table></figure>
-
 <p>有了这个公式，转化成递归代码就简单多了。最终的递归代码是这样的：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (n == <span class="number">1</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">if</span> (n == <span class="number">2</span>) <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">  <span class="keyword">return</span> f(n<span class="number">-1</span>) + f(n<span class="number">-2</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>总结一下，<strong>写递归代码的关键就是找到如何将大问题分解为小问题的规律，并且基于此写出递推公式，然后再推敲终止条件，最后将递推公式和终止条件翻译成代码。</strong></p>
 <p>虽然讲了这么多方法，但是作为初学者，现在是不是还是有种想不太清楚的感觉呢？实际上，刚学递归的时候，都有这种感觉，这也是文章开头说递归代码比较难理解的地方。</p>
 <p>刚讲的电影院的例子，递归调用只有一个分支，也就是说“一个问题只需要分解为一个子问题”，很容易能够想清楚“递“和”归”的每一个步骤，所以写起来、理解起来都不难。</p>
@@ -286,26 +282,21 @@
 <p>在“栈”那一篇讲过，函数调用会使用栈来保存临时变量。每调用一个函数，都会将临时变量封装为栈帧压入内存栈，等函数执行完成返回时，才出栈。系统栈或者虚拟机栈空间一般都不大。如果递归求解的数据规模很大，调用层次很深，一直压入栈，就会有堆栈溢出的风险。</p>
 <p>比如前面的讲到的电影院的例子，如果将系统栈或者 <code>JVM</code> 堆栈大小设置为 <code>1KB</code>，在求解 <code>f(19999)</code> 时便会出现如下堆栈报错：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread &quot;main&quot; java.lang.StackOverflowError</span><br></pre></td></tr></table></figure>
-
 <p>那么，如何避免出现堆栈溢出呢？</p>
 <p>可以通过在代码中限制递归调用的最大深度的方式来解决这个问题。递归调用超过一定深度（比如 <code>1000</code>）之后，就不继续往下再递归了，直接返回报错。还是电影院那个例子，可以改造成下面这样子，就可以避免堆栈溢出了。不过，代码是伪代码，为了代码简洁，有些边界条件没有考虑，比如 <code>x&lt;=0</code>。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 全局变量，表示递归的深度。</span></span><br><span class="line"><span class="keyword">int</span> depth = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">  ++depth；</span><br><span class="line">  <span class="keyword">if</span> (depth &gt; <span class="number">1000</span>) <span class="keyword">throw</span> exception;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span> (n == <span class="number">1</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">return</span> f(n<span class="number">-1</span>) + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>但这种做法并不能完全解决问题，因为最大允许的递归深度跟当前线程剩余的栈空间大小有关，事先无法计算。如果实时计算，代码过于复杂，就会影响代码的可读性。所以，如果最大深度比较小，比如 <code>10</code>、<code>50</code>，就可以用这种方法，否则这种方法并不是很实用。</p>
 <h2 id="递归代码要警惕重复计算"><a href="#递归代码要警惕重复计算" class="headerlink" title="递归代码要警惕重复计算"></a>递归代码要警惕重复计算</h2><p>除此之外，使用递归时还会出现重复计算的问题。刚才的第二个递归代码的例子，如果把整个递归过程分解一下的话，那就是这样的：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/3ad4ddf0-d3ae-11e9-b66f-d76c8c3e613a.png" alt="image.png"><br>从图中，可以直观地看到，想要计算 <code>f(5)</code>，需要先计算 <code>f(4)</code> 和 <code>f(3)</code>，而计算 <code>f(4)</code> 还需要计算 <code>f(3)</code>，因此，<code>f(3)</code> 就被计算了很多次，这就是重复计算问题。</p>
 <p>为了避免重复计算，可以通过一个数据结构（比如散列表）来保存已经求解过的 <code>f(k)</code>。当递归调用到 <code>f(k)</code> 时，先看下是否已经求解过了。如果是，则直接从散列表中取值返回，不需要重复计算，这样就能避免刚讲的问题了。</p>
 <p>按照上面的思路，来改造一下刚才的代码：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (n == <span class="number">1</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">if</span> (n == <span class="number">2</span>) <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// hasSolvedList 可以理解成一个 Map，key 是 n，value 是 f(n)</span></span><br><span class="line">  <span class="keyword">if</span> (hasSolvedList.containsKey(n)) &#123;</span><br><span class="line">    <span class="keyword">return</span> hasSovledList.get(n);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">int</span> ret = f(n-<span class="number">1</span>) + f(n-<span class="number">2</span>);</span><br><span class="line">  hasSovledList.put(n, ret);</span><br><span class="line">  <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>除了堆栈溢出、重复计算这两个常见的问题。递归代码还有很多别的问题。</p>
 <p>在时间效率上，递归代码里多了很多函数调用，当这些函数调用的数量较大时，就会积聚成一个可观的时间成本。在空间复杂度上，因为递归调用一次就会在内存栈中保存一次现场数据，所以在分析递归代码空间复杂度时，需要额外考虑这部分的开销，比如我们前面讲到的电影院递归代码，空间复杂度并不是 $O(1)$，而是 $O(n)$。</p>
 <h2 id="怎么将递归代码改写为非递归代码？"><a href="#怎么将递归代码改写为非递归代码？" class="headerlink" title="怎么将递归代码改写为非递归代码？"></a>怎么将递归代码改写为非递归代码？</h2><p>刚说了递归有利有弊，利是递归代码的表达力很强，写起来非常简洁；而弊就是空间复杂度高、有堆栈溢出的风险、存在重复计算、过多的函数调用会耗时较多等问题。所以，在开发过程中，要根据实际情况来选择是否需要用递归的方式来实现。</p>
 <p>那是否可以把递归代码改写为非递归代码呢？比如刚才那个电影院的例子，抛开场景，只看 <code>f(x) = f(x-1)+1</code> 这个递推公式。这样改写看看：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> ret = <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>; i &lt;= n; ++i) &#123;</span><br><span class="line">    ret = ret + <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>同样，第二个例子也可以改为非递归的实现方式。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (n == <span class="number">1</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">if</span> (n == <span class="number">2</span>) <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">int</span> ret = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">int</span> pre = <span class="number">2</span>;</span><br><span class="line">  <span class="keyword">int</span> prepre = <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">3</span>; i &lt;= n; ++i) &#123;</span><br><span class="line">    ret = pre + prepre;</span><br><span class="line">    prepre = pre;</span><br><span class="line">    pre = ret;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>那是不是所有的递归代码都可以改为这种迭代循环的非递归写法呢？</p>
 <p>笼统地讲，是的。因为递归本身就是借助栈来实现的，只不过使用的栈是系统或者虚拟机本身提供的，没有感知罢了。如果自己在内存堆上实现栈，手动模拟入栈、出栈过程，这样任何递归代码都可以改写成看上去不是递归代码的样子。</p>
 <p>但是这种思路实际上是将递归改为了“手动”递归，本质并没有变，而且也并没有解决前面讲到的某些问题，徒增了实现的复杂度。</p>
@@ -314,23 +305,22 @@
 <p>不过递归代码也比较难写、难理解。编写递归代码的关键就是不要把自己绕进去，正确姿势是写出递推公式，找出终止条件，然后再翻译成递归代码。</p>
 <p>递归代码虽然简洁高效，但是，递归代码也有很多弊端。比如，堆栈溢出、重复计算、函数调用耗时多、空间复杂度高等，所以，在编写递归代码的时候，一定要控制好这些副作用。</p>
 <h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ul>
-<li>如何找到“最终推荐人”？解决方案是这样的：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">long</span> <span class="title">findRootReferrerId</span><span class="params">(<span class="keyword">long</span> actorId)</span> </span>&#123;</span><br><span class="line">  Long referrerId = select referrer_id from [table] where actor_id = actorId;</span><br><span class="line">  <span class="keyword">if</span> (referrerId == <span class="keyword">null</span>) <span class="keyword">return</span> actorId;</span><br><span class="line">  <span class="keyword">return</span> findRootReferrerId(referrerId);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
+<li><p>如何找到“最终推荐人”？解决方案是这样的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">long</span> <span class="title">findRootReferrerId</span><span class="params">(<span class="keyword">long</span> actorId)</span> </span>&#123;</span><br><span class="line">  Long referrerId = select referrer_id from [table] where actor_id = actorId;</span><br><span class="line">  <span class="keyword">if</span> (referrerId == <span class="keyword">null</span>) <span class="keyword">return</span> actorId;</span><br><span class="line">  <span class="keyword">return</span> findRootReferrerId(referrerId);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>是不是非常简洁？用三行代码就能搞定了，不过在实际项目中，上面的代码并不能工作，为什么呢？这里面有两个问题。</p>
 <p>第一，如果递归很深，可能会有堆栈溢出的问题。</p>
 <p>第二，如果数据库里存在脏数据，还需要处理由此产生的无限递归问题。比如 <code>demo</code> 环境下数据库中，测试工程师为了方便测试，会人为地插入一些数据，就会出现脏数据。如果 <code>A</code> 的推荐人是 <code>B</code>，<code>B</code> 的推荐人是 <code>C</code>，<code>C</code> 的推荐人是 <code>A</code>，这样就会发生死循环。</p>
 <p>第一个问题，前面已经解答过了，可以用限制递归深度来解决。第二个问题，也可以用限制递归深度来解决。不过，还有一个更高级的处理方法，就是自动检测 <code>A-B-C-A</code> 这种“环”的存在。如何来检测环的存在呢？这个暂时不细说，你可以自己思考下。</p>
 </blockquote>
-<ul>
-<li>平时调试代码喜欢使用 <code>IDE</code> 的单步跟踪功能，像规模比较大、递归层次很深的递归代码，几乎无法使用这种调试方式。对于递归代码，有什么好的调试方法呢？</li>
+</li>
+<li><p>平时调试代码喜欢使用 <code>IDE</code> 的单步跟踪功能，像规模比较大、递归层次很深的递归代码，几乎无法使用这种调试方式。对于递归代码，有什么好的调试方法呢？</p>
+</li>
 </ul>
 <p>欢迎留言和我分享。</p>
   </article>
   <aside class="table-content" id="site-toc">
-  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);" target="_blank" rel="noopener"><i class="fa fa-angle-left"></i></a>
   <div class="table-content-title">
     <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
     <span>目录</span>
@@ -349,16 +339,16 @@
         </div>
       
       <div>
-        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
       </div>
     </aside>
   
   
     <div class="passage-tags">
     
-      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+      <a style="word-break: break-word;" href="/tags/%E7%AE%97%E6%B3%95/"><i class="fa fa-tags"></i>算法</a>
     
-      <a style="word-break: break-word;" href="/tags/递归/"><i class="fa fa-tags"></i>递归</a>
+      <a style="word-break: break-word;" href="/tags/%E9%80%92%E5%BD%92/"><i class="fa fa-tags"></i>递归</a>
     
     </div>
   
@@ -455,7 +445,7 @@
     <div class="site-layer-body" id="site-layer-container">
       <div class="site-layer-input" id="site-layer-search" style="display: none;">
         <div class="site-layer-input-choose">
-          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+          <a href="javascript:void(0);" target="_blank" rel="noopener" title="Change Search Engine">Google</a>
         </div>
         <input type="text">
         <i class="fa fa-search"></i>
@@ -502,7 +492,7 @@
     </a>
   </div>
   <div class="bottom-bar-right">
-    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" data-enable="true" id="site-toc-show-btn">
       <i class="fa fa-bars"></i>
     </a>
     
@@ -510,15 +500,15 @@
         <i class="fa fa-commenting"></i>
       </a>
     
-    <a href="javascript:void(0);" id="site-toggle-share-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-toggle-share-btn">
       <i class="fa fa-share-alt"></i>
     </a>
     
-      <a href="javascript:void(0);" id="site-reward">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-reward">
         <i class="fa fa-thumbs-up"></i>
       </a>
     
-    <a href="javascript:void(0);" id="back-top-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="back-top-btn">
       <i class="fa fa-chevron-up"></i>
     </a>
   </div>

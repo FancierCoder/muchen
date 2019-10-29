@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   
-<head><meta name="generator" content="Hexo 3.9.0">
+<head>
   <meta charset="utf-8">
-  <meta name="author" content="MuChen">
+  <meta name="author" content="MuChen" />
   
   
   <title>24.递归树 | MuChen&#39;s Blog</title>
@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="数据结构与算法(中级),数据结构,递归树,">
+    <meta name="keywords" content="数据结构与算法(中级),数据结构,递归树," />
   
 
   
@@ -149,10 +149,10 @@
           <i class="fa fa-github-alt"></i>
         </a>
       
-      <a href="javascript:void(0);" id="site-search" style="display: none">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-search" style="display: none">
         <i class="fa fa-search"></i>
       </a>
-      <a href="javascript:void(0);" id="site-nav-btn">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-nav-btn">
         <i class="fa fa-ellipsis-v"></i>
       </a>
     </div>
@@ -212,7 +212,7 @@
 
     
       <span style="margin-right: 24px;">
-        <a href="/categories/数据结构与算法-中级/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
+        <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
       </span>
     
     
@@ -257,7 +257,6 @@
 <p>也就是说，对于 $k$ 等于 $99$，$9999$，甚至是 $999999$，$99999999$……，只要 $k$ 的值不随 $n$ 变化，是一个事先确定的常量，那快排的时间复杂度就是 $O(nlogn)$。所以，从概率论的角度来说，快排的平均时间复杂度就是 $O(nlog⁡n)$。</p>
 <h2 id="实战二：分析斐波那契数列的时间复杂度"><a href="#实战二：分析斐波那契数列的时间复杂度" class="headerlink" title="实战二：分析斐波那契数列的时间复杂度"></a>实战二：分析斐波那契数列的时间复杂度</h2><p>为了方便回忆，我把它的代码实现贴在这里:</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (n == <span class="number">1</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">if</span> (n == <span class="number">2</span>) <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">  <span class="keyword">return</span> f(n-<span class="number">1</span>) + f(n-<span class="number">2</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>先把上面的递归代码画成递归树，就是下面这个样子：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/80b44070-ddb0-11e9-9c38-2bb533c1f573.png" alt="image.png"><br>这棵递归树的高度是多少呢？</p>
 <p>$f(n)$  分解为 $f(n−1)$ 和 $f(n−2)$，每次数据规模都是 <code>−1</code> 或者 <code>−2</code>，叶子节点的数据规模是 <code>1</code> 或者 <code>2</code>。所以，从根节点走到叶子节点，每条路径是长短不一的。如果每次都是 <code>−1</code>，那最长路径大约就是 <code>n</code>；如果每次都是 <code>−2</code>，那最短路径大约就是 $\frac n 2$。</p>
 <p>每次分解之后的合并操作只需要一次加法运算，把这次加法运算的时间消耗记作 <code>1</code>。所以，从上往下，第一层的总时间消耗是 <code>1</code>，第二层的总时间消耗是 <code>2</code>，第三层的总时间消耗就是 $2^2$。依次类推，第 $k$ 层的时间消耗就是 $2^{k-1}$，那整个算法的总的时间消耗就是每一层时间消耗之和。</p>
@@ -267,14 +266,11 @@
 <p>如果确定了最后一位数据，那就变成了求解剩下 $n−1$ 个数据的排列问题。而最后一位数据可以是 $n$ 个数据中的任意一个，因此它的取值就有 $n$ 种情况。所以，“$n$ 个数据的排列”问题，就可以分解成 $n$ 个“$n−1$ 个数据的排列”的子问题。</p>
 <p>如果把它写成递推公式，就是下面这个样子：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">假设数组中存储的是 1，2， 3...n。</span><br><span class="line">        </span><br><span class="line">f(1,2,...n) = &#123;最后一位是 1, f(n-1)&#125; + &#123;最后一位是 2, f(n-1)&#125; +...+&#123;最后一位是 n, f(n-1)&#125;。</span><br></pre></td></tr></table></figure>
-
 <p>如果把递推公式改写成代码，就是下面这个样子：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 调用方式：</span></span><br><span class="line"><span class="comment">// int[]a = a=&#123;1, 2, 3, 4&#125;; printPermutations(a, 4, 4);</span></span><br><span class="line"><span class="comment">// k 表示要处理的子数组的数据个数</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printPermutations</span><span class="params">(<span class="keyword">int</span>[] data, <span class="keyword">int</span> n, <span class="keyword">int</span> k)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (k == <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">      System.out.print(data[i] + <span class="string">" "</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; k; ++i) &#123;</span><br><span class="line">    <span class="keyword">int</span> tmp = data[i];</span><br><span class="line">    data[i] = data[k-<span class="number">1</span>];</span><br><span class="line">    data[k-<span class="number">1</span>] = tmp;</span><br><span class="line"></span><br><span class="line">    printPermutations(data, n, k - <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    tmp = data[i];</span><br><span class="line">    data[i] = data[k-<span class="number">1</span>];</span><br><span class="line">    data[k-<span class="number">1</span>] = tmp;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>如何借助递归树，分析出这个代码的时间复杂度。<br>首先，还是画出递归树。不过，现在的递归树已经不是标准的二叉树了。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/c1f062d0-ddb0-11e9-9c38-2bb533c1f573.png" alt="image.png"><br>第一层分解有 $n$ 次交换操作，第二层有 $n$ 个节点，每个节点分解需要 $n−1$ 次交换，所以第二层总的交换次数是 $n∗(n−1)$。第三层有 $n∗(n−1)$ 个节点，每个节点分解需要 $n−2$ 次交换，所以第三层总的交换次数是 $n∗(n−1)∗(n−2)$。</p>
 <p>以此类推，第 kk 层总的交换次数就是 $n∗(n−1)∗(n−2)∗…∗(n−k+1)$。最后一层的交换次数就是 $n∗(n−1)∗(n−2)∗…∗2∗1$。每一层的交换次数之和就是总的交换次数。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">n + n*(n-1) + n*(n-1)*(n-2) +... + n*(n-1)*(n-2)*...*2*1</span><br></pre></td></tr></table></figure>
-
 <p>这个公式的求和比较复杂，看最后一个数，$n∗(n−1)∗(n−2)∗…∗2∗1$ 等于 $n!$，而前面的 $n−1$ 个数都小于最后一个数，所以，总和肯定小于 $n∗n!$，也就是说，全排列的递归算法的时间复杂度大于 $O(n!)$，小于 $O(n∗n!)$，虽然没法知道非常精确的时间复杂度，但是这样一个范围已经让我们知道，全排列的时间复杂度是非常高的。</p>
 <p><strong>掌握分析的方法很重要，思路是重点，不要纠结于精确的时间复杂度到底是多少。</strong></p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>有些代码比较适合用递推公式来分析，比如归并排序的时间复杂度、快速排序的最好情况时间复杂度；有些比较适合采用递归树来分析，比如快速排序的平均时间复杂度。而有些可能两个都不怎么适合使用，比如二叉树的递归前中后序遍历。</p>
@@ -284,7 +280,7 @@
 </ul>
   </article>
   <aside class="table-content" id="site-toc">
-  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);" target="_blank" rel="noopener"><i class="fa fa-angle-left"></i></a>
   <div class="table-content-title">
     <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
     <span>目录</span>
@@ -303,16 +299,16 @@
         </div>
       
       <div>
-        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
       </div>
     </aside>
   
   
     <div class="passage-tags">
     
-      <a style="word-break: break-word;" href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
+      <a style="word-break: break-word;" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><i class="fa fa-tags"></i>数据结构</a>
     
-      <a style="word-break: break-word;" href="/tags/递归树/"><i class="fa fa-tags"></i>递归树</a>
+      <a style="word-break: break-word;" href="/tags/%E9%80%92%E5%BD%92%E6%A0%91/"><i class="fa fa-tags"></i>递归树</a>
     
     </div>
   
@@ -409,7 +405,7 @@
     <div class="site-layer-body" id="site-layer-container">
       <div class="site-layer-input" id="site-layer-search" style="display: none;">
         <div class="site-layer-input-choose">
-          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+          <a href="javascript:void(0);" target="_blank" rel="noopener" title="Change Search Engine">Google</a>
         </div>
         <input type="text">
         <i class="fa fa-search"></i>
@@ -456,7 +452,7 @@
     </a>
   </div>
   <div class="bottom-bar-right">
-    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" data-enable="true" id="site-toc-show-btn">
       <i class="fa fa-bars"></i>
     </a>
     
@@ -464,15 +460,15 @@
         <i class="fa fa-commenting"></i>
       </a>
     
-    <a href="javascript:void(0);" id="site-toggle-share-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-toggle-share-btn">
       <i class="fa fa-share-alt"></i>
     </a>
     
-      <a href="javascript:void(0);" id="site-reward">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-reward">
         <i class="fa fa-thumbs-up"></i>
       </a>
     
-    <a href="javascript:void(0);" id="back-top-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="back-top-btn">
       <i class="fa fa-chevron-up"></i>
     </a>
   </div>

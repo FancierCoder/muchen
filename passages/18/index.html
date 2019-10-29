@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   
-<head><meta name="generator" content="Hexo 3.9.0">
+<head>
   <meta charset="utf-8">
-  <meta name="author" content="MuChen">
+  <meta name="author" content="MuChen" />
   
   
   <title>18.哈希算法（上） | MuChen&#39;s Blog</title>
@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="数据结构与算法(中级),数据结构,算法,哈希算法,">
+    <meta name="keywords" content="数据结构与算法(中级),数据结构,算法,哈希算法," />
   
 
   
@@ -149,10 +149,10 @@
           <i class="fa fa-github-alt"></i>
         </a>
       
-      <a href="javascript:void(0);" id="site-search" style="display: none">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-search" style="display: none">
         <i class="fa fa-search"></i>
       </a>
-      <a href="javascript:void(0);" id="site-nav-btn">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-nav-btn">
         <i class="fa fa-ellipsis-v"></i>
       </a>
     </div>
@@ -212,7 +212,7 @@
 
     
       <span style="margin-right: 24px;">
-        <a href="/categories/数据结构与算法-中级/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
+        <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
       </span>
     
     
@@ -237,7 +237,7 @@
   </div>
   
   <article class="passage-article">
-    <p>记得 <code>2011</code> 年 <code>CSDN</code> 的“脱库”事件吗？当时，<code>CSDN</code> 网站被黑客攻击，超过 <code>600</code> 万用户的注册邮箱和密码明文被泄露，很多网友对 <code>CSDN</code> 明文保存用户密码行为产生了不满。如果你是 <code>CSDN</code> 的一名工程师，<font color="green">你会如何存储用户密码这么重要的数据吗？仅仅 <code>MD5</code> 加密一下存储就够了吗？</font>要想搞清楚这个问题，就要先弄明白哈希算法。</p>
+    <p>记得 <code>2011</code> 年 <code>CSDN</code> 的“脱库”事件吗？当时，<code>CSDN</code> 网站被黑客攻击，超过 <code>600</code> 万用户的注册邮箱和密码明文被泄露，很多网友对 <code>CSDN</code> 明文保存用户密码行为产生了不满。如果你是 <code>CSDN</code> 的一名工程师，<font color='green'>你会如何存储用户密码这么重要的数据吗？仅仅 <code>MD5</code> 加密一下存储就够了吗？</font>要想搞清楚这个问题，就要先弄明白哈希算法。</p>
 <p>哈希算法历史悠久，业界著名的哈希算法也有很多，比如 <code>MD5</code>、<code>SHA</code> 等。在平时的开发中，基本上都是拿现成的直接用。所以，下面不会重点剖析哈希算法的原理，也不会说如何设计一个哈希算法，而是从实战的角度告诉你，<strong>在实际的开发中，该如何用哈希算法解决问题。</strong></p>
 <h2 id="什么是哈希算法？"><a href="#什么是哈希算法？" class="headerlink" title="什么是哈希算法？"></a>什么是哈希算法？</h2><p>前面几篇讲到“散列表”“散列函数”，这里又讲到“哈希算法”，你是不是有点一头雾水？实际上，不管是“散列”还是“哈希”，这都是中文翻译的差别，英文其实就是“<strong>Hash</strong>”。所以，常听到有人把“散列表”叫作“哈希表”“Hash 表”，把“哈希算法”叫作“Hash 算法”或者“散列算法”。那到底什么是哈希算法呢？</p>
 <p>哈希算法的定义和原理非常简单，基本上一句话就可以概括了。将任意长度的二进制值串映射为固定长度的二进制值串，这个映射的规则就是哈希算法，而通过原始数据映射之后得到的二进制值串就是哈希值。但是，要想设计一个优秀的哈希算法并不容易，下面总结了需要满足的几点要求：</p>
@@ -254,10 +254,8 @@
 <p>这些定义和要求都比较理论，可能还是不好理解，拿 <code>MD5</code> 这种哈希算法来具体说明一下。</p>
 <p>分别对“今天我来讲哈希算法”和“jiajia”这两个文本，计算 <code>MD5</code> 哈希值，得到两串看起来毫无规律的字符串（<code>MD5</code> 的哈希值是 <code>128</code> 位的 <code>Bit</code> 长度，为了方便表示，把它们转化成了 <code>16</code> 进制编码）。可以看出来，无论要哈希的文本有多长、多短，通过 <code>MD5</code> 哈希之后，得到的哈希值的长度都是相同的，而且得到的哈希值看起来像一堆随机数，完全没有规律。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">MD5(&quot; 今天我来讲哈希算法 &quot;) = bb4767201ad42c74e650c1b6c03d78fa</span><br><span class="line">MD5(&quot;jiajia&quot;) = cd611a31ea969b908932d44d126d195b</span><br></pre></td></tr></table></figure>
-
 <p>再来看两个非常相似的文本，“我今天讲哈希算法！”和“我今天讲哈希算法”。这两个文本只有一个感叹号的区别。如果用 <code>MD5</code> 哈希算法分别计算它们的哈希值，你会发现，尽管只有一字之差，得到的哈希值也是完全不同的。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">MD5(&quot; 我今天讲哈希算法！&quot;) = 425f0d5a917188d2c3c3dc85b5e4f2cb</span><br><span class="line">MD5(&quot; 我今天讲哈希算法 &quot;) = a1fb91ac128e6aa37fe42c663971ac3d</span><br></pre></td></tr></table></figure>
-
 <p>在前面也说了，通过哈希算法得到的哈希值，很难反向推导出原始数据。比如上面的例子中，就很难通过哈希值 <code>a1fb91ac128e6aa37fe42c663971ac3d</code> 反推出对应的文本“我今天讲哈希算法”。</p>
 <p>哈希算法要处理的文本可能是各种各样的。比如，对于非常长的文本，如果哈希算法的计算时间很长，那就只能停留在理论研究的层面，很难应用到实际的软件开发中。比如，把今天这篇包含 <code>4000</code> 多个汉字的文章，用 <code>MD5</code> 计算哈希值，用不了 <code>1ms</code> 的时间。</p>
 <p>哈希算法的应用非常非常多，选了最常见的七个，分别是<strong>安全加密</strong>、<strong>唯一标识</strong>、<strong>数据校验</strong>、<strong>散列函数</strong>、<strong>负载均衡</strong>、<strong>数据分片</strong>、<strong>分布式存储</strong>。这节先来看前四个应用。</p>
@@ -269,7 +267,6 @@
 <p>有了鸽巢原理的铺垫之后，再来看，<strong>为什么哈希算法无法做到零冲突？</strong></p>
 <p>哈希算法产生的哈希值的长度是固定且有限的。比如前面举的 <code>MD5</code> 的例子，哈希值是固定的 <code>128</code> 位二进制串，能表示的数据是有限的，最多能表示 $2^{128}$ 个数据，而要哈希的数据是无穷的。基于鸽巢原理，如果对 $2^{128}+1$ 个数据求哈希值，就必然会存在哈希值相同的情况。这里你应该能想到，一般情况下，哈希值越长的哈希算法，散列冲突的概率越低。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2^128=340282366920938463463374607431768211456</span><br></pre></td></tr></table></figure>
-
 <p>为了让你能有个更加直观的感受，找了两段字符串放在这里。这两段字符串经过 <code>MD5</code> 哈希算法加密之后，产生的哈希值是相同的。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/20/58769940-db68-11e9-b03e-bd9724e985f2.png" alt="image.png"><br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/20/5eb06110-db68-11e9-b03e-bd9724e985f2.png" alt="image.png"><br>不过，即便哈希算法存在散列冲突的情况，但是因为哈希值的范围很大，冲突的概率极低，所以相对来说还是很难破解的。像 <code>MD5</code>，有 $2^{128}$ 个不同的哈希值，这个数据已经是一个天文数字了，所以散列冲突的概率要小于 $\frac 1 {2^{128}}$。</p>
 <p>如果拿到一个 <code>MD5</code> 哈希值，希望通过毫无规律的穷举的方法，找到跟这个 <code>MD5</code> 值相同的另一个数据，那耗费的时间应该是个天文数字。所以，即便哈希算法存在冲突，但是在有限的时间和资源下，哈希算法还是被很难破解的。</p>
 <p>除此之外，没有绝对安全的加密。越复杂、越难破解的加密算法，需要的计算时间也越长。比如 <code>SHA-256</code> 比 <code>SHA-1</code> 要更复杂、更安全，相应的计算时间就会比较长。密码学界也一直致力于找到一种快速并且很难被破解的哈希算法。在实际的开发过程中，也需要权衡破解难度和计算时间，来决定究竟使用哪种加密算法。</p>
@@ -307,7 +304,7 @@
 </ul>
   </article>
   <aside class="table-content" id="site-toc">
-  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);" target="_blank" rel="noopener"><i class="fa fa-angle-left"></i></a>
   <div class="table-content-title">
     <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
     <span>目录</span>
@@ -326,18 +323,18 @@
         </div>
       
       <div>
-        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
       </div>
     </aside>
   
   
     <div class="passage-tags">
     
-      <a style="word-break: break-word;" href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
+      <a style="word-break: break-word;" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><i class="fa fa-tags"></i>数据结构</a>
     
-      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+      <a style="word-break: break-word;" href="/tags/%E7%AE%97%E6%B3%95/"><i class="fa fa-tags"></i>算法</a>
     
-      <a style="word-break: break-word;" href="/tags/哈希算法/"><i class="fa fa-tags"></i>哈希算法</a>
+      <a style="word-break: break-word;" href="/tags/%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95/"><i class="fa fa-tags"></i>哈希算法</a>
     
     </div>
   
@@ -434,7 +431,7 @@
     <div class="site-layer-body" id="site-layer-container">
       <div class="site-layer-input" id="site-layer-search" style="display: none;">
         <div class="site-layer-input-choose">
-          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+          <a href="javascript:void(0);" target="_blank" rel="noopener" title="Change Search Engine">Google</a>
         </div>
         <input type="text">
         <i class="fa fa-search"></i>
@@ -481,7 +478,7 @@
     </a>
   </div>
   <div class="bottom-bar-right">
-    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" data-enable="true" id="site-toc-show-btn">
       <i class="fa fa-bars"></i>
     </a>
     
@@ -489,15 +486,15 @@
         <i class="fa fa-commenting"></i>
       </a>
     
-    <a href="javascript:void(0);" id="site-toggle-share-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-toggle-share-btn">
       <i class="fa fa-share-alt"></i>
     </a>
     
-      <a href="javascript:void(0);" id="site-reward">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-reward">
         <i class="fa fa-thumbs-up"></i>
       </a>
     
-    <a href="javascript:void(0);" id="back-top-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="back-top-btn">
       <i class="fa fa-chevron-up"></i>
     </a>
   </div>

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   
-<head><meta name="generator" content="Hexo 3.9.0">
+<head>
   <meta charset="utf-8">
-  <meta name="author" content="MuChen">
+  <meta name="author" content="MuChen" />
   
   
   <title>46.搜索 | MuChen&#39;s Blog</title>
@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="数据结构与算法(高级),数据结构,算法,">
+    <meta name="keywords" content="数据结构与算法(高级),数据结构,算法," />
   
 
   
@@ -149,10 +149,10 @@
           <i class="fa fa-github-alt"></i>
         </a>
       
-      <a href="javascript:void(0);" id="site-search" style="display: none">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-search" style="display: none">
         <i class="fa fa-search"></i>
       </a>
-      <a href="javascript:void(0);" id="site-nav-btn">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-nav-btn">
         <i class="fa fa-ellipsis-v"></i>
       </a>
     </div>
@@ -212,7 +212,7 @@
 
     
       <span style="margin-right: 24px;">
-        <a href="/categories/数据结构与算法-高级/"><i class="fa fa-bookmark"></i>数据结构与算法(高级)</a>
+        <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%AB%98%E7%BA%A7/"><i class="fa fa-bookmark"></i>数据结构与算法(高级)</a>
       </span>
     
     
@@ -248,12 +248,10 @@
 <p>当遍历到某个顶点的时候，从起点走到这个顶点的路径长度是确定的，记作 <code>g(i)</code>（<code>i</code> 表示顶点编号）。但是，从这个顶点到终点的路径长度是未知的。虽然确切的值无法提前知道，但是可以用其他估计值来代替。</p>
 <p>这里可以通过这个顶点跟终点之间的直线距离，也就是<strong>欧几里得距离</strong>，来近似地估计这个顶点跟终点的路径长度（注意：路径长度跟直线距离是两个概念）。把这个距离记作 <code>h(i)</code>（<code>i</code> 表示这个顶点的编号），专业的叫法是<strong>启发函数</strong>（<code>heuristic function</code>）。因为欧几里得距离的计算公式，会涉及比较耗时的开根号计算，所以，一般通过另外一个更加简单的距离计算公式，那就是<strong>曼哈顿距离</strong>（<code>Manhattan distance</code>）。曼哈顿距离是两点之间横纵坐标的距离之和。计算的过程只涉及加减法、符号位反转，所以比欧几里得距离更加高效。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">hManhattan</span><span class="params">(Vertex v1, Vertex v2)</span> </span>&#123; <span class="comment">// Vertex 表示顶点，后面有定义</span></span><br><span class="line">  <span class="keyword">return</span> Math.abs(v1.x - v2.x) + Math.abs(v1.y - v2.y);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>原来只是单纯地通过顶点与起点之间的路径长度 <code>g(i)</code>，来判断谁先出队列，现在有了顶点到终点的路径长度估计值，通过两者之和 <code>f(i)=g(i)+h(i)</code>，来判断哪个顶点该最先出队列。综合两部分，就能有效避免刚刚讲的“跑偏”。这里 <code>f(i)</code> 的专业叫法是<strong>估价函数</strong>（<code>evaluation function</code>）。    </p>
 <p>从刚刚的描述，可以发现，<code>A*</code> 算法就是对 <code>Dijkstra</code> 算法的简单改造。实际上，代码实现方面，也只需要稍微改动几行代码，就能把 <code>Dijkstra</code> 算法的代码实现，改成 <code>A*</code> 算法的代码实现。</p>
 <p>在 <code>A*</code> 算法的代码实现中，顶点 <code>Vertex</code> 类的定义，跟 <code>Dijkstra</code> 算法中的定义，稍微有点儿区别，多了 <code>x</code>，<code>y</code> 坐标，以及刚刚提到的 <code>f(i)</code> 值。图 <code>Graph</code> 类的定义跟 <code>Dijkstra</code> 算法中的定义一样。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">Vertex</span> </span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">int</span> id; <span class="comment">// 顶点编号 ID</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">int</span> dist; <span class="comment">// 从起始顶点，到这个顶点的距离，也就是 g(i)</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">int</span> f; <span class="comment">// 新增：f(i)=g(i)+h(i)</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">int</span> x, y; <span class="comment">// 新增：顶点在地图中的坐标（x, y）</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">Vertex</span><span class="params">(<span class="keyword">int</span> id, <span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.id = id;</span><br><span class="line">    <span class="keyword">this</span>.x = x;</span><br><span class="line">    <span class="keyword">this</span>.y = y;</span><br><span class="line">    <span class="keyword">this</span>.f = Integer.MAX_VALUE;</span><br><span class="line">    <span class="keyword">this</span>.dist = Integer.MAX_VALUE;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Graph 类的成员变量，在构造函数中初始化</span></span><br><span class="line">Vertex[] vertexes = <span class="keyword">new</span> Vertex[<span class="keyword">this</span>.v];</span><br><span class="line"><span class="comment">// 新增一个方法，添加顶点的坐标</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addVetex</span><span class="params">(<span class="keyword">int</span> id, <span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line">  vertexes[id] = <span class="keyword">new</span> Vertex(id, x, y)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p><code>A*</code> 算法的代码实现的主要逻辑是下面这段代码。它跟 <code>Dijkstra</code> 算法的代码实现，主要有 <code>3</code> 点区别：</p>
 <ul>
 <li><p>优先级队列构建的方式不同。<code>A*</code> 算法是根据 <code>f</code> 值（也就是刚刚讲到的 <code>f(i)=g(i)+h(i)</code>）来构建优先级队列，而 <code>Dijkstra</code> 算法是根据 <code>dist</code> 值（也就是刚刚讲到的 <code>g(i)</code>）来构建优先级队列；</p>
@@ -261,9 +259,7 @@
 <li><p><code>A*</code> 算法在更新顶点 <code>dist</code> 值的时候，会同步更新 <code>f</code> 值；</p>
 </li>
 <li><p>循环结束的条件也不一样。<code>Dijkstra</code> 算法是在终点出队列的时候才结束，<code>A*</code> 算法是一旦遍历到终点就结束。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">astar</span><span class="params">(<span class="keyword">int</span> s, <span class="keyword">int</span> t)</span> </span>&#123; <span class="comment">// 从顶点 s 到顶点 t 的路径</span></span><br><span class="line">  <span class="keyword">int</span>[] predecessor = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="keyword">this</span>.v]; <span class="comment">// 用来还原路径</span></span><br><span class="line">  <span class="comment">// 按照 vertex 的 f 值构建的小顶堆，而不是按照 dist</span></span><br><span class="line">  PriorityQueue queue = <span class="keyword">new</span> PriorityQueue(<span class="keyword">this</span>.v);</span><br><span class="line">  <span class="keyword">boolean</span>[] inqueue = <span class="keyword">new</span> <span class="keyword">boolean</span>[<span class="keyword">this</span>.v]; <span class="comment">// 标记是否进入过队列</span></span><br><span class="line">  vertexes[s].dist = <span class="number">0</span>;</span><br><span class="line">  vertexes[s].f = <span class="number">0</span>;</span><br><span class="line">  queue.add(vertexes[s]);</span><br><span class="line">  inqueue[s] = <span class="keyword">true</span>;</span><br><span class="line">  <span class="keyword">while</span> (!queue.isEmpty()) &#123;</span><br><span class="line">    Vertex minVertex = queue.poll(); <span class="comment">// 取堆顶元素并删除</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; adj[minVertex.id].size(); ++i) &#123;</span><br><span class="line">      Edge e = adj[minVertex.id].get(i); <span class="comment">// 取出一条 minVetex 相连的边</span></span><br><span class="line">      Vertex nextVertex = vertexes[e.tid]; <span class="comment">// minVertex--&gt;nextVertex</span></span><br><span class="line">      <span class="keyword">if</span> (minVertex.dist + e.w &lt; nextVertex.dist) &#123; <span class="comment">// 更新 next 的 dist,f</span></span><br><span class="line">        nextVertex.dist = minVertex.dist + e.w;</span><br><span class="line">        nextVertex.f </span><br><span class="line">           = nextVertex.dist+hManhattan(nextVertex, vertexes[t]);</span><br><span class="line">        predecessor[nextVertex.id] = minVertex.id;</span><br><span class="line">        <span class="keyword">if</span> (inqueue[nextVertex.id] == <span class="keyword">true</span>) &#123;</span><br><span class="line">          queue.update(nextVertex);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          queue.add(nextVertex);</span><br><span class="line">          inqueue[nextVertex.id] = <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (nextVertex.id == t) &#123; <span class="comment">// 只要到达 t 就可以结束 while 了</span></span><br><span class="line">        queue.clear(); <span class="comment">// 清空 queue，才能退出 while 循环</span></span><br><span class="line">        <span class="keyword">break</span>; </span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 输出路径</span></span><br><span class="line">  System.out.print(s);</span><br><span class="line">  print(s, t, predecessor); <span class="comment">// print 函数请参看 Dijkstra 算法的实现</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">astar</span><span class="params">(<span class="keyword">int</span> s, <span class="keyword">int</span> t)</span> </span>&#123; <span class="comment">// 从顶点 s 到顶点 t 的路径</span></span><br><span class="line">  <span class="keyword">int</span>[] predecessor = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="keyword">this</span>.v]; <span class="comment">// 用来还原路径</span></span><br><span class="line">  <span class="comment">// 按照 vertex 的 f 值构建的小顶堆，而不是按照 dist</span></span><br><span class="line">  PriorityQueue queue = <span class="keyword">new</span> PriorityQueue(<span class="keyword">this</span>.v);</span><br><span class="line">  <span class="keyword">boolean</span>[] inqueue = <span class="keyword">new</span> <span class="keyword">boolean</span>[<span class="keyword">this</span>.v]; <span class="comment">// 标记是否进入过队列</span></span><br><span class="line">  vertexes[s].dist = <span class="number">0</span>;</span><br><span class="line">  vertexes[s].f = <span class="number">0</span>;</span><br><span class="line">  queue.add(vertexes[s]);</span><br><span class="line">  inqueue[s] = <span class="keyword">true</span>;</span><br><span class="line">  <span class="keyword">while</span> (!queue.isEmpty()) &#123;</span><br><span class="line">    Vertex minVertex = queue.poll(); <span class="comment">// 取堆顶元素并删除</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; adj[minVertex.id].size(); ++i) &#123;</span><br><span class="line">      Edge e = adj[minVertex.id].get(i); <span class="comment">// 取出一条 minVetex 相连的边</span></span><br><span class="line">      Vertex nextVertex = vertexes[e.tid]; <span class="comment">// minVertex--&gt;nextVertex</span></span><br><span class="line">      <span class="keyword">if</span> (minVertex.dist + e.w &lt; nextVertex.dist) &#123; <span class="comment">// 更新 next 的 dist,f</span></span><br><span class="line">        nextVertex.dist = minVertex.dist + e.w;</span><br><span class="line">        nextVertex.f </span><br><span class="line">           = nextVertex.dist+hManhattan(nextVertex, vertexes[t]);</span><br><span class="line">        predecessor[nextVertex.id] = minVertex.id;</span><br><span class="line">        <span class="keyword">if</span> (inqueue[nextVertex.id] == <span class="keyword">true</span>) &#123;</span><br><span class="line">          queue.update(nextVertex);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          queue.add(nextVertex);</span><br><span class="line">          inqueue[nextVertex.id] = <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (nextVertex.id == t) &#123; <span class="comment">// 只要到达 t 就可以结束 while 了</span></span><br><span class="line">        queue.clear(); <span class="comment">// 清空 queue，才能退出 while 循环</span></span><br><span class="line">        <span class="keyword">break</span>; </span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 输出路径</span></span><br><span class="line">  System.out.print(s);</span><br><span class="line">  print(s, t, predecessor); <span class="comment">// print 函数请参看 Dijkstra 算法的实现</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
 </ul>
 <p><strong>尽管 <code>A*</code> 算法可以更加快速的找到从起点到终点的路线，但是它并不能像 <code>Dijkstra</code> 算法那样，找到最短路线。这是为什么呢？</strong></p>
 <p>要找出起点 <code>s</code> 到终点 <code>t</code> 的最短路径，最简单的方法是，通过回溯穷举所有从 <code>s</code> 到达 <code>t</code> 的不同路径，然后对比找出最短的那个。不过很显然，回溯算法的执行效率非常低，是指数级的。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/22/486d8280-c48d-11e9-808b-1970743a43bb.png" alt="image.png"><br><code>Dijkstra</code> 算法在此基础之上，利用动态规划的思想，对回溯搜索进行了剪枝，只保留起点到某个顶点的最短路径，继续往外扩展搜索。动态规划相较于回溯搜索，只是换了一个实现思路，但它实际上也考察到了所有从起点到终点的路线，所以才能得到最优解。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/22/60f829e0-c48d-11e9-808b-1970743a43bb.png" alt="image.png"><br><code>A*</code> 算法之所以不能像 <code>Dijkstra</code> 算法那样，找到最短路径，主要原因是两者的 <code>while</code> 循环结束条件不一样。刚刚提到，<code>Dijkstra</code> 算法是在终点出队列的时候才结束，<code>A*</code> 算法是一旦遍历到终点就结束。对于 <code>Dijkstra</code> 算法来说，当终点出队列的时候，终点的 <code>dist</code> 值是优先级队列中所有顶点的最小值，即便再运行下去，终点的 <code>dist</code> 值也不会再被更新了。对于 <code>A*</code> 算法来说，一旦遍历到终点，就结束 <code>while</code> 循环，这个时候，终点的 <code>dist</code> 值未必是最小值。</p>
@@ -277,7 +273,7 @@
 
   </article>
   <aside class="table-content" id="site-toc">
-  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);" target="_blank" rel="noopener"><i class="fa fa-angle-left"></i></a>
   <div class="table-content-title">
     <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
     <span>目录</span>
@@ -296,16 +292,16 @@
         </div>
       
       <div>
-        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
       </div>
     </aside>
   
   
     <div class="passage-tags">
     
-      <a style="word-break: break-word;" href="/tags/数据结构/"><i class="fa fa-tags"></i>数据结构</a>
+      <a style="word-break: break-word;" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><i class="fa fa-tags"></i>数据结构</a>
     
-      <a style="word-break: break-word;" href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
+      <a style="word-break: break-word;" href="/tags/%E7%AE%97%E6%B3%95/"><i class="fa fa-tags"></i>算法</a>
     
     </div>
   
@@ -402,7 +398,7 @@
     <div class="site-layer-body" id="site-layer-container">
       <div class="site-layer-input" id="site-layer-search" style="display: none;">
         <div class="site-layer-input-choose">
-          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+          <a href="javascript:void(0);" target="_blank" rel="noopener" title="Change Search Engine">Google</a>
         </div>
         <input type="text">
         <i class="fa fa-search"></i>
@@ -449,7 +445,7 @@
     </a>
   </div>
   <div class="bottom-bar-right">
-    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" data-enable="true" id="site-toc-show-btn">
       <i class="fa fa-bars"></i>
     </a>
     
@@ -457,15 +453,15 @@
         <i class="fa fa-commenting"></i>
       </a>
     
-    <a href="javascript:void(0);" id="site-toggle-share-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-toggle-share-btn">
       <i class="fa fa-share-alt"></i>
     </a>
     
-      <a href="javascript:void(0);" id="site-reward">
+      <a href="javascript:void(0);" target="_blank" rel="noopener" id="site-reward">
         <i class="fa fa-thumbs-up"></i>
       </a>
     
-    <a href="javascript:void(0);" id="back-top-btn">
+    <a href="javascript:void(0);" target="_blank" rel="noopener" id="back-top-btn">
       <i class="fa fa-chevron-up"></i>
     </a>
   </div>
