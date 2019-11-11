@@ -18,9 +18,17 @@
     return '/';
   }
 
+  function getPsgPath(pathname) {
+    if(!pathname) {
+      pathname = decodeURIComponent(window.location.pathname);
+      !pathname.endsWith('/') && (pathname = pathname + '/');
+    }
+    return pathname.substr(1);
+  }
+
   function _updateCommentNum() {
     const infoDOM = document.querySelector('#site-comment-info'),
-      url = getPsgID(),
+      url = getPsgPath(),
       _ts = 1000;
     let running = false;
 
@@ -192,7 +200,7 @@
       verify: false,
       avatar: "robohash",
       placeholder: "正确填写邮箱, 才能及时收到回复哦♪(^∇^*)",
-      path: getPsgID()
+      path: getPsgPath()
     });
 
     document.querySelector('.vsubmit.vbtn').addEventListener('click', (e) => {
