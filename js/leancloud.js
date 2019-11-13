@@ -200,7 +200,8 @@
       verify: false,
       avatar: "robohash",
       placeholder: "正确填写邮箱, 才能及时收到回复哦♪(^∇^*)",
-      path: getPsgPath()
+      path: getPsgPath(),
+      recordIP: true
     });
 
     document.querySelector('.vsubmit.vbtn').addEventListener('click', (e) => {
