@@ -394,10 +394,10 @@ main {
 .table-content {
     display: block;
     position: fixed;
-    right: -300px;
+    right: -350px;
     top: 0;
     height: 100vh;
-    width: 300px;
+    width: 350px;
     /*min-width: 300px;*/
     background: rgba(52,50,50,0.97);
     overflow-y: auto;

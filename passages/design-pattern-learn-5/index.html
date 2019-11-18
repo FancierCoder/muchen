@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="MuChen" />
+  
+  
+  <title>设计模式之美学习（五） | MuChen&#39;s Blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="设计模式(初级),设计模式," />
+  
+
+  
+  <meta name="description" content="哪些代码设计看似是面向对象，实际是面向过程的？">
+
+  <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/jquery-3.4.1.min.js"></script>
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.15.0/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/Valine-1.3.10.min.js" async></script>
+  
+
+  
+
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9" async></script>
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI","appkey":"5Rl3Rhl9zc8BJNvrPcncKWFy","comment":true,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2019-07-12",
+    passwords: ["0e31be4bd24c14e65633d11633fe616ee3d93b4f31d07726fdbe113fa98a391a", ],
+    is_post: true,
+    lock: false,
+    author: "MuChen",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/sha256.min.js"></script>
+<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/auth.js"></script>
+<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/index.js"></script>
+<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/favicon.ico">
+    <link rel="apple-touch-icon" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/animate-3.7.2.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+
+  <script type="text/javascript">
+      function getCSS() {
+          let dateToday = new Date();
+          let timeNow = dateToday.getTime();
+          dateToday.setTime(timeNow);
+          let theHour = dateToday.getHours();
+          let display = "/css/index-night.css";
+          if (theHour <= 5) {
+			  display = "https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/index-night.css";
+		  } else if (theHour >= 19) {
+              display = "https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/index-night.css";
+		  } else if (theHour > 5) {
+              display = "https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/index.css";
+		  } else if (theHour < 19) {
+              display = "https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/index.css";
+		  }
+          let css = '<';
+          css += 'link rel="stylesheet" href=' + display + ' \/';
+          css += '>';
+          document.write(css);
+      }
+  </script>
+  <script type="text/javascript">
+      window.onload = getCSS();
+  </script>
+
+</head>
+  <body>
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">沐晨</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | Learn To Learn</span>
+    
+  </div>
+  <div class="site-header-right">
+      <div class="search-box">
+          <section>
+              <div id="site_search">
+                  <input type="text" id="local-search-input" results="0"/>
+                  <div id="local-search-result"></div>
+              </div>
+          </section>
+      </div>
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+        <a href="/friends/" target="_self">友链</a>
+      
+        <a href="/about/" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/FancierCoder" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search" style="display: none">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/friends/" target="_self">
+            友链
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/about/" target="_self">
+            关于
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+
+    
+      <span style="margin-right: 24px;">
+        <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E5%88%9D%E7%BA%A7/"><i class="fa fa-bookmark"></i>设计模式(初级)</a>
+      </span>
+    
+    
+      <span style="margin-right: 24px;">
+         <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+
+  </div>
+  <div class="passage-title-wrap">
+      <h1 class="passage-title">
+        设计模式之美学习（五）
+      </h1>
+      <div class="passage-meta">
+        <span style="margin-right: 24px;">
+          <i class="fa fa-calendar"></i>2019.11.18 18:11
+        </span>
+        <span id="article-visit-info" style="margin-right: 24px;">
+            <i class="fa fa-eye"></i> 0
+        </span>
+      </div>
+  </div>
+  
+  <article class="passage-article">
+    <p>常见的编程范式或者说编程风格有三种，面向过程编程、面向对象编程、函数式编程，而面向对象编程又是这其中最主流的编程范式。现如今，大部分编程语言都是面向对象编程语言，大部分软件都是基于面向对象编程这种编程范式来开发的。</p>
+<p>不过，在实际的开发工作中，总以为把所有代码都塞到类里，自然就是在进行面向对象编程了。实际上，这样的认识是不正确的。有时候，从表面上看似是面向对象编程风格的代码，从本质上看却是面向过程编程风格的。</p>
+<h2 id="哪些代码设计看似是面向对象，实际是面向过程的？"><a href="#哪些代码设计看似是面向对象，实际是面向过程的？" class="headerlink" title="哪些代码设计看似是面向对象，实际是面向过程的？"></a>哪些代码设计看似是面向对象，实际是面向过程的？</h2><p>在用面向对象编程语言进行软件开发的时候，我们有时候会写出面向过程风格的代码。有些是有意为之，并无不妥；而有些是无意为之，会影响到代码的质量。</p>
+<p><strong>1. 滥用 <code>getter</code>、<code>setter</code> 方法</strong></p>
+<p>它违反了面向对象编程的封装特性，相当于将面向对象编程风格退化成了面向过程编程风格。通过下面这个例子来给你解释一下这句话。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ShoppingCart</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span> itemsCount;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">double</span> totalPrice;</span><br><span class="line">  <span class="keyword">private</span> List&lt;ShoppingCartItem&gt; items = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getItemsCount</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.itemsCount;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setItemsCount</span><span class="params">(<span class="keyword">int</span> itemsCount)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.itemsCount = itemsCount;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">getTotalPrice</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.totalPrice;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setTotalPrice</span><span class="params">(<span class="keyword">double</span> totalPrice)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.totalPrice = totalPrice;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> List&lt;ShoppingCartItem&gt; <span class="title">getItems</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.items;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addItem</span><span class="params">(ShoppingCartItem item)</span> </span>&#123;</span><br><span class="line">    items.add(item);</span><br><span class="line">    itemsCount++;</span><br><span class="line">    totalPrice += item.getPrice();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// ...省略其他方法...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这段代码中，<code>ShoppingCart</code> 是一个简化后的购物车类，有三个私有（<code>private</code>）属性：<code>itemsCount</code>、<code>totalPrice</code>、<code>items</code>。对于 <code>itemsCount</code>、<code>totalPrice</code> 两个属性，我们定义了它们的 <code>getter</code>、<code>setter</code> 方法。对于 <code>items</code> 属性，我们定义了它的 <code>getter</code> 方法和 <code>addItem()</code> 方法。代码很简单，理解起来不难。那你有没有发现，这段代码有什么问题呢？</p>
+<p>我们先来看前两个属性，<code>itemsCount</code> 和 <code>totalPrice</code>。虽然我们将它们定义成 <code>private</code> 私有属性，但是提供了 <code>public</code> 的 <code>getter</code>、<code>setter</code> 方法，这就跟将这两个属性定义为 <code>public</code> 公有属性，没有什么两样了。外部可以通过 <code>setter</code> 方法随意地修改这两个属性的值。除此之外，任何代码都可以随意调用 <code>setter</code> 方法，来重新设置 <code>itemsCount</code>、<code>totalPrice</code> 属性的值，这也会导致其跟 <code>items</code> 属性的值不一致。</p>
+<p>而面向对象封装的定义是：通过访问权限控制，隐藏内部数据，外部仅能通过类提供的有限的接口访问、修改内部数据。所以，暴露不应该暴露的 <code>setter</code> 方法，明显违反了面向对象的封装特性。数据没有访问权限控制，任何代码都可以随意修改它，代码就退化成了面向过程编程风格的了。</p>
+<p>看完了前两个属性，我们再来看 <code>items</code> 这个属性。对于 <code>items</code> 这个属性，我们定义了它的 <code>getter</code> 方法和 <code>addItem()</code> 方法，并没有定义它的 <code>setter</code> 方法。这样的设计貌似看起来没有什么问题，但实际上并不是。</p>
+<p>对于 <code>itemsCount</code> 和 <code>totalPrice</code> 这两个属性来说，定义一个 <code>public</code> 的 <code>getter</code> 方法，确实无伤大雅，毕竟 <code>getter</code> 方法不会修改数据。但是，对于 <code>items</code> 属性就不一样了，这是因为 <code>items</code> 属性的 <code>getter</code> 方法，返回的是一个 <code>List</code>集合容器。外部调用者在拿到这个容器之后，是可以操作容器内部数据的，也就是说，外部代码还是能修改 <code>items</code> 中的数据。比如像下面这样：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ShoppingCart cart = <span class="keyword">new</span> ShoppCart();</span><br><span class="line">...</span><br><span class="line">cart.getItems().clear(); <span class="comment">// 清空购物车</span></span><br></pre></td></tr></table></figure>
+<p>你可能会说，清空购物车这样的功能需求看起来合情合理啊，上面的代码没有什么不妥啊。你说得没错，需求是合理的，但是这样的代码写法，会导致 <code>itemsCount</code>、<code>totalPrice</code>、<code>items</code> 三者数据不一致。我们不应该将清空购物车的业务逻辑暴露给上层代码。正确的做法应该是，在 <code>ShoppingCart</code> 类中定义一个 <code>clear()</code> 方法，将清空购物车的业务逻辑封装在里面，透明地给调用者使用。<code>ShoppingCart</code> 类的 <code>clear()</code> 方法的具体代码实现如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ShoppingCart</span> </span>&#123;</span><br><span class="line">  <span class="comment">// ...省略其他代码...</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">clear</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    items.clear();</span><br><span class="line">    itemsCount = <span class="number">0</span>;</span><br><span class="line">    totalPrice = <span class="number">0.0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>你可能还会说，我有一个需求，需要查看购物车中都买了啥，那这个时候，<code>ShoppingCart</code> 类不得不提供 <code>items</code> 属性的 <code>getter</code> 方法了，那又该怎么办才好呢？</p>
+<p>如果你熟悉 <code>Java</code> 语言，那解决这个问题的方法还是挺简单的。我们可以通过 <code>Java</code> 提供的 <code>Collections.unmodifiableList()</code> 方法，让 <code>getter</code> 方法返回一个不可被修改的 <code>UnmodifiableList</code> 集合容器，而这个容器类重写了 <code>List</code> 容器中跟修改数据相关的方法，比如 <code>add()</code>、<code>clear()</code> 等方法。一旦我们调用这些修改数据的方法，代码就会抛出 <code>UnsupportedOperationException</code> 异常，这样就避免了容器中的数据被修改。具体的代码实现如下所示。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ShoppingCart</span> </span>&#123;</span><br><span class="line">  <span class="comment">// ...省略其他代码...</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> List&lt;ShoppingCartItem&gt; <span class="title">getItems</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> Collections.unmodifiableList(<span class="keyword">this</span>.items);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UnmodifiableList</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">UnmodifiableCollection</span>&lt;<span class="title">E</span>&gt;</span></span><br><span class="line"><span class="class">                          <span class="keyword">implements</span> <span class="title">List</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> UnsupportedOperationException();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">clear</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> UnsupportedOperationException();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// ...省略其他代码...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ShoppingCart cart = <span class="keyword">new</span> ShoppingCart();</span><br><span class="line">List&lt;ShoppingCartItem&gt; items = cart.getItems();</span><br><span class="line">items.clear();<span class="comment">//抛出UnsupportedOperationException异常</span></span><br></pre></td></tr></table></figure>
+<p>不过，这样的实现思路还是有点问题。因为当调用者通过 <code>ShoppingCart</code> 的 <code>getItems()</code> 获取到 <code>items</code> 之后，虽然我们没法修改容器中的数据，但我们仍然可以修改容器中每个对象（<code>ShoppingCartItem</code>）的数据。听起来有点绕，看看下面这几行代码你就明白了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ShoppingCart cart = <span class="keyword">new</span> ShoppingCart();</span><br><span class="line">cart.add(<span class="keyword">new</span> ShoppingCartItem(...));</span><br><span class="line">List&lt;ShoppingCartItem&gt; items = cart.getItems();</span><br><span class="line">ShoppingCartItem item = items.get(<span class="number">0</span>);</span><br><span class="line">item.setPrice(<span class="number">19.0</span>); <span class="comment">// 这里修改了item的价格属性</span></span><br></pre></td></tr></table></figure>
+
+<p>总结一下，在设计实现类的时候，除非真的需要，否则，尽量不要给属性定义 <code>setter</code> 方法。除此之外，尽管 <code>getter</code> 方法相对 <code>setter</code> 方法要安全些，但是如果返回的是集合容器（比如例子中的 <code>List</code> 容器），也要防范集合内部数据被修改的危险。</p>
+<p><strong>2. 滥用全局变量和全局方法</strong></p>
+<p>在面向对象编程中，常见的全局变量有单例类对象、静态成员变量、常量等，常见的全局方法有静态方法。单例类对象在全局代码中只有一份，所以，它相当于一个全局变量。静态成员变量归属于类上的数据，被所有的实例化对象所共享，也相当于一定程度上的全局变量。而常量是一种非常常见的全局变量，比如一些代码中的配置参数，一般都设置为常量，放到一个 <code>Constants</code> 类中。静态方法一般用来操作静态变量或者外部数据。你可以联想一下我们常用的各种 <code>Utils</code> 类，里面的方法一般都会定义成静态方法，可以在不用创建对象的情况下，直接拿来使用。静态方法将方法与数据分离，破坏了封装特性，是典型的面向过程风格。</p>
+<p>在刚刚介绍的这些全局变量和全局方法中，<code>Constants</code> 类和 <code>Utils</code> 类最常用到。现在，我们就结合这两个几乎在每个软件开发中都会用到的类，来深入探讨一下全局变量和全局方法的利与弊。</p>
+<p><strong>我们先来看一下，在我过去参与的项目中，一种常见的 <code>Constants</code> 类的定义方法。</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Constants</span> </span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String MYSQL_ADDR_KEY = <span class="string">"mysql_addr"</span>;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String MYSQL_DB_NAME_KEY = <span class="string">"db_name"</span>;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String MYSQL_USERNAME_KEY = <span class="string">"mysql_username"</span>;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String MYSQL_PASSWORD_KEY = <span class="string">"mysql_password"</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String REDIS_DEFAULT_ADDR = <span class="string">"192.168.7.2:7234"</span>;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> REDIS_DEFAULT_MAX_TOTAL = <span class="number">50</span>;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> REDIS_DEFAULT_MAX_IDLE = <span class="number">50</span>;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> REDIS_DEFAULT_MIN_IDLE = <span class="number">20</span>;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String REDIS_DEFAULT_KEY_PREFIX = <span class="string">"rt:"</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// ...省略更多的常量定义...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这段代码中，我们把程序中所有用到的常量，都集中地放到这个 <code>Constants</code> 类中。不过，定义一个如此大而全的 <code>Constants</code> 类，并不是一种很好的设计思路。为什么这么说呢？原因主要有以下几点。</p>
+<p>首先，这样的设计会影响代码的可维护性。</p>
+<p>如果参与开发同一个项目的工程师有很多，在开发过程中，可能都要涉及修改这个类，比如往这个类里添加常量，那这个类就会变得越来越大，成百上千行都有可能，查找修改某个常量也会变得比较费时，而且还会增加提交代码冲突的概率。</p>
+<p>其次，这样的设计还会增加代码的编译时间。</p>
+<p>当 <code>Constants</code> 类中包含很多常量定义的时候，依赖这个类的代码就会很多。那每次修改 <code>Constants</code> 类，都会导致依赖它的类文件重新编译，因此会浪费很多不必要的编译时间。不要小看编译花费的时间，对于一个非常大的工程项目来说，编译一次项目花费的时间可能是几分钟，甚至几十分钟。而我们在开发过程中，每次运行单元测试，都会触发一次编译的过程，这个编译时间就有可能会影响到我们的开发效率。</p>
+<p>最后，这样的设计还会影响代码的复用性。</p>
+<p>如果我们要在另一个项目中，复用本项目开发的某个类，而这个类又依赖 <code>Constants</code> 类。即便这个类只依赖 <code>Constants</code> 类中的一小部分常量，我们仍然需要把整个 <code>Constants</code> 类也一并引入，也就引入了很多无关的常量到新的项目中。</p>
+<p>那如何改进 <code>Constants</code> 类的设计呢？这里有两种思路可以借鉴。</p>
+<p>第一种是将 <code>Constants</code> 类拆解为功能更加单一的多个类，比如跟 <code>MySQL</code> 配置相关的常量，我们放到 <code>MysqlConstants</code> 类中；跟 <code>Redis</code> 配置相关的常量，我们放到 <code>RedisConstants</code> 类中。当然，还有一种觉得更好的设计思路，那就是并不单独地设计 <code>Constants</code> 常量类，而是哪个类用到了某个常量，我们就把这个常量定义到这个类中。比如，<code>RedisConfig</code> 类用到了 <code>Redis</code> 配置相关的常量，那我们就直接将这些常量定义在 <code>RedisConfig</code> 中，这样也提高了类设计的内聚性和代码的复用性。</p>
+<p>讲完了 <code>Constants</code> 类，我们再来讨论一下 <code>Utils</code> 类。首先，想问你这样一个问题，我们为什么需要 <code>Utils</code> 类？<code>Utils</code> 类存在的意义是什么？</p>
+<p>在讲面向对象特性的时候，讲过继承可以实现代码复用。利用继承特性，我们把相同的属性和方法，抽取出来，定义到父类中。子类复用父类中的属性和方法，达到代码复用的目的。但是，有的时候，从业务含义上，<code>A</code> 类和 <code>B</code> 类并不一定具有继承关系，比如 <code>Crawler</code> 类和 <code>PageAnalyzer</code> 类，它们都用到了 <code>URL</code> 拼接和分割的功能，但并不具有继承关系（既不是父子关系，也不是兄弟关系）。仅仅为了代码复用，生硬地抽象出一个父类出来，会影响到代码的可读性。如果不熟悉背后设计思路的同事，发现 <code>Crawler</code> 类和 <code>PageAnalyzer</code> 类继承同一个父类，而父类中定义的却是 <code>URL</code> 相关的操作，会觉得这个代码写得莫名其妙，理解不了。</p>
+<p>既然继承不能解决这个问题，我们可以定义一个新的类，实现 <code>URL</code> 拼接和分割的方法。而拼接和分割两个方法，不需要共享任何数据，所以新的类不需要定义任何属性，这个时候，我们就可以把它定义为只包含静态方法的 <code>Utils</code> 类了。</p>
+<p>实际上，只包含静态方法不包含任何属性的 <code>Utils</code> 类，是彻彻底底的面向过程的编程风格。但这并不是说，我们就要杜绝使用 <code>Utils</code> 类了。实际上，从刚刚讲的 <code>Utils</code> 类存在的目的来看，它在软件开发中还是挺有用的，能解决代码复用问题。所以，这里并不是说完全不能用 <code>Utils</code> 类，而是说，要尽量避免滥用，不要不加思考地随意去定义 <code>Utils</code> 类。</p>
+<p>在定义 <code>Utils</code> 类之前，你要问一下自己，你真的需要单独定义这样一个 <code>Utils</code> 类吗？是否可以把 <code>Utils</code> 类中的某些方法定义到其他类中呢？如果在回答完这些问题之后，你还是觉得确实有必要去定义这样一个 <code>Utils</code> 类，那就大胆地去定义它吧。因为即便在面向对象编程中，我们也并不是完全排斥面向过程风格的代码。只要它能为我们写出好的代码贡献力量，我们就可以适度地去使用。</p>
+<p>除此之外，类比 <code>Constants</code> 类的设计，我们设计 <code>Utils</code> 类的时候，最好也能细化一下，针对不同的功能，设计不同的 <code>Utils</code> 类，比如 <code>FileUtils</code>、<code>IOUtils</code>、<code>StringUtils</code>、<code>UrlUtils</code> 等，不要设计一个过于大而全的 <code>Utils</code> 类。</p>
+<p><strong>3. 定义数据和方法分离的类</strong></p>
+<p>最后一种面向对象编程过程中，常见的面向过程风格的代码。那就是，数据定义在一个类中，方法定义在另一个类中。</p>
+<p>传统的 <code>MVC</code> 结构分为 <code>Model</code> 层、<code>Controller</code> 层、<code>View</code> 层这三层。不过，在做前后端分离之后，三层结构在后端开发中，会稍微有些调整，被分为 <code>Controller</code> 层、<code>Service</code> 层、<code>Repository</code> 层。<code>Controller</code> 层负责暴露接口给前端调用，<code>Service</code> 层负责核心业务逻辑，<code>Repository</code> 层负责数据读写。而在每一层中，我们又会定义相应的 <code>VO</code>（<code>View Object</code>）、<code>BO</code>（<code>Business Object</code>）、<code>Entity</code>。一般情况下，<code>VO</code>、<code>BO</code>、<code>Entity</code> 中只会定义数据，不会定义方法，所有操作这些数据的业务逻辑都定义在对应的 <code>Controller</code> 类、<code>Service</code> 类、<code>Repository</code> 类中。这就是典型的面向过程的编程风格。</p>
+<p>实际上，这种开发模式叫作<strong>基于贫血模型的开发模式</strong>，也是我们现在非常常用的一种 <code>Web</code> 项目的开发模式。</p>
+<h2 id="在面向对象编程中，为什么容易写出面向过程风格的代码？"><a href="#在面向对象编程中，为什么容易写出面向过程风格的代码？" class="headerlink" title="在面向对象编程中，为什么容易写出面向过程风格的代码？"></a>在面向对象编程中，为什么容易写出面向过程风格的代码？</h2><p>可以联想一下，在生活中，你去完成一个任务，你一般都会思考，应该先做什么、后做什么，如何一步一步地顺序执行一系列操作，最后完成整个任务。面向过程编程风格恰恰符合人的这种流程化思维方式。而面向对象编程风格正好相反。它是一种自底向上的思考方式。它不是先去按照执行流程来分解任务，而是将任务翻译成一个一个的小的模块（也就是类），设计类之间的交互，最后按照流程将类组装起来，完成整个任务。我们在上一节课讲到了，这样的思考路径比较适合复杂程序的开发，但并不是特别符合人类的思考习惯。</p>
+<p>除此之外，面向对象编程要比面向过程编程难一些。在面向对象编程中，类的设计还是挺需要技巧，挺需要一定设计经验的。你要去思考如何封装合适的数据和方法到一个类里，如何设计类之间的关系，如何设计类之间的交互等等诸多设计问题。</p>
+<p>所以，基于这两点原因，很多工程师在开发的过程，更倾向于用不太需要动脑子的方式去实现需求，也就不由自主地就将代码写成面向过程风格的了。</p>
+<h2 id="面向过程编程及面向过程编程语言就真的无用武之地了吗？"><a href="#面向过程编程及面向过程编程语言就真的无用武之地了吗？" class="headerlink" title="面向过程编程及面向过程编程语言就真的无用武之地了吗？"></a>面向过程编程及面向过程编程语言就真的无用武之地了吗？</h2><p>前面我们有讲到，如果我们开发的是微小程序，或者是一个数据处理相关的代码，以算法为主，数据为辅，那脚本式的面向过程的编程风格就更适合一些。当然，面向过程编程的用武之地还不止这些。实际上，面向过程编程是面向对象编程的基础，面向对象编程离不开基础的面向过程编程。为什么这么说？我们仔细想想，类中每个方法的实现逻辑，不就是面向过程风格的代码吗？</p>
+<p>除此之外，面向对象和面向过程两种编程风格，也并不是非黑即白、完全对立的。在用面向对象编程语言开发的软件中，面向过程风格的代码并不少见，甚至在一些标准的开发库（比如 <code>JDK</code>、<code>Apache Commons</code>、<code>Google Guava</code>）中，也有很多面向过程风格的代码。</p>
+<p>不管使用面向过程还是面向对象哪种风格来写代码，我们最终的目的还是写出易维护、易读、易复用、易扩展的高质量代码。只要我们能避免面向过程编程风格的一些弊端，控制好它的副作用，在掌控范围内为我们所用，我们就大可不用避讳在面向对象编程中写面向过程风格的代码。</p>
+<h2 id="重点回顾"><a href="#重点回顾" class="headerlink" title="重点回顾"></a>重点回顾</h2><p><strong>1. 滥用 <code>getter</code>、<code>setter</code> 方法</strong></p>
+<p>在设计实现类的时候，除非真的需要，否则尽量不要给属性定义 <code>setter</code> 方法。除此之外，尽管 <code>getter</code> 方法相对 <code>setter</code> 方法要安全些，但是如果返回的是集合容器，那也要防范集合内部数据被修改的风险。</p>
+<p><strong>2.<code>Constants</code> 类、<code>Utils</code> 类的设计问题</strong></p>
+<p>对于这两种类的设计，我们尽量能做到职责单一，定义一些细化的小类，比如 <code>RedisConstants</code>、<code>FileUtils</code>，而不是定义一个大而全的 <code>Constants</code> 类、<code>Utils</code> 类。除此之外，如果能将这些类中的属性和方法，划分归并到其他业务类中，那是最好不过的了，能极大地提高类的内聚性和代码的可复用性。</p>
+<ol start="3">
+<li>基于贫血模型的开发模式</li>
+</ol>
+<p>讲了为什么这种开发模式是彻彻底底的面向过程编程风格的。这是因为数据和操作是分开定义在 <code>VO/BO/Entity</code> 和 <code>Controler/Service/Repository</code> 中的。</p>
+<p>参考：<a href="https://time.geekbang.org/column/article/164907" target="_blank" rel="noopener">哪些代码设计看似是面向对象，实际是面向过程的？</a></p>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main" id="table-toc">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#哪些代码设计看似是面向对象，实际是面向过程的？"><span class="toc-text">哪些代码设计看似是面向对象，实际是面向过程的？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#在面向对象编程中，为什么容易写出面向过程风格的代码？"><span class="toc-text">在面向对象编程中，为什么容易写出面向过程风格的代码？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#面向过程编程及面向过程编程语言就真的无用武之地了吗？"><span class="toc-text">面向过程编程及面向过程编程语言就真的无用武之地了吗？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重点回顾"><span class="toc-text">重点回顾</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: 沐晨</div>
+      
+        <div>
+          原文链接:
+          <a style="word-break: break-word;" href="" target="_blank">https://muchen.fun/passages/design-pattern-learn-5/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+    
+      <a style="word-break: break-word;" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"><i class="fa fa-tags"></i>设计模式</a>
+    
+    </div>
+  
+</div>
+
+<div class="left_prev_arrow_div">
+    <div class="left_prev_arrow arrow_div">
+        <a href="/passages/design-pattern-learn-4/" data-enable="true">
+            <i class="fa fa-angle-left" aria-hidden="true"></i>
+        </a>
+    </div>
+</div>
+<div class="right_prev_arrow_div">
+    <div class="right_prev_arrow arrow_div">
+        <a href="javascript:void(0);" data-enable="false">
+            <i class="fa fa-angle-right" aria-hidden="true"></i>
+        </a>
+    </div>
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      
+        <div class="site-footer-col">
+          <h5 class="site-footer-title">博客推荐</h5>
+          
+            <span class="site-footer-item">
+              <a href="https://muchen.fun/" target="_blank">沐晨</a>
+            </span>
+          
+            <span class="site-footer-item">
+              <a href="http://www.wangdabo.com" target="_blank">王大博</a>
+            </span>
+          
+            <span class="site-footer-item">
+              <a href="https://inrgg.com/" target="_blank">任公公</a>
+            </span>
+          
+        </div>
+      
+        <div class="site-footer-col">
+          <h5 class="site-footer-title">系列教程</h5>
+          
+            <span class="site-footer-item">
+              <a href="https://muchen.fun/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/" target="_blank">数据结构与算法(中级)</a>
+            </span>
+          
+            <span class="site-footer-item">
+              <a href="/tags/设计模式/" target="_self">设计模式</a>
+            </span>
+          
+        </div>
+      
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: lcoder@qq.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://fanciercoder.github.io/" target="_blank">沐晨</a>.
+      All rights reserved.
+    </div>
+    <div class="site-footer-info">
+        <span style="position: relative;">
+        <a style=" position: absolute;
+            white-space: nowrap;" id="colorPrint">
+        </a>
+        </span>
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+        <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+          
+            <div>
+              <img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/wechat.png" alt="WeChat">
+              
+                <p>WeChat</p>
+              
+            </div>
+          
+            <div>
+              <img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/alipay.png" alt="AliPay">
+              
+                <p>AliPay</p>
+              
+            </div>
+          
+            <div>
+              <img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/BitCoin.jpg" alt="BitCoin">
+              
+                <p>BitCoin</p>
+              
+            </div>
+          
+        </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="javascript:void(0);" target="_self" data-enable="false">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/design-pattern-learn-4/" target="_self" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" target="_self" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" target="_self" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" target="_self" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+      <a href="javascript:void(0);" target="_self" id="site-reward">
+        <i class="fa fa-thumbs-up"></i>
+      </a>
+    
+    <a href="javascript:void(0);" target="_self" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-144841374-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-144841374-1');
+  </script>
+
+
+
+
+  <script async>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+
+
+
+
+ <script>
+ //const element =  document.querySelector('.home-article-wrapper')
+ //element.classList.add('animated', 'bounceInLeft')
+ function testAnim(x) {
+     $('.home-article-wrapper').removeClass('animate').addClass(x + ' animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+       $(this).removeClass('animate');
+     });
+   };
+
+   testAnim('flipInX');
+ </script>
+
+    
+      <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/footer.js"></script>
+    
+  </body>
+</html>
