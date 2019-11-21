@@ -2004,4 +2004,8 @@ figure::-webkit-scrollbar-track {/*滚动条里面轨道*/
     background: #2c2a2a;
 }
 
+@font-face {
+    font-display: swap;
+}
+
 /*# sourceMappingURL=index.css.map */

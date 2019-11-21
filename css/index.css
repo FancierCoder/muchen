@@ -1945,4 +1945,8 @@ figure::-webkit-scrollbar-track {/*滚动条里面轨道*/
     border-radius: 0;
     background: #fafafa;
 }
+
+@font-face {
+    font-display: swap;
+}
 /*# sourceMappingURL=index.css.map */
