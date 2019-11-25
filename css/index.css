@@ -850,8 +850,16 @@ main {
     margin: 20px auto;
     /*width: 95%;*/
     padding: 40px 40px 24px 40px;
-    box-shadow: 0 8px 16px 6px rgba(7, 17, 27, 0.05);
     border-radius: 12px;
+}
+
+.passage:hover {
+    box-shadow: 0 8px 16px 6px rgba(7, 17, 27, 0.05);
+    -webkit-transition: 0.8s ease all;
+    -moz-transition: 0.8s ease all;
+    -ms-transition: 0.8s ease all;
+    -o-transition: 0.8s ease all;
+    transition: 0.8s ease all
 }
 
 @media screen and (max-width: 768px) {
@@ -862,6 +870,10 @@ main {
         padding: 20px 0 24px 0;
         box-shadow: none;
         border-radius: 12px;
+    }
+
+    .passage:hover {
+        box-shadow: none;
     }
 }
 
