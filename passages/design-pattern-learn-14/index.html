@@ -6,16 +6,16 @@
   <meta name="author" content="MuChen" />
   
   
-  <title>归档 | MuChen&#39;s Blog</title>
+  <title>设计模式之美学习（十四） | MuChen&#39;s Blog</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="MuChen&#39;s Blog" />
+    <meta name="keywords" content="设计模式(设计原则),设计模式," />
   
 
   
-  <meta name="description" content="沐晨的博客">
+  <meta name="description" content="如何做到“对扩展开放、修改关闭”？扩展和修改各指什么？">
 
   <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/jquery-3.4.1.min.js"></script>
 
@@ -46,7 +46,7 @@
     welcome: {"enable":false,"interval":30},
     start_time: "2019-07-12",
     passwords: ["0e31be4bd24c14e65633d11633fe616ee3d93b4f31d07726fdbe113fa98a391a", ],
-    is_post: false,
+    is_post: true,
     lock: false,
     author: "MuChen",
     share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
@@ -206,100 +206,118 @@
 </nav>
 <div id="site-process"></div>
     <main>
-      <div class="timeline">
-  <h2 class="timeline-title">归档: 84篇</h2>
+      
+  <div class="passage">
+  <div class="passage-meta">
+
+    
+      <span style="margin-right: 24px;">
+        <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/"><i class="fa fa-bookmark"></i>设计模式(设计原则)</a>
+      </span>
+    
+    
+      <span style="margin-right: 24px;">
+         <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+
+  </div>
+  <div class="passage-title-wrap">
+      <h1 class="passage-title">
+        设计模式之美学习（十四）
+      </h1>
+      <div class="passage-meta">
+        <span style="margin-right: 24px;">
+          <i class="fa fa-calendar"></i>2019.12.09 11:57
+        </span>
+        <span id="article-visit-info" style="margin-right: 24px;">
+            <i class="fa fa-eye"></i> 0
+        </span>
+      </div>
+  </div>
   
-    
-      <h3 class="timeline-subtitle">2019</h3>
-    
-    <div class="timeline-item">
-      <time>2019-12-09</time>
-      <a target="_self" href="/passages/design-pattern-learn-14/">设计模式之美学习（十四）</a>
-    </div>
+  <article class="passage-article">
+    <h2 id="如何理解“对扩展开放、修改关闭”？"><a href="#如何理解“对扩展开放、修改关闭”？" class="headerlink" title="如何理解“对扩展开放、修改关闭”？"></a>如何理解“对扩展开放、修改关闭”？</h2><p>开闭原则的英文全称是 <code>Open Closed Principle</code>，简写为 <code>OCP</code>。它的英文描述是：<code>software entities (modules, classes, functions, etc.) should be open for extension , but closed for modification</code>。我们把它翻译成中文就是：软件实体（模块、类、方法等）应该“对扩展开放、对修改关闭”。</p>
+<p>这个描述比较简略，如果我们详细表述一下，那就是，添加一个新的功能应该是，在已有代码基础上扩展代码（新增模块、类、方法等），而非修改已有代码（修改模块、类、方法等）。</p>
+<h2 id="修改代码就意味着违背开闭原则吗？"><a href="#修改代码就意味着违背开闭原则吗？" class="headerlink" title="修改代码就意味着违背开闭原则吗？"></a>修改代码就意味着违背开闭原则吗？</h2><p>实际上，我们也没必要纠结某个代码改动是“修改”还是“扩展”，更没必要太纠结它是否违反“开闭原则”。我们回到这条原则的设计初衷：只要它没有破坏原有的代码的正常运行，没有破坏原有的单元测试，我们就可以说，这是一个合格的代码改动。</p>
+<p>而且，我们要认识到，添加一个新功能，不可能任何模块、类、方法的代码都不“修改”，这个是做不到的。类需要创建、组装、并且做一些初始化操作，才能构建成可运行的的程序，这部分代码的修改是在所难免的。我们要做的是尽量让修改操作更集中、更少、更上层，尽量让最核心、最复杂的那部分逻辑代码满足开闭原则。</p>
+<h2 id="如何做到“对扩展开放、修改关闭”？"><a href="#如何做到“对扩展开放、修改关闭”？" class="headerlink" title="如何做到“对扩展开放、修改关闭”？"></a>如何做到“对扩展开放、修改关闭”？</h2><p>开闭原则讲的就是代码的扩展性问题，是判断一段代码是否易扩展的“金标准”。如果某段代码在应对未来需求变化的时候，能够做到“对扩展开放、对修改关闭”，那就说明这段代码的扩展性比较好。所以，问如何才能做到“对扩展开放、对修改关闭”，也就粗略地等同于在问，如何才能写出扩展性好的代码。</p>
+<p><strong>先来看一些更加偏向顶层的指导思想。为了尽量写出扩展性好的代码，我们要时刻具备扩展意识、抽象意识、封装意识。这些“潜意识”可能比任何开发技巧都重要。</strong></p>
+<p>在写代码的时候后，我们要多花点时间往前多思考一下，这段代码未来可能有哪些需求变更、如何设计代码结构，事先留好扩展点，以便在未来需求变更的时候，不需要改动代码整体结构、做到最小代码改动的情况下，新的代码能够很灵活地插入到扩展点上，做到“对扩展开放、对修改关闭”。</p>
+<p>还有，在识别出代码可变部分和不可变部分之后，我们要将可变部分封装起来，隔离变化，提供抽象化的不可变接口，给上层系统使用。当具体的实现发生变化的时候，我们只需要基于相同的抽象接口，扩展一个新的实现，替换掉老的实现即可，上游系统的代码几乎不需要修改。</p>
+<p><strong>再来看下，支持开闭原则的一些更加具体的方法论。</strong></p>
+<p>在众多的设计原则、思想、模式中，最常用来提高代码扩展性的方法有：多态、依赖注入、基于接口而非实现编程，以及大部分的设计模式（比如，装饰、策略、模板、职责链、状态等）。</p>
+<p>实际上，多态、依赖注入、基于接口而非实现编程，以及前面提到的抽象意识，说的都是同一种设计思路，只是从不同的角度、不同的层面来阐述而已。这也体现了“很多设计原则、思想、模式都是相通的”这一思想。</p>
+<h2 id="如何在项目中灵活应用开闭原则？"><a href="#如何在项目中灵活应用开闭原则？" class="headerlink" title="如何在项目中灵活应用开闭原则？"></a>如何在项目中灵活应用开闭原则？</h2><p>如果你开发的是一个业务导向的系统，比如金融系统、电商系统、物流系统等，要想识别出尽可能多的扩展点，就要对业务有足够的了解，能够知道当下以及未来可能要支持的业务需求。如果你开发的是跟业务无关的、通用的、偏底层的系统，比如，框架、组件、类库，你需要了解“它们会被如何使用？今后你打算添加哪些功能？使用者未来会有哪些更多的功能需求？”等问题。</p>
+<p>有一句话说得好，“唯一不变的只有变化本身”。即便我们对业务、对系统有足够的了解，那也不可能识别出所有的扩展点，即便你能识别出所有的扩展点，为这些地方都预留扩展点，这样做的成本也是不可接受的。我们没必要为一些遥远的、不一定发生的需求去提前买单，做过度设计。</p>
+<p>最合理的做法是，对于一些比较确定的、短期内可能就会扩展，或者需求改动对代码结构影响比较大的情况，或者实现成本不高的扩展点，在编写代码的时候之后，我们就可以事先做些扩展性设计。但对于一些不确定未来是否要支持的需求，或者实现起来比较复杂的扩展点，我们可以等到有需求驱动的时候，再通过重构代码的方式来支持扩展的需求。</p>
+<p>而且，开闭原则也并不是免费的。有些情况下，代码的扩展性会跟可读性相冲突。比如，为了更好地支持扩展性，我们对代码进行了重构，重构之后的代码要比之前的代码复杂很多，理解起来也更加有难度。很多时候，我们都需要在扩展性和可读性之间做权衡。在某些场景下，代码的扩展性很重要，我们就可以适当地牺牲一些代码的可读性；在另一些场景下，代码的可读性更加重要，那我们就适当地牺牲一些代码的可扩展性。总之，这里没有一个放之四海而皆准的参考标准，全凭实际的应用场景来决定。</p>
+<h2 id="重点回顾"><a href="#重点回顾" class="headerlink" title="重点回顾"></a>重点回顾</h2><p><strong>1. 如何理解“对扩展开放、对修改关闭”？</strong></p>
+<p>添加一个新的功能，应该是通过在已有代码基础上扩展代码（新增模块、类、方法、属性等），而非修改已有代码（修改模块、类、方法、属性等）的方式来完成。关于定义，我们有两点要注意。第一点是，开闭原则并不是说完全杜绝修改，而是以最小的修改代码的代价来完成新功能的开发。第二点是，同样的代码改动，在粗代码粒度下，可能被认定为“修改”；在细代码粒度下，可能又被认定为“扩展”。</p>
+<p><strong>2. 如何做到“对扩展开放、修改关闭”？</strong></p>
+<p>我们要时刻具备扩展意识、抽象意识、封装意识。在写代码的时候，我们要多花点时间思考一下，这段代码未来可能有哪些需求变更，如何设计代码结构，事先留好扩展点，以便在未来需求变更的时候，在不改动代码整体结构、做到最小代码改动的情况下，将新的代码灵活地插入到扩展点上。</p>
+<p>很多设计原则、设计思想、设计模式，都是以提高代码的扩展性为最终目的的。特别是 <code>23</code> 种经典设计模式，大部分都是为了解决代码的扩展性问题而总结出来的，都是以开闭原则为指导原则的。最常用来提高代码扩展性的方法有：多态、依赖注入、基于接口而非实现编程，以及大部分的设计模式（比如，装饰、策略、模板、职责链、状态）。</p>
+<p>参考：<a href="https://time.geekbang.org/column/article/176075" target="_blank" rel="noopener">理论二：如何做到“对扩展开放、修改关闭”？扩展和修改各指什么？</a></p>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main" id="table-toc">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#如何理解“对扩展开放、修改关闭”？"><span class="toc-text">如何理解“对扩展开放、修改关闭”？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#修改代码就意味着违背开闭原则吗？"><span class="toc-text">修改代码就意味着违背开闭原则吗？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何做到“对扩展开放、修改关闭”？"><span class="toc-text">如何做到“对扩展开放、修改关闭”？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何在项目中灵活应用开闭原则？"><span class="toc-text">如何在项目中灵活应用开闭原则？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重点回顾"><span class="toc-text">重点回顾</span></a></li></ol>
+  </div>
+</aside>
   
-    
-    <div class="timeline-item">
-      <time>2019-12-08</time>
-      <a target="_self" href="/passages/design-pattern-learn-13/">设计模式之美学习（十三）</a>
-    </div>
+    <aside class="passage-copyright">
+      <div>本文作者: 沐晨</div>
+      
+        <div>
+          原文链接:
+          <a style="word-break: break-word;" href="" target="_blank">https://muchen.fun/passages/design-pattern-learn-14/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
   
-    
-    <div class="timeline-item">
-      <time>2019-12-04</time>
-      <a target="_self" href="/passages/design-pattern-learn-12/">设计模式之美学习（十二）</a>
-    </div>
   
+    <div class="passage-tags">
     
-    <div class="timeline-item">
-      <time>2019-12-03</time>
-      <a target="_self" href="/passages/design-pattern-learn-11/">设计模式之美学习（十一）</a>
-    </div>
-  
+      <a style="word-break: break-word;" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"><i class="fa fa-tags"></i>设计模式</a>
     
-    <div class="timeline-item">
-      <time>2019-11-30</time>
-      <a target="_self" href="/passages/design-pattern-learn-10/">设计模式之美学习（十）</a>
-    </div>
-  
-    
-    <div class="timeline-item">
-      <time>2019-11-27</time>
-      <a target="_self" href="/passages/design-pattern-learn-9/">设计模式之美学习（九）</a>
-    </div>
-  
-    
-    <div class="timeline-item">
-      <time>2019-11-25</time>
-      <a target="_self" href="/passages/design-pattern-learn-8/">设计模式之美学习（八）</a>
-    </div>
-  
-    
-    <div class="timeline-item">
-      <time>2019-11-22</time>
-      <a target="_self" href="/passages/design-pattern-learn-7/">设计模式之美学习（七）</a>
-    </div>
-  
-    
-    <div class="timeline-item">
-      <time>2019-11-20</time>
-      <a target="_self" href="/passages/design-pattern-learn-6/">设计模式之美学习（六）</a>
-    </div>
-  
-    
-    <div class="timeline-item">
-      <time>2019-11-18</time>
-      <a target="_self" href="/passages/design-pattern-learn-5/">设计模式之美学习（五）</a>
-    </div>
-  
-    
-    <div class="timeline-item">
-      <time>2019-11-15</time>
-      <a target="_self" href="/passages/design-pattern-learn-4/">设计模式之美学习（四）</a>
-    </div>
-  
-    
-    <div class="timeline-item">
-      <time>2019-11-13</time>
-      <a target="_self" href="/passages/design-pattern-learn-3/">设计模式之美学习（三）</a>
     </div>
   
 </div>
 
 <div class="left_prev_arrow_div">
-  <div class="left_prev_arrow arrow_div">
-    <a href="javascript:void(0);" data-enable="false">
-      <i class="fa fa-angle-left" aria-hidden="true"></i>
-    </a>
-  </div>
+    <div class="left_prev_arrow arrow_div">
+        <a href="/passages/design-pattern-learn-13/" data-enable="true">
+            <i class="fa fa-angle-left" aria-hidden="true"></i>
+        </a>
+    </div>
 </div>
 <div class="right_prev_arrow_div">
-  <div class="right_prev_arrow arrow_div">
-    <a href="/archives/page/2/" data-enable="true">
-      <i class="fa fa-angle-right" aria-hidden="true"></i>
-    </a>
-  </div>
+    <div class="right_prev_arrow arrow_div">
+        <a href="javascript:void(0);" data-enable="false">
+            <i class="fa fa-angle-right" aria-hidden="true"></i>
+        </a>
+    </div>
 </div>
+
     </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
     
     <div class="site-footer-wrapper">
   <footer class="site-footer">
@@ -424,16 +442,16 @@
     <a href="javascript:void(0);" target="_self" data-enable="false">
       <i class="fa fa-arrow-left"></i>
     </a>
-    <a href="/archives/page/2/" target="_self" data-enable="true">
+    <a href="/passages/design-pattern-learn-13/" target="_self" data-enable="true">
       <i class="fa fa-arrow-right"></i>
     </a>
   </div>
   <div class="bottom-bar-right">
-    <a href="javascript:void(0);" target="_self" data-enable="false" id="site-toc-show-btn">
+    <a href="javascript:void(0);" target="_self" data-enable="true" id="site-toc-show-btn">
       <i class="fa fa-bars"></i>
     </a>
     
-      <a href="javascript:void(0);" target="_self" data-enable="false">
+      <a href="#site-comment" target="_self" data-enable="true">
         <i class="fa fa-commenting"></i>
       </a>
     
