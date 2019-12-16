@@ -14,7 +14,7 @@
       return; 
     }
 
-    password = prompt('输入您的名称小写全拼 (例如: 李三 => lisan)');
+    password = prompt('请输入文章阅读密码：(可加公众号 MuchenBlog 回复 设计模式 获取)');
     password = sha256(password || '');
 
     if(passwords.includes(password)) {
