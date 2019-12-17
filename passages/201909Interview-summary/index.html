@@ -237,8 +237,7 @@
   </div>
   
   <article class="passage-article">
-    <!-- more -->
-<p>面试的问题都记录在下面，以及问题的一些解答。</p>
+    <p>面试的问题都记录在下面，以及问题的一些解答。</p>
 <h2 id="Java-基础"><a href="#Java-基础" class="headerlink" title="Java 基础"></a>Java 基础</h2><p><strong>谈谈你对 <code>HashMap</code> 的理解</strong></p>
 <ul>
 <li><p><code>HashMap</code> 是以数组+链表的方式存储的;</p>
@@ -455,9 +454,9 @@
 </li>
 <li><p><code>AOF</code> 持久化会保留原来的存储格式，将数据按照原有的格式存储在磁盘中。拿散列表这样的数据结构来举例。可以将散列表的大小、每个数据被散列到的槽的编号等信息，都保存在磁盘中。有了这些信息，从磁盘中将数据还原到内存中的时候，就可以避免重新计算哈希值。</p>
 </li>
-<li><p><code>AOF</code>文件比rdb更新频率高，优先使用<code>AOF</code>还原数据。</p>
+<li><p><code>AOF</code>文件比<code>RDB</code>更新频率高，优先使用<code>AOF</code>还原数据。</p>
 </li>
-<li><p><code>AOF</code>比<code>AOF</code>更安全也更大</p>
+<li><p><code>AOF</code>比<code>RDB</code>更安全也更大</p>
 </li>
 <li><p><code>RDB</code>性能比<code>AOF</code>好</p>
 </li>
@@ -584,7 +583,7 @@
 </ul>
 <p><strong>Kafka中是怎么体现消息顺序性的？</strong></p>
 <ul>
-<li><code>kafka</code>每个 <code>partition</code> 中的消息在写入时都是有序的，消费时，每个<code>partition</code>只能被每一个<code>group</code>中的一个消费者消费，保证了消费时也是有序的。整个<code>topic</code>不保证有序。如果为了保证<code>topic</code>整个有序，那么将<code>partition</code>调整为1.</li>
+<li><code>kafka</code>每个 <code>partition</code> 中的消息在写入时都是有序的，消费时，每个<code>partition</code>只能被每一个<code>group</code>中的一个消费者消费，保证了消费时也是有序的。整个<code>topic</code>不保证有序。如果为了保证<code>topic</code>整个有序，那么将<code>partition</code>调整为<code>1</code>.</li>
 </ul>
   </article>
   <aside class="table-content" id="site-toc">

@@ -6,16 +6,16 @@
   <meta name="author" content="MuChen" />
   
   
-  <title>分类 | MuChen&#39;s Blog</title>
+  <title>Java的内存模型 | MuChen&#39;s Blog</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="MuChen&#39;s Blog" />
+    <meta name="keywords" content="后端,Java内存模型," />
   
 
   
-  <meta name="description" content="沐晨的博客">
+  <meta name="description" content="Java的内存模型是什么？一起来了解一下。">
 
   <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/jquery-3.4.1.min.js"></script>
 
@@ -46,12 +46,12 @@
     welcome: {"enable":false,"interval":30},
     start_time: "2019-07-12",
     passwords: ["0e31be4bd24c14e65633d11633fe616ee3d93b4f31d07726fdbe113fa98a391a", ],
-    is_post: false,
+    is_post: true,
     lock: false,
     author: "MuChen",
     share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
     mathjax: true,
-    page_type: "categories",
+    page_type: "",
     root: "/"
   };
 </script>
@@ -207,15 +207,122 @@
 <div id="site-process"></div>
     <main>
       
-  <div class="set">
-  <h3 style="text-align: left;">
-    <i class="fa fa-bookmark"></i>
-    共 12 个分类
-  </h3>
-  <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/">数据结构与算法(中级)</a><span class="category-list-count">34</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">设计模式(面向对象)</a><span class="category-list-count">11</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%AB%98%E7%BA%A7/">数据结构与算法(高级)</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/LEETCODE/">LEETCODE</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%90%8E%E7%AB%AF/">后端</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95%E5%AE%9E%E6%88%98/">算法实战</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/">设计模式(设计原则)</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E5%88%9D%E7%BA%A7/">数据结构与算法(初级)</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E5%85%A5%E9%97%A8/">数据结构与算法(入门)</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%93%BE%E8%A1%A8/">链表</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95/">面试</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E5%85%A5%E9%97%A8/">设计模式(入门)</a><span class="category-list-count">1</span></li></ul>
+  <div class="passage">
+  <div class="passage-meta">
+
+    
+      <span style="margin-right: 24px;">
+        <a href="/categories/%E5%90%8E%E7%AB%AF/"><i class="fa fa-bookmark"></i>后端</a>
+      </span>
+    
+    
+      <span style="margin-right: 24px;">
+         <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+
+  </div>
+  <div class="passage-title-wrap">
+      <h1 class="passage-title">
+        Java的内存模型
+      </h1>
+      <div class="passage-meta">
+        <span style="margin-right: 24px;">
+          <i class="fa fa-calendar"></i>2019.12.17 17:07
+        </span>
+        <span id="article-visit-info" style="margin-right: 24px;">
+            <i class="fa fa-eye"></i> 0
+        </span>
+      </div>
+  </div>
+  
+  <article class="passage-article">
+    <p>首先给出定义，<code>Java</code>内存模型（<code>Java Memory Model</code> ,<code>JMM</code>）是一种符合内存模型规范的，屏蔽了各种硬件和操作系统的访问差异的，保证了<code>Java</code>程序在各种平台下对内存的访问都能保证效果一致的机制及规范。</p>
+<p>在弄懂<code>JMM</code>之前，我们要先了解下<code>CPU</code>和内存是如何交互的。</p>
+<h2 id="CPU和高速缓存以及内存-主存-的交互"><a href="#CPU和高速缓存以及内存-主存-的交互" class="headerlink" title="CPU和高速缓存以及内存(主存)的交互"></a>CPU和高速缓存以及内存(主存)的交互</h2><p><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/12/17/9e3867c0-20a9-11ea-8db3-9950b8386e73.png" alt="image.png"><br>从图中可以看出在多<code>CPU</code>的系统中，每个<code>CPU</code>都有都有各自的高速缓存，一般分为<code>L1</code>、<code>L2</code>、<code>L3</code>缓存，因为这些缓存的存在，提供了数据的访问性能，也减轻了数据总线上数据传输的压力，而主内存却只有一个 。<br><code>CPU</code>要读取一个数据时，首先从一级缓存中查找，如果没有找到再从二级缓存中查找，如果还是没有就从三级缓存或内存中查找，每个<code>CPU</code>有且只有一套自己的缓存。</p>
+<p>但是问题也就来了，如果两个<code>CPU</code>同时去操作同一个内存地址，会发生什么？也就是说，如何保证多个处理器运算涉及到同一个内存区域时，多线程场景下的缓存一致性问题？运行时如何保证数据一致性？那就是<strong>内存屏障</strong>(<code>Memory Barrier</code>)。</p>
+<p><strong>内存屏障</strong></p>
+<p><code>CPU</code>中的高速缓存提高了数据访问性能，避免每次都向内存索取，但是不能实时的和内存发生信息交换。在不同<code>CPU</code>执行的不同线程对同一个变量的缓存值可能是不同的，由此就出现了内存屏障，硬件层的内存屏障分为两种：<code>Load Barrier</code> 和 <code>Store Barrier</code>即读屏障和写屏障。</p>
+<p>内存屏障的作用主要有两点：</p>
+<ul>
+<li>阻止屏障两侧指令重排序</li>
+<li>强制把写缓冲区/高速缓存中的脏数据等写回主内存，让缓存中相应的数据失效。</li>
+</ul>
+<p>之所以扯了那么多计算机内存模型，是因为<code>Java</code>内存模型的设定符合了计算机的规范。</p>
+<p>实际上，<code>JMM</code>是<code>JVM</code>的一种规范，定义了<code>JVM</code>的内存模型。<br>它屏蔽了各种硬件和操作系统的访问差异，不像<code>C</code>那样直接访问硬件内存，相对安全很多。<br>它的主要目的是解决由于多线程通过共享内存进行通信时，存在的本地内存数据不一致、编译器会对代码指令重排序、处理器会对代码乱序执行等带来的问题。可以保证并发编程场景中的原子性、可见性和有序性。</p>
+<h2 id="Java内存模型的应用"><a href="#Java内存模型的应用" class="headerlink" title="Java内存模型的应用"></a>Java内存模型的应用</h2><p><code>Java</code>中的几个关键字：<code>volatile</code>、<code>final</code>、<code>synchronized</code>，可以帮助程序员把代码中的并发需求描述给编译器。<code>Java</code>内存模型中定义了它们的行为，以确保正确同步的<code>Java</code>代码在所有的处理器架构上都能正确执行。</p>
+<p><strong>volatile</strong></p>
+<p>在<code>Java</code>中，<code>volatile</code>关键字可以解决上面的问题，<code>Java</code>屏蔽掉这些差异，通过<code>JVM</code>生成内存屏障的指令。</p>
+<p>当我们声明某个变量为<code>volatile</code>修饰时，这个变量就有了线程可见性，<code>volatile</code>会在读写操作前后添加内存屏障。<code>volatile</code>字段的每次读行为都能看到其它线程最后一次对该字段的写行为，通过它就可以避免拿到缓存中陈旧数据。它们必须保证在被写入之后，会被刷新到主内存中，这样就可以立即对其它线程可以见。</p>
+<p><strong>final</strong></p>
+<p>如果一个类包含<code>final</code>字段，且在构造函数中初始化，那么正确的构造一个对象后，<code>final</code>字段被设置后对于其它线程是可见的。</p>
+<p>注意这里所说的正确构造对象，意思是在对象的构造过程中，不允许对该对象进行引用，不然的话，可能存在其它线程在对象还没构造完成时就对该对象进行访问，造成其他的问题。</p>
+<p><strong>synchronized</strong></p>
+<p>对于一个被<code>synchronized</code>修饰的<code>monitor</code>对象，只能够被一个线程持有，意味着一旦有线程进入了同步代码块，那么其它线程就不能进入，直到第一个进入的线程退出代码块。</p>
+<p>在一个线程退出同步块时，线程释放<code>monitor</code>对象，它的作用是把<code>CPU</code>缓存数据（本地缓存数据）刷新到主内存中，从而实现该线程的行为可以被其它线程看到。在其它线程进入到该代码块时，需要获得<code>monitor</code>对象，它在作用是使<code>CPU</code>缓存失效，从而使变量从主内存中重新加载，然后就可以看到之前线程对该变量的修改。</p>
+<p>但从缓存的角度看，这个问题只会影响多处理器的机器，对于单核来说没什么问题，但是它还有一个语义是禁止指令的重排序，对于编译器来说，同步块中的代码不会移动到获取和释放<code>monitor</code>的外面。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>JMM</code>是<code>JVM</code>的一种规范，定义了<code>JVM</code>的内存模型。它的主要目的是解决由于多线程通过共享内存进行通信时，存在的本地内存数据不一致、编译器会对代码指令重排序、处理器会对代码乱序执行等带来的问题。可以保证并发编程场景中的原子性、可见性和有序性。</p>
+<p>在<code>Java</code>中，<code>volatile</code>、<code>final</code>、<code>synchronized</code>这三个关键字是对与内存模型的具体实现。</p>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main" id="table-toc">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#CPU和高速缓存以及内存-主存-的交互"><span class="toc-text">CPU和高速缓存以及内存(主存)的交互</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java内存模型的应用"><span class="toc-text">Java内存模型的应用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: 沐晨</div>
+      
+        <div>
+          原文链接:
+          <a style="word-break: break-word;" href="" target="_blank">https://muchen.fun/passages/java-memory-model/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+    
+      <a style="word-break: break-word;" href="/tags/Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/"><i class="fa fa-tags"></i>Java内存模型</a>
+    
+    </div>
+  
+</div>
+
+<div class="left_prev_arrow_div">
+    <div class="left_prev_arrow arrow_div">
+        <a href="/passages/design-pattern-learn-17/" data-enable="true">
+            <i class="fa fa-angle-left" aria-hidden="true"></i>
+        </a>
+    </div>
+</div>
+<div class="right_prev_arrow_div">
+    <div class="right_prev_arrow arrow_div">
+        <a href="javascript:void(0);" data-enable="false">
+            <i class="fa fa-angle-right" aria-hidden="true"></i>
+        </a>
+    </div>
 </div>
 
     </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
     
     <div class="site-footer-wrapper">
   <footer class="site-footer">
@@ -344,16 +451,16 @@
     <a href="javascript:void(0);" target="_self" data-enable="false">
       <i class="fa fa-arrow-left"></i>
     </a>
-    <a href="javascript:void(0);" target="_self" data-enable="false">
+    <a href="/passages/design-pattern-learn-17/" target="_self" data-enable="true">
       <i class="fa fa-arrow-right"></i>
     </a>
   </div>
   <div class="bottom-bar-right">
-    <a href="javascript:void(0);" target="_self" data-enable="false" id="site-toc-show-btn">
+    <a href="javascript:void(0);" target="_self" data-enable="true" id="site-toc-show-btn">
       <i class="fa fa-bars"></i>
     </a>
     
-      <a href="javascript:void(0);" target="_self" data-enable="false">
+      <a href="#site-comment" target="_self" data-enable="true">
         <i class="fa fa-commenting"></i>
       </a>
     
