@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="MuChen" />
+  
+  
+  <title>设计模式之美学习（十八） | MuChen&#39;s Blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="设计模式(设计原则),设计模式," />
+  
+
+  
+  <meta name="description" content="为何说KISS、YAGNI原则看似简单，却经常被用错？">
+
+  <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/jquery-3.4.1.min.js"></script>
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.15.0/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/Valine-1.3.10.min.js" async></script>
+  
+
+  
+
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9" async></script>
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI","appkey":"5Rl3Rhl9zc8BJNvrPcncKWFy","comment":true,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2019-07-12",
+    passwords: ["0e31be4bd24c14e65633d11633fe616ee3d93b4f31d07726fdbe113fa98a391a", "0d8a148173f09e85d47f658ad7b3f620ddee98fb47470b2a85608a8ebc6896fe", ],
+    is_post: true,
+    lock: true,
+    author: "MuChen",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/sha256.min.js"></script>
+<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/auth.js"></script>
+<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/index.js"></script>
+<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/favicon.ico">
+    <link rel="apple-touch-icon" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/animate-3.7.2.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+
+  <script type="text/javascript">
+      function getCSS() {
+          let dateToday = new Date();
+          let timeNow = dateToday.getTime();
+          dateToday.setTime(timeNow);
+          let theHour = dateToday.getHours();
+          let display = "/css/index-night.css";
+          if (theHour <= 5) {
+			  display = "https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/index-night.css";
+		  } else if (theHour >= 19) {
+              display = "https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/index-night.css";
+		  } else if (theHour > 5) {
+              display = "https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/index.css";
+		  } else if (theHour < 19) {
+              display = "https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/index.css";
+		  }
+          let css = '<';
+          css += 'link rel="stylesheet" href=' + display + ' \/';
+          css += '>';
+          document.write(css);
+      }
+  </script>
+  <script type="text/javascript">
+      window.onload = getCSS();
+  </script>
+
+</head>
+  <body>
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">沐晨</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | Learn To Learn</span>
+    
+  </div>
+  <div class="site-header-right">
+      <div class="search-box">
+          <section>
+              <div id="site_search">
+                  <input type="text" id="local-search-input" results="0"/>
+                  <div id="local-search-result"></div>
+              </div>
+          </section>
+      </div>
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+        <a href="/friends/" target="_self">友链</a>
+      
+        <a href="/about/" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/FancierCoder" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search" style="display: none">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/friends/" target="_self">
+            友链
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/about/" target="_self">
+            关于
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+
+    
+      <span style="margin-right: 24px;">
+        <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/"><i class="fa fa-bookmark"></i>设计模式(设计原则)</a>
+      </span>
+    
+    
+      <span style="margin-right: 24px;">
+         <i class="fa fa-lock"></i>LOCK
+      </span>
+    
+
+  </div>
+  <div class="passage-title-wrap">
+      <h1 class="passage-title">
+        设计模式之美学习（十八）
+      </h1>
+      <div class="passage-meta">
+        <span style="margin-right: 24px;">
+          <i class="fa fa-calendar"></i>2019.12.18 14:42
+        </span>
+        <span id="article-visit-info" style="margin-right: 24px;">
+            <i class="fa fa-eye"></i> 0
+        </span>
+      </div>
+  </div>
+  
+  <article class="passage-article">
+    <h2 id="如何理解“KISS-原则”？"><a href="#如何理解“KISS-原则”？" class="headerlink" title="如何理解“KISS 原则”？"></a>如何理解“KISS 原则”？</h2><p><code>KISS</code> 原则的英文描述有好几个版本，比如下面这几个。</p>
+<ul>
+<li><code>Keep It Simple and Stupid.</code></li>
+<li><code>Keep It Short and Simple.</code></li>
+<li><code>Keep It Simple and Straightforward.</code></li>
+</ul>
+<p>不过，它们要表达的意思其实差不多，翻译成中文就是：尽量保持简单。</p>
+<p><code>KISS</code> 原则算是一个万金油类型的设计原则，可以应用在很多场景中。它不仅经常用来指导软件开发，还经常用来指导更加广泛的系统设计、产品设计等，比如，冰箱、建筑、<code>iPhone</code> 手机的设计等等。</p>
+<p>代码的可读性和可维护性是衡量代码质量非常重要的两个标准。而 <code>KISS</code> 原则就是保持代码可读和可维护的重要手段。代码足够简单，也就意味着很容易读懂，<code>bug</code> 比较难隐藏。即便出现 <code>bug</code>，修复起来也比较简单。</p>
+<p>不过，这条原则只是告诉我们，要保持代码“<code>Simple and Stupid</code>”，但并没有讲到，什么样的代码才是“<code>Simple and Stupid</code>”的，更没有给出特别明确的方法论，来指导如何开发出“<code>Simple and Stupid</code>”的代码。所以，看着非常简单，但不能落地，这就有点像我们常说的“心灵鸡汤”。这里应该叫“技术鸡汤”。</p>
+<h2 id="代码行数越少就越“简单”吗？"><a href="#代码行数越少就越“简单”吗？" class="headerlink" title="代码行数越少就越“简单”吗？"></a>代码行数越少就越“简单”吗？</h2><p>一起看一个例子，下面这三段代码可以实现同样一个功能：检查输入的字符串 <code>ipAddress</code> 是否是合法的 <code>IP</code> 地址。</p>
+<p>一个合法的 <code>IP</code> 地址由四个数字组成，并且通过“.”来进行分割。每组数字的取值范围是 <code>0~255</code>。第一组数字比较特殊，不允许为 <code>0</code>。对比这三段代码，你觉得哪一段代码最符合 <code>KISS</code> 原则呢？如果让你来实现这个功能，你会选择用哪种实现方法呢？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 第一种实现方式: 使用正则表达式</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isValidIpAddressV1</span><span class="params">(String ipAddress)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (StringUtils.isBlank(ipAddress)) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">  String regex = <span class="string">"^(1\\d&#123;2&#125;|2[0-4]\\d|25[0-5]|[1-9]\\d|[1-9])\\."</span></span><br><span class="line">          + <span class="string">"(1\\d&#123;2&#125;|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."</span></span><br><span class="line">          + <span class="string">"(1\\d&#123;2&#125;|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."</span></span><br><span class="line">          + <span class="string">"(1\\d&#123;2&#125;|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)$"</span>;</span><br><span class="line">  <span class="keyword">return</span> ipAddress.matches(regex);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 第二种实现方式: 使用现成的工具类</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isValidIpAddressV2</span><span class="params">(String ipAddress)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (StringUtils.isBlank(ipAddress)) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">  String[] ipUnits = StringUtils.split(ipAddress, <span class="string">'.'</span>);</span><br><span class="line">  <span class="keyword">if</span> (ipUnits.length != <span class="number">4</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; ++i) &#123;</span><br><span class="line">    <span class="keyword">int</span> ipUnitIntValue;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      ipUnitIntValue = Integer.parseInt(ipUnits[i]);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (NumberFormatException e) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (ipUnitIntValue &lt; <span class="number">0</span> || ipUnitIntValue &gt; <span class="number">255</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (i == <span class="number">0</span> &amp;&amp; ipUnitIntValue == <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 第三种实现方式: 不使用任何工具类</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isValidIpAddressV3</span><span class="params">(String ipAddress)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">char</span>[] ipChars = ipAddress.toCharArray();</span><br><span class="line">  <span class="keyword">int</span> length = ipChars.length;</span><br><span class="line">  <span class="keyword">int</span> ipUnitIntValue = -<span class="number">1</span>;</span><br><span class="line">  <span class="keyword">boolean</span> isFirstUnit = <span class="keyword">true</span>;</span><br><span class="line">  <span class="keyword">int</span> unitsCount = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; length; ++i) &#123;</span><br><span class="line">    <span class="keyword">char</span> c = ipChars[i];</span><br><span class="line">    <span class="keyword">if</span> (c == <span class="string">'.'</span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (ipUnitIntValue &lt; <span class="number">0</span> || ipUnitIntValue &gt; <span class="number">255</span>) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">      <span class="keyword">if</span> (isFirstUnit &amp;&amp; ipUnitIntValue == <span class="number">0</span>) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">      <span class="keyword">if</span> (isFirstUnit) isFirstUnit = <span class="keyword">false</span>;</span><br><span class="line">      ipUnitIntValue = -<span class="number">1</span>;</span><br><span class="line">      unitsCount++;</span><br><span class="line">      <span class="keyword">continue</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (c &lt; <span class="string">'0'</span> || c &gt; <span class="string">'9'</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (ipUnitIntValue == -<span class="number">1</span>) ipUnitIntValue = <span class="number">0</span>;</span><br><span class="line">    ipUnitIntValue = ipUnitIntValue * <span class="number">10</span> + (c - <span class="string">'0'</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (ipUnitIntValue &lt; <span class="number">0</span> || ipUnitIntValue &gt; <span class="number">255</span>) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">  <span class="keyword">if</span> (unitsCount != <span class="number">3</span>) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第一种实现方式利用的是正则表达式，只用三行代码就把这个问题搞定了。它的代码行数最少，那是不是就最符合 <code>KISS</code> 原则呢？答案是否定的。虽然代码行数最少，看似最简单，实际上却很复杂。这正是因为它使用了正则表达式。</p>
+<p>一方面，正则表达式本身是比较复杂的，写出完全没有 <code>bug</code> 的正则表达本身就比较有挑战；另一方面，并不是每个程序员都精通正则表达式。对于不怎么懂正则表达式的同事来说，看懂并且维护这段正则表达式是比较困难的。这种实现方式会导致代码的可读性和可维护性变差，所以，从 <code>KISS</code> 原则的设计初衷上来讲，这种实现方式并不符合 <code>KISS</code> 原则。</p>
+<p>第二种实现方式使用了 <code>StringUtils</code> 类、<code>Integer</code> 类提供的一些现成的工具函数，来处理 <code>IP</code> 地址字符串。</p>
+<p>第三种实现方式，不使用任何工具函数，而是通过逐一处理 <code>IP</code> 地址中的字符，来判断是否合法。从代码行数上来说，这两种方式差不多。但是，第三种要比第二种更加有难度，更容易写出 <code>bug</code>。</p>
+<p>从可读性上来说，第二种实现方式的代码逻辑更清晰、更好理解。所以，在这两种实现方式中，第二种实现方式更加“简单”，更加符合 <code>KISS</code> 原则。</p>
+<p>不过，你可能会想，第三种实现方式虽然实现起来稍微有点复杂，但性能要比第二种实现方式高一些啊。从性能的角度来说，选择第三种实现方式是不是更好些呢？</p>
+<p>先解释一下，为什么说第三种实现方式性能会更高一些。一般来说，工具类的功能都比较通用和全面，所以，在代码实现上，需要考虑和处理更多的细节，执行效率就会有所影响。而第三种实现方式，完全是自己操作底层字符，只针对 <code>IP</code> 地址这一种格式的数据输入来做处理，没有太多多余的函数调用和其他不必要的处理逻辑，所以，在执行效率上，这种类似定制化的处理代码方式肯定比通用的工具类要高些。</p>
+<p>不过，尽管第三种实现方式性能更高些，但我还是更倾向于选择第二种实现方法。那是因为第三种实现方式实际上是一种过度优化。除非 <code>isValidIpAddress()</code> 函数是影响系统性能的瓶颈代码，否则，这样优化的投入产出比并不高，增加了代码实现的难度、牺牲了代码的可读性，性能上的提升却并不明显。</p>
+<h2 id="代码逻辑复杂就违背-KISS-原则吗？"><a href="#代码逻辑复杂就违背-KISS-原则吗？" class="headerlink" title="代码逻辑复杂就违背 KISS 原则吗？"></a>代码逻辑复杂就违背 KISS 原则吗？</h2><p>并不是代码行数越少就越“简单”，还要考虑逻辑复杂度、实现难度、代码的可读性等。那如果一段代码的逻辑复杂、实现难度大、可读性也不太好，是不是就一定违背 <code>KISS</code> 原则呢？先看一段代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// KMP algorithm: a, b分别是主串和模式串；n, m分别是主串和模式串的长度。</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">kmp</span><span class="params">(<span class="keyword">char</span>[] a, <span class="keyword">int</span> n, <span class="keyword">char</span>[] b, <span class="keyword">int</span> m)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span>[] next = getNexts(b, m);</span><br><span class="line">  <span class="keyword">int</span> j = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">    <span class="keyword">while</span> (j &gt; <span class="number">0</span> &amp;&amp; a[i] != b[j]) &#123; <span class="comment">// 一直找到a[i]和b[j]</span></span><br><span class="line">      j = next[j - <span class="number">1</span>] + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (a[i] == b[j]) &#123;</span><br><span class="line">      ++j;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (j == m) &#123; <span class="comment">// 找到匹配模式串的了</span></span><br><span class="line">      <span class="keyword">return</span> i - m + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// b表示模式串，m表示模式串的长度</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span>[] getNexts(<span class="keyword">char</span>[] b, <span class="keyword">int</span> m) &#123;</span><br><span class="line">  <span class="keyword">int</span>[] next = <span class="keyword">new</span> <span class="keyword">int</span>[m];</span><br><span class="line">  next[<span class="number">0</span>] = -<span class="number">1</span>;</span><br><span class="line">  <span class="keyword">int</span> k = -<span class="number">1</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; m; ++i) &#123;</span><br><span class="line">    <span class="keyword">while</span> (k != -<span class="number">1</span> &amp;&amp; b[k + <span class="number">1</span>] != b[i]) &#123;</span><br><span class="line">      k = next[k];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (b[k + <span class="number">1</span>] == b[i]) &#123;</span><br><span class="line">      ++k;</span><br><span class="line">    &#125;</span><br><span class="line">    next[i] = k;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> next;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码完全符合我们刚提到的逻辑复杂、实现难度大、可读性差的特点，但它并不违反 <code>KISS</code> 原则。为什么这么说呢？</p>
+<p><code>KMP</code> 算法以快速高效著称。当我们需要处理长文本字符串匹配问题（几百 <code>MB</code> 大小文本内容的匹配），或者字符串匹配是某个产品的核心功能（比如 <code>Vim</code>、<code>Word</code> 等文本编辑器），又或者字符串匹配算法是系统性能瓶颈的时候，我们就应该选择尽可能高效的 <code>KMP</code> 算法。而 <code>KMP</code> 算法本身具有逻辑复杂、实现难度大、可读性差的特点。本身就复杂的问题，用复杂的方法解决，并不违背 <code>KISS</code> 原则。</p>
+<p>不过，平时的项目开发中涉及的字符串匹配问题，大部分都是针对比较小的文本。在这种情况下，直接调用编程语言提供的现成的字符串匹配函数就足够了。如果非得用 <code>KMP</code> 算法、<code>BM</code> 算法来实现字符串匹配，那就真的违背 <code>KISS</code> 原则了。也就是说，同样的代码，在某个业务场景下满足 <code>KISS</code> 原则，换一个应用场景可能就不满足了。</p>
+<h2 id="如何写出满足-KISS-原则的代码？"><a href="#如何写出满足-KISS-原则的代码？" class="headerlink" title="如何写出满足 KISS 原则的代码？"></a>如何写出满足 KISS 原则的代码？</h2><ul>
+<li>不要使用同事可能不懂的技术来实现代码。比如前面例子中的正则表达式，还有一些编程语言中过于高级的语法等。</li>
+<li>不要重复造轮子，要善于使用已经有的工具类库。经验证明，自己去实现这些类库，出 <code>bug</code> 的概率会更高，维护的成本也比较高。</li>
+<li>不要过度优化。不要过度使用一些奇技淫巧（比如，位运算代替算术运算、复杂的条件语句代替 <code>if-else</code>、使用一些过于底层的函数等）来优化代码，牺牲代码的可读性。</li>
+</ul>
+<p>实际上，代码是否足够简单是一个挺主观的评判。同样的代码，有的人觉得简单，有的人觉得不够简单。而往往自己编写的代码，自己都会觉得够简单。所以，评判代码是否简单，还有一个很有效的间接方法，那就是 <code>code review</code>。如果在 <code>code review</code> 的时候，同事对你的代码有很多疑问，那就说明你的代码有可能不够“简单”，需要优化啦。</p>
+<p>我们在做开发的时候，一定不要过度设计，不要觉得简单的东西就没有技术含量。实际上，越是能用简单的方法解决复杂的问题，越能体现一个人的能力。</p>
+<h2 id="YAGNI-跟-KISS-说的是一回事吗？"><a href="#YAGNI-跟-KISS-说的是一回事吗？" class="headerlink" title="YAGNI 跟 KISS 说的是一回事吗？"></a>YAGNI 跟 KISS 说的是一回事吗？</h2><p><code>YAGNI</code> 原则的英文全称是：<code>You Ain’t Gonna Need It</code>。直译就是：你不会需要它。这条原则也算是万金油了。当用在软件开发中的时候，它的意思是：不要去设计当前用不到的功能；不要去编写当前用不到的代码。实际上，这条原则的核心思想就是：不要做过度设计。</p>
+<p>比如，不要在项目中提前引入不需要依赖的开发包。对于 <code>Java</code> 程序员来说，我们经常使用 <code>Maven</code> 或者 <code>Gradle</code> 来管理依赖的类库（<code>library</code>）。有些同事为了避免开发中 <code>library</code> 包缺失而频繁地修改 <code>Maven</code> 或者 <code>Gradle</code> 配置文件，提前往项目里引入大量常用的 <code>library</code> 包。实际上，这样的做法也是违背 <code>YAGNI</code> 原则的。</p>
+<p>从刚刚的分析可以看出，<code>YAGNI</code> 原则跟 <code>KISS</code> 原则并非一回事儿。<code>KISS</code> 原则讲的是“如何做”的问题（尽量保持简单），而 <code>YAGNI</code> 原则说的是“要不要做”的问题（当前不需要的就不要做）。</p>
+<h2 id="重点回顾"><a href="#重点回顾" class="headerlink" title="重点回顾"></a>重点回顾</h2><p><code>KISS</code> 原则是保持代码可读和可维护的重要手段。<code>KISS</code> 原则中的“简单”并不是以代码行数来考量的。代码行数越少并不代表代码越简单，我们还要考虑逻辑复杂度、实现难度、代码的可读性等。而且，本身就复杂的问题，用复杂的方法解决，并不违背 <code>KISS</code> 原则。除此之外，同样的代码，在某个业务场景下满足 <code>KISS</code> 原则，换一个应用场景可能就不满足了。</p>
+<p>如何写出满足 <code>KISS</code> 原则的代码，有下面几条指导原则：</p>
+<ul>
+<li>不要使用同事可能不懂的技术来实现代码；</li>
+<li>不要重复造轮子，要善于使用已经有的工具类库；</li>
+<li>不要过度优化。</li>
+</ul>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ul>
+<li>你怎么看待在开发中重复造轮子这件事情？什么时候要重复造轮子？什么时候应该使用现成的工具类库、开源框架？</li>
+</ul>
+<p>参考：<a href="https://time.geekbang.org/column/article/177448" target="_blank" rel="noopener">理论六：我为何说KISS、YAGNI原则看似简单，却经常被用错？</a></p>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main" id="table-toc">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#如何理解“KISS-原则”？"><span class="toc-text">如何理解“KISS 原则”？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码行数越少就越“简单”吗？"><span class="toc-text">代码行数越少就越“简单”吗？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码逻辑复杂就违背-KISS-原则吗？"><span class="toc-text">代码逻辑复杂就违背 KISS 原则吗？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何写出满足-KISS-原则的代码？"><span class="toc-text">如何写出满足 KISS 原则的代码？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#YAGNI-跟-KISS-说的是一回事吗？"><span class="toc-text">YAGNI 跟 KISS 说的是一回事吗？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重点回顾"><span class="toc-text">重点回顾</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#思考"><span class="toc-text">思考</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: 沐晨</div>
+      
+        <div>
+          原文链接:
+          <a style="word-break: break-word;" href="" target="_blank">https://muchen.fun/passages/design-pattern-learn-18/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+    
+      <a style="word-break: break-word;" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"><i class="fa fa-tags"></i>设计模式</a>
+    
+    </div>
+  
+</div>
+
+<div class="left_prev_arrow_div">
+    <div class="left_prev_arrow arrow_div">
+        <a href="/passages/java-memory-model/" data-enable="true">
+            <i class="fa fa-angle-left" aria-hidden="true"></i>
+        </a>
+    </div>
+</div>
+<div class="right_prev_arrow_div">
+    <div class="right_prev_arrow arrow_div">
+        <a href="/passages/java-memory-structure/" data-enable="true">
+            <i class="fa fa-angle-right" aria-hidden="true"></i>
+        </a>
+    </div>
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      
+        <div class="site-footer-col">
+          <h5 class="site-footer-title">博客推荐</h5>
+          
+            <span class="site-footer-item">
+              <a href="https://muchen.fun/" target="_blank">沐晨</a>
+            </span>
+          
+            <span class="site-footer-item">
+              <a href="http://www.wangdabo.com" target="_blank">王大博</a>
+            </span>
+          
+            <span class="site-footer-item">
+              <a href="https://inrgg.com/" target="_blank">任公公</a>
+            </span>
+          
+        </div>
+      
+        <div class="site-footer-col">
+          <h5 class="site-footer-title">系列教程</h5>
+          
+            <span class="site-footer-item">
+              <a href="https://muchen.fun/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/" target="_blank">数据结构与算法(中级)</a>
+            </span>
+          
+            <span class="site-footer-item">
+              <a href="/tags/设计模式/" target="_self">设计模式</a>
+            </span>
+          
+        </div>
+      
+        <div class="site-footer-col">
+          <h5 class="site-footer-title">找到我</h5>
+          
+            <span class="site-footer-item">
+              <a href="https://live.bilibili.com/10606164" target="_blank">哔哩哔哩</a>
+            </span>
+          
+            <span class="site-footer-item">
+              <a href="https://leetcode-cn.com/u/fancier/" target="_blank">Leetcode</a>
+            </span>
+          
+        </div>
+      
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: lcoder@qq.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://fanciercoder.github.io/" target="_blank">沐晨</a>.
+      All rights reserved.
+    </div>
+    <div class="site-footer-info">
+        <span style="position: relative;">
+        <a style=" position: absolute;
+            white-space: nowrap;" id="colorPrint">
+        </a>
+        </span>
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+        <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+          
+            <div>
+              <img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/wechat.png" alt="WeChat">
+              
+                <p>WeChat</p>
+              
+            </div>
+          
+            <div>
+              <img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/alipay.png" alt="AliPay">
+              
+                <p>AliPay</p>
+              
+            </div>
+          
+            <div>
+              <img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/BitCoin.jpg" alt="BitCoin">
+              
+                <p>BitCoin</p>
+              
+            </div>
+          
+        </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/passages/java-memory-structure/" target="_self" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/java-memory-model/" target="_self" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" target="_self" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" target="_self" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" target="_self" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+      <a href="javascript:void(0);" target="_self" id="site-reward">
+        <i class="fa fa-thumbs-up"></i>
+      </a>
+    
+    <a href="javascript:void(0);" target="_self" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-144841374-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-144841374-1');
+  </script>
+
+
+
+
+  <script async>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+
+
+
+
+ <script>
+ //const element =  document.querySelector('.home-article-wrapper')
+ //element.classList.add('animated', 'bounceInLeft')
+ function testAnim(x) {
+     $('.home-article-wrapper').removeClass('animate').addClass(x + ' animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+       $(this).removeClass('animate');
+     });
+   };
+
+   testAnim('flipInX');
+ </script>
+
+    
+      <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/footer.js"></script>
+    
+  </body>
+</html>
