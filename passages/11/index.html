@@ -56,10 +56,12 @@
   };
 </script>
 
-  <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/sha256.min.js"></script>
+  
+<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/sha256.min.js"></script>
 <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/auth.js"></script>
 <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/index.js"></script>
 <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/qrcode.min.js"></script>
+
 
   
     <link rel="icon" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/favicon.ico">
@@ -70,7 +72,9 @@
 
   <link href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/animate-3.7.2.min.css" rel="stylesheet">
 
-  <link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+  
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
 
   
 
@@ -100,7 +104,7 @@
       window.onload = getCSS();
   </script>
 
-</head>
+<meta name="generator" content="Hexo 4.2.0"></head>
   <body>
     <div class="preloader">
         <div class="lds-ripple">
@@ -264,7 +268,7 @@
 <p>在讲复杂度分析的时候讲过，算法的性能可以通过时间复杂度来分析，但是，这种复杂度分析是比较偏理论的，如果深究的话，实际上时间复杂度并不等于代码实际的运行时间。</p>
 <p>时间复杂度代表的是一个增长趋势，如果画成增长曲线图，你会发现 $O(n^2)$ 比 $O(nlogn)$ 要陡峭，也就是说增长趋势要更猛一些。但是，前面讲过，在大 $O$ 复杂度表示法中，会省略低阶、系数和常数，也就是说，$O(nlogn)$ 在没有省略低阶、系数、常数之前可能是 $O(knlogn + c)$，而且 <code>k</code> 和 <code>c</code> 有可能还是一个比较大的数。</p>
 <p>假设 <code>k=1000</code>，<code>c=200</code>，当对小规模数据（比如 <code>n=100</code>）排序时，$n^2$的值实际上比 $knlogn+c$ 还要小。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">knlogn+c = 1000 * 100 * log100 + 200 远大于 10000</span><br><span class="line"></span><br><span class="line">n^2 = 100*100 = 10000</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">knlogn+c &#x3D; 1000 * 100 * log100 + 200 远大于 10000</span><br><span class="line"></span><br><span class="line">n^2 &#x3D; 100*100 &#x3D; 10000</span><br></pre></td></tr></table></figure>
 <p>所以，对于小规模数据的排序，$O(n^2)$ 的排序算法并不一定比 $O(nlogn)$ 排序算法执行的时间长。对于小数据量的排序，选择比较简单、不需要递归的插入排序算法。</p>
 <p>还记得之前讲到的哨兵来简化代码，提高执行效率吗？在 <code>qsort()</code> 插入排序的算法实现中，也利用了这种编程技巧。虽然哨兵可能只是少做一次判断，但是毕竟排序函数是非常常用、非常基础的函数，性能的优化要做到极致。</p>
 <p><code>C</code> 语言的 <code>qsort()</code> 已经分析完了，你有没有觉得其实也不是很难？基本上都是用了前面的知识点，有了前面的知识积累，看一些底层的类库的时候是不是也更容易了呢？</p>
@@ -563,7 +567,9 @@
  </script>
 
     
-      <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/footer.js"></script>
+      
+<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/footer.js"></script>
+
     
   </body>
 </html>

@@ -56,10 +56,12 @@
   };
 </script>
 
-  <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/sha256.min.js"></script>
+  
+<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/sha256.min.js"></script>
 <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/auth.js"></script>
 <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/index.js"></script>
 <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/qrcode.min.js"></script>
+
 
   
     <link rel="icon" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/favicon.ico">
@@ -70,7 +72,9 @@
 
   <link href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/animate-3.7.2.min.css" rel="stylesheet">
 
-  <link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+  
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
 
   
 
@@ -100,7 +104,7 @@
       window.onload = getCSS();
   </script>
 
-</head>
+<meta name="generator" content="Hexo 4.2.0"></head>
   <body>
     <div class="preloader">
         <div class="lds-ripple">
@@ -245,7 +249,7 @@
 <p>第一是<strong>线性表</strong>（<code>Linear List</code>）。顾名思义，线性表就是数据排成像一条线一样的结构。每个线性表上的数据最多只有前和后两个方向。其实除了数组，链表、队列、栈等也是线性表结构。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/02/09337bf0-cd44-11e9-949b-39df729e553b.png" alt="image.png"><br>而与它相对立的概念是<strong>非线性表</strong>，比如二叉树、堆、图等。之所以叫非线性，是因为，在非线性表中，数据之间并不是简单的前后关系。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/02/124961a0-cd44-11e9-949b-39df729e553b.png" alt="image.png"><br>第二个是<strong>连续的内存空间和相同类型的数据</strong>。正是因为这两个限制，它才有了一个堪称“杀手锏”的特性：“随机访问”。但有利就有弊，这两个限制也让数组的很多操作变得非常低效，比如要想在数组中删除、插入一个数据，为了保证连续性，就需要做大量的数据搬移工作。</p>
 <p>说到数据的访问，那你知道数组是如何实现根据下标随机访问数组元素的吗？</p>
 <p>拿一个长度为 <code>10</code> 的 <code>int</code> 类型的数组 <code>int[] a = new int[10]</code> 来举例。下面的这个图中，计算机给数组 <code>a[10]</code>分配了一块连续内存空间 <code>1000～1039</code>，其中，内存块的首地址为 <code>base_address = 1000</code>。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/02/4000df60-cd44-11e9-949b-39df729e553b.png" alt="image.png"><br>计算机会给每个内存单元分配一个地址，计算机通过地址来访问内存中的数据。当计算机需要随机访问数组中的某个元素时，它会首先通过下面的寻址公式，计算出该元素存储的内存地址：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a[i]_address = base_address + i * data_type_size</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a[i]_address &#x3D; base_address + i * data_type_size</span><br></pre></td></tr></table></figure>
 <p>其中 <code>data_type_size</code> 表示数组中每个元素的大小。上面举的这个例子里，数组中存储的是 <code>int</code> 类型数据，所以 <code>data_type_size</code> 就为 4 个字节。这个公式非常简单，就不多做解释了。</p>
 <p>这里要特别纠正一个“错误”。在面试的时候，常常会问数组和链表的区别，很多人都回答说，“链表适合插入、删除，时间复杂度 $O(1)$；数组适合查找，查找时间复杂度为 $O(1)$”。</p>
 <p>实际上，这种表述是不准确的。数组是适合查找操作，但是查找的时间复杂度并不为 $O(1)$。即便是排好序的数组，你用二分查找，时间复杂度也是 $O(logn)$。所以，正确的表述应该是，数组支持随机访问，根据下标随机访问的时间复杂度为 $O(1)$。</p>
@@ -295,9 +299,9 @@
 <li>为什么大多数编程语言中，数组要从 <code>0</code> 开始编号，而不是从 <code>1</code> 开始呢？</li>
 </ul>
 <p>从数组存储的内存模型上来看，“下标”最确切的定义应该是“偏移（<code>offset</code>）”。前面也讲到，如果用 <code>a</code> 来表示数组的首地址，<code>a[0]</code> 就是偏移为 <code>0</code> 的位置，也就是首地址，<code>a[k]</code> 就表示偏移 <code>k</code> 个 <code>type_size</code> 的位置，所以计算 <code>a[k]</code> 的内存地址只需要用这个公式：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a[k]_address = base_address + k * type_size</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a[k]_address &#x3D; base_address + k * type_size</span><br></pre></td></tr></table></figure>
 <p>但是，如果数组从 <code>1</code> 开始计数，那计算数组元素 <code>a[k]</code> 的内存地址就会变为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a[k]_address = base_address + (k-1)*type_size</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a[k]_address &#x3D; base_address + (k-1)*type_size</span><br></pre></td></tr></table></figure>
 <p>对比两个公式，不难发现，从 <code>1</code> 开始编号，每次随机访问数组元素都多了一次减法运算，对于 <code>CPU</code> 来说，就是多了一次减法指令。</p>
 <p>数组作为非常基础的数据结构，通过下标随机访问数组元素又是其非常基础的编程操作，效率的优化就要尽可能做到极致。所以为了减少一次减法操作，数组选择了从 <code>0</code> 开始编号，而不是从 <code>1</code> 开始。</p>
 <p>不过我认为，上面解释得再多其实都算不上压倒性的证明，说数组起始编号非 <code>0</code> 开始不可。所以最主要的原因可能是历史原因。</p>
@@ -596,7 +600,9 @@
  </script>
 
     
-      <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/footer.js"></script>
+      
+<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/footer.js"></script>
+
     
   </body>
 </html>

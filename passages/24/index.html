@@ -56,10 +56,12 @@
   };
 </script>
 
-  <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/sha256.min.js"></script>
+  
+<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/sha256.min.js"></script>
 <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/auth.js"></script>
 <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/index.js"></script>
 <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/qrcode.min.js"></script>
+
 
   
     <link rel="icon" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/favicon.ico">
@@ -70,7 +72,9 @@
 
   <link href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/animate-3.7.2.min.css" rel="stylesheet">
 
-  <link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+  
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
 
   
 
@@ -100,7 +104,7 @@
       window.onload = getCSS();
   </script>
 
-</head>
+<meta name="generator" content="Hexo 4.2.0"></head>
   <body>
     <div class="preloader">
         <div class="lds-ripple">
@@ -265,7 +269,7 @@
 <p>如何编程打印一组数据的所有排列呢？这里就可以用递归来实现。</p>
 <p>如果确定了最后一位数据，那就变成了求解剩下 $n−1$ 个数据的排列问题。而最后一位数据可以是 $n$ 个数据中的任意一个，因此它的取值就有 $n$ 种情况。所以，“$n$ 个数据的排列”问题，就可以分解成 $n$ 个“$n−1$ 个数据的排列”的子问题。</p>
 <p>如果把它写成递推公式，就是下面这个样子：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">假设数组中存储的是 1，2， 3...n。</span><br><span class="line">        </span><br><span class="line">f(1,2,...n) = &#123;最后一位是 1, f(n-1)&#125; + &#123;最后一位是 2, f(n-1)&#125; +...+&#123;最后一位是 n, f(n-1)&#125;。</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">假设数组中存储的是 1，2， 3...n。</span><br><span class="line">        </span><br><span class="line">f(1,2,...n) &#x3D; &#123;最后一位是 1, f(n-1)&#125; + &#123;最后一位是 2, f(n-1)&#125; +...+&#123;最后一位是 n, f(n-1)&#125;。</span><br></pre></td></tr></table></figure>
 <p>如果把递推公式改写成代码，就是下面这个样子：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 调用方式：</span></span><br><span class="line"><span class="comment">// int[]a = a=&#123;1, 2, 3, 4&#125;; printPermutations(a, 4, 4);</span></span><br><span class="line"><span class="comment">// k 表示要处理的子数组的数据个数</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printPermutations</span><span class="params">(<span class="keyword">int</span>[] data, <span class="keyword">int</span> n, <span class="keyword">int</span> k)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (k == <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">      System.out.print(data[i] + <span class="string">" "</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; k; ++i) &#123;</span><br><span class="line">    <span class="keyword">int</span> tmp = data[i];</span><br><span class="line">    data[i] = data[k-<span class="number">1</span>];</span><br><span class="line">    data[k-<span class="number">1</span>] = tmp;</span><br><span class="line"></span><br><span class="line">    printPermutations(data, n, k - <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    tmp = data[i];</span><br><span class="line">    data[i] = data[k-<span class="number">1</span>];</span><br><span class="line">    data[k-<span class="number">1</span>] = tmp;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>如何借助递归树，分析出这个代码的时间复杂度。<br>首先，还是画出递归树。不过，现在的递归树已经不是标准的二叉树了。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/c1f062d0-ddb0-11e9-9c38-2bb533c1f573.png" alt="image.png"><br>第一层分解有 $n$ 次交换操作，第二层有 $n$ 个节点，每个节点分解需要 $n−1$ 次交换，所以第二层总的交换次数是 $n∗(n−1)$。第三层有 $n∗(n−1)$ 个节点，每个节点分解需要 $n−2$ 次交换，所以第三层总的交换次数是 $n∗(n−1)∗(n−2)$。</p>
@@ -565,7 +569,9 @@
  </script>
 
     
-      <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/footer.js"></script>
+      
+<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/footer.js"></script>
+
     
   </body>
 </html>

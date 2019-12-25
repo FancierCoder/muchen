@@ -56,10 +56,12 @@
   };
 </script>
 
-  <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/sha256.min.js"></script>
+  
+<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/sha256.min.js"></script>
 <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/auth.js"></script>
 <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/index.js"></script>
 <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/qrcode.min.js"></script>
+
 
   
     <link rel="icon" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/favicon.ico">
@@ -70,7 +72,9 @@
 
   <link href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/animate-3.7.2.min.css" rel="stylesheet">
 
-  <link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+  
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
 
   
 
@@ -100,7 +104,7 @@
       window.onload = getCSS();
   </script>
 
-</head>
+<meta name="generator" content="Hexo 4.2.0"></head>
   <body>
     <div class="preloader">
         <div class="lds-ripple">
@@ -276,7 +280,7 @@
 <p>所谓双重散列，意思就是不仅要使用一个散列函数。使用一组散列函数 <code>hash1(key)</code>，<code>hash2(key)</code>，<code>hash3(key)</code>……先用第一个散列函数，如果计算得到的存储位置已经被占用，再用第二个散列函数，依次类推，直到找到空闲的存储位置。</p>
 <p>不管采用哪种探测方法，当散列表中空闲位置不多的时候，散列冲突的概率就会大大提高。为了尽可能保证散列表的操作效率，一般情况下，会尽可能保证散列表中有一定比例的空闲槽位。用<strong>装载因子</strong>（<code>load factor</code>）来表示空位的多少。</p>
 <p>装载因子的计算公式是：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">散列表的装载因子 = 填入表中的元素个数 / 散列表的长度</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">散列表的装载因子 &#x3D; 填入表中的元素个数 &#x2F; 散列表的长度</span><br></pre></td></tr></table></figure>
 <p>装载因子越大，说明空闲位置越少，冲突越多，散列表的性能会下降。</p>
 <h3 id="链表法"><a href="#链表法" class="headerlink" title="链表法"></a>链表法</h3><p>链表法是一种更加常用的散列冲突解决办法，相比开放寻址法，它要简单很多。来看这个图，在散列表中，每个“桶（<code>bucket</code>）”或者“槽（<code>slot</code>）”会对应一条链表，所有散列值相同的元素都放到相同槽位对应的链表中。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/19/879f05d0-da9c-11e9-aeb5-dd57c0620d4c.png" alt="image.png"><br>当插入的时候，只需要通过散列函数计算出对应的散列槽位，将其插入到对应链表中即可，所以插入的时间复杂度是 $O(1)$。当查找、删除一个元素时，同样通过散列函数计算出对应的槽，然后遍历链表查找或者删除。那查找或删除操作的时间复杂度是多少呢？</p>
 <p>实际上，这两个操作的时间复杂度跟链表的长度 <code>k</code> 成正比，也就是 $O(k)$。对于散列比较均匀的散列函数来说，理论上讲，<code>k=n/m</code>，其中 <code>n</code> 表示散列中数据的个数，<code>m</code> 表示散列表中“槽”的个数。</p>
@@ -590,7 +594,9 @@
  </script>
 
     
-      <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/footer.js"></script>
+      
+<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/footer.js"></script>
+
     
   </body>
 </html>

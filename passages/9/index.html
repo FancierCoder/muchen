@@ -56,10 +56,12 @@
   };
 </script>
 
-  <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/sha256.min.js"></script>
+  
+<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/sha256.min.js"></script>
 <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/auth.js"></script>
 <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/index.js"></script>
 <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/qrcode.min.js"></script>
+
 
   
     <link rel="icon" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/favicon.ico">
@@ -70,7 +72,9 @@
 
   <link href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/animate-3.7.2.min.css" rel="stylesheet">
 
-  <link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+  
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
 
   
 
@@ -100,7 +104,7 @@
       window.onload = getCSS();
   </script>
 
-</head>
+<meta name="generator" content="Hexo 4.2.0"></head>
   <body>
     <div class="preloader">
         <div class="lds-ripple">
@@ -242,7 +246,7 @@
 <p>从刚才的描述，你有没有感觉到，分治思想跟前面讲的递归思想很像。是的，分治算法一般都是用递归来实现的。<strong>分治是一种解决问题的处理思想，递归是一种编程技巧</strong>，这两者并不冲突。</p>
 <p>前面通过举例对归并有了一个感性的认识，归并排序用的是分治思想，可以用递归来实现。现在就来看看如何用递归代码来实现归并排序。</p>
 <p>递归代码的编写技巧你还记得吗？写递归代码的技巧就是，分析得出递推公式，然后找到终止条件，最后将递推公式翻译成递归代码。所以，要想写出归并排序的代码，先写出归并排序的递推公式。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">递推公式：</span><br><span class="line">merge_sort(p…r) = merge(merge_sort(p…q), merge_sort(q+1…r))</span><br><span class="line"></span><br><span class="line">终止条件：</span><br><span class="line">p &gt;= r 不用再继续分解</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">递推公式：</span><br><span class="line">merge_sort(p…r) &#x3D; merge(merge_sort(p…q), merge_sort(q+1…r))</span><br><span class="line"></span><br><span class="line">终止条件：</span><br><span class="line">p &gt;&#x3D; r 不用再继续分解</span><br></pre></td></tr></table></figure>
 <p>解释一下这个递推公式。</p>
 <p><code>merge_sort(p…r)</code> 表示，给下标从 <code>p</code> 到 <code>r</code> 之间的数组排序。将这个排序问题转化为了两个子问题，<code>merge_sort(p…q)</code> 和 <code>merge_sort(q+1…r)</code>，其中下标 <code>q</code> 等于 <code>p</code> 和 <code>r</code> 的中间位置，也就是 <code>(p+r)/2</code>。当下标从 <code>p</code> 到 <code>q</code> 和从 <code>q+1</code> 到 <code>r</code> 这两个子数组都排好序之后，再将两个有序的子数组合并在一起，这样下标从 <code>p</code> 到 <code>r</code> 之间的数据就也排好序了。</p>
 <p>有了递推公式，转化成代码就简单多了。为了阅读方便，这里只给出伪代码，你可以翻译成你熟悉的编程语言。</p>
@@ -261,14 +265,14 @@
 <p>归并排序涉及递归，时间复杂度的分析稍微有点复杂。正好借此机会来学习一下，如何分析递归代码的时间复杂度。</p>
 <p>在递归那一节讲过，递归的适用场景是，一个问题 <code>a</code> 可以分解为多个子问题 <code>b</code>、<code>c</code>，那求解问题 <code>a</code> 就可以分解为求解问题 <code>b</code>、<code>c</code>。问题 <code>b</code>、<code>c</code> 解决之后，再把 <code>b</code>、<code>c</code> 的结果合并成 <code>a</code> 的结果。</p>
 <p>如果定义求解问题 <code>a</code> 的时间是 $T(a)$，求解问题 <code>b</code>、<code>c</code> 的时间分别是 $T(b)$ 和 $T(c)$，那就可以得到这样的递推关系式：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">T(a) = T(b) + T(c) + K</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">T(a) &#x3D; T(b) + T(c) + K</span><br></pre></td></tr></table></figure>
 <p>其中 <code>K</code> 等于将两个子问题 <code>b</code>、<code>c</code> 的结果合并成问题 <code>a</code> 的结果所消耗的时间。</p>
 <p>从刚刚的分析，可以得到一个重要的结论：<strong>不仅递归求解的问题可以写成递推公式，递归代码的时间复杂度也可以写成递推公式。</strong></p>
 <p>套用这个公式，来分析一下归并排序的时间复杂度。</p>
 <p>假设对 <code>n</code> 个元素进行归并排序需要的时间是 $T(n)$，那分解成两个子数组排序的时间都是 $T(\frac n 2)$。<code>merge()</code> 函数合并两个有序子数组的时间复杂度是 $O(n)$。所以，套用前面的公式，归并排序的时间复杂度的计算公式就是：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">T(1) = C；   n=1 时，只需要常量级的执行时间，所以表示为 C。</span><br><span class="line">T(n) = 2*T(n/2) + n； n&gt;1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">T(1) &#x3D; C；   n&#x3D;1 时，只需要常量级的执行时间，所以表示为 C。</span><br><span class="line">T(n) &#x3D; 2*T(n&#x2F;2) + n； n&gt;1</span><br></pre></td></tr></table></figure>
 <p>通过这个公式，如何来求解 $T(n)$ 呢？还不够直观？那再进一步分解一下计算过程。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">T(n) = 2*T(n/2) + n</span><br><span class="line">     = 2*(2*T(n/4) + n/2) + n = 4*T(n/4) + 2*n</span><br><span class="line">     = 4*(2*T(n/8) + n/4) + 2*n = 8*T(n/8) + 3*n</span><br><span class="line">     = 8*(2*T(n/16) + n/8) + 3*n = 16*T(n/16) + 4*n</span><br><span class="line">     ......</span><br><span class="line">     = 2^k * T(n/2^k) + k * n</span><br><span class="line">     ......</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">T(n) &#x3D; 2*T(n&#x2F;2) + n</span><br><span class="line">     &#x3D; 2*(2*T(n&#x2F;4) + n&#x2F;2) + n &#x3D; 4*T(n&#x2F;4) + 2*n</span><br><span class="line">     &#x3D; 4*(2*T(n&#x2F;8) + n&#x2F;4) + 2*n &#x3D; 8*T(n&#x2F;8) + 3*n</span><br><span class="line">     &#x3D; 8*(2*T(n&#x2F;16) + n&#x2F;8) + 3*n &#x3D; 16*T(n&#x2F;16) + 4*n</span><br><span class="line">     ......</span><br><span class="line">     &#x3D; 2^k * T(n&#x2F;2^k) + k * n</span><br><span class="line">     ......</span><br></pre></td></tr></table></figure>
 <p>通过这样一步一步分解推导，可以得到 $T(n) = 2^kT(\frac n {2^k}) + kn$。当 $T(\frac n {2^k})=T(1)$ 时，也就是 $\frac n {2^k}=1$，可以得到 $k=log_2n$ 。将 <code>k</code> 值代入上面的公式，得到 $T(n)=Cn+nlog_2n$ 。如果用大 $O$ 标记法来表示的话，$T(n)$ 就等于 $O(nlogn)$。所以归并排序的时间复杂度是 $O(nlogn)$。</p>
 <p>从上面的原理分析和伪代码可以看出，归并排序的执行效率与要排序的原始数组的有序程度无关，所以其时间复杂度是非常稳定的，不管是最好情况、最坏情况，还是平均情况，时间复杂度都是 $O(nlogn)$。</p>
 <p><strong>第三，归并排序的空间复杂度是多少？</strong></p>
@@ -280,7 +284,7 @@
 <p>快排的思想是这样的：如果要排序数组中下标从 <code>p</code> 到 <code>r</code> 之间的一组数据，选择 <code>p</code> 到 <code>r</code> 之间的任意一个数据作为 <code>pivot</code>（分区点）。</p>
 <p>遍历 <code>p</code> 到 <code>r</code> 之间的数据，将小于 <code>pivot</code> 的放到左边，将大于 <code>pivot</code> 的放到右边，将 <code>pivot</code> 放到中间。经过这一步骤之后，数组 <code>p</code> 到 <code>r</code> 之间的数据就被分成了三个部分，前面 <code>p</code> 到 <code>q-1</code> 之间都是小于 <code>pivot</code> 的，中间是 <code>pivot</code>，后面的 <code>q+1</code> 到 <code>r</code> 之间是大于 <code>pivot</code> 的。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/11/cc2317a0-d443-11e9-8ff2-7340a5031e46.png" alt="image.png"><br>根据分治、递归的处理思想，可以用递归排序下标从 <code>p</code> 到 <code>q-1</code> 之间的数据和下标从 <code>q+1</code> 到 <code>r</code> 之间的数据，直到区间缩小为 <code>1</code>，就说明所有的数据都有序了。</p>
 <p>如果用递推公式来将上面的过程写出来的话，就是这样：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">递推公式：</span><br><span class="line">quick_sort(p…r) = quick_sort(p…q-1) + quick_sort(q+1, r)</span><br><span class="line"></span><br><span class="line">终止条件：</span><br><span class="line">p &gt;= r</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">递推公式：</span><br><span class="line">quick_sort(p…r) &#x3D; quick_sort(p…q-1) + quick_sort(q+1, r)</span><br><span class="line"></span><br><span class="line">终止条件：</span><br><span class="line">p &gt;&#x3D; r</span><br></pre></td></tr></table></figure>
 <p>将递推公式转化成递归代码。跟归并排序一样，还是用伪代码来实现，你可以翻译成你熟悉的任何语言。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 快速排序，A 是数组，n 表示数组的大小</span></span><br><span class="line">quick_sort(A, n) &#123;</span><br><span class="line">  quick_sort_c(A, <span class="number">0</span>, n<span class="number">-1</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 快速排序递归函数，p,r 为下标</span></span><br><span class="line">quick_sort_c(A, p, r) &#123;</span><br><span class="line">  <span class="keyword">if</span> p &gt;= r then <span class="keyword">return</span></span><br><span class="line">  </span><br><span class="line">  q = partition(A, p, r) <span class="comment">// 获取分区点</span></span><br><span class="line">  quick_sort_c(A, p, q<span class="number">-1</span>)</span><br><span class="line">  quick_sort_c(A, q+<span class="number">1</span>, r)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>归并排序中有一个 <code>merge()</code> 合并函数，这里有一个 <code>partition()</code> 分区函数。<code>partition()</code> 分区函数实际上前面已经讲过了，就是随机选择一个元素作为 <code>pivot</code>（一般情况下，可以选择 <code>p</code> 到 <code>r</code> 区间的最后一个元素），然后对 <code>A[p…r]</code> 分区，函数返回 <code>pivot</code> 的下标。</p>
@@ -293,12 +297,12 @@
 <p>到此，快速排序的原理应该也掌握了。现在，再来看另外一个问题：快排和归并用的都是分治思想，递推公式和递归代码也非常相似，那它们的区别在哪里呢？<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/11/e0bf5150-d444-11e9-8ff2-7340a5031e46.png" alt="image.png"><br>可以发现，归并排序的处理过程是<strong>由下到上</strong>的，先处理子问题，然后再合并。而快排正好相反，它的处理过程是<strong>由上到下</strong>的，先分区，然后再处理子问题。归并排序虽然是稳定的、时间复杂度为 $O(nlogn)$ 的排序算法，但是它是非原地排序算法。前面讲过，归并之所以是非原地排序算法，主要原因是合并函数无法在原地执行。快速排序通过设计巧妙的原地分区函数，可以实现原地排序，解决了归并排序占用太多内存的问题。</p>
 <h2 id="快速排序的性能分析"><a href="#快速排序的性能分析" class="headerlink" title="快速排序的性能分析"></a>快速排序的性能分析</h2><p>现在来分析一下快速排序的性能。在讲解快排的实现原理的时候，已经分析了稳定性和空间复杂度。快排是一种原地、不稳定的排序算法。现在，集中精力来看快排的时间复杂度。</p>
 <p>快排也是用递归来实现的。对于递归代码的时间复杂度，前面总结的公式，这里也还是适用的。如果每次分区操作，都能正好把数组分成大小接近相等的两个小区间，那快排的时间复杂度递推求解公式跟归并是相同的。所以，快排的时间复杂度也是 $O(nlogn)$。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">T(1) = C；   n=1 时，只需要常量级的执行时间，所以表示为 C。</span><br><span class="line">T(n) = 2*T(n/2) + n； n&gt;1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">T(1) &#x3D; C；   n&#x3D;1 时，只需要常量级的执行时间，所以表示为 C。</span><br><span class="line">T(n) &#x3D; 2*T(n&#x2F;2) + n； n&gt;1</span><br></pre></td></tr></table></figure>
 <p>但是，公式成立的前提是每次分区操作，选择的 <code>pivot</code> 都很合适，正好能将大区间对等地一分为二。但实际上这种情况是很难实现的。</p>
 <p>举一个比较极端的例子。如果数组中的数据原来已经是有序的了，比如 <code>1，3，5，6，8</code>。如果每次选择最后一个元素作为 <code>pivot</code>，那每次分区得到的两个区间都是不均等的。需要进行大约 <code>n</code> 次分区操作，才能完成快排的整个过程。每次分区平均要扫描大约 <code>n/2</code> 个元素，这种情况下，快排的时间复杂度就从 $O(nlogn)$ 退化成了 $O(n^2)$。</p>
 <p>刚刚讲了两个极端情况下的时间复杂度，一个是分区极其均衡，一个是分区极其不均衡。它们分别对应快排的最好情况时间复杂度和最坏情况时间复杂度。那快排的平均情况时间复杂度是多少呢？</p>
 <p>假设每次分区操作都将区间分成大小为 <code>9:1</code> 的两个小区间。继续套用递归时间复杂度的递推公式，就会变成这样：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">T(1) = C；   n=1 时，只需要常量级的执行时间，所以表示为 C。</span><br><span class="line"></span><br><span class="line">T(n) = T(n/10) + T(9*n/10) + n； n&gt;1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">T(1) &#x3D; C；   n&#x3D;1 时，只需要常量级的执行时间，所以表示为 C。</span><br><span class="line"></span><br><span class="line">T(n) &#x3D; T(n&#x2F;10) + T(9*n&#x2F;10) + n； n&gt;1</span><br></pre></td></tr></table></figure>
 <p>这个公式的递推求解的过程非常复杂，虽然可以求解，但不推荐用这种方法。实际上，递归的时间复杂度的求解方法除了递推公式之外，还有递归树，这里暂时不说。这里直接给你结论：$T(n)$ 在大部分情况下的时间复杂度都可以做到 $O(nlogn)$，只有在极端情况下，才会退化到 $O(n^2)$。而且，也有很多方法将这个概率降到很低，如何来做？后面再讲。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>归并排序和快速排序是两种稍微复杂的排序算法，它们用的都是分治的思想，代码都通过递归来实现，过程非常相似。理解归并排序的重点是理解递推公式和 <code>merge()</code> 合并函数。同理，理解快排的重点也是理解递推公式，还有 <code>partition()</code> 分区函数。</p>
 <p>归并排序算法是一种在任何情况下时间复杂度都比较稳定的排序算法，这也使它存在致命的缺点，即归并排序不是原地排序算法，空间复杂度比较高，是 $O(n)$。正因为此，它也没有快排应用广泛。</p>
@@ -614,7 +618,9 @@
  </script>
 
     
-      <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/footer.js"></script>
+      
+<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/footer.js"></script>
+
     
   </body>
 </html>

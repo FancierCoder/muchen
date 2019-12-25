@@ -56,10 +56,12 @@
   };
 </script>
 
-  <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/sha256.min.js"></script>
+  
+<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/sha256.min.js"></script>
 <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/auth.js"></script>
 <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/index.js"></script>
 <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/qrcode.min.js"></script>
+
 
   
     <link rel="icon" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/favicon.ico">
@@ -70,7 +72,9 @@
 
   <link href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/animate-3.7.2.min.css" rel="stylesheet">
 
-  <link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+  
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
 
   
 
@@ -100,7 +104,7 @@
       window.onload = getCSS();
   </script>
 
-</head>
+<meta name="generator" content="Hexo 4.2.0"></head>
   <body>
     <div class="preloader">
         <div class="lds-ripple">
@@ -253,9 +257,9 @@
 </ul>
 <p>这些定义和要求都比较理论，可能还是不好理解，拿 <code>MD5</code> 这种哈希算法来具体说明一下。</p>
 <p>分别对“今天我来讲哈希算法”和“jiajia”这两个文本，计算 <code>MD5</code> 哈希值，得到两串看起来毫无规律的字符串（<code>MD5</code> 的哈希值是 <code>128</code> 位的 <code>Bit</code> 长度，为了方便表示，把它们转化成了 <code>16</code> 进制编码）。可以看出来，无论要哈希的文本有多长、多短，通过 <code>MD5</code> 哈希之后，得到的哈希值的长度都是相同的，而且得到的哈希值看起来像一堆随机数，完全没有规律。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">MD5(&quot; 今天我来讲哈希算法 &quot;) = bb4767201ad42c74e650c1b6c03d78fa</span><br><span class="line">MD5(&quot;jiajia&quot;) = cd611a31ea969b908932d44d126d195b</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">MD5(&quot; 今天我来讲哈希算法 &quot;) &#x3D; bb4767201ad42c74e650c1b6c03d78fa</span><br><span class="line">MD5(&quot;jiajia&quot;) &#x3D; cd611a31ea969b908932d44d126d195b</span><br></pre></td></tr></table></figure>
 <p>再来看两个非常相似的文本，“我今天讲哈希算法！”和“我今天讲哈希算法”。这两个文本只有一个感叹号的区别。如果用 <code>MD5</code> 哈希算法分别计算它们的哈希值，你会发现，尽管只有一字之差，得到的哈希值也是完全不同的。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">MD5(&quot; 我今天讲哈希算法！&quot;) = 425f0d5a917188d2c3c3dc85b5e4f2cb</span><br><span class="line">MD5(&quot; 我今天讲哈希算法 &quot;) = a1fb91ac128e6aa37fe42c663971ac3d</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">MD5(&quot; 我今天讲哈希算法！&quot;) &#x3D; 425f0d5a917188d2c3c3dc85b5e4f2cb</span><br><span class="line">MD5(&quot; 我今天讲哈希算法 &quot;) &#x3D; a1fb91ac128e6aa37fe42c663971ac3d</span><br></pre></td></tr></table></figure>
 <p>在前面也说了，通过哈希算法得到的哈希值，很难反向推导出原始数据。比如上面的例子中，就很难通过哈希值 <code>a1fb91ac128e6aa37fe42c663971ac3d</code> 反推出对应的文本“我今天讲哈希算法”。</p>
 <p>哈希算法要处理的文本可能是各种各样的。比如，对于非常长的文本，如果哈希算法的计算时间很长，那就只能停留在理论研究的层面，很难应用到实际的软件开发中。比如，把今天这篇包含 <code>4000</code> 多个汉字的文章，用 <code>MD5</code> 计算哈希值，用不了 <code>1ms</code> 的时间。</p>
 <p>哈希算法的应用非常非常多，选了最常见的七个，分别是<strong>安全加密</strong>、<strong>唯一标识</strong>、<strong>数据校验</strong>、<strong>散列函数</strong>、<strong>负载均衡</strong>、<strong>数据分片</strong>、<strong>分布式存储</strong>。这节先来看前四个应用。</p>
@@ -266,7 +270,7 @@
 <p>这里就基于组合数学中一个非常基础的理论，<strong>鸽巢原理</strong>（也叫抽屉原理）。这个原理本身很简单，它是说，如果有 <code>10</code> 个鸽巢，有 <code>11</code> 只鸽子，那肯定有 <code>1</code> 个鸽巢中的鸽子数量多于 <code>1</code> 个，换句话说就是，肯定有 <code>2</code> 只鸽子在 <code>1</code> 个鸽巢内。</p>
 <p>有了鸽巢原理的铺垫之后，再来看，<strong>为什么哈希算法无法做到零冲突？</strong></p>
 <p>哈希算法产生的哈希值的长度是固定且有限的。比如前面举的 <code>MD5</code> 的例子，哈希值是固定的 <code>128</code> 位二进制串，能表示的数据是有限的，最多能表示 $2^{128}$ 个数据，而要哈希的数据是无穷的。基于鸽巢原理，如果对 $2^{128}+1$ 个数据求哈希值，就必然会存在哈希值相同的情况。这里你应该能想到，一般情况下，哈希值越长的哈希算法，散列冲突的概率越低。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2^128=340282366920938463463374607431768211456</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2^128&#x3D;340282366920938463463374607431768211456</span><br></pre></td></tr></table></figure>
 <p>为了让你能有个更加直观的感受，找了两段字符串放在这里。这两段字符串经过 <code>MD5</code> 哈希算法加密之后，产生的哈希值是相同的。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/20/58769940-db68-11e9-b03e-bd9724e985f2.png" alt="image.png"><br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/20/5eb06110-db68-11e9-b03e-bd9724e985f2.png" alt="image.png"><br>不过，即便哈希算法存在散列冲突的情况，但是因为哈希值的范围很大，冲突的概率极低，所以相对来说还是很难破解的。像 <code>MD5</code>，有 $2^{128}$ 个不同的哈希值，这个数据已经是一个天文数字了，所以散列冲突的概率要小于 $\frac 1 {2^{128}}$。</p>
 <p>如果拿到一个 <code>MD5</code> 哈希值，希望通过毫无规律的穷举的方法，找到跟这个 <code>MD5</code> 值相同的另一个数据，那耗费的时间应该是个天文数字。所以，即便哈希算法存在冲突，但是在有限的时间和资源下，哈希算法还是被很难破解的。</p>
 <p>除此之外，没有绝对安全的加密。越复杂、越难破解的加密算法，需要的计算时间也越长。比如 <code>SHA-256</code> 比 <code>SHA-1</code> 要更复杂、更安全，相应的计算时间就会比较长。密码学界也一直致力于找到一种快速并且很难被破解的哈希算法。在实际的开发过程中，也需要权衡破解难度和计算时间，来决定究竟使用哪种加密算法。</p>
@@ -591,7 +595,9 @@
  </script>
 
     
-      <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/footer.js"></script>
+      
+<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/footer.js"></script>
+
     
   </body>
 </html>
