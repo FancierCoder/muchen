@@ -241,7 +241,7 @@
   </div>
   
   <article class="passage-article">
-    <p><code>Java</code> 的运行时数据区域分为五大数据区域。这些区域各有各的用途，创建及销毁时间。如下图所示，其中方法区和堆是所有线程共享的，栈，本地方法栈和程序虚拟机则为线程私有的。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/12/18/a5328860-2164-11ea-b270-e1ada5ee6906.png" alt="image.png"><br>根据<code>Java</code>虚拟机规范，<code>Java</code>虚拟机管理的内存分为<strong>方法区、堆、虚拟机栈、本地方法栈、程序计数器栈</strong>五大区域。</p>
+    <p><code>Java</code> 的运行时数据区域分为五大数据区域。这些区域各有各的用途，创建及销毁时间。如下图所示，其中方法区和堆是所有线程共享的，虚拟机栈，本地方法栈和程序计数器则为线程私有的。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/12/18/a5328860-2164-11ea-b270-e1ada5ee6906.png" alt="image.png"><br>根据<code>Java</code>虚拟机规范，<code>Java</code>虚拟机管理的内存分为<strong>方法区、堆、虚拟机栈、本地方法栈、程序计数器栈</strong>五大区域。</p>
 <h2 id="程序计数器-Program-Counter-Register"><a href="#程序计数器-Program-Counter-Register" class="headerlink" title="程序计数器(Program Counter Register)"></a>程序计数器(Program Counter Register)</h2><p>程序计数器是一块很小的内存空间，它是线程私有的，可以认作为当前线程的行号指示器。</p>
 <p>在虚拟机的概念模型里,字节码解释器工作时就是通过改变这个计数器的值来选取下一条需要执行的字节码指令，分支、循环、跳转、异常处理、线程恢复等基础功能都需要依赖这个计数器来完成。由于<code>Java</code>虚拟机的多线程是通过线程轮流切换并分配处理器执行时间的方式来实现的，对于一个处理器(如果是多核<code>CPU</code>那就是一核)来说，在一个确定的时刻只会执行一条线程中的指令，而一条线程中有多个指令，为了线程切换可以恢复到正确执行位置，每个线程都需有独立的一个程序计数器，不同线程之间的程序计数器互不影响，独立存储。</p>
 <p>如果线程执行的是个<code>Java</code>方法，那么计数器记录的是虚拟机字节码指令的地址。如果为<code>native</code>底层方法，那么计数器为空(<code>Undefined</code>)。这块内存区域是虚拟机规范中唯一没有<code>OutOfMemoryError</code>的区域。</p>
@@ -249,7 +249,7 @@
 <blockquote>
 <p>栈帧(<code>Stack Frame</code>): 是用来存储数据和部分过程结果的数据结构。<br>栈帧的位置:  内存 -&gt; 运行时数据区 -&gt; 某个线程对应的虚拟机栈 -&gt; <code>here</code><br>栈帧大小确定时间: 编译期确定，不受运行期数据影响。</p>
 </blockquote>
-<p>通常有人将<code>Java</code>内存区分为栈(<code>Heap</code>)和堆(<code>Heap</code>)，实际上<code>Java</code>内存比这复杂，这么区分可能是因为我们最关注的与对象内存分配关系最密切的是这两个，平时说的栈一般就是指局部变量表。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/12/18/ce696dc0-2169-11ea-b270-e1ada5ee6906.png" alt="image.png"><br><strong>局部变量表</strong>: 一片连续的内存空间，用来存放方法参数，以及方法内定义的局部变量，存放着编译期间已知的数据类型(八大基本类型和对象引用(<code>reference</code>类型)，<code>returnAddress</code>类型。它的最小的局部变量表空间单位为<code>Slot</code>，虚拟机没有指明<code>Slot</code>的大小，但在<code>JVM</code>中，<code>long</code>和<code>double</code>类型数据明确规定为<code>64</code>位，这两个类型占<code>2</code>个<code>Slot</code>，其它基本类型固定占用<code>1</code>个<code>Slot</code>。</p>
+<p>通常有人将<code>Java</code>内存区分为栈(<code>Stacks</code>)和堆(<code>Heap</code>)，实际上<code>Java</code>内存比这复杂，这么区分可能是因为我们最关注的与对象内存分配关系最密切的是这两个，平时说的栈一般就是指局部变量表。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/12/18/ce696dc0-2169-11ea-b270-e1ada5ee6906.png" alt="image.png"><br><strong>局部变量表</strong>: 一片连续的内存空间，用来存放方法参数，以及方法内定义的局部变量，存放着编译期间已知的数据类型(八大基本类型和对象引用(<code>reference</code>类型)，<code>returnAddress</code>类型。它的最小的局部变量表空间单位为<code>Slot</code>，虚拟机没有指明<code>Slot</code>的大小，但在<code>JVM</code>中，<code>long</code>和<code>double</code>类型数据明确规定为<code>64</code>位，这两个类型占<code>2</code>个<code>Slot</code>，其它基本类型固定占用<code>1</code>个<code>Slot</code>。</p>
 <p><strong><code>reference</code>类型</strong>: 与基本类型不同的是它不等同本身，即使是<code>String</code>，内部也是<code>char</code>数组组成，它可能是指向一个对象起始位置指针，也可能指向一个代表对象的句柄或其他与该对象有关的位置。</p>
 <p><strong><code>returnAddress</code>类型</strong>: 指向一条字节码指令的地址</p>
 <p>需要注意的是，<strong>局部变量表所需要的内存空间在编译期完成分配，当进入一个方法时，这个方法在栈中需要分配多大的局部变量空间是完全确定的，在方法运行期间不会改变局部变量表大小</strong>。</p>
@@ -266,7 +266,7 @@
 <p>逃逸分析: 通过逃逸分析来决定某些实例或者变量是否要在堆中进行分配，如果开启了逃逸分析，即可将这些变量直接在栈上进行分配，而非堆上进行分配。这些变量的指针可以被全局所引用，或者其其它线程所引用。</p>
 </blockquote>
 <p><code>Java</code>堆是垃圾收集器管理的主要区域，因此很多时候也被称做“<code>GC</code>堆”。从内存回收的角度来看，由于收集器基本都采用分代收集算法，所以<code>Java</code>堆中还可以细分为: 新生代和老年代，再细致一点的有<code>Eden</code>空间、<code>From Survivor</code>空间、<code>To Survivor</code>空间等。</p>
-<p>根据<code>Java</code>虛拟机规范的规定，<code>Java</code> 堆可以处于物理上不连续的内存空间中，只要逻辑上是连续的即可，就像我们的磁盘空间一样。在实现时，既可以实现成固定大小的，也可以是可扩展的，不过当前主流的虚拟机都是按照可扩展来实现的(通过<code>-Xmx</code>和<code>-Xms</code>控制)。如果堆中没有内存内存完成实例分配，而且堆无法扩展将报<code>OOM</code>错误(<code>OutOfMemoryError</code>)。</p>
+<p>根据<code>Java</code>虛拟机规范的规定，<code>Java</code> 堆可以处于物理上不连续的内存空间中，只要逻辑上是连续的即可，就像我们的磁盘空间一样。在实现时，既可以实现成固定大小的，也可以是可扩展的，不过当前主流的虚拟机都是按照可扩展来实现的(通过<code>-Xmx</code>和<code>-Xms</code>控制)。如果堆中没有内存完成实例分配，而且堆无法扩展将报<code>OOM</code>错误(<code>OutOfMemoryError</code>)。</p>
 <h2 id="方法区-Method-Area"><a href="#方法区-Method-Area" class="headerlink" title="方法区(Method Area)"></a>方法区(Method Area)</h2><p>方法区同堆一样，是所有线程共享的内存区域，为了区分堆，又被称为非堆。</p>
 <p>方法区用于存储已被虚拟机加载的类信息、常量、静态变量，如<code>static</code>修饰的变量加载类的时候就被加载到方法区中。</p>
 <blockquote>
