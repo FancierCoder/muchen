@@ -385,7 +385,7 @@
 </ul>
 <p>这个阶段是停顿的(<code>Stop the World Event</code>)，并且会触发一次普通<code>Mintor GC</code>。<br>对应<code>GC log</code>:<code>GC pause</code> (<code>young</code>) (<code>inital-mark</code>)</p>
 <ul>
-<li>Root Region Scanning；</li>
+<li><code>Root Region Scanning</code>；</li>
 </ul>
 <p>程序运行过程中会回收<code>survivor</code>区(存活到老年代)，这一过程必须在<code>young GC</code>之前完成。</p>
 <ul>
