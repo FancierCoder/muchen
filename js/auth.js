@@ -21,7 +21,7 @@
       expires = now + day * 3;
       window.localStorage.setItem('auth', btoa(`${password}:${expires}`));
     } else {
-      alert('您没有阅读权限');
+      alert('您没有阅读权限！（暂支持在PC端输入密码）');
       window.location.href = root;
     }
   };
