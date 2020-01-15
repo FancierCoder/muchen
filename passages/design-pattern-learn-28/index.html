@@ -6,7 +6,7 @@
   <meta name="author" content="MuChen" />
   
   
-  <title>设计模式之美学习（二十七） | MuChen&#39;s Blog</title>
+  <title>设计模式之美学习（二十八） | MuChen&#39;s Blog</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -15,7 +15,7 @@
   
 
   
-  <meta name="description" content="让你最快速地改善代码质量的20条编程规范（上）">
+  <meta name="description" content="让你最快速地改善代码质量的20条编程规范（中）">
 
   <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/jquery-3.4.1.min.js"></script>
 
@@ -225,18 +225,14 @@
       </span>
         
         
-            <span style="margin-right: 24px;">
-            <i class="fa fa-weixin"></i>FOLLOW
-        </span>
-        
     </div>
     <div class="passage-title-wrap">
         <h1 class="passage-title">
-            设计模式之美学习（二十七）
+            设计模式之美学习（二十八）
         </h1>
         <div class="passage-meta">
         <span style="margin-right: 24px;">
-          <i class="fa fa-calendar"></i>2020.01.13 15:56
+          <i class="fa fa-calendar"></i>2020.01.15 10:44
         </span>
             <span id="article-visit-info" style="margin-right: 24px;">
             <i class="fa fa-eye"></i> 0
@@ -245,63 +241,38 @@
   </div>
   
   <article class="passage-article">
-    <p>编码规范大部分都简单明了，在代码细节方面，能立竿见影地改善质量。除此之外，持续低层次、小规模重构依赖的基本上都是编码规范，这也是改善代码可读性的有效手段。</p>
-<h2 id="命名"><a href="#命名" class="headerlink" title="命名"></a>命名</h2><p>大到项目名、模块名、包名、对外暴露的接口，小到类名、函数名、变量名、参数名，只要是做开发，我们就逃不过“起名字”这一关。命名的好坏，对于代码的可读性来说非常重要，甚至可以说是起决定性作用的。除此之外，命名能力也体现了一个程序员的基本编程素养。</p>
-<p>取一个特别合适的名字是一件非常有挑战的事情，即便是对母语是英语的程序员来说，也是如此。而对于我们这些英语非母语的程序员来说，想要起一个能准确达意的名字，更是难上加难了。</p>
-<p><strong>1. 命名多长最合适？</strong></p>
-<p>在足够表达其含义的情况下，命名当然是越短越好。但是，大部分情况下，短的命名都没有长的命名更能达意。所以，很多书籍或者文章都不推荐在命名时使用缩写。对于一些默认的、大家都比较熟知的词，比较推荐用缩写。这样一方面能让命名短一些，另一方面又不影响阅读理解，比如，<code>sec</code> 表示 <code>second</code>、<code>str</code> 表示 <code>string</code>、<code>num</code> 表示 <code>number</code>、<code>doc</code> 表示 <code>document</code>。除此之外，对于作用域比较小的变量，我们可以使用相对短的命名，比如一些函数内的临时变量。相反，对于类名这种作用域比较大的，我更推荐用长的命名方式。</p>
-<p>总之，命名的一个原则就是以能准确达意为目标。不过，对于代码的编写者来说，自己对代码的逻辑很清楚，总感觉用什么样的命名都可以达意，实际上，对于不熟悉你代码的同事来讲，可能就不这么认为了。所以，命名的时候，我们一定要学会换位思考，假设自己不熟悉这块代码，从代码阅读者的角度去考量命名是否足够直观。</p>
-<p><strong>2. 利用上下文简化命名</strong></p>
-<p>先来看一个简单的例子。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> String userName;</span><br><span class="line">  <span class="keyword">private</span> String userPassword;</span><br><span class="line">  <span class="keyword">private</span> String userAvatarUrl;</span><br><span class="line">  <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在 <code>User</code> 类这样一个上下文中，我们没有在成员变量的命名中重复添加“<code>user</code>”这样一个前缀单词，而是直接命名为 <code>name</code>、<code>password</code>、<code>avatarUrl</code>。在使用这些属性时候，我们能借助对象这样一个上下文，表意也足够明确。具体代码如下所示：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">User user = <span class="keyword">new</span> User();</span><br><span class="line">user.getName(); <span class="comment">// 借助user对象这个上下文</span></span><br></pre></td></tr></table></figure>
-<p>除了类之外，函数参数也可以借助函数这个上下文来简化命名。</p>
-<p><strong>3. 命名要可读、可搜索</strong></p>
-<p>先解释一下，这里所说的“可读”，指的是不要用一些特别生僻、难发音的英文单词来命名。虽然我们并不排斥一些独特的命名方式，但起码得让大部分人看一眼就能知道怎么读。</p>
-<p>我们在 <code>IDE</code> 中编写代码的时候，经常会用“关键词联想”的方法来自动补全和搜索。比如，键入某个对象“<code>.get</code>”，希望 <code>IDE</code> 返回这个对象的所有 <code>get</code> 开头的方法。再比如，通过在 <code>IDE</code> 搜索框中输入“<code>Array</code>”，搜索 <code>JDK</code> 中数组相关的类。所以，我们在命名的时候，最好能符合整个项目的命名习惯。大家都用“<code>selectXXX</code>”表示查询，你就不要用“<code>queryXXX</code>”；大家都用“<code>insertXXX</code>”表示插入一条数据，你就要不用“<code>addXXX</code>”，统一规约是很重要的，能减少很多不必要的麻烦。</p>
-<p><strong>4. 如何命名接口和抽象类？</strong></p>
-<p>对于接口的命名，一般有两种比较常见的方式。一种是加前缀“<code>I</code>”，表示一个 <code>Interface</code>。比如 <code>IUserService</code>，对应的实现类命名为 <code>UserService</code>。另一种是不加前缀，比如 <code>UserService</code>，对应的实现类加后缀“<code>Impl</code>”，比如 <code>UserServiceImpl</code>。</p>
-<p>对于抽象类的命名，也有两种方式，一种是带上前缀“<code>Abstract</code>”，比如 <code>AbstractConfiguration</code>；另一种是不带前缀“<code>Abstract</code>”。实际上，对于接口和抽象类，选择哪种命名方式都是可以的，只要项目里能够统一就行。</p>
-<h2 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h2><p>命名很重要，注释跟命名同等重要。很多书籍认为，好的命名完全可以替代注释。如果需要注释，那说明命名不够好，需要在命名上下功夫，而不是添加注释。实际上，个人觉得，这样的观点有点太过极端。命名再好，毕竟有长度限制，不可能足够详尽，而这个时候，注释就是一个很好的补充。</p>
-<p><strong>1. 注释到底该写什么？</strong></p>
-<p>注释的目的就是让代码更容易看懂。只要符合这个要求的内容，你就可以将它写到注释里。总结一下，注释的内容主要包含这样三个方面：做什么、为什么、怎么做。举一个例子具体解释一下。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* (what) Bean factory to create beans. </span></span><br><span class="line"><span class="comment">* </span></span><br><span class="line"><span class="comment">* (why) The class likes Spring IOC framework, but is more lightweight. </span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* (how) Create objects from different sources sequentially:</span></span><br><span class="line"><span class="comment">* user specified object &gt; SPI &gt; configuration &gt; default object.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BeansFactory</span> </span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>有些人认为，注释是要提供一些代码没有的额外信息，所以不要写“做什么、怎么做”，这两方面在代码中都可以体现出来，只需要写清楚“为什么”，表明代码的设计意图即可。个人不是特别认可这样的观点，理由主要有下面 <code>3</code> 点。</p>
-<ul>
-<li>注释比代码承载的信息更多</li>
-</ul>
-<p>命名的主要目的是解释“做什么”。比如，<code>void increaseWalletAvailableBalance(BigDecimal amount)</code> 表明这个函数用来增加钱包的可用余额，<code>boolean isValidatedPassword</code> 表明这个变量用来标识是否是合法密码。函数和变量如果命名得好，确实可以不用再在注释中解释它是做什么的。但是，对于类来说，包含的信息比较多，一个简单的命名就不够全面详尽了。这个时候，在注释中写明“做什么”就合情合理了。</p>
-<ul>
-<li>注释起到总结性作用、文档的作用</li>
-</ul>
-<p>代码之下无秘密。阅读代码可以明确地知道代码是“怎么做”的，也就是知道代码是如何实现的，那注释中是不是就不用写“怎么做”了？实际上也可以写。在注释中，关于具体的代码实现思路，我们可以写一些总结性的说明、特殊情况的说明。这样能够让阅读代码的人通过注释就能大概了解代码的实现思路，阅读起来就会更加容易。<br>实际上，对于有些比较复杂的类或者接口，我们可能还需要在注释中写清楚“如何用”，举一些简单的 <code>quick start</code> 的例子，让使用者在不阅读代码的情况下，快速地知道该如何使用。</p>
-<ul>
-<li>一些总结性注释能让代码结构更清晰</li>
-</ul>
-<p>对于逻辑比较复杂的代码或者比较长的函数，如果不好提炼、不好拆分成小的函数调用，那我们可以借助总结性的注释来让代码结构更清晰、更有条理。</p>
-<p><strong>2. 注释是不是越多越好？</strong></p>
-<p>注释太多和太少都有问题。太多，有可能意味着代码写得不够可读，需要写很多注释来补充。除此之外，注释太多也会对代码本身的阅读起到干扰。而且，后期的维护成本也比较高，有时候代码改了，注释忘了同步修改，就会让代码阅读者更加迷惑。当然，如果代码中一行注释都没有，那只能说明这个程序员很懒，要适当督促一下，让他注意添加一些必要的注释。</p>
-<p>类和函数一定要写注释，而且要写得尽可能全面、详细，而函数内部的注释要相对少一些，一般都是靠好的命名、提炼函数、解释性变量、总结性注释来提高代码的可读性。</p>
-<h2 id="重点总结"><a href="#重点总结" class="headerlink" title="重点总结"></a>重点总结</h2><p><strong>1. 关于命名</strong></p>
-<ul>
-<li><p>命名的关键是能准确达意。对于不同作用域的命名，我们可以适当地选择不同的长度。作用域小的变量（比如临时变量），可以适当地选择短一些的命名方式。除此之外，命名中也可以使用一些耳熟能详的缩写。</p>
-</li>
-<li><p>我们可以借助类的信息来简化属性、函数的命名，利用函数的信息来简化函数参数的命名。</p>
-</li>
-<li><p>命名要可读、可搜索。不要使用生僻的、不好读的英文单词来命名。除此之外，命名要符合项目的统一规范，不要用些反直觉的命名。</p>
-</li>
-<li><p>接口有两种命名方式：一种是在接口中带前缀“I”；另一种是在接口的实现类中带后缀“Impl”。对于抽象类的命名，也有两种方式，一种是带上前缀“Abstract”，一种是不带前缀。这两种命名方式都可以，关键是要在项目中统一。</p>
-</li>
-</ul>
-<p><strong>2. 关于注释</strong></p>
-<ul>
-<li><p>注释的目的就是让代码更容易看懂。只要符合这个要求的内容，你就可以将它写到注释里。总结一下，注释的内容主要包含这样三个方面：做什么、为什么、怎么做。对于一些复杂的类和接口，我们可能还需要写明“如何用”。</p>
-</li>
-<li><p>注释本身有一定的维护成本，所以并非越多越好。类和函数一定要写注释，而且要写得尽可能全面、详细，而函数内部的注释要相对少一些，一般都是靠好的命名、提炼函数、解释性变量、总结性注释来提高代码可读性。</p>
-</li>
-</ul>
-<p>参考：<a href="https://time.geekbang.org/column/article/188622" target="_blank" rel="noopener">理论五：让你最快速地改善代码质量的20条编程规范（上）</a></p>
+    <p>起代码风格，我们其实很难说哪种风格更好。最重要的，也是最需要我们做到的，是在团队、项目中保持风格统一，让代码像同一个人写出来的，整齐划一。这样能减少阅读干扰，提高代码的可读性。这才是我们在实际工作中想要实现的目标。</p>
+<h2 id="类、函数多大才合适？"><a href="#类、函数多大才合适？" class="headerlink" title="类、函数多大才合适？"></a>类、函数多大才合适？</h2><p>总体上来讲，类或函数的代码行数不能太多，但也不能太少。类或函数的代码行数太多，一个类上千行，一个函数几百行，逻辑过于繁杂，阅读代码的时候，很容易就会看了后面忘了前面。相反，类或函数的代码行数太少，在代码总量相同的情况下，被分割成的类和函数就会相应增多，调用关系就会变得更复杂，阅读某个代码逻辑的时候，需要频繁地在 <code>n</code> 多类或者 <code>n</code> 多函数之间跳来跳去，阅读体验也不好。</p>
+<p>那一个类或函数有多少行代码才最合适呢？</p>
+<p>对于函数代码行数的最大限制，网上有一种说法，那就是不要超过一个显示屏的垂直高度。因为超过一屏之后，在阅读代码的时候，为了串联前后的代码逻辑，就可能需要频繁地上下滚动屏幕，阅读体验不好不说，还容易出错。</p>
+<p>对于类的代码行数的最大限制，这个就更难给出一个确切的值了。当一个类的代码读起来让你感觉头大了，实现某个功能时不知道该用哪个函数了，想用哪个函数翻半天都找不到了，只用到一个小功能要引入整个类（类中包含很多无关此功能实现的函数）的时候，这就说明类的行数过多了。</p>
+<h2 id="一行代码多长最合适？"><a href="#一行代码多长最合适？" class="headerlink" title="一行代码多长最合适？"></a>一行代码多长最合适？</h2><p>在<code>Google Java Style Guide</code>文档中，一行代码最长限制为 <code>100</code> 个字符。不过，不同的编程语言、不同的规范、不同的项目团队，对此的限制可能都不相同。不管这个限制是多少，总体上来讲我们要遵循的一个原则是：一行代码最长不能超过 <code>IDE</code> 显示的宽度。需要滚动鼠标才能查看一行的全部代码，显然不利于代码的阅读。当然，这个限制也不能太小，太小会导致很多稍长点的语句被折成两行，也会影响到代码的整洁，不利于阅读。</p>
+<h2 id="善用空行分割单元块"><a href="#善用空行分割单元块" class="headerlink" title="善用空行分割单元块"></a>善用空行分割单元块</h2><p>对于比较长的函数，如果逻辑上可以分为几个独立的代码块，在不方便将这些独立的代码块抽取成小函数的情况下，为了让逻辑更加清晰，除了上一节课中提到的用总结性注释的方法之外，我们还可以使用空行来分割各个代码块。</p>
+<p>除此之外，在类的成员变量与函数之间、静态成员变量与普通成员变量之间、各函数之间、甚至各成员变量之间，我们都可以通过添加空行的方式，让这些不同模块的代码之间，界限更加明确。写代码就类似写文章，善于应用空行，可以让代码的整体结构看起来更加有清晰、有条理。</p>
+<h2 id="四格缩进还是两格缩进？"><a href="#四格缩进还是两格缩进？" class="headerlink" title="四格缩进还是两格缩进？"></a>四格缩进还是两格缩进？</h2><p>“<code>PHP</code> 是世界上最好的编程语言？代码换行应该四格缩进还是两格缩进？”这应该是程序员争论得最多的两个话题了。据我所知，<code>Java</code> 语言倾向于两格缩进，<code>PHP</code> 语言倾向于四格缩进。至于到底应该是两格缩进还是四格缩进，这个取决于个人喜好。只要项目内部能够统一就行了。</p>
+<p>当然，还有一个选择的标准，那就是跟业内推荐的风格统一、跟著名开源项目统一。当我们需要拷贝一些开源的代码到项目里的时候，能够让引入的代码跟我们项目本身的代码，保持风格统一。</p>
+<p>不过，比较推荐使用两格缩进，这样可以节省空间。特别是在代码嵌套层次比较深的情况下，累计缩进较多的话，容易导致一个语句被折成两行，影响代码可读性。</p>
+<h2 id="大括号是否要另起一行？"><a href="#大括号是否要另起一行？" class="headerlink" title="大括号是否要另起一行？"></a>大括号是否要另起一行？</h2><p>左大括号是否要另起一行呢？这个也有争论。据我所知，PHP 程序员喜欢另起一行，Java 程序员喜欢跟上一条语句放到一起。具体代码示例如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; PHP</span><br><span class="line">class ClassName</span><br><span class="line">&#123;</span><br><span class="line">    public function foo()</span><br><span class="line">    &#123;</span><br><span class="line">        &#x2F;&#x2F; method body</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Java</span><br><span class="line">public class ClassName &#123;</span><br><span class="line">  public void foo() &#123;</span><br><span class="line">    &#x2F;&#x2F; method body</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>比较推荐，将括号放到跟语句同一行的风格。理由跟上面类似，节省代码行数。但是将大括号另起新的一行的方式，也有它的优势。这样的话，左右括号可以垂直对齐，哪些代码属于哪一个代码块，更一目了然。</p>
+<p>不过，还是那句话，大括号跟上一条语句在同一行，还是另起新的一行，只要团队统一、业内统一、跟开源项目看齐就好了，没有绝对的优劣之分。</p>
+<h2 id="类中成员的排列顺序"><a href="#类中成员的排列顺序" class="headerlink" title="类中成员的排列顺序"></a>类中成员的排列顺序</h2><p>在 <code>Java</code> 类文件中，先要书写类所属的包名，然后再罗列 <code>import</code> 引入的依赖类。在 <code>Google</code> 编码规范中，依赖类按照字母序从小到大排列。</p>
+<p>在类中，成员变量排在函数的前面。成员变量之间或函数之间，都是按照“先静态（静态函数或静态成员变量）、后普通（非静态函数或非静态成员变量）”的方式来排列的。除此之外，成员变量之间或函数之间，还会按照作用域范围从大到小的顺序来排列，先写 <code>public</code> 成员变量或函数，然后是 <code>protected</code> 的，最后是 <code>private</code> 的。</p>
+<p>不过，不同的编程语言中，类内部成员的排列顺序可能会有比较大的差别。比如 <code>C++</code> 中，成员变量会习惯性放到函数后面。除此之外，函数之间的排列顺序，会按照刚刚我们提到的作用域的大小来排列。实际上，还有另外一种排列习惯，那就是把有调用关系的函数放到一块。比如，一个 <code>public</code> 函数调用了另外一个 <code>private</code> 函数，那就把这两者放到一块。</p>
+<h2 id="重点回顾"><a href="#重点回顾" class="headerlink" title="重点回顾"></a>重点回顾</h2><p><strong>1. 函数、类多大才合适？</strong></p>
+<p>函数的代码行数不要超过一屏幕的大小，比如 <code>50</code> 行。类的大小限制比较难确定。</p>
+<p><strong>2. 一行代码多长最合适？</strong></p>
+<p>最好不要超过 <code>IDE</code> 显示的宽度。当然，限制也不能太小，太小会导致很多稍微长点的语句被折成两行，也会影响到代码的整洁，不利于阅读。</p>
+<p><strong>3. 善用空行分割单元块</strong></p>
+<p>对于比较长的函数，为了让逻辑更加清晰，可以使用空行来分割各个代码块。在类内部，成员变量与函数之间、静态成员变量与普通成员变量之间、函数之间，甚至成员变量之间，都可以通过添加空行的方式，让不同模块的代码之间的界限更加明确。</p>
+<p><strong>4. 四格缩进还是两格缩进？</strong></p>
+<p>比较推荐使用两格缩进，这样可以节省空间，特别是在代码嵌套层次比较深的情况下。</p>
+<p><strong>5. 大括号是否要另起一行？</strong></p>
+<p>比较推荐将大括号放到跟上一条语句同一行的风格，这样可以节省代码行数。但是，将大括号另起一行，也有它的优势，那就是，左右括号可以垂直对齐，哪些代码属于哪一个代码块，更加一目了然。</p>
+<p><strong>6. 类中成员的排列顺序</strong></p>
+<p>在 <code>Google Java</code> 编程规范中，依赖类按照字母序从小到大排列。类中先写成员变量后写函数。成员变量之间或函数之间，先写静态成员变量或函数，后写普通变量或函数，并且按照作用域大小依次排列。</p>
+<p>所有的代码风格都没有对错和优劣之分，只要能在团队、项目中统一即可，不过，最好能跟业内推荐的风格、开源项目的代码风格相一致。</p>
+<p>参考：<a href="https://time.geekbang.org/column/article/188857" target="_blank" rel="noopener">理论五：让你最快速地改善代码质量的20条编程规范（中）</a></p>
   </article>
   <aside class="table-content" id="site-toc">
   <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
@@ -310,7 +281,7 @@
     <span>目录</span>
   </div>
   <div class="table-content-main" id="table-toc">
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#命名"><span class="toc-text">命名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#注释"><span class="toc-text">注释</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重点总结"><span class="toc-text">重点总结</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#类、函数多大才合适？"><span class="toc-text">类、函数多大才合适？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一行代码多长最合适？"><span class="toc-text">一行代码多长最合适？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#善用空行分割单元块"><span class="toc-text">善用空行分割单元块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四格缩进还是两格缩进？"><span class="toc-text">四格缩进还是两格缩进？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#大括号是否要另起一行？"><span class="toc-text">大括号是否要另起一行？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类中成员的排列顺序"><span class="toc-text">类中成员的排列顺序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重点回顾"><span class="toc-text">重点回顾</span></a></li></ol>
   </div>
 </aside>
   
@@ -319,7 +290,7 @@
       
         <div>
           原文链接:
-          <a style="word-break: break-word;" href="" target="_blank">https://muchen.fun/passages/design-pattern-learn-27/</a>
+          <a style="word-break: break-word;" href="" target="_blank">https://muchen.fun/passages/design-pattern-learn-28/</a>
         </div>
       
       <div>
@@ -338,30 +309,18 @@
 
 <div class="left_prev_arrow_div">
     <div class="left_prev_arrow arrow_div">
-        <a href="/passages/design-pattern-learn-26/" data-enable="true">
+        <a href="/passages/design-pattern-learn-27/" data-enable="true">
             <i class="fa fa-angle-left" aria-hidden="true"></i>
         </a>
     </div>
 </div>
 <div class="right_prev_arrow_div">
     <div class="right_prev_arrow arrow_div">
-        <a href="/passages/design-pattern-learn-28/" data-enable="true">
+        <a href="javascript:void(0);" data-enable="false">
             <i class="fa fa-angle-right" aria-hidden="true"></i>
         </a>
     </div>
 </div>
-
-    <script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
-    <script async>
-        const btw = new BTWPlugin();
-        btw.init({
-            id: 'passage',
-            blogId: '18542-1574856232441-836',
-            name: '沐晨丶博客',
-            qrcode: 'https://static.muchen.fun/images/weixin_mp.jpg',
-            keyword: 'learn',
-        });
-    </script>
 
 
     </main>
@@ -508,10 +467,10 @@
 
 <div class="bottom-bar">
   <div class="bottom-bar-left">
-    <a href="/passages/design-pattern-learn-28/" target="_self" data-enable="true">
+    <a href="javascript:void(0);" target="_self" data-enable="false">
       <i class="fa fa-arrow-left"></i>
     </a>
-    <a href="/passages/design-pattern-learn-26/" target="_self" data-enable="true">
+    <a href="/passages/design-pattern-learn-27/" target="_self" data-enable="true">
       <i class="fa fa-arrow-right"></i>
     </a>
   </div>
