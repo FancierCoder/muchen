@@ -19,7 +19,7 @@
 // Updated by Rook1e <https://github.com/0x2E>
 
 // eslint-disable-next-line no-unused-vars
-var searchFunc = function(path, search_id, content_id) {
+var searchFunc = function (path, search_id, content_id) {
   // 0x00. environment initialization
   'use strict';
   var $input = document.getElementById(search_id);
@@ -27,20 +27,20 @@ var searchFunc = function(path, search_id, content_id) {
   $resultContent.innerHTML = '<div class="m-auto text-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div><br/>Loading...</div>';
   $.ajax({
     // 0x01. load xml file
-    url     : path,
+    url: path,
     dataType: 'xml',
-    success : function(xmlResponse) {
+    success: function (xmlResponse) {
       // 0x02. parse xml file
-      var dataList = $('entry', xmlResponse).map(function() {
+      var dataList = $('entry', xmlResponse).map(function () {
         return {
-          title  : $('title', this).text(),
+          title: $('title', this).text(),
           content: $('content', this).text(),
-          url    : $('url', this).text()
+          url: $('url', this).text()
         };
       }).get();
       $resultContent.innerHTML = '';
 
-      $input.addEventListener('input', function() {
+      $input.addEventListener('input', function () {
         // 0x03. parse query to keywords list
         var str = '';
         var keywords = this.value.trim().toLowerCase().split(/[\s-]+/);
@@ -49,7 +49,7 @@ var searchFunc = function(path, search_id, content_id) {
           return;
         }
         // 0x04. perform local searching
-        dataList.forEach(function(data) {
+        dataList.forEach(function (data) {
           var isMatch = true;
           if (!data.title || data.title.trim() === '') {
             data.title = 'Untitled';
@@ -64,7 +64,7 @@ var searchFunc = function(path, search_id, content_id) {
           var first_occur = -1;
           // only match articles with not empty contents
           if (data_content !== '') {
-            keywords.forEach(function(keyword, i) {
+            keywords.forEach(function (keyword, i) {
               index_title = data_title.indexOf(keyword);
               index_content = data_content.indexOf(keyword);
 
@@ -107,7 +107,7 @@ var searchFunc = function(path, search_id, content_id) {
               var match_content = content.substring(start, end);
 
               // highlight all keywords
-              keywords.forEach(function(keyword) {
+              keywords.forEach(function (keyword) {
                 var regS = new RegExp(keyword, 'gi');
                 match_content = match_content.replace(regS, '<span class=\'pink-text\'>' + keyword + '</span>');
               });
@@ -125,7 +125,7 @@ var searchFunc = function(path, search_id, content_id) {
       });
     }
   });
-  $(document).on('click', '#local-search-close', function() {
+  $(document).on('click', '#local-search-close', function () {
     $('#local-search-input').val('').removeClass('invalid').removeClass('valid');
     $('#local-search-result').html('');
   });

@@ -17,7 +17,7 @@
     <meta name="description" content="沐晨的个人博客,技术博客">
     <meta name="author" content="Li Duo">
     <meta name="keywords" content="个人博客,个人见解">
-    <title>归档 - MuChen&#39;s Blog</title>
+    <title>设计模式之美学习（三十） - MuChen&#39;s Blog</title>
 
     <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
@@ -50,7 +50,7 @@
 
 
 <body>
-<header style="height: 60vh;">
+<header style="height: 70vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
     <div class="container">
         <a class="navbar-brand"
@@ -137,7 +137,7 @@
 </nav>
 
     <div class="view intro-2" id="background" parallax=true
-         style="background: url('/images/02.jpg') no-repeat center center;
+         style="background: url('/images/07.jpg') no-repeat center center;
                  background-size: cover;">
         <div class="full-bg-img">
             <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -146,6 +146,45 @@
                 
             </span>
 
+                    
+                        
+                            <div class="mt-3 post-meta">
+                                <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                                <time datetime="2020-05-03 21:42">
+                                    2020年5月3日 晚上
+                                </time>
+                            </div>
+                        
+
+                        <div class="mt-1">
+                            
+                                
+                                <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    582 字
+                  </span>
+                            
+
+                            
+                                
+                                <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                                    
+                                    
+                                    7
+                                     分钟
+                  </span>
+                            
+
+                            
+                                <!-- 不蒜子统计文章PV -->
+                                
+                                <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
+                    <i class="iconfont icon-eye" aria-hidden="true"></i>
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>
+                            
+                        </div>
                     
                 </div>
 
@@ -167,109 +206,156 @@
 
 <main>
     
-        <div class="container nopadding-md">
-            <div class="py-5" id="board"
-                    >
-                
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12 col-md-10 m-auto">
-                            
+        
 
-<div class="list-group">
-    <p class="h4">共计 106 篇文章</p>
-    <hr>
-    
-        
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
             
-            <p class="h5">2019</p>
-        
-        <a href="/passages/9/" class="list-group-item list-group-item-action">
-            <span class="archive-post-title">9.排序（下）</span>
-            <span style="float: right;">07-17</span>
-        </a>
+              <p class="note note-info">
+                
+                  本文最后更新于：20 小时前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <!-- more -->
+<p>单例设计模式（<code>Singleton Design Pattern</code>）理解起来非常简单。一个类只允许创建一个对象（或者实例），那这个类就是一个单例类，这种设计模式就叫作单例设计模式，简称<strong>单例模式</strong>。</p>
+<h2 id="如何实现一个单例？"><a href="#如何实现一个单例？" class="headerlink" title="如何实现一个单例？"></a>如何实现一个单例？</h2><p>要实现一个单例，我们需要关注的点无外乎下面几个：</p>
+<ul>
+<li><p>构造函数需要是 <code>private</code> 访问权限的，这样才能避免外部通过 <code>new</code> 创建实例；</p>
+</li>
+<li><p>考虑对象创建时的线程安全问题；</p>
+</li>
+<li><p>考虑是否支持延迟加载；</p>
+</li>
+<li><p>考虑 <code>getInstance()</code> 性能是否高（是否加锁）。</p>
+</li>
+</ul>
+<h2 id="单例的用处"><a href="#单例的用处" class="headerlink" title="单例的用处"></a>单例的用处</h2><p>从业务概念上，有些数据在系统中只应该保存一份，就比较适合设计为单例类。比如，系统的配置信息类。除此之外，我们还可以使用单例解决资源访问冲突的问题。</p>
+<h2 id="单例的实现"><a href="#单例的实现" class="headerlink" title="单例的实现"></a>单例的实现</h2><p>单例有下面几种经典的实现方式:</p>
+<ul>
+<li>饿汉式</li>
+</ul>
+<p>饿汉式的实现方式，在类加载的期间，就已经将 <code>instance</code> 静态实例初始化好了，所以，<code>instance</code> 实例的创建是线程安全的。不过，这样的实现方式不支持延迟加载实例。</p>
+<ul>
+<li>懒汉式</li>
+</ul>
+<p>懒汉式相对于饿汉式的优势是支持延迟加载。这种实现方式会导致频繁加锁、释放锁，以及并发度低等问题，频繁的调用会产生性能瓶颈。</p>
+<ul>
+<li>双重检测</li>
+</ul>
+<p>双重检测实现方式既支持延迟加载、又支持高并发的单例实现方式。只要 <code>instance</code> 被创建之后，再调用 <code>getInstance()</code> 函数都不会进入到加锁逻辑中。所以，这种实现方式解决了懒汉式并发度低的问题。</p>
+<ul>
+<li>静态内部类</li>
+</ul>
+<p>利用 <code>Java</code> 的静态内部类来实现单例。这种实现方式，既支持延迟加载，也支持高并发，实现起来也比双重检测简单。</p>
+<ul>
+<li>枚举</li>
+</ul>
+<p>最简单的实现方式，基于枚举类型的单例实现。这种实现方式通过 <code>Java</code> 枚举类型本身的特性，保证了实例创建的线程安全性和实例的唯一性。</p>
+<p>参考：<a href="https://time.geekbang.org/column/article/194035" target="_blank" rel="noopener">为什么说支持懒加载的双重检测不比饿汉式更优？</a></p>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E8%8C%83%E5%BC%8F-%E5%88%9B%E5%BB%BA%E5%9E%8B/">设计模式与范式(创建型)</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/passages/design-pattern-learn-29/">
+                        <span class="hidden-mobile">设计模式之美学习（二十九）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+    <div id="vcomments"></div>
+    <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+    <script type="text/javascript">
+        var oldLoadVa = window.onload;
+        window.onload = function () {
+            oldLoadVa && oldLoadVa();
+
+            new Valine({
+                el: "#vcomments",
+                app_id: "O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",
+                app_key: "5Rl3Rhl9zc8BJNvrPcncKWFy",
+                placeholder: "说点什么吧~",
+                path: window.location.pathname,
+                avatar: "retro",
+                meta: ["nick","mail","link"],
+                pageSize: "10",
+                lang: "zh-CN",
+                highlight: true,
+                recordIP: true,
+                serverURLs: "",
+            });
+        };
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments
+            powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
     
-        
-        <a href="/passages/8/" class="list-group-item list-group-item-action">
-            <span class="archive-post-title">8.排序（上）</span>
-            <span style="float: right;">07-16</span>
-        </a>
-    
-        
-        <a href="/passages/recursion/" class="list-group-item list-group-item-action">
-            <span class="archive-post-title">递归算法</span>
-            <span style="float: right;">07-16</span>
-        </a>
-    
-        
-        <a href="/passages/7/" class="list-group-item list-group-item-action">
-            <span class="archive-post-title">7.队列</span>
-            <span style="float: right;">07-16</span>
-        </a>
-    
-        
-        <a href="/passages/Kafka/" class="list-group-item list-group-item-action">
-            <span class="archive-post-title">SpringBoot Kafka的配置</span>
-            <span style="float: right;">07-15</span>
-        </a>
-    
-        
-        <a href="/passages/6/" class="list-group-item list-group-item-action">
-            <span class="archive-post-title">6.栈</span>
-            <span style="float: right;">07-15</span>
-        </a>
-    
-        
-        <a href="/passages/5/" class="list-group-item list-group-item-action">
-            <span class="archive-post-title">5.链表（下）</span>
-            <span style="float: right;">07-14</span>
-        </a>
-    
-        
-        <a href="/passages/4/" class="list-group-item list-group-item-action">
-            <span class="archive-post-title">4.链表（上）</span>
-            <span style="float: right;">07-13</span>
-        </a>
-    
-        
-        <a href="/passages/3/" class="list-group-item list-group-item-action">
-            <span class="archive-post-title">3.数组</span>
-            <span style="float: right;">07-13</span>
-        </a>
-    
-        
-        <a href="/passages/2/" class="list-group-item list-group-item-action">
-            <span class="archive-post-title">2.浅析最好、最坏、平均、均摊时间复杂度</span>
-            <span style="float: right;">07-13</span>
-        </a>
-    
-        
-        <a href="/passages/1/" class="list-group-item list-group-item-action">
-            <span class="archive-post-title">1.复杂度分析</span>
-            <span style="float: right;">07-12</span>
-        </a>
-    
+  </div>
 </div>
 
-    <nav aria-label="navigation">
-    <span class="pagination" id="pagination">
-      <a class="extend prev" rel="prev" href="/archives/2019/page/7/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/archives/2019/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/2019/page/6/">6</a><a class="page-number" href="/archives/2019/page/7/">7</a><span class="page-number current">8</span>
-    </span>
-    </nav>
-    
-    <script>
-        for (ele of document.getElementById("pagination").getElementsByTagName("a")) {
-            ele.href += '#board';
-        }
-    </script>
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><br><div class="text-center">欢迎关注我的公众号</div>
+    </div>
+  </div>
 
 
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     
 </main>
 
@@ -368,6 +454,9 @@
 
 
 
+    
+
+
 
 
     <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
@@ -435,7 +524,7 @@
         var typed = new Typed('#subtitle', {
             strings: [
                 '  ',
-                "归档&nbsp;",
+                "设计模式之美学习（三十）&nbsp;",
             ],
             cursorChar: "_",
             typeSpeed: 60,
@@ -479,9 +568,62 @@
 
 
 
+    <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+    <script>
+        $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+            function () {
+                var element = document.createElement('a');
+                $(element).attr('data-fancybox', 'images');
+                $(element).attr('href', $(this).attr('src'));
+                $(this).wrap(element);
+            }
+        );
+    </script>
 
 
 
+
+
+    
+
+    
+        <!-- MathJax -->
+        <script>
+            MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']]
+                },
+                options: {
+                    renderActions: {
+                        findScript: [10, doc => {
+                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                                const display = !!node.type.match(/; *mode=display/);
+                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                                const text = document.createTextNode('');
+                                node.parentNode.replaceChild(text, node);
+                                math.start = {node: text, delim: '', n: 0};
+                                math.end = {node: text, delim: '', n: 0};
+                                doc.math.push(math);
+                            });
+                        }, '', false],
+                        insertedScript: [200, () => {
+                            document.querySelectorAll('mjx-container').forEach(node => {
+                                let target = node.parentNode;
+                                if (target.nodeName.toLowerCase() === 'li') {
+                                    target.parentNode.classList.add('has-jax');
+                                }
+                            });
+                        }, '', false]
+                    }
+                }
+            };
+        </script>
+
+        <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+    
 
 
 

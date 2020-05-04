@@ -1,11 +1,11 @@
 // eslint-disable-next-line no-unused-expressions
-!(function(e, t, a) {
+!(function (e, t, a) {
   function initCopyCode() {
     var copyHtml = '';
     copyHtml += '<button class="copy-btn" data-clipboard-snippet="">';
     copyHtml += '<i class="iconfont icon-copy"></i><span>Copy</span>';
     copyHtml += '</button>';
-    $('.markdown-body pre').each(function() {
+    $('.markdown-body pre').each(function () {
       const pre = $(this);
       if (pre.find('code.mermaid').length > 0) {
         return;
@@ -14,16 +14,16 @@
     });
     // eslint-disable-next-line no-undef
     var clipboard = new ClipboardJS('.copy-btn', {
-      target: function(trigger) {
+      target: function (trigger) {
         return trigger.previousElementSibling;
       }
     });
     $('.copy-btn').addClass(getBgClass());
-    clipboard.on('success', function(e) {
+    clipboard.on('success', function (e) {
       e.clearSelection();
       var tmp = e.trigger.outerHTML;
       e.trigger.innerHTML = 'Success';
-      setTimeout(function() {
+      setTimeout(function () {
         e.trigger.outerHTML = tmp;
       }, 2000);
     });
@@ -41,7 +41,7 @@
   }
 
   var oldLoadCb = window.onload;
-  window.onload = function() {
+  window.onload = function () {
     oldLoadCb && oldLoadCb();
 
     initCopyCode();

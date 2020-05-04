@@ -5,8 +5,8 @@
     
     <entry>
       <title>设计模式之美学习（三十）</title>
-      <link href="/passages/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%BE%8E%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%89%E5%8D%81%EF%BC%89/"/>
-      <url>/passages/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%BE%8E%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%89%E5%8D%81%EF%BC%89/</url>
+      <link href="/passages/design-pattern-learn-30/"/>
+      <url>/passages/design-pattern-learn-30/</url>
       
         <content type="html"><![CDATA[<!-- more --><p>单例设计模式（<code>Singleton Design Pattern</code>）理解起来非常简单。一个类只允许创建一个对象（或者实例），那这个类就是一个单例类，这种设计模式就叫作单例设计模式，简称<strong>单例模式</strong>。</p><h2 id="如何实现一个单例？"><a href="#如何实现一个单例？" class="headerlink" title="如何实现一个单例？"></a>如何实现一个单例？</h2><p>要实现一个单例，我们需要关注的点无外乎下面几个：</p><ul><li><p>构造函数需要是 <code>private</code> 访问权限的，这样才能避免外部通过 <code>new</code> 创建实例；</p></li><li><p>考虑对象创建时的线程安全问题；</p></li><li><p>考虑是否支持延迟加载；</p></li><li><p>考虑 <code>getInstance()</code> 性能是否高（是否加锁）。</p></li></ul><h2 id="单例的用处"><a href="#单例的用处" class="headerlink" title="单例的用处"></a>单例的用处</h2><p>从业务概念上，有些数据在系统中只应该保存一份，就比较适合设计为单例类。比如，系统的配置信息类。除此之外，我们还可以使用单例解决资源访问冲突的问题。</p><h2 id="单例的实现"><a href="#单例的实现" class="headerlink" title="单例的实现"></a>单例的实现</h2><p>单例有下面几种经典的实现方式:</p><ul><li>饿汉式</li></ul><p>饿汉式的实现方式，在类加载的期间，就已经将 <code>instance</code> 静态实例初始化好了，所以，<code>instance</code> 实例的创建是线程安全的。不过，这样的实现方式不支持延迟加载实例。</p><ul><li>懒汉式</li></ul><p>懒汉式相对于饿汉式的优势是支持延迟加载。这种实现方式会导致频繁加锁、释放锁，以及并发度低等问题，频繁的调用会产生性能瓶颈。</p><ul><li>双重检测</li></ul><p>双重检测实现方式既支持延迟加载、又支持高并发的单例实现方式。只要 <code>instance</code> 被创建之后，再调用 <code>getInstance()</code> 函数都不会进入到加锁逻辑中。所以，这种实现方式解决了懒汉式并发度低的问题。</p><ul><li>静态内部类</li></ul><p>利用 <code>Java</code> 的静态内部类来实现单例。这种实现方式，既支持延迟加载，也支持高并发，实现起来也比双重检测简单。</p><ul><li>枚举</li></ul><p>最简单的实现方式，基于枚举类型的单例实现。这种实现方式通过 <code>Java</code> 枚举类型本身的特性，保证了实例创建的线程安全性和实例的唯一性。</p><p>参考：<a href="https://time.geekbang.org/column/article/194035" target="_blank" rel="noopener">为什么说支持懒加载的双重检测不比饿汉式更优？</a></p>]]></content>
       
@@ -1213,9 +1213,9 @@
       
         <tags>
             
-            <tag> 栈 </tag>
-            
             <tag> 队列 </tag>
+            
+            <tag> 栈 </tag>
             
             <tag> 递归 </tag>
             
