@@ -1,255 +1,238 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-  
+
+
+
+
+
 <head>
-  <meta charset="utf-8">
-  <meta name="author" content="MuChen" />
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/touch-icon.png">
+  <link rel="icon" type="image/png" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/favicon.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
   
-  
-  <title>3.数组 | MuChen&#39;s Blog</title>
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="沐晨的个人博客,技术博客">
+  <meta name="author" content="Li Duo">
+  <meta name="keywords" content="个人博客,个人见解">
+  <title>3.数组 - MuChen&#39;s Blog</title>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
 
-  
-    <meta name="keywords" content="数据结构与算法(初级),数据结构,数组," />
-  
 
-  
-  <meta name="description" content="在大部分编程语言中，数组都是从 0 开始编号的，但你是否下意识地想过，为什么数组要从 0 开始编号，而不是从 1 开始呢？ 从 1 开始不是更符合人类的思维习惯吗？">
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
 
-  <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/jquery-3.4.1.min.js"></script>
 
-  
+<!-- 主题依赖的图标库，不要自行修改 -->
 
-  
-    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@4.5.3/dist/av-min.js" async></script>
-  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
 
-  
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
-  
 
-  
-    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
-  
 
-  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
 
- <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/8.11.8/sweetalert2.all.min.js" async></script>
 
-  <script>
-  // theme-ad's config script
-  // it can be used in every script
-  
-  window.AD_CONFIG = {
-    leancloud: {"appid":"O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI","appkey":"5Rl3Rhl9zc8BJNvrPcncKWFy","comment":true,"count":true},
-    welcome: {"enable":false,"interval":30},
-    start_time: "2019-07-12",
-    passwords: ["0e31be4bd24c14e65633d11633fe616ee3d93b4f31d07726fdbe113fa98a391a", ],
-    is_post: true,
-    lock: false,
-    author: "MuChen",
-    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
-    mathjax: true,
-    page_type: "",
-    root: "/"
-  };
-</script>
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
 
   
-<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/sha256.min.js"></script>
-<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/auth.js"></script>
-<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/index.js"></script>
-<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/qrcode.min.js"></script>
+<link rel="stylesheet" href="https://static.muchen.fun/css/custom.css?t=0.1423425.css">
 
 
-  
-    <link rel="icon" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/favicon.ico">
-    <link rel="apple-touch-icon" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/touch-icon.png">
-  
-
-  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-
-  <link href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/animate-3.7.2.min.css" rel="stylesheet">
-
-  
-<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
-
-
-  
-
-  <script type="text/javascript">
-      function getCSS() {
-          let dateToday = new Date();
-          let timeNow = dateToday.getTime();
-          dateToday.setTime(timeNow);
-          let theHour = dateToday.getHours();
-          let display = "/css/index-night.css";
-          if (theHour <= 5) {
-			  display = "https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/index-night.css";
-		  } else if (theHour >= 19) {
-              display = "https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/index-night.css";
-		  } else if (theHour > 5) {
-              display = "https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/index.css";
-		  } else if (theHour < 19) {
-              display = "https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/index.css";
-		  }
-          let css = '<';
-          css += 'link rel="stylesheet" href=' + display + ' \/';
-          css += '>';
-          document.write(css);
-      }
-  </script>
-  <script type="text/javascript">
-      window.onload = getCSS();
-  </script>
 
 <meta name="generator" content="Hexo 4.2.0"></head>
-  <body>
-    <div class="preloader">
-        <div class="lds-ripple">
-            <div class="lds-pos"></div>
-            <div class="lds-pos"></div>
-        </div>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">
+              <i class="iconfont icon-home-fill"></i>
+              首页</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">
+              <i class="iconfont icon-archive-fill"></i>
+              归档</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">
+              <i class="iconfont icon-category-fill"></i>
+              分类</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">
+              <i class="iconfont icon-tags-fill"></i>
+              标签</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">
+              <i class="iconfont icon-user-fill"></i>
+              关于</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/links/">
+              <i class="iconfont icon-link-fill"></i>
+              友链</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+            <li class="nav-item">
+                <a id="dark" class="nav-link" onclick="switchDarkMode()">
+                    <i class="iconfont icon-sun"></i>
+                </a>
+            </li>
+      </ul>
     </div>
-    <header class="site-header">
-  <div class="site-header-brand">
-    
-      <span class="site-header-brand-title">
-        <a href="/">沐晨</a>
-      </span>
-    
-    
-      <span class="site-header-brand-motto"> | Learn To Learn</span>
-    
-  </div>
-  <div class="site-header-right">
-      <div class="search-box">
-          <section>
-              <div id="site_search">
-                  <input type="text" id="local-search-input" results="0"/>
-                  <div id="local-search-result"></div>
-              </div>
-          </section>
-      </div>
-    <nav class="site-header-navigation">
-      
-        <a href="/" target="_self">首页</a>
-      
-        <a href="/archives/" target="_self">归档</a>
-      
-        <a href="/tags/" target="_self">标签</a>
-      
-        <a href="/categories/" target="_self">分类</a>
-      
-        <a href="/friends/" target="_self">友链</a>
-      
-        <a href="/about/" target="_self">关于</a>
-      
-    </nav>
-    <div class="site-header-btn">
-      
-        <a href="https://github.com/FancierCoder" target="_blank" id="site-github">
-          <i class="fa fa-github-alt"></i>
-        </a>
-      
-      <a href="javascript:void(0);" id="site-search" style="display: none">
-        <i class="fa fa-search"></i>
-      </a>
-      <a href="javascript:void(0);" id="site-nav-btn">
-        <i class="fa fa-ellipsis-v"></i>
-      </a>
-    </div>
-  </div>
-</header>
-<nav class="table-content" id="site-nav">
-  <div class="table-content-title">
-    <span>导航</span>
-  </div>
-  <div class="table-content-main">
-    <ol class="toc">
-      
-        <li class="toc-item">
-          <a href="/" target="_self">
-            首页
-          </a>
-        </li>
-      
-        <li class="toc-item">
-          <a href="/archives/" target="_self">
-            归档
-          </a>
-        </li>
-      
-        <li class="toc-item">
-          <a href="/tags/" target="_self">
-            标签
-          </a>
-        </li>
-      
-        <li class="toc-item">
-          <a href="/categories/" target="_self">
-            分类
-          </a>
-        </li>
-      
-        <li class="toc-item">
-          <a href="/friends/" target="_self">
-            友链
-          </a>
-        </li>
-      
-        <li class="toc-item">
-          <a href="/about/" target="_self">
-            关于
-          </a>
-        </li>
-      
-    </ol>
   </div>
 </nav>
-<div id="site-process"></div>
-    <main id="passage">
-      
-  <div class="passage">
-    <div class="passage-meta">
 
-        
-      <span style="margin-right: 24px;">
-        <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E5%88%9D%E7%BA%A7/"><i class="fa fa-bookmark"></i>数据结构与算法(初级)</a>
-      </span>
-        
-        
-            <span style="margin-right: 24px;">
-         <i class="fa fa-unlock-alt"></i>UNLOCK
-      </span>
-        
-        
-    </div>
-    <div class="passage-title-wrap">
-        <h1 class="passage-title">
-            3.数组
-        </h1>
-        <div class="passage-meta">
-        <span style="margin-right: 24px;">
-          <i class="fa fa-calendar"></i>2019.07.13 11:38
-        </span>
-            <span id="article-visit-info" style="margin-right: 24px;">
-            <i class="fa fa-eye"></i> 0
-        </span>
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/images/07.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+                <div class="mt-3 post-meta">
+                  <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                  <time datetime="2019-07-13 11:38">
+                    2019年7月13日 中午
+                  </time>
+                </div>
+              
+
+              <div class="mt-1">
+                
+                  
+                  <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    4k 字
+                  </span>
+                
+
+                
+                  
+                  <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                    
+                    
+                    54
+                     分钟
+                  </span>
+                
+
+                
+                  <!-- 不蒜子统计文章PV -->
+                  
+                  <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
+                    <i class="iconfont icon-eye" aria-hidden="true"></i>
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>
+                
+              </div>
+            
+          </div>
+
+          
+        </div>
       </div>
-  </div>
-  
-  <article class="passage-article">
-    <p>提到数组，我想你肯定不陌生，甚至还会自信地说，它很简单啊。</p>
+    </div>
+      <script>
+          var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+          // 依次判断 系统暗黑模式 指定时间 缓存 dark
+          if( matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+              if(!(isNight&&localStorage.getItem('noDark') === '1')) {
+                  document.body.classList.add('dark');
+              }
+          }
+          document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark")?"🌙":"☀";
+      </script>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：10 个月前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <!-- more -->
+<p>提到数组，我想你肯定不陌生，甚至还会自信地说，它很简单啊。</p>
 <p>是的，在每一种编程语言中，基本都会有数组这种数据类型。不过，它不仅仅是一种编程语言中的数据类型，还是一种最基础的数据结构。尽管数组看起来非常基础、简单，但是估计很多人都并没有理解这个基础数据结构的精髓。</p>
 <p>在大部分编程语言中，数组都是从 <code>0</code> 开始编号的，但你是否下意识地想过，为什么数组要从 <code>0</code> 开始编号，而不是从 <code>1</code> 开始呢？ 从 <code>1</code> 开始不是更符合人类的思维习惯吗？</p>
 <h2 id="如何实现随机访问？"><a href="#如何实现随机访问？" class="headerlink" title="如何实现随机访问？"></a>如何实现随机访问？</h2><p>什么是数组？估计你心中已经有了答案。不过，还是想用专业的话来做下解释。<strong>数组（Array）是一种线性表数据结构。它用一组连续的内存空间，来存储一组具有相同类型的数据。</strong></p>
 <p>这个定义里有几个关键词，理解了这几个关键词，你就能彻底掌握数组的概念了。下面就来看一下。</p>
-<p>第一是<strong>线性表</strong>（<code>Linear List</code>）。顾名思义，线性表就是数据排成像一条线一样的结构。每个线性表上的数据最多只有前和后两个方向。其实除了数组，链表、队列、栈等也是线性表结构。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/02/09337bf0-cd44-11e9-949b-39df729e553b.png" alt="image.png"><br>而与它相对立的概念是<strong>非线性表</strong>，比如二叉树、堆、图等。之所以叫非线性，是因为，在非线性表中，数据之间并不是简单的前后关系。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/02/124961a0-cd44-11e9-949b-39df729e553b.png" alt="image.png"><br>第二个是<strong>连续的内存空间和相同类型的数据</strong>。正是因为这两个限制，它才有了一个堪称“杀手锏”的特性：“随机访问”。但有利就有弊，这两个限制也让数组的很多操作变得非常低效，比如要想在数组中删除、插入一个数据，为了保证连续性，就需要做大量的数据搬移工作。</p>
+<p>第一是<strong>线性表</strong>（<code>Linear List</code>）。顾名思义，线性表就是数据排成像一条线一样的结构。每个线性表上的数据最多只有前和后两个方向。其实除了数组，链表、队列、栈等也是线性表结构。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/02/09337bf0-cd44-11e9-949b-39df729e553b.png" srcset="/img/loading.gif" alt="image.png"><br>而与它相对立的概念是<strong>非线性表</strong>，比如二叉树、堆、图等。之所以叫非线性，是因为，在非线性表中，数据之间并不是简单的前后关系。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/02/124961a0-cd44-11e9-949b-39df729e553b.png" srcset="/img/loading.gif" alt="image.png"><br>第二个是<strong>连续的内存空间和相同类型的数据</strong>。正是因为这两个限制，它才有了一个堪称“杀手锏”的特性：“随机访问”。但有利就有弊，这两个限制也让数组的很多操作变得非常低效，比如要想在数组中删除、插入一个数据，为了保证连续性，就需要做大量的数据搬移工作。</p>
 <p>说到数据的访问，那你知道数组是如何实现根据下标随机访问数组元素的吗？</p>
-<p>拿一个长度为 <code>10</code> 的 <code>int</code> 类型的数组 <code>int[] a = new int[10]</code> 来举例。下面的这个图中，计算机给数组 <code>a[10]</code>分配了一块连续内存空间 <code>1000～1039</code>，其中，内存块的首地址为 <code>base_address = 1000</code>。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/02/4000df60-cd44-11e9-949b-39df729e553b.png" alt="image.png"><br>计算机会给每个内存单元分配一个地址，计算机通过地址来访问内存中的数据。当计算机需要随机访问数组中的某个元素时，它会首先通过下面的寻址公式，计算出该元素存储的内存地址：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a[i]_address &#x3D; base_address + i * data_type_size</span><br></pre></td></tr></table></figure>
+<p>拿一个长度为 <code>10</code> 的 <code>int</code> 类型的数组 <code>int[] a = new int[10]</code> 来举例。下面的这个图中，计算机给数组 <code>a[10]</code>分配了一块连续内存空间 <code>1000～1039</code>，其中，内存块的首地址为 <code>base_address = 1000</code>。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/02/4000df60-cd44-11e9-949b-39df729e553b.png" srcset="/img/loading.gif" alt="image.png"><br>计算机会给每个内存单元分配一个地址，计算机通过地址来访问内存中的数据。当计算机需要随机访问数组中的某个元素时，它会首先通过下面的寻址公式，计算出该元素存储的内存地址：</p>
+<pre><code class="hljs plain">a[i]_address &#x3D; base_address + i * data_type_size</code></pre>
 <p>其中 <code>data_type_size</code> 表示数组中每个元素的大小。上面举的这个例子里，数组中存储的是 <code>int</code> 类型数据，所以 <code>data_type_size</code> 就为 4 个字节。这个公式非常简单，就不多做解释了。</p>
 <p>这里要特别纠正一个“错误”。在面试的时候，常常会问数组和链表的区别，很多人都回答说，“链表适合插入、删除，时间复杂度 $O(1)$；数组适合查找，查找时间复杂度为 $O(1)$”。</p>
 <p>实际上，这种表述是不准确的。数组是适合查找操作，但是查找的时间复杂度并不为 $O(1)$。即便是排好序的数组，你用二分查找，时间复杂度也是 $O(logn)$。所以，正确的表述应该是，数组支持随机访问，根据下标随机访问的时间复杂度为 $O(1)$。</p>
@@ -259,23 +242,32 @@
 <p>如果在数组的末尾插入元素，那就不需要移动数据了，这时的时间复杂度为 $O(1)$。但如果在数组的开头插入元素，那所有的数据都需要依次往后移动一位，所以最坏时间复杂度是 $O(n)$。 因为在每个位置插入元素的概率是一样的，所以平均情况时间复杂度为 $(1+2+…n) / n = O(n)$。</p>
 <p>如果数组中的数据是有序的，在某个位置插入一个新的元素时，就必须按照刚才的方法搬移 <code>k</code> 之后的数据。但是，如果数组中存储的数据并没有任何规律，数组只是被当作一个存储数据的集合。在这种情况下，如果要将某个数组插入到第 <code>k</code> 个位置，为了避免大规模的数据搬移，还有一个简单的办法就是，直接将第 <code>k</code> 位的数据搬移到数组元素的最后，把新的元素直接放入第 <code>k</code> 个位置。</p>
 <p>为了更好地理解，举一个例子。假设数组 <code>a[10]</code> 中存储了如下 <code>5</code> 个元素：<code>a</code>，<code>b</code>，<code>c</code>，<code>d</code>，<code>e</code>。</p>
-<p>现在需要将元素 <code>x</code> 插入到第 <code>3</code> 个位置。只需要将 <code>c</code> 放入到 <code>a[5]</code>，将 <code>a[2]</code> 赋值为 <code>x</code> 即可。最后，数组中的元素如下：<code>a</code>，<code>b</code>，<code>x</code>，<code>d</code>，<code>e</code>，<code>c</code>。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/02/012db140-cd45-11e9-949b-39df729e553b.png" alt="image.png"><br>利用这种处理技巧，在特定场景下，在第 k 个位置插入一个元素的时间复杂度就会降为 O(1)。这个处理思想在快排中也会用到，我会在排序那一节具体来讲，这里就说到这儿。</p>
+<p>现在需要将元素 <code>x</code> 插入到第 <code>3</code> 个位置。只需要将 <code>c</code> 放入到 <code>a[5]</code>，将 <code>a[2]</code> 赋值为 <code>x</code> 即可。最后，数组中的元素如下：<code>a</code>，<code>b</code>，<code>x</code>，<code>d</code>，<code>e</code>，<code>c</code>。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/02/012db140-cd45-11e9-949b-39df729e553b.png" srcset="/img/loading.gif" alt="image.png"><br>利用这种处理技巧，在特定场景下，在第 k 个位置插入一个元素的时间复杂度就会降为 O(1)。这个处理思想在快排中也会用到，我会在排序那一节具体来讲，这里就说到这儿。</p>
 <p>我们再来看<strong>删除操作</strong>。</p>
 <p>跟插入数据类似，如果要删除第 <code>k</code> 个位置的数据，为了内存的连续性，也需要搬移数据，不然中间就会出现空洞，内存就不连续了。</p>
 <p>和插入类似，如果删除数组末尾的数据，则最好情况时间复杂度为 $O(1)$；如果删除开头的数据，则最坏情况时间复杂度为 $O(n)$；平均情况时间复杂度也为 $O(n)$。</p>
 <p>实际上，在某些特殊场景下，并不一定非得追求数组中数据的连续性。如果将多次删除操作集中在一起执行，删除的效率是不是会提高很多呢？</p>
-<p>继续来看例子。数组 <code>a[10]</code> 中存储了 <code>8</code> 个元素：<code>a</code>，<code>b</code>，<code>c</code>，<code>d</code>，<code>e</code>，<code>f</code>，<code>g</code>，<code>h</code>。现在，要依次删除 <code>a</code>，<code>b</code>，<code>c</code> 三个元素。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/02/3114b930-cd45-11e9-949b-39df729e553b.png" alt="image.png"><br>为了避免 <code>d</code>，<code>e</code>，<code>f</code>，<code>g</code>，<code>h</code> 这几个数据会被搬移三次，可以先记录下已经删除的数据。每次的删除操作并不是真正地搬移数据，只是记录数据已经被删除。当数组没有更多空间存储数据时，再触发执行一次真正的删除操作，这样就大大减少了删除操作导致的数据搬移。</p>
+<p>继续来看例子。数组 <code>a[10]</code> 中存储了 <code>8</code> 个元素：<code>a</code>，<code>b</code>，<code>c</code>，<code>d</code>，<code>e</code>，<code>f</code>，<code>g</code>，<code>h</code>。现在，要依次删除 <code>a</code>，<code>b</code>，<code>c</code> 三个元素。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/02/3114b930-cd45-11e9-949b-39df729e553b.png" srcset="/img/loading.gif" alt="image.png"><br>为了避免 <code>d</code>，<code>e</code>，<code>f</code>，<code>g</code>，<code>h</code> 这几个数据会被搬移三次，可以先记录下已经删除的数据。每次的删除操作并不是真正地搬移数据，只是记录数据已经被删除。当数组没有更多空间存储数据时，再触发执行一次真正的删除操作，这样就大大减少了删除操作导致的数据搬移。</p>
 <p>如果你了解 <code>JVM</code>，你会发现，这不就是 <code>JVM</code> 标记清除垃圾回收算法的核心思想吗？没错，数据结构和算法的魅力就在于此，<font color='red'><strong>很多时候我们并不是要去死记硬背某个数据结构或者算法，而是要学习它背后的思想和处理技巧，这些东西才是最有价值的</strong></font>。如果你细心留意，不管是在软件开发还是架构设计中，总能找到某些算法和数据结构的影子。</p>
 <h2 id="警惕数组的访问越界问题"><a href="#警惕数组的访问越界问题" class="headerlink" title="警惕数组的访问越界问题"></a>警惕数组的访问越界问题</h2><p>了解了数组的几个基本操作后，来聊聊数组访问越界的问题。</p>
 <p>首先，请你来分析一下这段 <code>C</code> 语言代码的运行结果：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> arr[<span class="number">3</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="keyword">for</span>(; i&lt;=<span class="number">3</span>; i++)&#123;</span><br><span class="line">        arr[i] = <span class="number">0</span>;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"hello world\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span>* argv[])</span></span>&#123;
+    <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">int</span> arr[<span class="hljs-number">3</span>] = &#123;<span class="hljs-number">0</span>&#125;;
+    <span class="hljs-keyword">for</span>(; i&lt;=<span class="hljs-number">3</span>; i++)&#123;
+        arr[i] = <span class="hljs-number">0</span>;
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"hello world\n"</span>);
+    &#125;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;</code></pre>
 <p>你发现问题了吗？这段代码的运行结果并非是打印三行“hello word”，而是会无限打印“hello world”，这是为什么呢？</p>
 <p>因为，数组大小为 <code>3</code>，<code>a[0]</code>，<code>a[1]</code>，<code>a[2]</code>，而代码因为书写错误，导致 <code>for</code> 循环的结束条件错写为了 <code>i &lt;= 3</code> 而非 <code>i &lt; 3</code>，所以当 <code>i = 3</code> 时，数组 <code>a[3]</code> 访问越界。</p>
 <p>在 <code>C</code> 语言中，只要不是访问受限的内存，所有的内存空间都是可以自由访问的。根据前面讲的数组寻址公式，<code>a[3]</code> 也会被定位到某块不属于数组的内存地址上，而这个地址正好是存储变量 <code>i</code> 的内存地址，那么 <code>a[3] = 0</code> 就相当于 <code>i = 0</code>，所以就会导致代码无限循环。</p>
 <p>数组越界在 <code>C</code> 语言中是一种未决行为，并没有规定数组访问越界时编译器应该如何处理。因为，访问数组的本质就是访问一段连续内存，只要数组通过偏移计算得到的内存地址是可用的，那么程序就可能不会报任何错误。</p>
 <p>这种情况下，一般都会出现莫名其妙的逻辑错误，就像刚刚举的那个例子，<code>debug</code> 的难度非常的大。而且，很多计算机病毒也正是利用到了代码中的数组越界可以访问非法地址的漏洞，来攻击系统，所以写代码的时候一定要警惕数组越界。</p>
 <p>但并非所有的语言都像 <code>C</code> 一样，把数组越界检查的工作丢给程序员来做，像 <code>Java</code> 本身就会做越界检查，比如下面这几行 <code>Java</code> 代码，就会抛出 <code>java.lang.ArrayIndexOutOfBoundsException</code>。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span>[] a = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">3</span>];</span><br><span class="line">a[<span class="number">3</span>] = <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">int</span>[] a = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span>[<span class="hljs-number">3</span>];
+a[<span class="hljs-number">3</span>] = <span class="hljs-number">10</span>;</code></pre>
 
 <h2 id="容器能否完全替代数组？"><a href="#容器能否完全替代数组？" class="headerlink" title="容器能否完全替代数组？"></a>容器能否完全替代数组？</h2><p>针对数组类型，很多语言都提供了容器类，比如 <code>Java</code> 中的 <code>ArrayList</code>、<code>C++ STL</code> 中的 <code>vector</code>。在项目开发中，什么时候适合用数组，什么时候适合用容器呢？</p>
 <p>这里拿 <code>Java</code> 语言来举例。如果你是 <code>Java</code> 工程师，几乎天天都在用 <code>ArrayList</code>，对它应该非常熟悉。那它与数组相比，到底有哪些优势呢？</p>
@@ -284,7 +276,10 @@
 <p>如果使用 <code>ArrayList</code>，就完全不需要关心底层的扩容逻辑，<code>ArrayList</code> 已经帮我们实现好了。每次存储空间不够的时候，它都会将空间自动扩容为 <code>1.5</code> 倍大小。</p>
 <p>不过，这里需要注意一点，因为扩容操作涉及内存申请和数据搬移，是比较耗时的。所以，如果事先能确定需要存储的数据大小，<strong>最好在创建 <code>ArrayList</code> 的时候事先指定数据大小</strong>。</p>
 <p>比如要从数据库中取出 <code>10000</code> 条数据放入 <code>ArrayList</code>。看下面这几行代码，你会发现，相比之下，事先指定数据大小可以省掉很多次内存申请和数据搬移操作。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ArrayList&lt;User&gt; users = <span class="keyword">new</span> ArrayList(<span class="number">10000</span>);</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10000</span>; ++i) &#123;</span><br><span class="line">  users.add(xxx);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java">ArrayList&lt;User&gt; users = <span class="hljs-keyword">new</span> ArrayList(<span class="hljs-number">10000</span>);
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10000</span>; ++i) &#123;
+  users.add(xxx);
+&#125;</code></pre>
 <p>作为高级语言编程者，是不是数组就无用武之地了呢？当然不是，有些时候，用数组会更合适些，总结了几点经验。</p>
 <ol>
 <li><p><code>Java ArrayList</code> 无法存储基本类型，比如 <code>int</code>、<code>long</code>，需要封装为 <code>Integer</code>、<code>Long</code> 类，而 <code>Autoboxing</code>、<code>Unboxing</code> 则有一定的性能消耗，所以如果特别关注性能，或者希望使用基本类型，就可以选用数组。</p>
@@ -299,9 +294,9 @@
 <li>为什么大多数编程语言中，数组要从 <code>0</code> 开始编号，而不是从 <code>1</code> 开始呢？</li>
 </ul>
 <p>从数组存储的内存模型上来看，“下标”最确切的定义应该是“偏移（<code>offset</code>）”。前面也讲到，如果用 <code>a</code> 来表示数组的首地址，<code>a[0]</code> 就是偏移为 <code>0</code> 的位置，也就是首地址，<code>a[k]</code> 就表示偏移 <code>k</code> 个 <code>type_size</code> 的位置，所以计算 <code>a[k]</code> 的内存地址只需要用这个公式：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a[k]_address &#x3D; base_address + k * type_size</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plain">a[k]_address &#x3D; base_address + k * type_size</code></pre>
 <p>但是，如果数组从 <code>1</code> 开始计数，那计算数组元素 <code>a[k]</code> 的内存地址就会变为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a[k]_address &#x3D; base_address + (k-1)*type_size</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plain">a[k]_address &#x3D; base_address + (k-1)*type_size</code></pre>
 <p>对比两个公式，不难发现，从 <code>1</code> 开始编号，每次随机访问数组元素都多了一次减法运算，对于 <code>CPU</code> 来说，就是多了一次减法指令。</p>
 <p>数组作为非常基础的数据结构，通过下标随机访问数组元素又是其非常基础的编程操作，效率的优化就要尽可能做到极致。所以为了减少一次减法操作，数组选择了从 <code>0</code> 开始编号，而不是从 <code>1</code> 开始。</p>
 <p>不过我认为，上面解释得再多其实都算不上压倒性的证明，说数组起始编号非 <code>0</code> 开始不可。所以最主要的原因可能是历史原因。</p>
@@ -313,305 +308,439 @@
 </li>
 </ul>
 <p>欢迎留言和我分享。</p>
-  </article>
-  <aside class="table-content" id="site-toc">
-  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
-  <div class="table-content-title">
-    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
-    <span>目录</span>
-  </div>
-  <div class="table-content-main" id="table-toc">
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#如何实现随机访问？"><span class="toc-text">如何实现随机访问？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#低效的“插入”和“删除”"><span class="toc-text">低效的“插入”和“删除”</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#警惕数组的访问越界问题"><span class="toc-text">警惕数组的访问越界问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#容器能否完全替代数组？"><span class="toc-text">容器能否完全替代数组？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#思考"><span class="toc-text">思考</span></a></li></ol>
-  </div>
-</aside>
-  
-    <aside class="passage-copyright">
-      <div>本文作者: 沐晨</div>
-      
-        <div>
-          原文链接:
-          <a style="word-break: break-word;" href="" target="_blank">https://muchen.fun/passages/3/</a>
-        </div>
-      
-      <div>
-        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
-      </div>
-    </aside>
-  
-    
-    <div class="passage-tags">
-    
-      <a style="word-break: break-word;" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><i class="fa fa-tags"></i>数据结构</a>
-    
-      <a style="word-break: break-word;" href="/tags/%E6%95%B0%E7%BB%84/"><i class="fa fa-tags"></i>数组</a>
-    
-    </div>
-  
-</div>
 
-<div class="left_prev_arrow_div">
-    <div class="left_prev_arrow arrow_div">
-        <a href="/passages/2/" data-enable="true">
-            <i class="fa fa-angle-left" aria-hidden="true"></i>
-        </a>
-    </div>
-</div>
-<div class="right_prev_arrow_div">
-    <div class="right_prev_arrow arrow_div">
-        <a href="/passages/4/" data-enable="true">
-            <i class="fa fa-angle-right" aria-hidden="true"></i>
-        </a>
-    </div>
-</div>
-
-
-    </main>
-    
-      
-<div class="site-comment-contanier" data-plateform="leancloud">
-  
-    <p id="site-comment-info">
-      <i class="fa fa-spinner fa-spin"></i> 评论加载中
-    </p>
-    <div id="site-comment"></div>
-  
-</div>
-    
-    <div class="site-footer-wrapper">
-  <footer class="site-footer">
-    
-      
-        <div class="site-footer-col">
-          <h5 class="site-footer-title">博客推荐</h5>
-          
-            <span class="site-footer-item">
-              <a href="https://muchen.fun/" target="_blank">沐晨</a>
-            </span>
-          
-            <span class="site-footer-item">
-              <a href="http://www.wangdabo.com" target="_blank">王大博</a>
-            </span>
-          
-            <span class="site-footer-item">
-              <a href="https://inrgg.com/" target="_blank">任公公</a>
-            </span>
-          
-            <span class="site-footer-item">
-              <a href="https://naiyouhuameitang.club/" target="_blank">奶油话梅糖</a>
-            </span>
-          
-        </div>
-      
-        <div class="site-footer-col">
-          <h5 class="site-footer-title">系列教程</h5>
-          
-            <span class="site-footer-item">
-              <a href="https://muchen.fun/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/" target="_blank">数据结构与算法(中级)</a>
-            </span>
-          
-            <span class="site-footer-item">
-              <a href="/tags/设计模式/" target="_self">设计模式</a>
-            </span>
-          
-        </div>
-      
-        <div class="site-footer-col">
-          <h5 class="site-footer-title">找到我</h5>
-          
-            <span class="site-footer-item">
-              <a href="https://live.bilibili.com/10606164" target="_blank">哔哩哔哩</a>
-            </span>
-          
-            <span class="site-footer-item">
-              <a href="https://leetcode-cn.com/u/fancier/" target="_blank">Leetcode</a>
-            </span>
-          
-            <span class="site-footer-item">
-              <a href="https://juejin.im/user/5c1a2bf6e51d453073485c36" target="_blank">掘金</a>
-            </span>
-          
-        </div>
-      
-    
-    <div class="site-footer-info">
-      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
-    </div>
-    
-      <div class="site-footer-info">
-        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
-      </div>
-    
-    
-      <div class="site-footer-info">
-        <i class="fa fa-at"></i> Email: lcoder@qq.com
-      </div>
-    
-    <div class="site-footer-info">
-      <i class="fa fa-copyright"></i> 
-      2019-2020 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
-      Created by <a href="https://fanciercoder.github.io/" target="_blank">沐晨</a>.
-      All rights reserved.
-    </div>
-    <div class="site-footer-info">
-        <span style="position: relative;">
-        <a style=" position: absolute;
-            white-space: nowrap;" id="colorPrint">
-        </a>
-        </span>
-    </div>
-  </footer>
-</div>
-    <div id="site-layer" style="display:none;">
-  <div class="site-layer-content">
-    <div class="site-layer-header">
-      <span class="site-layer-header-title" id="site-layer-title"></span>
-      <i class="fa fa-close" id="site-layer-close"></i>
-    </div>
-    <div class="site-layer-body" id="site-layer-container">
-      <div class="site-layer-input" id="site-layer-search" style="display: none;">
-        <div class="site-layer-input-choose">
-          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
-        </div>
-        <input type="text">
-        <i class="fa fa-search"></i>
-      </div>
-      
-        <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
-          
+            </article>
+            <hr>
             <div>
-              <img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/wechat.png" alt="WeChat">
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E5%88%9D%E7%BA%A7/">数据结构与算法(初级)</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%95%B0%E7%BB%84/">数组</a>
+                    
+                  </div>
+                
+              </div>
               
-                <p>WeChat</p>
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/passages/4/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">4.链表（上）</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/passages/2/">
+                        <span class="hidden-mobile">2.浅析最好、最坏、平均、均摊时间复杂度</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
               
             </div>
-          
-            <div>
-              <img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/alipay.png" alt="AliPay">
-              
-                <p>AliPay</p>
-              
-            </div>
-          
-            <div>
-              <img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/BitCoin.jpg" alt="BitCoin">
-              
-                <p>BitCoin</p>
-              
-            </div>
-          
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <div id="vcomments"></div>
+  <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+  <script type="text/javascript">
+    var oldLoadVa = window.onload;
+    window.onload = function () {
+      oldLoadVa && oldLoadVa();
+
+      new Valine({
+        el: "#vcomments",
+        app_id: "O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",
+        app_key: "5Rl3Rhl9zc8BJNvrPcncKWFy",
+        placeholder: "说点什么吧~",
+        path: window.location.pathname,
+        avatar: "retro",
+        meta: ["nick","mail","link"],
+        pageSize: "10",
+        lang: "zh-CN",
+        highlight: true,
+        recordIP: true,
+        serverURLs: "",
+      });
+    };
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments
+      powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
         </div>
-      
-      <div id="site-layer-welcome" style="display:none;"></div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><br><div class="text-center">欢迎关注我的公众号</div>
+    </div>
+  </div>
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
     </div>
   </div>
 </div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    <div>
+      <span id="timeDate">载入天数...</span>
+      <span id="times">载入时分秒...</span>
+      <script>
+        var now = new Date();
+        function createtime(){
+          var grt= new Date("07/12/2019 00:00:00");//此处修改你的建站时间或者网站上线时间
+          now.setTime(now.getTime()+250);
+          days = (now - grt ) / 1000 / 60 / 60 / 24;
+          dnum = Math.floor(days);
+          hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum);
+          hnum = Math.floor(hours);
+          if(String(hnum).length ==1 ){
+            hnum = "0" + hnum;
+          }
+          minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+          mnum = Math.floor(minutes);
+          if(String(mnum).length ==1 ){
+            mnum = "0" + mnum;
+          }
+          seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+          snum = Math.round(seconds);
+          if(String(snum).length ==1 ){
+            snum = "0" + snum;
+          }
+          document.getElementById("timeDate").innerHTML = "本站已运行&nbsp"+dnum+"&nbsp天";
+          document.getElementById("times").innerHTML = hnum + "&nbsp小时&nbsp" + mnum + "&nbsp分&nbsp" + snum + "&nbsp秒";
+        }
+        setInterval("createtime()",250);
+      </script>
+    </div>
     
 
-<div class="bottom-bar">
-  <div class="bottom-bar-left">
-    <a href="/passages/4/" target="_self" data-enable="true">
-      <i class="fa fa-arrow-left"></i>
-    </a>
-    <a href="/passages/2/" target="_self" data-enable="true">
-      <i class="fa fa-arrow-right"></i>
-    </a>
-  </div>
-  <div class="bottom-bar-right">
-    <a href="javascript:void(0);" target="_self" data-enable="true" id="site-toc-show-btn">
-      <i class="fa fa-bars"></i>
-    </a>
     
-      <a href="#site-comment" target="_self" data-enable="true">
-        <i class="fa fa-commenting"></i>
-      </a>
-    
-    <a href="javascript:void(0);" target="_self" id="site-toggle-share-btn">
-      <i class="fa fa-share-alt"></i>
-    </a>
-    
-      <a href="javascript:void(0);" target="_self" id="site-reward">
-        <i class="fa fa-thumbs-up"></i>
-      </a>
-    
-    <a href="javascript:void(0);" target="_self" id="back-top-btn">
-      <i class="fa fa-chevron-up"></i>
-    </a>
-  </div>
-</div>
-    <div id="share-btn">
-  
-    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
-      <i class="fa fa-twitter"></i>
-    </a>
-  
-  
-    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
-      <i class="fa fa-facebook"></i>
-    </a>
-  
-  
-    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
-      <i class="fa fa-weibo"></i>
-    </a>
-  
-  
-    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
-      <i class="fa fa-qq"></i>
-    </a>
-  
-  
-    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
-      <i class="fa fa-wechat"></i>
-    </a>
-  
-</div>
-    
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-144841374-1"></script>
-  <script async>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
 
-    gtag('config', 'UA-144841374-1');
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+  <script  src="/js/lazyload.js" ></script>
+
+
+
+  
+
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+  
+<script src="https://static.muchen.fun/js/custom.js"></script>
+
+
+
+<!-- Plugins -->
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+    <!-- Google Analytics -->
+    <script defer>
+      (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+          (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+          m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+      })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+      ga('create', 'UA-144841374-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "3.数组&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 60,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
   </script>
 
 
 
 
-  <script async>
-  (function(){
-      var bp = document.createElement('script');
-      var curProtocol = window.location.protocol.split(':')[0];
-      if (curProtocol === 'https') {
-          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
-      }
-      else {
-          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
-      }
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(bp, s);
-  })();
-  </script>
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+  
+
+
+
+  
+  
+    <script>
+      !function (e, t, a) {
+        function r() {
+          for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+          requestAnimationFrame(r)
+        }
+
+        function n() {
+          var t = "function" == typeof e.onclick && e.onclick;
+          e.onclick = function (e) {
+            t && t(), o(e)
+          }
+        }
+
+        function o(e) {
+          var a = t.createElement("div");
+          a.className = "heart", s.push({
+            el: a,
+            x: e.clientX - 5,
+            y: e.clientY - 5,
+            scale: 1,
+            alpha: 1,
+            color: c()
+          }), t.body.appendChild(a)
+        }
+
+        function i(e) {
+          var a = t.createElement("style");
+          a.type = "text/css";
+          try {
+            a.appendChild(t.createTextNode(e))
+          } catch (t) {
+            a.styleSheet.cssText = e
+          }
+          t.getElementsByTagName("head")[0].appendChild(a)
+        }
+
+        function c() {
+          return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+        }
+
+        var s = [];
+        e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+          setTimeout(e, 1e3 / 60)
+        }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+      }(window, document);
+    </script>
+  
 
 
 
 
- <script>
- //const element =  document.querySelector('.home-article-wrapper')
- //element.classList.add('animated', 'bounceInLeft')
- function testAnim(x) {
-     $('.home-article-wrapper').removeClass('animate').addClass(x + ' animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-       $(this).removeClass('animate');
-     });
-   };
 
-   testAnim('flipInX');
- </script>
 
-    
-      
-<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/footer.js"></script>
 
-    
-  </body>
+
+
+
+
+
+</body>
 </html>

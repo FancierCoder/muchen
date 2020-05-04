@@ -1,257 +1,243 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-  
+
+
+
+
+
 <head>
-  <meta charset="utf-8">
-  <meta name="author" content="MuChen" />
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/touch-icon.png">
+  <link rel="icon" type="image/png" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/favicon.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
   
-  
-  <title>递归算法 | MuChen&#39;s Blog</title>
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="沐晨的个人博客,技术博客">
+  <meta name="author" content="Li Duo">
+  <meta name="keywords" content="个人博客,个人见解">
+  <title>递归算法 - MuChen&#39;s Blog</title>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
 
-  
-    <meta name="keywords" content="数据结构与算法(中级),算法,递归," />
-  
 
-  
-  <meta name="description" content="如何用三行代码找到“最终推荐人”？">
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
 
-  <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/jquery-3.4.1.min.js"></script>
 
-  
+<!-- 主题依赖的图标库，不要自行修改 -->
 
-  
-    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@4.5.3/dist/av-min.js" async></script>
-  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
 
-  
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
-  
 
-  
-    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
-  
 
-  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
 
- <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/8.11.8/sweetalert2.all.min.js" async></script>
 
-  <script>
-  // theme-ad's config script
-  // it can be used in every script
-  
-  window.AD_CONFIG = {
-    leancloud: {"appid":"O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI","appkey":"5Rl3Rhl9zc8BJNvrPcncKWFy","comment":true,"count":true},
-    welcome: {"enable":false,"interval":30},
-    start_time: "2019-07-12",
-    passwords: ["0e31be4bd24c14e65633d11633fe616ee3d93b4f31d07726fdbe113fa98a391a", ],
-    is_post: true,
-    lock: false,
-    author: "MuChen",
-    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
-    mathjax: true,
-    page_type: "",
-    root: "/"
-  };
-</script>
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
 
   
-<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/sha256.min.js"></script>
-<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/auth.js"></script>
-<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/index.js"></script>
-<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/qrcode.min.js"></script>
+<link rel="stylesheet" href="https://static.muchen.fun/css/custom.css?t=0.1423425.css">
 
 
-  
-    <link rel="icon" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/favicon.ico">
-    <link rel="apple-touch-icon" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/touch-icon.png">
-  
-
-  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-
-  <link href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/animate-3.7.2.min.css" rel="stylesheet">
-
-  
-<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
-
-
-  
-
-  <script type="text/javascript">
-      function getCSS() {
-          let dateToday = new Date();
-          let timeNow = dateToday.getTime();
-          dateToday.setTime(timeNow);
-          let theHour = dateToday.getHours();
-          let display = "/css/index-night.css";
-          if (theHour <= 5) {
-			  display = "https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/index-night.css";
-		  } else if (theHour >= 19) {
-              display = "https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/index-night.css";
-		  } else if (theHour > 5) {
-              display = "https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/index.css";
-		  } else if (theHour < 19) {
-              display = "https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/index.css";
-		  }
-          let css = '<';
-          css += 'link rel="stylesheet" href=' + display + ' \/';
-          css += '>';
-          document.write(css);
-      }
-  </script>
-  <script type="text/javascript">
-      window.onload = getCSS();
-  </script>
 
 <meta name="generator" content="Hexo 4.2.0"></head>
-  <body>
-    <div class="preloader">
-        <div class="lds-ripple">
-            <div class="lds-pos"></div>
-            <div class="lds-pos"></div>
-        </div>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">
+              <i class="iconfont icon-home-fill"></i>
+              首页</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">
+              <i class="iconfont icon-archive-fill"></i>
+              归档</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">
+              <i class="iconfont icon-category-fill"></i>
+              分类</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">
+              <i class="iconfont icon-tags-fill"></i>
+              标签</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">
+              <i class="iconfont icon-user-fill"></i>
+              关于</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/links/">
+              <i class="iconfont icon-link-fill"></i>
+              友链</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+            <li class="nav-item">
+                <a id="dark" class="nav-link" onclick="switchDarkMode()">
+                    <i class="iconfont icon-sun"></i>
+                </a>
+            </li>
+      </ul>
     </div>
-    <header class="site-header">
-  <div class="site-header-brand">
-    
-      <span class="site-header-brand-title">
-        <a href="/">沐晨</a>
-      </span>
-    
-    
-      <span class="site-header-brand-motto"> | Learn To Learn</span>
-    
-  </div>
-  <div class="site-header-right">
-      <div class="search-box">
-          <section>
-              <div id="site_search">
-                  <input type="text" id="local-search-input" results="0"/>
-                  <div id="local-search-result"></div>
-              </div>
-          </section>
-      </div>
-    <nav class="site-header-navigation">
-      
-        <a href="/" target="_self">首页</a>
-      
-        <a href="/archives/" target="_self">归档</a>
-      
-        <a href="/tags/" target="_self">标签</a>
-      
-        <a href="/categories/" target="_self">分类</a>
-      
-        <a href="/friends/" target="_self">友链</a>
-      
-        <a href="/about/" target="_self">关于</a>
-      
-    </nav>
-    <div class="site-header-btn">
-      
-        <a href="https://github.com/FancierCoder" target="_blank" id="site-github">
-          <i class="fa fa-github-alt"></i>
-        </a>
-      
-      <a href="javascript:void(0);" id="site-search" style="display: none">
-        <i class="fa fa-search"></i>
-      </a>
-      <a href="javascript:void(0);" id="site-nav-btn">
-        <i class="fa fa-ellipsis-v"></i>
-      </a>
-    </div>
-  </div>
-</header>
-<nav class="table-content" id="site-nav">
-  <div class="table-content-title">
-    <span>导航</span>
-  </div>
-  <div class="table-content-main">
-    <ol class="toc">
-      
-        <li class="toc-item">
-          <a href="/" target="_self">
-            首页
-          </a>
-        </li>
-      
-        <li class="toc-item">
-          <a href="/archives/" target="_self">
-            归档
-          </a>
-        </li>
-      
-        <li class="toc-item">
-          <a href="/tags/" target="_self">
-            标签
-          </a>
-        </li>
-      
-        <li class="toc-item">
-          <a href="/categories/" target="_self">
-            分类
-          </a>
-        </li>
-      
-        <li class="toc-item">
-          <a href="/friends/" target="_self">
-            友链
-          </a>
-        </li>
-      
-        <li class="toc-item">
-          <a href="/about/" target="_self">
-            关于
-          </a>
-        </li>
-      
-    </ol>
   </div>
 </nav>
-<div id="site-process"></div>
-    <main id="passage">
-      
-  <div class="passage">
-    <div class="passage-meta">
 
-        
-      <span style="margin-right: 24px;">
-        <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
-      </span>
-        
-        
-            <span style="margin-right: 24px;">
-         <i class="fa fa-unlock-alt"></i>UNLOCK
-      </span>
-        
-        
-    </div>
-    <div class="passage-title-wrap">
-        <h1 class="passage-title">
-            递归算法
-        </h1>
-        <div class="passage-meta">
-        <span style="margin-right: 24px;">
-          <i class="fa fa-calendar"></i>2019.07.16 17:42
-        </span>
-            <span id="article-visit-info" style="margin-right: 24px;">
-            <i class="fa fa-eye"></i> 0
-        </span>
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/images/07.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+                <div class="mt-3 post-meta">
+                  <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                  <time datetime="2019-07-16 17:42">
+                    2019年7月16日 下午
+                  </time>
+                </div>
+              
+
+              <div class="mt-1">
+                
+                  
+                  <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    4.3k 字
+                  </span>
+                
+
+                
+                  
+                  <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                    
+                    
+                    59
+                     分钟
+                  </span>
+                
+
+                
+                  <!-- 不蒜子统计文章PV -->
+                  
+                  <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
+                    <i class="iconfont icon-eye" aria-hidden="true"></i>
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>
+                
+              </div>
+            
+          </div>
+
+          
+        </div>
       </div>
-  </div>
-  
-  <article class="passage-article">
-    <p>推荐注册返佣金的这个功能你应该不陌生吧？现在很多 <code>App</code> 都有这个功能。这个功能中，用户 <code>A</code> 推荐用户 <code>B</code> 来注册，用户 <code>B</code> 又推荐了用户 <code>C</code> 来注册。可以说，用户 <code>C</code> 的“最终推荐人”为用户 <code>A</code>，用户 <code>B</code> 的“最终推荐人”也为用户 <code>A</code>，而用户 <code>A</code> 没有“最终推荐人”。</p>
-<p>一般来说，会通过数据库来记录这种推荐关系。在数据库表中，可以记录两行数据，其中 <code>actor_id</code> 表示用户 <code>id</code>，<code>referrer_id</code> 表示推荐人 <code>id</code>。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/3b8e2dc0-d3ac-11e9-b66f-d76c8c3e613a.png" alt="image.png"><br>基于这个背景的问题是，给定一个用户 <code>ID</code>，如何查找这个用户的“最终推荐人”？</p>
+    </div>
+      <script>
+          var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+          // 依次判断 系统暗黑模式 指定时间 缓存 dark
+          if( matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+              if(!(isNight&&localStorage.getItem('noDark') === '1')) {
+                  document.body.classList.add('dark');
+              }
+          }
+          document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark")?"🌙":"☀";
+      </script>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：10 个月前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <!-- more -->
+<p>推荐注册返佣金的这个功能你应该不陌生吧？现在很多 <code>App</code> 都有这个功能。这个功能中，用户 <code>A</code> 推荐用户 <code>B</code> 来注册，用户 <code>B</code> 又推荐了用户 <code>C</code> 来注册。可以说，用户 <code>C</code> 的“最终推荐人”为用户 <code>A</code>，用户 <code>B</code> 的“最终推荐人”也为用户 <code>A</code>，而用户 <code>A</code> 没有“最终推荐人”。</p>
+<p>一般来说，会通过数据库来记录这种推荐关系。在数据库表中，可以记录两行数据，其中 <code>actor_id</code> 表示用户 <code>id</code>，<code>referrer_id</code> 表示推荐人 <code>id</code>。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/3b8e2dc0-d3ac-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>基于这个背景的问题是，给定一个用户 <code>ID</code>，如何查找这个用户的“最终推荐人”？</p>
 <h2 id="如何理解“递归”？"><a href="#如何理解“递归”？" class="headerlink" title="如何理解“递归”？"></a>如何理解“递归”？</h2><p>个人觉得，有两个最难理解的知识点，一个是<strong>动态规划</strong>，另一个就是<strong>递归</strong>。</p>
 <p>递归是一种应用非常广泛的算法（或者编程技巧）。很多数据结构和算法的编码实现都要用到递归，比如 <code>DFS</code> 深度优先搜索、前中后序二叉树遍历等等。所以，搞懂递归非常重要，否则，后面复杂一些的数据结构和算法学起来就会比较吃力。</p>
 <p>不过，别看说了这么多，递归本身可是一点儿都不“高冷”，生活中就有很多用到递归的例子。</p>
 <p>周末你带着女朋友去电影院看电影，女朋友问你，咱们现在坐在第几排啊？电影院里面太黑了，看不清，没法数，现在你怎么办？</p>
 <p>别忘了你是程序员，这个可难不倒你，递归就开始排上用场了。于是你就问前面一排的人他是第几排，你想只要在他的数字上加一，就知道自己在哪一排了。但是，前面的人也看不清啊，所以他也问他前面的人。就这样一排一排往前问，直到问到第一排的人，说我在第一排，然后再这样一排一排再把数字传回来。直到你前面的人告诉你他在哪一排，于是你就知道答案了。</p>
 <p>这就是一个非常标准的递归求解问题的分解过程，去的过程叫“递”，回来的过程叫“归”。基本上，所有的递归问题都可以用递推公式来表示。刚刚这个生活中的例子，用递推公式将它表示出来就是这样的：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f(n)&#x3D;f(n-1)+1 其中，f(1)&#x3D;1</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plain">f(n)&#x3D;f(n-1)+1 其中，f(1)&#x3D;1</code></pre>
 <p><code>f(n)</code> 表示你想知道自己在哪一排，<code>f(n-1)</code> 表示前面一排所在的排数，<code>f(1)=1</code> 表示第一排的人知道自己在第一排。有了这个递推公式，就可以很轻松地将它改为递归代码，如下：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (n == <span class="number">1</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">return</span> f(n<span class="number">-1</span>) + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">f</span><span class="hljs-params">(<span class="hljs-keyword">int</span> n)</span> </span>&#123;
+  <span class="hljs-keyword">if</span> (n == <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+  <span class="hljs-keyword">return</span> f(n<span class="hljs-number">-1</span>) + <span class="hljs-number">1</span>;
+&#125;</code></pre>
 
 <h2 id="递归需要满足的三个条件"><a href="#递归需要满足的三个条件" class="headerlink" title="递归需要满足的三个条件"></a>递归需要满足的三个条件</h2><p>刚刚这个例子是非常典型的递归，那究竟什么样的问题可以用递归来解决呢？这里总结了三个条件，只要同时满足以下三个条件，就可以用递归来解决。</p>
 <p><strong>1. 一个问题的解可以分解为几个子问题的解</strong></p>
@@ -265,14 +251,20 @@
 <p>先记住这个理论。举一个例子，一步一步实现一个递归代码。</p>
 <p>假如这里有 <code>n</code> 个台阶，每次可以跨 <code>1</code> 个台阶或者 <code>2</code> 个台阶，请问走这 <code>n</code> 个台阶有多少种走法？如果有 <code>7</code> 个台阶，可以 <code>2，2，2，1</code> 这样子上去，也可以 <code>1，2，1，1，2</code> 这样子上去，总之走法有很多，那如何用编程求得总共有多少种走法呢？</p>
 <p>仔细想下，实际上，可以根据第一步的走法把所有走法分为两类，第一类是第一步走了 <code>1</code> 个台阶，另一类是第一步走了 <code>2</code> 个台阶。所以 <code>n</code> 个台阶的走法就等于先走 <code>1</code> 阶后，<code>n-1</code> 个台阶的走法加上先走 <code>2</code> 阶后，<code>n-2</code> 个台阶的走法。用公式表示就是：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f(n) &#x3D; f(n-1)+f(n-2)</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plain">f(n) &#x3D; f(n-1)+f(n-2)</code></pre>
 <p>有了递推公式，递归代码基本上就完成了一半。再来看下终止条件。当有一个台阶时，不需要再继续递归，就只有一种走法。所以 <code>f(1)=1</code>。这个递归终止条件足够吗？可以用 <code>n=2</code>，<code>n=3</code> 这样比较小的数试验一下。</p>
 <p><code>n=2</code> 时，<code>f(2)=f(1)+f(0)</code>。如果递归终止条件只有一个 <code>f(1)=1</code>，那 <code>f(2)</code> 就无法求解了。所以除了 <code>f(1)=1</code> 这一个递归终止条件外，还要有 <code>f(0)=1</code>，表示走 <code>0</code> 个台阶有一种走法，不过这样子看起来就不符合正常的逻辑思维了。所以，可以把 <code>f(2)=2</code> 作为一种终止条件，表示走 <code>2</code> 个台阶，有两种走法，一步走完或者分两步来走。</p>
 <p>所以，递归终止条件就是 <code>f(1)=1</code>，<code>f(2)=2</code>。这个时候，可以再拿 <code>n=3</code>，<code>n=4</code> 来验证一下，这个终止条件是否足够并且正确。</p>
 <p>把递归终止条件和刚刚得到的递推公式放到一起就是这样的：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">f(1) &#x3D; 1;</span><br><span class="line">f(2) &#x3D; 2;</span><br><span class="line">f(n) &#x3D; f(n-1)+f(n-2)</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plain">f(1) &#x3D; 1;
+f(2) &#x3D; 2;
+f(n) &#x3D; f(n-1)+f(n-2)</code></pre>
 <p>有了这个公式，转化成递归代码就简单多了。最终的递归代码是这样的：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (n == <span class="number">1</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">if</span> (n == <span class="number">2</span>) <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">  <span class="keyword">return</span> f(n<span class="number">-1</span>) + f(n<span class="number">-2</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">f</span><span class="hljs-params">(<span class="hljs-keyword">int</span> n)</span> </span>&#123;
+  <span class="hljs-keyword">if</span> (n == <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+  <span class="hljs-keyword">if</span> (n == <span class="hljs-number">2</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">2</span>;
+  <span class="hljs-keyword">return</span> f(n<span class="hljs-number">-1</span>) + f(n<span class="hljs-number">-2</span>);
+&#125;</code></pre>
 <p>总结一下，<strong>写递归代码的关键就是找到如何将大问题分解为小问题的规律，并且基于此写出递推公式，然后再推敲终止条件，最后将递推公式和终止条件翻译成代码。</strong></p>
 <p>虽然讲了这么多方法，但是作为初学者，现在是不是还是有种想不太清楚的感觉呢？实际上，刚学递归的时候，都有这种感觉，这也是文章开头说递归代码比较难理解的地方。</p>
 <p>刚讲的电影院的例子，递归调用只有一个分支，也就是说“一个问题只需要分解为一个子问题”，很容易能够想清楚“递“和”归”的每一个步骤，所以写起来、理解起来都不难。</p>
@@ -285,22 +277,62 @@
 <h2 id="递归代码要警惕堆栈溢出"><a href="#递归代码要警惕堆栈溢出" class="headerlink" title="递归代码要警惕堆栈溢出"></a>递归代码要警惕堆栈溢出</h2><p>在实际的软件开发中，编写递归代码时，会遇到很多问题，比如堆栈溢出。而堆栈溢出会造成系统崩溃，后果会非常严重。为什么递归代码容易造成堆栈溢出呢？又该如何预防堆栈溢出呢？</p>
 <p>在“栈”那一篇讲过，函数调用会使用栈来保存临时变量。每调用一个函数，都会将临时变量封装为栈帧压入内存栈，等函数执行完成返回时，才出栈。系统栈或者虚拟机栈空间一般都不大。如果递归求解的数据规模很大，调用层次很深，一直压入栈，就会有堆栈溢出的风险。</p>
 <p>比如前面的讲到的电影院的例子，如果将系统栈或者 <code>JVM</code> 堆栈大小设置为 <code>1KB</code>，在求解 <code>f(19999)</code> 时便会出现如下堆栈报错：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread &quot;main&quot; java.lang.StackOverflowError</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs plain">Exception in thread &quot;main&quot; java.lang.StackOverflowError</code></pre>
 <p>那么，如何避免出现堆栈溢出呢？</p>
 <p>可以通过在代码中限制递归调用的最大深度的方式来解决这个问题。递归调用超过一定深度（比如 <code>1000</code>）之后，就不继续往下再递归了，直接返回报错。还是电影院那个例子，可以改造成下面这样子，就可以避免堆栈溢出了。不过，代码是伪代码，为了代码简洁，有些边界条件没有考虑，比如 <code>x&lt;=0</code>。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 全局变量，表示递归的深度。</span></span><br><span class="line"><span class="keyword">int</span> depth = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">  ++depth；</span><br><span class="line">  <span class="keyword">if</span> (depth &gt; <span class="number">1000</span>) <span class="keyword">throw</span> exception;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span> (n == <span class="number">1</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">return</span> f(n<span class="number">-1</span>) + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs c"><span class="hljs-comment">// 全局变量，表示递归的深度。</span>
+<span class="hljs-keyword">int</span> depth = <span class="hljs-number">0</span>;
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">f</span><span class="hljs-params">(<span class="hljs-keyword">int</span> n)</span> </span>&#123;
+  ++depth；
+  <span class="hljs-keyword">if</span> (depth &gt; <span class="hljs-number">1000</span>) <span class="hljs-keyword">throw</span> exception;
+  
+  <span class="hljs-keyword">if</span> (n == <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+  <span class="hljs-keyword">return</span> f(n<span class="hljs-number">-1</span>) + <span class="hljs-number">1</span>;
+&#125;</code></pre>
 <p>但这种做法并不能完全解决问题，因为最大允许的递归深度跟当前线程剩余的栈空间大小有关，事先无法计算。如果实时计算，代码过于复杂，就会影响代码的可读性。所以，如果最大深度比较小，比如 <code>10</code>、<code>50</code>，就可以用这种方法，否则这种方法并不是很实用。</p>
-<h2 id="递归代码要警惕重复计算"><a href="#递归代码要警惕重复计算" class="headerlink" title="递归代码要警惕重复计算"></a>递归代码要警惕重复计算</h2><p>除此之外，使用递归时还会出现重复计算的问题。刚才的第二个递归代码的例子，如果把整个递归过程分解一下的话，那就是这样的：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/3ad4ddf0-d3ae-11e9-b66f-d76c8c3e613a.png" alt="image.png"><br>从图中，可以直观地看到，想要计算 <code>f(5)</code>，需要先计算 <code>f(4)</code> 和 <code>f(3)</code>，而计算 <code>f(4)</code> 还需要计算 <code>f(3)</code>，因此，<code>f(3)</code> 就被计算了很多次，这就是重复计算问题。</p>
+<h2 id="递归代码要警惕重复计算"><a href="#递归代码要警惕重复计算" class="headerlink" title="递归代码要警惕重复计算"></a>递归代码要警惕重复计算</h2><p>除此之外，使用递归时还会出现重复计算的问题。刚才的第二个递归代码的例子，如果把整个递归过程分解一下的话，那就是这样的：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/3ad4ddf0-d3ae-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>从图中，可以直观地看到，想要计算 <code>f(5)</code>，需要先计算 <code>f(4)</code> 和 <code>f(3)</code>，而计算 <code>f(4)</code> 还需要计算 <code>f(3)</code>，因此，<code>f(3)</code> 就被计算了很多次，这就是重复计算问题。</p>
 <p>为了避免重复计算，可以通过一个数据结构（比如散列表）来保存已经求解过的 <code>f(k)</code>。当递归调用到 <code>f(k)</code> 时，先看下是否已经求解过了。如果是，则直接从散列表中取值返回，不需要重复计算，这样就能避免刚讲的问题了。</p>
 <p>按照上面的思路，来改造一下刚才的代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (n == <span class="number">1</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">if</span> (n == <span class="number">2</span>) <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// hasSolvedList 可以理解成一个 Map，key 是 n，value 是 f(n)</span></span><br><span class="line">  <span class="keyword">if</span> (hasSolvedList.containsKey(n)) &#123;</span><br><span class="line">    <span class="keyword">return</span> hasSovledList.get(n);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">int</span> ret = f(n-<span class="number">1</span>) + f(n-<span class="number">2</span>);</span><br><span class="line">  hasSovledList.put(n, ret);</span><br><span class="line">  <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">f</span><span class="hljs-params">(<span class="hljs-keyword">int</span> n)</span> </span>&#123;
+  <span class="hljs-keyword">if</span> (n == <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+  <span class="hljs-keyword">if</span> (n == <span class="hljs-number">2</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">2</span>;
+  
+  <span class="hljs-comment">// hasSolvedList 可以理解成一个 Map，key 是 n，value 是 f(n)</span>
+  <span class="hljs-keyword">if</span> (hasSolvedList.containsKey(n)) &#123;
+    <span class="hljs-keyword">return</span> hasSovledList.get(n);
+  &#125;
+  
+  <span class="hljs-keyword">int</span> ret = f(n-<span class="hljs-number">1</span>) + f(n-<span class="hljs-number">2</span>);
+  hasSovledList.put(n, ret);
+  <span class="hljs-keyword">return</span> ret;
+&#125;</code></pre>
 <p>除了堆栈溢出、重复计算这两个常见的问题。递归代码还有很多别的问题。</p>
 <p>在时间效率上，递归代码里多了很多函数调用，当这些函数调用的数量较大时，就会积聚成一个可观的时间成本。在空间复杂度上，因为递归调用一次就会在内存栈中保存一次现场数据，所以在分析递归代码空间复杂度时，需要额外考虑这部分的开销，比如我们前面讲到的电影院递归代码，空间复杂度并不是 $O(1)$，而是 $O(n)$。</p>
 <h2 id="怎么将递归代码改写为非递归代码？"><a href="#怎么将递归代码改写为非递归代码？" class="headerlink" title="怎么将递归代码改写为非递归代码？"></a>怎么将递归代码改写为非递归代码？</h2><p>刚说了递归有利有弊，利是递归代码的表达力很强，写起来非常简洁；而弊就是空间复杂度高、有堆栈溢出的风险、存在重复计算、过多的函数调用会耗时较多等问题。所以，在开发过程中，要根据实际情况来选择是否需要用递归的方式来实现。</p>
 <p>那是否可以把递归代码改写为非递归代码呢？比如刚才那个电影院的例子，抛开场景，只看 <code>f(x) = f(x-1)+1</code> 这个递推公式。这样改写看看：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> ret = <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>; i &lt;= n; ++i) &#123;</span><br><span class="line">    ret = ret + <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">f</span><span class="hljs-params">(<span class="hljs-keyword">int</span> n)</span> </span>&#123;
+  <span class="hljs-keyword">int</span> ret = <span class="hljs-number">1</span>;
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">2</span>; i &lt;= n; ++i) &#123;
+    ret = ret + <span class="hljs-number">1</span>;
+  &#125;
+  <span class="hljs-keyword">return</span> ret;
+&#125;</code></pre>
 <p>同样，第二个例子也可以改为非递归的实现方式。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (n == <span class="number">1</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">if</span> (n == <span class="number">2</span>) <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">int</span> ret = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">int</span> pre = <span class="number">2</span>;</span><br><span class="line">  <span class="keyword">int</span> prepre = <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">3</span>; i &lt;= n; ++i) &#123;</span><br><span class="line">    ret = pre + prepre;</span><br><span class="line">    prepre = pre;</span><br><span class="line">    pre = ret;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">f</span><span class="hljs-params">(<span class="hljs-keyword">int</span> n)</span> </span>&#123;
+  <span class="hljs-keyword">if</span> (n == <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+  <span class="hljs-keyword">if</span> (n == <span class="hljs-number">2</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">2</span>;
+  
+  <span class="hljs-keyword">int</span> ret = <span class="hljs-number">0</span>;
+  <span class="hljs-keyword">int</span> pre = <span class="hljs-number">2</span>;
+  <span class="hljs-keyword">int</span> prepre = <span class="hljs-number">1</span>;
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">3</span>; i &lt;= n; ++i) &#123;
+    ret = pre + prepre;
+    prepre = pre;
+    pre = ret;
+  &#125;
+  <span class="hljs-keyword">return</span> ret;
+&#125;</code></pre>
 <p>那是不是所有的递归代码都可以改为这种迭代循环的非递归写法呢？</p>
 <p>笼统地讲，是的。因为递归本身就是借助栈来实现的，只不过使用的栈是系统或者虚拟机本身提供的，没有感知罢了。如果自己在内存堆上实现栈，手动模拟入栈、出栈过程，这样任何递归代码都可以改写成看上去不是递归代码的样子。</p>
 <p>但是这种思路实际上是将递归改为了“手动”递归，本质并没有变，而且也并没有解决前面讲到的某些问题，徒增了实现的复杂度。</p>
@@ -310,7 +342,11 @@
 <p>递归代码虽然简洁高效，但是，递归代码也有很多弊端。比如，堆栈溢出、重复计算、函数调用耗时多、空间复杂度高等，所以，在编写递归代码的时候，一定要控制好这些副作用。</p>
 <h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ul>
 <li><p>如何找到“最终推荐人”？解决方案是这样的：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">long</span> <span class="title">findRootReferrerId</span><span class="params">(<span class="keyword">long</span> actorId)</span> </span>&#123;</span><br><span class="line">  Long referrerId = select referrer_id from [table] where actor_id = actorId;</span><br><span class="line">  <span class="keyword">if</span> (referrerId == <span class="keyword">null</span>) <span class="keyword">return</span> actorId;</span><br><span class="line">  <span class="keyword">return</span> findRootReferrerId(referrerId);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">long</span> <span class="hljs-title">findRootReferrerId</span><span class="hljs-params">(<span class="hljs-keyword">long</span> actorId)</span> </span>&#123;
+  Long referrerId = select referrer_id from [table] where actor_id = actorId;
+  <span class="hljs-keyword">if</span> (referrerId == <span class="hljs-keyword">null</span>) <span class="hljs-keyword">return</span> actorId;
+  <span class="hljs-keyword">return</span> findRootReferrerId(referrerId);
+&#125;</code></pre>
 <blockquote>
 <p>是不是非常简洁？用三行代码就能搞定了，不过在实际项目中，上面的代码并不能工作，为什么呢？这里面有两个问题。</p>
 <p>第一，如果递归很深，可能会有堆栈溢出的问题。</p>
@@ -322,305 +358,439 @@
 </li>
 </ul>
 <p>欢迎留言和我分享。</p>
-  </article>
-  <aside class="table-content" id="site-toc">
-  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
-  <div class="table-content-title">
-    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
-    <span>目录</span>
-  </div>
-  <div class="table-content-main" id="table-toc">
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#如何理解“递归”？"><span class="toc-text">如何理解“递归”？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#递归需要满足的三个条件"><span class="toc-text">递归需要满足的三个条件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何编写递归代码？"><span class="toc-text">如何编写递归代码？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#递归代码要警惕堆栈溢出"><span class="toc-text">递归代码要警惕堆栈溢出</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#递归代码要警惕重复计算"><span class="toc-text">递归代码要警惕重复计算</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#怎么将递归代码改写为非递归代码？"><span class="toc-text">怎么将递归代码改写为非递归代码？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#思考"><span class="toc-text">思考</span></a></li></ol>
-  </div>
-</aside>
-  
-    <aside class="passage-copyright">
-      <div>本文作者: 沐晨</div>
-      
-        <div>
-          原文链接:
-          <a style="word-break: break-word;" href="" target="_blank">https://muchen.fun/passages/recursion/</a>
-        </div>
-      
-      <div>
-        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
-      </div>
-    </aside>
-  
-    
-    <div class="passage-tags">
-    
-      <a style="word-break: break-word;" href="/tags/%E7%AE%97%E6%B3%95/"><i class="fa fa-tags"></i>算法</a>
-    
-      <a style="word-break: break-word;" href="/tags/%E9%80%92%E5%BD%92/"><i class="fa fa-tags"></i>递归</a>
-    
-    </div>
-  
-</div>
 
-<div class="left_prev_arrow_div">
-    <div class="left_prev_arrow arrow_div">
-        <a href="/passages/7/" data-enable="true">
-            <i class="fa fa-angle-left" aria-hidden="true"></i>
-        </a>
-    </div>
-</div>
-<div class="right_prev_arrow_div">
-    <div class="right_prev_arrow arrow_div">
-        <a href="/passages/8/" data-enable="true">
-            <i class="fa fa-angle-right" aria-hidden="true"></i>
-        </a>
-    </div>
-</div>
-
-
-    </main>
-    
-      
-<div class="site-comment-contanier" data-plateform="leancloud">
-  
-    <p id="site-comment-info">
-      <i class="fa fa-spinner fa-spin"></i> 评论加载中
-    </p>
-    <div id="site-comment"></div>
-  
-</div>
-    
-    <div class="site-footer-wrapper">
-  <footer class="site-footer">
-    
-      
-        <div class="site-footer-col">
-          <h5 class="site-footer-title">博客推荐</h5>
-          
-            <span class="site-footer-item">
-              <a href="https://muchen.fun/" target="_blank">沐晨</a>
-            </span>
-          
-            <span class="site-footer-item">
-              <a href="http://www.wangdabo.com" target="_blank">王大博</a>
-            </span>
-          
-            <span class="site-footer-item">
-              <a href="https://inrgg.com/" target="_blank">任公公</a>
-            </span>
-          
-            <span class="site-footer-item">
-              <a href="https://naiyouhuameitang.club/" target="_blank">奶油话梅糖</a>
-            </span>
-          
-        </div>
-      
-        <div class="site-footer-col">
-          <h5 class="site-footer-title">系列教程</h5>
-          
-            <span class="site-footer-item">
-              <a href="https://muchen.fun/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/" target="_blank">数据结构与算法(中级)</a>
-            </span>
-          
-            <span class="site-footer-item">
-              <a href="/tags/设计模式/" target="_self">设计模式</a>
-            </span>
-          
-        </div>
-      
-        <div class="site-footer-col">
-          <h5 class="site-footer-title">找到我</h5>
-          
-            <span class="site-footer-item">
-              <a href="https://live.bilibili.com/10606164" target="_blank">哔哩哔哩</a>
-            </span>
-          
-            <span class="site-footer-item">
-              <a href="https://leetcode-cn.com/u/fancier/" target="_blank">Leetcode</a>
-            </span>
-          
-            <span class="site-footer-item">
-              <a href="https://juejin.im/user/5c1a2bf6e51d453073485c36" target="_blank">掘金</a>
-            </span>
-          
-        </div>
-      
-    
-    <div class="site-footer-info">
-      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
-    </div>
-    
-      <div class="site-footer-info">
-        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
-      </div>
-    
-    
-      <div class="site-footer-info">
-        <i class="fa fa-at"></i> Email: lcoder@qq.com
-      </div>
-    
-    <div class="site-footer-info">
-      <i class="fa fa-copyright"></i> 
-      2019-2020 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
-      Created by <a href="https://fanciercoder.github.io/" target="_blank">沐晨</a>.
-      All rights reserved.
-    </div>
-    <div class="site-footer-info">
-        <span style="position: relative;">
-        <a style=" position: absolute;
-            white-space: nowrap;" id="colorPrint">
-        </a>
-        </span>
-    </div>
-  </footer>
-</div>
-    <div id="site-layer" style="display:none;">
-  <div class="site-layer-content">
-    <div class="site-layer-header">
-      <span class="site-layer-header-title" id="site-layer-title"></span>
-      <i class="fa fa-close" id="site-layer-close"></i>
-    </div>
-    <div class="site-layer-body" id="site-layer-container">
-      <div class="site-layer-input" id="site-layer-search" style="display: none;">
-        <div class="site-layer-input-choose">
-          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
-        </div>
-        <input type="text">
-        <i class="fa fa-search"></i>
-      </div>
-      
-        <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
-          
+            </article>
+            <hr>
             <div>
-              <img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/wechat.png" alt="WeChat">
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/">数据结构与算法(中级)</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E9%80%92%E5%BD%92/">递归</a>
+                    
+                  </div>
+                
+              </div>
               
-                <p>WeChat</p>
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/passages/8/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">8.排序（上）</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/passages/7/">
+                        <span class="hidden-mobile">7.队列</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
               
             </div>
-          
-            <div>
-              <img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/alipay.png" alt="AliPay">
-              
-                <p>AliPay</p>
-              
-            </div>
-          
-            <div>
-              <img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/BitCoin.jpg" alt="BitCoin">
-              
-                <p>BitCoin</p>
-              
-            </div>
-          
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <div id="vcomments"></div>
+  <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+  <script type="text/javascript">
+    var oldLoadVa = window.onload;
+    window.onload = function () {
+      oldLoadVa && oldLoadVa();
+
+      new Valine({
+        el: "#vcomments",
+        app_id: "O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",
+        app_key: "5Rl3Rhl9zc8BJNvrPcncKWFy",
+        placeholder: "说点什么吧~",
+        path: window.location.pathname,
+        avatar: "retro",
+        meta: ["nick","mail","link"],
+        pageSize: "10",
+        lang: "zh-CN",
+        highlight: true,
+        recordIP: true,
+        serverURLs: "",
+      });
+    };
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments
+      powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
         </div>
-      
-      <div id="site-layer-welcome" style="display:none;"></div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><br><div class="text-center">欢迎关注我的公众号</div>
+    </div>
+  </div>
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
     </div>
   </div>
 </div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    <div>
+      <span id="timeDate">载入天数...</span>
+      <span id="times">载入时分秒...</span>
+      <script>
+        var now = new Date();
+        function createtime(){
+          var grt= new Date("07/12/2019 00:00:00");//此处修改你的建站时间或者网站上线时间
+          now.setTime(now.getTime()+250);
+          days = (now - grt ) / 1000 / 60 / 60 / 24;
+          dnum = Math.floor(days);
+          hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum);
+          hnum = Math.floor(hours);
+          if(String(hnum).length ==1 ){
+            hnum = "0" + hnum;
+          }
+          minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+          mnum = Math.floor(minutes);
+          if(String(mnum).length ==1 ){
+            mnum = "0" + mnum;
+          }
+          seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+          snum = Math.round(seconds);
+          if(String(snum).length ==1 ){
+            snum = "0" + snum;
+          }
+          document.getElementById("timeDate").innerHTML = "本站已运行&nbsp"+dnum+"&nbsp天";
+          document.getElementById("times").innerHTML = hnum + "&nbsp小时&nbsp" + mnum + "&nbsp分&nbsp" + snum + "&nbsp秒";
+        }
+        setInterval("createtime()",250);
+      </script>
+    </div>
     
 
-<div class="bottom-bar">
-  <div class="bottom-bar-left">
-    <a href="/passages/8/" target="_self" data-enable="true">
-      <i class="fa fa-arrow-left"></i>
-    </a>
-    <a href="/passages/7/" target="_self" data-enable="true">
-      <i class="fa fa-arrow-right"></i>
-    </a>
-  </div>
-  <div class="bottom-bar-right">
-    <a href="javascript:void(0);" target="_self" data-enable="true" id="site-toc-show-btn">
-      <i class="fa fa-bars"></i>
-    </a>
     
-      <a href="#site-comment" target="_self" data-enable="true">
-        <i class="fa fa-commenting"></i>
-      </a>
-    
-    <a href="javascript:void(0);" target="_self" id="site-toggle-share-btn">
-      <i class="fa fa-share-alt"></i>
-    </a>
-    
-      <a href="javascript:void(0);" target="_self" id="site-reward">
-        <i class="fa fa-thumbs-up"></i>
-      </a>
-    
-    <a href="javascript:void(0);" target="_self" id="back-top-btn">
-      <i class="fa fa-chevron-up"></i>
-    </a>
-  </div>
-</div>
-    <div id="share-btn">
-  
-    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
-      <i class="fa fa-twitter"></i>
-    </a>
-  
-  
-    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
-      <i class="fa fa-facebook"></i>
-    </a>
-  
-  
-    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
-      <i class="fa fa-weibo"></i>
-    </a>
-  
-  
-    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
-      <i class="fa fa-qq"></i>
-    </a>
-  
-  
-    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
-      <i class="fa fa-wechat"></i>
-    </a>
-  
-</div>
-    
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-144841374-1"></script>
-  <script async>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
 
-    gtag('config', 'UA-144841374-1');
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+  <script  src="/js/lazyload.js" ></script>
+
+
+
+  
+
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+  
+<script src="https://static.muchen.fun/js/custom.js"></script>
+
+
+
+<!-- Plugins -->
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+    <!-- Google Analytics -->
+    <script defer>
+      (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+          (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+          m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+      })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+      ga('create', 'UA-144841374-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "递归算法&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 60,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
   </script>
 
 
 
 
-  <script async>
-  (function(){
-      var bp = document.createElement('script');
-      var curProtocol = window.location.protocol.split(':')[0];
-      if (curProtocol === 'https') {
-          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
-      }
-      else {
-          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
-      }
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(bp, s);
-  })();
-  </script>
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+  
+
+
+
+  
+  
+    <script>
+      !function (e, t, a) {
+        function r() {
+          for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+          requestAnimationFrame(r)
+        }
+
+        function n() {
+          var t = "function" == typeof e.onclick && e.onclick;
+          e.onclick = function (e) {
+            t && t(), o(e)
+          }
+        }
+
+        function o(e) {
+          var a = t.createElement("div");
+          a.className = "heart", s.push({
+            el: a,
+            x: e.clientX - 5,
+            y: e.clientY - 5,
+            scale: 1,
+            alpha: 1,
+            color: c()
+          }), t.body.appendChild(a)
+        }
+
+        function i(e) {
+          var a = t.createElement("style");
+          a.type = "text/css";
+          try {
+            a.appendChild(t.createTextNode(e))
+          } catch (t) {
+            a.styleSheet.cssText = e
+          }
+          t.getElementsByTagName("head")[0].appendChild(a)
+        }
+
+        function c() {
+          return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+        }
+
+        var s = [];
+        e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+          setTimeout(e, 1e3 / 60)
+        }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+      }(window, document);
+    </script>
+  
 
 
 
 
- <script>
- //const element =  document.querySelector('.home-article-wrapper')
- //element.classList.add('animated', 'bounceInLeft')
- function testAnim(x) {
-     $('.home-article-wrapper').removeClass('animate').addClass(x + ' animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-       $(this).removeClass('animate');
-     });
-   };
 
-   testAnim('flipInX');
- </script>
 
-    
-      
-<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/footer.js"></script>
 
-    
-  </body>
+
+
+
+
+
+</body>
 </html>

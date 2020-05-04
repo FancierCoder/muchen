@@ -1,571 +1,834 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-  
+
+
+
+
+
 <head>
-  <meta charset="utf-8">
-  <meta name="author" content="MuChen" />
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/touch-icon.png">
+  <link rel="icon" type="image/png" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/favicon.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
   
-  
-  <title>Shiro过滤器导致的前端跨域 | MuChen&#39;s Blog</title>
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="沐晨的个人博客,技术博客">
+  <meta name="author" content="Li Duo">
+  <meta name="keywords" content="个人博客,个人见解">
+  <title>Shiro过滤器导致的前端跨域 - MuChen&#39;s Blog</title>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
 
-  
-    <meta name="keywords" content="踩坑经历,后端,SHIRO,跨域," />
-  
 
-  
-  <meta name="description" content="Shiro会导致跨域？">
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
 
-  <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/jquery-3.4.1.min.js"></script>
 
-  
+<!-- 主题依赖的图标库，不要自行修改 -->
 
-  
-    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@4.5.3/dist/av-min.js" async></script>
-  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
 
-  
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
-  
 
-  
-    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
-  
 
-  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
 
- <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/8.11.8/sweetalert2.all.min.js" async></script>
 
-  <script>
-  // theme-ad's config script
-  // it can be used in every script
-  
-  window.AD_CONFIG = {
-    leancloud: {"appid":"O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI","appkey":"5Rl3Rhl9zc8BJNvrPcncKWFy","comment":true,"count":true},
-    welcome: {"enable":false,"interval":30},
-    start_time: "2019-07-12",
-    passwords: ["0e31be4bd24c14e65633d11633fe616ee3d93b4f31d07726fdbe113fa98a391a", ],
-    is_post: true,
-    lock: false,
-    author: "MuChen",
-    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
-    mathjax: true,
-    page_type: "",
-    root: "/"
-  };
-</script>
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
 
   
-<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/sha256.min.js"></script>
-<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/auth.js"></script>
-<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/index.js"></script>
-<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/qrcode.min.js"></script>
+<link rel="stylesheet" href="https://static.muchen.fun/css/custom.css?t=0.1423425.css">
 
 
-  
-    <link rel="icon" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/favicon.ico">
-    <link rel="apple-touch-icon" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/touch-icon.png">
-  
-
-  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-
-  <link href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/animate-3.7.2.min.css" rel="stylesheet">
-
-  
-<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
-
-
-  
-
-  <script type="text/javascript">
-      function getCSS() {
-          let dateToday = new Date();
-          let timeNow = dateToday.getTime();
-          dateToday.setTime(timeNow);
-          let theHour = dateToday.getHours();
-          let display = "/css/index-night.css";
-          if (theHour <= 5) {
-			  display = "https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/index-night.css";
-		  } else if (theHour >= 19) {
-              display = "https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/index-night.css";
-		  } else if (theHour > 5) {
-              display = "https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/index.css";
-		  } else if (theHour < 19) {
-              display = "https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/index.css";
-		  }
-          let css = '<';
-          css += 'link rel="stylesheet" href=' + display + ' \/';
-          css += '>';
-          document.write(css);
-      }
-  </script>
-  <script type="text/javascript">
-      window.onload = getCSS();
-  </script>
 
 <meta name="generator" content="Hexo 4.2.0"></head>
-  <body>
-    <div class="preloader">
-        <div class="lds-ripple">
-            <div class="lds-pos"></div>
-            <div class="lds-pos"></div>
-        </div>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">
+              <i class="iconfont icon-home-fill"></i>
+              首页</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">
+              <i class="iconfont icon-archive-fill"></i>
+              归档</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">
+              <i class="iconfont icon-category-fill"></i>
+              分类</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">
+              <i class="iconfont icon-tags-fill"></i>
+              标签</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">
+              <i class="iconfont icon-user-fill"></i>
+              关于</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/links/">
+              <i class="iconfont icon-link-fill"></i>
+              友链</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+            <li class="nav-item">
+                <a id="dark" class="nav-link" onclick="switchDarkMode()">
+                    <i class="iconfont icon-sun"></i>
+                </a>
+            </li>
+      </ul>
     </div>
-    <header class="site-header">
-  <div class="site-header-brand">
-    
-      <span class="site-header-brand-title">
-        <a href="/">沐晨</a>
-      </span>
-    
-    
-      <span class="site-header-brand-motto"> | Learn To Learn</span>
-    
-  </div>
-  <div class="site-header-right">
-      <div class="search-box">
-          <section>
-              <div id="site_search">
-                  <input type="text" id="local-search-input" results="0"/>
-                  <div id="local-search-result"></div>
-              </div>
-          </section>
-      </div>
-    <nav class="site-header-navigation">
-      
-        <a href="/" target="_self">首页</a>
-      
-        <a href="/archives/" target="_self">归档</a>
-      
-        <a href="/tags/" target="_self">标签</a>
-      
-        <a href="/categories/" target="_self">分类</a>
-      
-        <a href="/friends/" target="_self">友链</a>
-      
-        <a href="/about/" target="_self">关于</a>
-      
-    </nav>
-    <div class="site-header-btn">
-      
-        <a href="https://github.com/FancierCoder" target="_blank" id="site-github">
-          <i class="fa fa-github-alt"></i>
-        </a>
-      
-      <a href="javascript:void(0);" id="site-search" style="display: none">
-        <i class="fa fa-search"></i>
-      </a>
-      <a href="javascript:void(0);" id="site-nav-btn">
-        <i class="fa fa-ellipsis-v"></i>
-      </a>
-    </div>
-  </div>
-</header>
-<nav class="table-content" id="site-nav">
-  <div class="table-content-title">
-    <span>导航</span>
-  </div>
-  <div class="table-content-main">
-    <ol class="toc">
-      
-        <li class="toc-item">
-          <a href="/" target="_self">
-            首页
-          </a>
-        </li>
-      
-        <li class="toc-item">
-          <a href="/archives/" target="_self">
-            归档
-          </a>
-        </li>
-      
-        <li class="toc-item">
-          <a href="/tags/" target="_self">
-            标签
-          </a>
-        </li>
-      
-        <li class="toc-item">
-          <a href="/categories/" target="_self">
-            分类
-          </a>
-        </li>
-      
-        <li class="toc-item">
-          <a href="/friends/" target="_self">
-            友链
-          </a>
-        </li>
-      
-        <li class="toc-item">
-          <a href="/about/" target="_self">
-            关于
-          </a>
-        </li>
-      
-    </ol>
   </div>
 </nav>
-<div id="site-process"></div>
-    <main id="passage">
-      
-  <div class="passage">
-    <div class="passage-meta">
 
-        
-      <span style="margin-right: 24px;">
-        <a href="/categories/%E8%B8%A9%E5%9D%91%E7%BB%8F%E5%8E%86/"><i class="fa fa-bookmark"></i>踩坑经历</a>
-      </span>
-        
-        
-            <span style="margin-right: 24px;">
-         <i class="fa fa-unlock-alt"></i>UNLOCK
-      </span>
-        
-        
-    </div>
-    <div class="passage-title-wrap">
-        <h1 class="passage-title">
-            Shiro过滤器导致的前端跨域
-        </h1>
-        <div class="passage-meta">
-        <span style="margin-right: 24px;">
-          <i class="fa fa-calendar"></i>2020.04.19 12:51
-        </span>
-            <span id="article-visit-info" style="margin-right: 24px;">
-            <i class="fa fa-eye"></i> 0
-        </span>
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/images/07.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+                <div class="mt-3 post-meta">
+                  <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                  <time datetime="2020-04-19 12:51">
+                    2020年4月19日 下午
+                  </time>
+                </div>
+              
+
+              <div class="mt-1">
+                
+                  
+                  <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    1.2k 字
+                  </span>
+                
+
+                
+                  
+                  <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                    
+                    
+                    21
+                     分钟
+                  </span>
+                
+
+                
+                  <!-- 不蒜子统计文章PV -->
+                  
+                  <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
+                    <i class="iconfont icon-eye" aria-hidden="true"></i>
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>
+                
+              </div>
+            
+          </div>
+
+          
+        </div>
       </div>
-  </div>
-  
-  <article class="passage-article">
-    <h2 id="问题背景"><a href="#问题背景" class="headerlink" title="问题背景"></a>问题背景</h2><p>公司项目是前后端分离的，最近要求在请求时都要在请求头加入自定义的 <code>token</code>，在做接口调试时，前端总是请求不通，然而自己用 <code>POSTMAN</code> 等工具时都可以，这就出现了问题，也就是 <strong>复杂请求</strong> 的跨域问题。</p>
+    </div>
+      <script>
+          var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+          // 依次判断 系统暗黑模式 指定时间 缓存 dark
+          if( matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+              if(!(isNight&&localStorage.getItem('noDark') === '1')) {
+                  document.body.classList.add('dark');
+              }
+          }
+          document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark")?"🌙":"☀";
+      </script>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：15 天前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <!-- more -->
+<h2 id="问题背景"><a href="#问题背景" class="headerlink" title="问题背景"></a>问题背景</h2><p>公司项目是前后端分离的，最近要求在请求时都要在请求头加入自定义的 <code>token</code>，在做接口调试时，前端总是请求不通，然而自己用 <code>POSTMAN</code> 等工具时都可以，这就出现了问题，也就是 <strong>复杂请求</strong> 的跨域问题。</p>
 <h2 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h2><blockquote>
 <p>部分文段摘自 <a href="http://www.ruanyifeng.com/blog/2016/04/cors.html" target="_blank" rel="noopener">跨域资源共享 CORS 详解</a></p>
 </blockquote>
 <h3 id="复杂请求"><a href="#复杂请求" class="headerlink" title="复杂请求"></a>复杂请求</h3><p>浏览器将<code>CORS</code>请求分成两类：简单请求（<code>simple request</code>）和非简单请求（<code>not-so-simple request</code>）。</p>
 <p>只要同时满足以下两大条件，就属于简单请求。</p>
 <ul>
-<li>请求方法是以下三种方法之一：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">HEAD</span><br><span class="line">GET</span><br><span class="line">POST</span><br></pre></td></tr></table></figure></li>
-<li><code>HTTP</code>的头信息不超出以下几种字段：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Accept</span><br><span class="line">Accept-Language</span><br><span class="line">Content-Language</span><br><span class="line">Last-Event-ID</span><br><span class="line">Content-Type: 只限于三个值 application&#x2F;x-www-form-urlencoded multipart&#x2F;form-data text&#x2F;plain</span><br></pre></td></tr></table></figure>
+<li>请求方法是以下三种方法之一：<pre><code class="hljs plain">HEAD
+GET
+POST</code></pre></li>
+<li><code>HTTP</code>的头信息不超出以下几种字段：<pre><code class="hljs plain">Accept
+Accept-Language
+Content-Language
+Last-Event-ID
+Content-Type: 只限于三个值 application&#x2F;x-www-form-urlencoded multipart&#x2F;form-data text&#x2F;plain</code></pre>
 这是为了兼容表单（<code>form</code>），因为历史上表单一直可以发出跨域请求。<code>AJAX</code> 的跨域设计就是，只要表单可以发，<code>AJAX</code> 就可以直接发。</li>
 </ul>
 <p>凡是不同时满足上面两个条件，就属于非简单请求。</p>
 <h3 id="预检请求"><a href="#预检请求" class="headerlink" title="预检请求"></a>预检请求</h3><p>非简单请求的<code>CORS</code>请求，会在正式通信之前，增加一次<code>HTTP</code>查询请求，称为”预检”请求（<code>preflight</code>）。</p>
 <p>浏览器先询问服务器，当前网页所在的域名是否在服务器的许可名单之中，以及可以使用哪些<code>HTTP</code>动词和头信息字段。只有得到肯定答复，浏览器才会发出正式的<code>XMLHttpRequest</code>请求，否则就报错。</p>
 <h3 id="过滤器"><a href="#过滤器" class="headerlink" title="过滤器"></a>过滤器</h3><p>由于项目中的 <code>shiro</code> 使用了 <code>UserFilter</code>, 下面是其代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserFilter</span> <span class="keyword">extends</span> <span class="title">AccessControlFilter</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">UserFilter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">isAccessAllowed</span><span class="params">(ServletRequest request, ServletResponse response, Object mappedValue)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.isLoginRequest(request, response)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            Subject subject = <span class="keyword">this</span>.getSubject(request, response);</span><br><span class="line">            <span class="keyword">return</span> subject.getPrincipal() != <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">onAccessDenied</span><span class="params">(ServletRequest request, ServletResponse response)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.saveRequestAndRedirectToLogin(request, response);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UserFilter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AccessControlFilter</span> </span>&#123;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">UserFilter</span><span class="hljs-params">()</span> </span>&#123;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">isAccessAllowed</span><span class="hljs-params">(ServletRequest request, ServletResponse response, Object mappedValue)</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.isLoginRequest(request, response)) &#123;
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            Subject subject = <span class="hljs-keyword">this</span>.getSubject(request, response);
+            <span class="hljs-keyword">return</span> subject.getPrincipal() != <span class="hljs-keyword">null</span>;
+        &#125;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">onAccessDenied</span><span class="hljs-params">(ServletRequest request, ServletResponse response)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        <span class="hljs-keyword">this</span>.saveRequestAndRedirectToLogin(request, response);
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+    &#125;
+&#125;</code></pre>
 <p>可以看出过滤器在过滤时上面的判断是用来判断是否为登录请求的，否则就去寻找登录凭证。而在 <code>OPTIONS</code> 请求中，是没有携带上 <code>token</code> 信息的，下面是当时情况下请求的 <code>header</code>:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">=== MimeHeaders ===</span><br><span class="line">host = 192.168.7.139:4000</span><br><span class="line">connection = keep-alive</span><br><span class="line">accept = */*</span><br><span class="line">access-control-request-method = POST</span><br><span class="line">access-control-request-headers = content-type,x-admin-token</span><br><span class="line">origin = http://192.168.7.117:8080</span><br><span class="line">sec-fetch-mode = cors</span><br><span class="line">referer = http://192.168.7.117:8080/</span><br><span class="line">user-agent = Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36</span><br><span class="line">accept-encoding = gzip, deflate</span><br><span class="line">accept-language = zh-CN,zh;q=0.9</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs http">=== MimeHeaders ===
+host = 192.168.7.139:4000
+connection = keep-alive
+accept = */*
+access-control-request-method = POST
+access-control-request-headers = content-type,x-admin-token
+origin = http://192.168.7.117:8080
+sec-fetch-mode = cors
+referer = http://192.168.7.117:8080/
+user-agent = Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36
+accept-encoding = gzip, deflate
+accept-language = zh-CN,zh;q=0.9</code></pre>
 <p>可以看到 <code>token</code> 是被带在了 <code>access-control-request-headers</code> 中，这样 <code>shiro</code> 是找不到登录凭证的，请求自然就被拒绝了。</p>
 <h2 id="问题解决"><a href="#问题解决" class="headerlink" title="问题解决"></a>问题解决</h2><p>解决办法就是重写 <code>UserFilter</code>(具体看项目用的是哪个过滤器) 的 <code>isAccessAllowed</code> 方法，代码如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StatelessAuthcFilter</span> <span class="keyword">extends</span> <span class="title">UserFilter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">preHandle</span><span class="params">(ServletRequest request, ServletResponse response)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        HttpServletRequest httpRequest = WebUtils.toHttp(request);</span><br><span class="line">        HttpServletResponse httpResponse = WebUtils.toHttp(response);</span><br><span class="line">        <span class="keyword">if</span> (httpRequest.getMethod().equals(RequestMethod.OPTIONS.name())) &#123;</span><br><span class="line">            httpResponse.setHeader(<span class="string">"Access-control-Allow-Origin"</span>, httpRequest.getHeader(<span class="string">"Origin"</span>));</span><br><span class="line">            httpResponse.setHeader(<span class="string">"Access-Control-Allow-Methods"</span>, httpRequest.getMethod());</span><br><span class="line">            httpResponse.setHeader(<span class="string">"Access-Control-Allow-Headers"</span>, httpRequest.getHeader(<span class="string">"Access-Control-Request-Headers"</span>));</span><br><span class="line">            httpResponse.setStatus(HttpStatus.OK.value());</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.preHandle(request, response);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">StatelessAuthcFilter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">UserFilter</span> </span>&#123;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">preHandle</span><span class="hljs-params">(ServletRequest request, ServletResponse response)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        HttpServletRequest httpRequest = WebUtils.toHttp(request);
+        HttpServletResponse httpResponse = WebUtils.toHttp(response);
+        <span class="hljs-keyword">if</span> (httpRequest.getMethod().equals(RequestMethod.OPTIONS.name())) &#123;
+            httpResponse.setHeader(<span class="hljs-string">"Access-control-Allow-Origin"</span>, httpRequest.getHeader(<span class="hljs-string">"Origin"</span>));
+            httpResponse.setHeader(<span class="hljs-string">"Access-Control-Allow-Methods"</span>, httpRequest.getMethod());
+            httpResponse.setHeader(<span class="hljs-string">"Access-Control-Allow-Headers"</span>, httpRequest.getHeader(<span class="hljs-string">"Access-Control-Request-Headers"</span>));
+            httpResponse.setStatus(HttpStatus.OK.value());
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+        &#125;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.preHandle(request, response);
+    &#125;
+&#125;</code></pre>
 <p>然后再去 shiro 配置中将 user 过滤器修改为自定义的过滤器：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Shiro过滤器配置</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ShiroFilterFactoryBean <span class="title">shiroFilterFactoryBean</span><span class="params">(SecurityManager securityManager)</span> </span>&#123;</span><br><span class="line">        ShiroFilterFactoryBean shiroFilterFactoryBean = <span class="keyword">new</span> ShiroFilterFactoryBean();</span><br><span class="line">        <span class="comment">// Shiro的核心安全接口,这个属性是必须的</span></span><br><span class="line">        shiroFilterFactoryBean.setSecurityManager(securityManager);</span><br><span class="line">        <span class="comment">// 身份认证失败，则跳转到登录页面的配置</span></span><br><span class="line">        shiroFilterFactoryBean.setLoginUrl(loginUrl);</span><br><span class="line">        <span class="comment">// 权限认证失败，则跳转到指定页面</span></span><br><span class="line">        shiroFilterFactoryBean.setUnauthorizedUrl(unauthorizedUrl);</span><br><span class="line"></span><br><span class="line">        Map&lt;String, Filter&gt; filters = <span class="keyword">new</span> LinkedHashMap&lt;&gt;();</span><br><span class="line">        filters.put(<span class="string">"user"</span>, <span class="keyword">new</span> StatelessAuthcFilter());</span><br><span class="line">        shiroFilterFactoryBean.setFilters(filters);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Shiro连接约束配置，即过滤链的定义</span></span><br><span class="line">        Map&lt;String, String&gt; filterChainDefinitionMap = <span class="keyword">new</span> LinkedHashMap&lt;&gt;();</span><br><span class="line">        <span class="comment">// 对静态资源设置匿名访问</span></span><br><span class="line">        filterChainDefinitionMap.put(<span class="string">"/favicon.ico**"</span>, <span class="string">"anon"</span>);</span><br><span class="line">        filterChainDefinitionMap.put(<span class="string">"/css/**"</span>, <span class="string">"anon"</span>);</span><br><span class="line">        filterChainDefinitionMap.put(<span class="string">"/docs/**"</span>, <span class="string">"anon"</span>);</span><br><span class="line">        filterChainDefinitionMap.put(<span class="string">"/fonts/**"</span>, <span class="string">"anon"</span>);</span><br><span class="line">        filterChainDefinitionMap.put(<span class="string">"/img/**"</span>, <span class="string">"anon"</span>);</span><br><span class="line">        filterChainDefinitionMap.put(<span class="string">"/ajax/**"</span>, <span class="string">"anon"</span>);</span><br><span class="line">        filterChainDefinitionMap.put(<span class="string">"/js/**"</span>, <span class="string">"anon"</span>);</span><br><span class="line">        <span class="comment">// 不需要拦截的访问</span></span><br><span class="line">        filterChainDefinitionMap.put(<span class="string">"/auth/login"</span>, <span class="string">"anon"</span>);</span><br><span class="line">        <span class="comment">// 所有请求需要认证</span></span><br><span class="line">        filterChainDefinitionMap.put(<span class="string">"/**"</span>, <span class="string">"user"</span>);</span><br><span class="line">        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);</span><br><span class="line">        <span class="keyword">return</span> shiroFilterFactoryBean;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-comment">/**
+     * Shiro过滤器配置
+     */</span>
+    <span class="hljs-meta">@Bean</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> ShiroFilterFactoryBean <span class="hljs-title">shiroFilterFactoryBean</span><span class="hljs-params">(SecurityManager securityManager)</span> </span>&#123;
+        ShiroFilterFactoryBean shiroFilterFactoryBean = <span class="hljs-keyword">new</span> ShiroFilterFactoryBean();
+        <span class="hljs-comment">// Shiro的核心安全接口,这个属性是必须的</span>
+        shiroFilterFactoryBean.setSecurityManager(securityManager);
+        <span class="hljs-comment">// 身份认证失败，则跳转到登录页面的配置</span>
+        shiroFilterFactoryBean.setLoginUrl(loginUrl);
+        <span class="hljs-comment">// 权限认证失败，则跳转到指定页面</span>
+        shiroFilterFactoryBean.setUnauthorizedUrl(unauthorizedUrl);
+
+        Map&lt;String, Filter&gt; filters = <span class="hljs-keyword">new</span> LinkedHashMap&lt;&gt;();
+        filters.put(<span class="hljs-string">"user"</span>, <span class="hljs-keyword">new</span> StatelessAuthcFilter());
+        shiroFilterFactoryBean.setFilters(filters);
+
+        <span class="hljs-comment">// Shiro连接约束配置，即过滤链的定义</span>
+        Map&lt;String, String&gt; filterChainDefinitionMap = <span class="hljs-keyword">new</span> LinkedHashMap&lt;&gt;();
+        <span class="hljs-comment">// 对静态资源设置匿名访问</span>
+        filterChainDefinitionMap.put(<span class="hljs-string">"/favicon.ico**"</span>, <span class="hljs-string">"anon"</span>);
+        filterChainDefinitionMap.put(<span class="hljs-string">"/css/**"</span>, <span class="hljs-string">"anon"</span>);
+        filterChainDefinitionMap.put(<span class="hljs-string">"/docs/**"</span>, <span class="hljs-string">"anon"</span>);
+        filterChainDefinitionMap.put(<span class="hljs-string">"/fonts/**"</span>, <span class="hljs-string">"anon"</span>);
+        filterChainDefinitionMap.put(<span class="hljs-string">"/img/**"</span>, <span class="hljs-string">"anon"</span>);
+        filterChainDefinitionMap.put(<span class="hljs-string">"/ajax/**"</span>, <span class="hljs-string">"anon"</span>);
+        filterChainDefinitionMap.put(<span class="hljs-string">"/js/**"</span>, <span class="hljs-string">"anon"</span>);
+        <span class="hljs-comment">// 不需要拦截的访问</span>
+        filterChainDefinitionMap.put(<span class="hljs-string">"/auth/login"</span>, <span class="hljs-string">"anon"</span>);
+        <span class="hljs-comment">// 所有请求需要认证</span>
+        filterChainDefinitionMap.put(<span class="hljs-string">"/**"</span>, <span class="hljs-string">"user"</span>);
+        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
+        <span class="hljs-keyword">return</span> shiroFilterFactoryBean;
+    &#125;</code></pre>
 <p>本以为这样就好了，但实际上在页面重定向后再请求接口还是有问题，这是因为重定向会会默认把请求头清空，所以还需要将 <code>onAccessDenied</code> 方法重写，完整的代码如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StatelessAuthcFilter</span> <span class="keyword">extends</span> <span class="title">UserFilter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">preHandle</span><span class="params">(ServletRequest request, ServletResponse response)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        HttpServletRequest httpRequest = WebUtils.toHttp(request);</span><br><span class="line">        HttpServletResponse httpResponse = WebUtils.toHttp(response);</span><br><span class="line">        <span class="keyword">if</span> (httpRequest.getMethod().equals(RequestMethod.OPTIONS.name())) &#123;</span><br><span class="line">            httpResponse.setHeader(<span class="string">"Access-control-Allow-Origin"</span>, httpRequest.getHeader(<span class="string">"Origin"</span>));</span><br><span class="line">            httpResponse.setHeader(<span class="string">"Access-Control-Allow-Methods"</span>, httpRequest.getMethod());</span><br><span class="line">            httpResponse.setHeader(<span class="string">"Access-Control-Allow-Headers"</span>, httpRequest.getHeader(<span class="string">"Access-Control-Request-Headers"</span>));</span><br><span class="line">            httpResponse.setStatus(HttpStatus.OK.value());</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.preHandle(request, response);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">onAccessDenied</span><span class="params">(ServletRequest request, ServletResponse response)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        HttpServletResponse httpResp = WebUtils.toHttp(response);</span><br><span class="line">        HttpServletRequest httpReq = WebUtils.toHttp(request);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*系统重定向会默认把请求头清空，这里通过拦截器重新设置请求头，解决跨域问题*/</span></span><br><span class="line">        httpResp.addHeader(<span class="string">"Access-Control-Allow-Origin"</span>, httpReq.getHeader(<span class="string">"Origin"</span>));</span><br><span class="line">        httpResp.addHeader(<span class="string">"Access-Control-Allow-Headers"</span>, <span class="string">"*"</span>);</span><br><span class="line">        httpResp.addHeader(<span class="string">"Access-Control-Allow-Methods"</span>, <span class="string">"*"</span>);</span><br><span class="line">        httpResp.addHeader(<span class="string">"Access-Control-Allow-Credentials"</span>, <span class="string">"true"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>.saveRequestAndRedirectToLogin(request, response);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">StatelessAuthcFilter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">UserFilter</span> </span>&#123;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">preHandle</span><span class="hljs-params">(ServletRequest request, ServletResponse response)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        HttpServletRequest httpRequest = WebUtils.toHttp(request);
+        HttpServletResponse httpResponse = WebUtils.toHttp(response);
+        <span class="hljs-keyword">if</span> (httpRequest.getMethod().equals(RequestMethod.OPTIONS.name())) &#123;
+            httpResponse.setHeader(<span class="hljs-string">"Access-control-Allow-Origin"</span>, httpRequest.getHeader(<span class="hljs-string">"Origin"</span>));
+            httpResponse.setHeader(<span class="hljs-string">"Access-Control-Allow-Methods"</span>, httpRequest.getMethod());
+            httpResponse.setHeader(<span class="hljs-string">"Access-Control-Allow-Headers"</span>, httpRequest.getHeader(<span class="hljs-string">"Access-Control-Request-Headers"</span>));
+            httpResponse.setStatus(HttpStatus.OK.value());
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+        &#125;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.preHandle(request, response);
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">onAccessDenied</span><span class="hljs-params">(ServletRequest request, ServletResponse response)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        HttpServletResponse httpResp = WebUtils.toHttp(response);
+        HttpServletRequest httpReq = WebUtils.toHttp(request);
+
+        <span class="hljs-comment">/*系统重定向会默认把请求头清空，这里通过拦截器重新设置请求头，解决跨域问题*/</span>
+        httpResp.addHeader(<span class="hljs-string">"Access-Control-Allow-Origin"</span>, httpReq.getHeader(<span class="hljs-string">"Origin"</span>));
+        httpResp.addHeader(<span class="hljs-string">"Access-Control-Allow-Headers"</span>, <span class="hljs-string">"*"</span>);
+        httpResp.addHeader(<span class="hljs-string">"Access-Control-Allow-Methods"</span>, <span class="hljs-string">"*"</span>);
+        httpResp.addHeader(<span class="hljs-string">"Access-Control-Allow-Credentials"</span>, <span class="hljs-string">"true"</span>);
+
+        <span class="hljs-keyword">this</span>.saveRequestAndRedirectToLogin(request, response);
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+    &#125;
+
+&#125;</code></pre>
 <p>这样就解决了 <code>shiro</code> 导致的跨域问题，如果内容对你有所帮助，可以分享给你的好友共同学习。</p>
-  </article>
-  <aside class="table-content" id="site-toc">
-  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
-  <div class="table-content-title">
-    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
-    <span>目录</span>
-  </div>
-  <div class="table-content-main" id="table-toc">
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#问题背景"><span class="toc-text">问题背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#问题分析"><span class="toc-text">问题分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#复杂请求"><span class="toc-text">复杂请求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#预检请求"><span class="toc-text">预检请求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤器"><span class="toc-text">过滤器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#问题解决"><span class="toc-text">问题解决</span></a></li></ol>
-  </div>
-</aside>
-  
-    <aside class="passage-copyright">
-      <div>本文作者: 沐晨</div>
-      
-        <div>
-          原文链接:
-          <a style="word-break: break-word;" href="" target="_blank">https://muchen.fun/passages/shiro-cause-cors/</a>
-        </div>
-      
-      <div>
-        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
-      </div>
-    </aside>
-  
-    
-    <div class="passage-tags">
-    
-      <a style="word-break: break-word;" href="/tags/SHIRO/"><i class="fa fa-tags"></i>SHIRO</a>
-    
-      <a style="word-break: break-word;" href="/tags/%E8%B7%A8%E5%9F%9F/"><i class="fa fa-tags"></i>跨域</a>
-    
-    </div>
-  
-</div>
 
-<div class="left_prev_arrow_div">
-    <div class="left_prev_arrow arrow_div">
-        <a href="/passages/design-pattern-learn-28/" data-enable="true">
-            <i class="fa fa-angle-left" aria-hidden="true"></i>
-        </a>
-    </div>
-</div>
-<div class="right_prev_arrow_div">
-    <div class="right_prev_arrow arrow_div">
-        <a href="/passages/design-pattern-learn-sum-2/" data-enable="true">
-            <i class="fa fa-angle-right" aria-hidden="true"></i>
-        </a>
-    </div>
-</div>
-
-
-    </main>
-    
-      
-<div class="site-comment-contanier" data-plateform="leancloud">
-  
-    <p id="site-comment-info">
-      <i class="fa fa-spinner fa-spin"></i> 评论加载中
-    </p>
-    <div id="site-comment"></div>
-  
-</div>
-    
-    <div class="site-footer-wrapper">
-  <footer class="site-footer">
-    
-      
-        <div class="site-footer-col">
-          <h5 class="site-footer-title">博客推荐</h5>
-          
-            <span class="site-footer-item">
-              <a href="https://muchen.fun/" target="_blank">沐晨</a>
-            </span>
-          
-            <span class="site-footer-item">
-              <a href="http://www.wangdabo.com" target="_blank">王大博</a>
-            </span>
-          
-            <span class="site-footer-item">
-              <a href="https://inrgg.com/" target="_blank">任公公</a>
-            </span>
-          
-            <span class="site-footer-item">
-              <a href="https://naiyouhuameitang.club/" target="_blank">奶油话梅糖</a>
-            </span>
-          
-        </div>
-      
-        <div class="site-footer-col">
-          <h5 class="site-footer-title">系列教程</h5>
-          
-            <span class="site-footer-item">
-              <a href="https://muchen.fun/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/" target="_blank">数据结构与算法(中级)</a>
-            </span>
-          
-            <span class="site-footer-item">
-              <a href="/tags/设计模式/" target="_self">设计模式</a>
-            </span>
-          
-        </div>
-      
-        <div class="site-footer-col">
-          <h5 class="site-footer-title">找到我</h5>
-          
-            <span class="site-footer-item">
-              <a href="https://live.bilibili.com/10606164" target="_blank">哔哩哔哩</a>
-            </span>
-          
-            <span class="site-footer-item">
-              <a href="https://leetcode-cn.com/u/fancier/" target="_blank">Leetcode</a>
-            </span>
-          
-            <span class="site-footer-item">
-              <a href="https://juejin.im/user/5c1a2bf6e51d453073485c36" target="_blank">掘金</a>
-            </span>
-          
-        </div>
-      
-    
-    <div class="site-footer-info">
-      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
-    </div>
-    
-      <div class="site-footer-info">
-        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
-      </div>
-    
-    
-      <div class="site-footer-info">
-        <i class="fa fa-at"></i> Email: lcoder@qq.com
-      </div>
-    
-    <div class="site-footer-info">
-      <i class="fa fa-copyright"></i> 
-      2019-2020 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
-      Created by <a href="https://fanciercoder.github.io/" target="_blank">沐晨</a>.
-      All rights reserved.
-    </div>
-    <div class="site-footer-info">
-        <span style="position: relative;">
-        <a style=" position: absolute;
-            white-space: nowrap;" id="colorPrint">
-        </a>
-        </span>
-    </div>
-  </footer>
-</div>
-    <div id="site-layer" style="display:none;">
-  <div class="site-layer-content">
-    <div class="site-layer-header">
-      <span class="site-layer-header-title" id="site-layer-title"></span>
-      <i class="fa fa-close" id="site-layer-close"></i>
-    </div>
-    <div class="site-layer-body" id="site-layer-container">
-      <div class="site-layer-input" id="site-layer-search" style="display: none;">
-        <div class="site-layer-input-choose">
-          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
-        </div>
-        <input type="text">
-        <i class="fa fa-search"></i>
-      </div>
-      
-        <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
-          
+            </article>
+            <hr>
             <div>
-              <img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/wechat.png" alt="WeChat">
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E8%B8%A9%E5%9D%91%E7%BB%8F%E5%8E%86/">踩坑经历</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/SHIRO/">SHIRO</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E8%B7%A8%E5%9F%9F/">跨域</a>
+                    
+                  </div>
+                
+              </div>
               
-                <p>WeChat</p>
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/passages/design-pattern-learn-sum-2/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">设计模式之美学习（总结一）</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/passages/design-pattern-learn-28/">
+                        <span class="hidden-mobile">设计模式之美学习（二十八）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
               
             </div>
-          
-            <div>
-              <img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/alipay.png" alt="AliPay">
-              
-                <p>AliPay</p>
-              
-            </div>
-          
-            <div>
-              <img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/BitCoin.jpg" alt="BitCoin">
-              
-                <p>BitCoin</p>
-              
-            </div>
-          
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <div id="vcomments"></div>
+  <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+  <script type="text/javascript">
+    var oldLoadVa = window.onload;
+    window.onload = function () {
+      oldLoadVa && oldLoadVa();
+
+      new Valine({
+        el: "#vcomments",
+        app_id: "O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",
+        app_key: "5Rl3Rhl9zc8BJNvrPcncKWFy",
+        placeholder: "说点什么吧~",
+        path: window.location.pathname,
+        avatar: "retro",
+        meta: ["nick","mail","link"],
+        pageSize: "10",
+        lang: "zh-CN",
+        highlight: true,
+        recordIP: true,
+        serverURLs: "",
+      });
+    };
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments
+      powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
         </div>
-      
-      <div id="site-layer-welcome" style="display:none;"></div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><br><div class="text-center">欢迎关注我的公众号</div>
+    </div>
+  </div>
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
     </div>
   </div>
 </div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    <div>
+      <span id="timeDate">载入天数...</span>
+      <span id="times">载入时分秒...</span>
+      <script>
+        var now = new Date();
+        function createtime(){
+          var grt= new Date("07/12/2019 00:00:00");//此处修改你的建站时间或者网站上线时间
+          now.setTime(now.getTime()+250);
+          days = (now - grt ) / 1000 / 60 / 60 / 24;
+          dnum = Math.floor(days);
+          hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum);
+          hnum = Math.floor(hours);
+          if(String(hnum).length ==1 ){
+            hnum = "0" + hnum;
+          }
+          minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+          mnum = Math.floor(minutes);
+          if(String(mnum).length ==1 ){
+            mnum = "0" + mnum;
+          }
+          seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+          snum = Math.round(seconds);
+          if(String(snum).length ==1 ){
+            snum = "0" + snum;
+          }
+          document.getElementById("timeDate").innerHTML = "本站已运行&nbsp"+dnum+"&nbsp天";
+          document.getElementById("times").innerHTML = hnum + "&nbsp小时&nbsp" + mnum + "&nbsp分&nbsp" + snum + "&nbsp秒";
+        }
+        setInterval("createtime()",250);
+      </script>
+    </div>
     
 
-<div class="bottom-bar">
-  <div class="bottom-bar-left">
-    <a href="/passages/design-pattern-learn-sum-2/" target="_self" data-enable="true">
-      <i class="fa fa-arrow-left"></i>
-    </a>
-    <a href="/passages/design-pattern-learn-28/" target="_self" data-enable="true">
-      <i class="fa fa-arrow-right"></i>
-    </a>
-  </div>
-  <div class="bottom-bar-right">
-    <a href="javascript:void(0);" target="_self" data-enable="true" id="site-toc-show-btn">
-      <i class="fa fa-bars"></i>
-    </a>
     
-      <a href="#site-comment" target="_self" data-enable="true">
-        <i class="fa fa-commenting"></i>
-      </a>
-    
-    <a href="javascript:void(0);" target="_self" id="site-toggle-share-btn">
-      <i class="fa fa-share-alt"></i>
-    </a>
-    
-      <a href="javascript:void(0);" target="_self" id="site-reward">
-        <i class="fa fa-thumbs-up"></i>
-      </a>
-    
-    <a href="javascript:void(0);" target="_self" id="back-top-btn">
-      <i class="fa fa-chevron-up"></i>
-    </a>
-  </div>
-</div>
-    <div id="share-btn">
-  
-    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
-      <i class="fa fa-twitter"></i>
-    </a>
-  
-  
-    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
-      <i class="fa fa-facebook"></i>
-    </a>
-  
-  
-    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
-      <i class="fa fa-weibo"></i>
-    </a>
-  
-  
-    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
-      <i class="fa fa-qq"></i>
-    </a>
-  
-  
-    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
-      <i class="fa fa-wechat"></i>
-    </a>
-  
-</div>
-    
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-144841374-1"></script>
-  <script async>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
 
-    gtag('config', 'UA-144841374-1');
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+  <script  src="/js/lazyload.js" ></script>
+
+
+
+  
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
   </script>
 
 
 
 
-  <script async>
-  (function(){
-      var bp = document.createElement('script');
-      var curProtocol = window.location.protocol.split(':')[0];
-      if (curProtocol === 'https') {
-          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+  
+<script src="https://static.muchen.fun/js/custom.js"></script>
+
+
+
+<!-- Plugins -->
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+    <!-- Google Analytics -->
+    <script defer>
+      (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+          (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+          m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+      })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+      ga('create', 'UA-144841374-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "Shiro过滤器导致的前端跨域&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 60,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
       }
-      else {
-          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
-      }
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(bp, s);
-  })();
+    );
   </script>
 
 
 
 
- <script>
- //const element =  document.querySelector('.home-article-wrapper')
- //element.classList.add('animated', 'bounceInLeft')
- function testAnim(x) {
-     $('.home-article-wrapper').removeClass('animate').addClass(x + ' animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-       $(this).removeClass('animate');
-     });
-   };
 
-   testAnim('flipInX');
- </script>
+  
 
-    
-      
-<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/footer.js"></script>
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
 
-    
-  </body>
+    <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+  
+
+
+
+  
+  
+    <script>
+      !function (e, t, a) {
+        function r() {
+          for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+          requestAnimationFrame(r)
+        }
+
+        function n() {
+          var t = "function" == typeof e.onclick && e.onclick;
+          e.onclick = function (e) {
+            t && t(), o(e)
+          }
+        }
+
+        function o(e) {
+          var a = t.createElement("div");
+          a.className = "heart", s.push({
+            el: a,
+            x: e.clientX - 5,
+            y: e.clientY - 5,
+            scale: 1,
+            alpha: 1,
+            color: c()
+          }), t.body.appendChild(a)
+        }
+
+        function i(e) {
+          var a = t.createElement("style");
+          a.type = "text/css";
+          try {
+            a.appendChild(t.createTextNode(e))
+          } catch (t) {
+            a.styleSheet.cssText = e
+          }
+          t.getElementsByTagName("head")[0].appendChild(a)
+        }
+
+        function c() {
+          return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+        }
+
+        var s = [];
+        e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+          setTimeout(e, 1e3 / 60)
+        }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+      }(window, document);
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
 </html>

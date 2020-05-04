@@ -1,278 +1,396 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-  
+
+
+
+
+
 <head>
-  <meta charset="utf-8">
-  <meta name="author" content="MuChen" />
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/touch-icon.png">
+  <link rel="icon" type="image/png" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/favicon.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
   
-  
-  <title>7.队列 | MuChen&#39;s Blog</title>
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="沐晨的个人博客,技术博客">
+  <meta name="author" content="Li Duo">
+  <meta name="keywords" content="个人博客,个人见解">
+  <title>7.队列 - MuChen&#39;s Blog</title>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
 
-  
-    <meta name="keywords" content="数据结构与算法(中级),数据结构,队列," />
-  
 
-  
-  <meta name="description" content="当我们向固定大小的线程池中请求一个线程时，如果线程池中没有空闲资源了，这个时候线程池如何处理这个请求？是拒绝请求还是排队请求？各种处理策略又是怎么实现的呢？">
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
 
-  <script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/jquery-3.4.1.min.js"></script>
 
-  
+<!-- 主题依赖的图标库，不要自行修改 -->
 
-  
-    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@4.5.3/dist/av-min.js" async></script>
-  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
 
-  
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
-  
 
-  
-    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
-  
 
-  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
 
- <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/8.11.8/sweetalert2.all.min.js" async></script>
 
-  <script>
-  // theme-ad's config script
-  // it can be used in every script
-  
-  window.AD_CONFIG = {
-    leancloud: {"appid":"O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI","appkey":"5Rl3Rhl9zc8BJNvrPcncKWFy","comment":true,"count":true},
-    welcome: {"enable":false,"interval":30},
-    start_time: "2019-07-12",
-    passwords: ["0e31be4bd24c14e65633d11633fe616ee3d93b4f31d07726fdbe113fa98a391a", ],
-    is_post: true,
-    lock: false,
-    author: "MuChen",
-    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
-    mathjax: true,
-    page_type: "",
-    root: "/"
-  };
-</script>
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
 
   
-<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/sha256.min.js"></script>
-<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/auth.js"></script>
-<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/index.js"></script>
-<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/vendor/qrcode.min.js"></script>
+<link rel="stylesheet" href="https://static.muchen.fun/css/custom.css?t=0.1423425.css">
 
 
-  
-    <link rel="icon" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/favicon.ico">
-    <link rel="apple-touch-icon" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/touch-icon.png">
-  
-
-  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-
-  <link href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/animate-3.7.2.min.css" rel="stylesheet">
-
-  
-<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
-
-
-  
-
-  <script type="text/javascript">
-      function getCSS() {
-          let dateToday = new Date();
-          let timeNow = dateToday.getTime();
-          dateToday.setTime(timeNow);
-          let theHour = dateToday.getHours();
-          let display = "/css/index-night.css";
-          if (theHour <= 5) {
-			  display = "https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/index-night.css";
-		  } else if (theHour >= 19) {
-              display = "https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/index-night.css";
-		  } else if (theHour > 5) {
-              display = "https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/index.css";
-		  } else if (theHour < 19) {
-              display = "https://muchen-img.oss-cn-hongkong.aliyuncs.com/css/index.css";
-		  }
-          let css = '<';
-          css += 'link rel="stylesheet" href=' + display + ' \/';
-          css += '>';
-          document.write(css);
-      }
-  </script>
-  <script type="text/javascript">
-      window.onload = getCSS();
-  </script>
 
 <meta name="generator" content="Hexo 4.2.0"></head>
-  <body>
-    <div class="preloader">
-        <div class="lds-ripple">
-            <div class="lds-pos"></div>
-            <div class="lds-pos"></div>
-        </div>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">
+              <i class="iconfont icon-home-fill"></i>
+              首页</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">
+              <i class="iconfont icon-archive-fill"></i>
+              归档</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">
+              <i class="iconfont icon-category-fill"></i>
+              分类</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">
+              <i class="iconfont icon-tags-fill"></i>
+              标签</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">
+              <i class="iconfont icon-user-fill"></i>
+              关于</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/links/">
+              <i class="iconfont icon-link-fill"></i>
+              友链</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+            <li class="nav-item">
+                <a id="dark" class="nav-link" onclick="switchDarkMode()">
+                    <i class="iconfont icon-sun"></i>
+                </a>
+            </li>
+      </ul>
     </div>
-    <header class="site-header">
-  <div class="site-header-brand">
-    
-      <span class="site-header-brand-title">
-        <a href="/">沐晨</a>
-      </span>
-    
-    
-      <span class="site-header-brand-motto"> | Learn To Learn</span>
-    
-  </div>
-  <div class="site-header-right">
-      <div class="search-box">
-          <section>
-              <div id="site_search">
-                  <input type="text" id="local-search-input" results="0"/>
-                  <div id="local-search-result"></div>
-              </div>
-          </section>
-      </div>
-    <nav class="site-header-navigation">
-      
-        <a href="/" target="_self">首页</a>
-      
-        <a href="/archives/" target="_self">归档</a>
-      
-        <a href="/tags/" target="_self">标签</a>
-      
-        <a href="/categories/" target="_self">分类</a>
-      
-        <a href="/friends/" target="_self">友链</a>
-      
-        <a href="/about/" target="_self">关于</a>
-      
-    </nav>
-    <div class="site-header-btn">
-      
-        <a href="https://github.com/FancierCoder" target="_blank" id="site-github">
-          <i class="fa fa-github-alt"></i>
-        </a>
-      
-      <a href="javascript:void(0);" id="site-search" style="display: none">
-        <i class="fa fa-search"></i>
-      </a>
-      <a href="javascript:void(0);" id="site-nav-btn">
-        <i class="fa fa-ellipsis-v"></i>
-      </a>
-    </div>
-  </div>
-</header>
-<nav class="table-content" id="site-nav">
-  <div class="table-content-title">
-    <span>导航</span>
-  </div>
-  <div class="table-content-main">
-    <ol class="toc">
-      
-        <li class="toc-item">
-          <a href="/" target="_self">
-            首页
-          </a>
-        </li>
-      
-        <li class="toc-item">
-          <a href="/archives/" target="_self">
-            归档
-          </a>
-        </li>
-      
-        <li class="toc-item">
-          <a href="/tags/" target="_self">
-            标签
-          </a>
-        </li>
-      
-        <li class="toc-item">
-          <a href="/categories/" target="_self">
-            分类
-          </a>
-        </li>
-      
-        <li class="toc-item">
-          <a href="/friends/" target="_self">
-            友链
-          </a>
-        </li>
-      
-        <li class="toc-item">
-          <a href="/about/" target="_self">
-            关于
-          </a>
-        </li>
-      
-    </ol>
   </div>
 </nav>
-<div id="site-process"></div>
-    <main id="passage">
-      
-  <div class="passage">
-    <div class="passage-meta">
 
-        
-      <span style="margin-right: 24px;">
-        <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/"><i class="fa fa-bookmark"></i>数据结构与算法(中级)</a>
-      </span>
-        
-        
-            <span style="margin-right: 24px;">
-         <i class="fa fa-unlock-alt"></i>UNLOCK
-      </span>
-        
-        
-    </div>
-    <div class="passage-title-wrap">
-        <h1 class="passage-title">
-            7.队列
-        </h1>
-        <div class="passage-meta">
-        <span style="margin-right: 24px;">
-          <i class="fa fa-calendar"></i>2019.07.16 13:22
-        </span>
-            <span id="article-visit-info" style="margin-right: 24px;">
-            <i class="fa fa-eye"></i> 0
-        </span>
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/images/07.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+                <div class="mt-3 post-meta">
+                  <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                  <time datetime="2019-07-16 13:22">
+                    2019年7月16日 下午
+                  </time>
+                </div>
+              
+
+              <div class="mt-1">
+                
+                  
+                  <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    4k 字
+                  </span>
+                
+
+                
+                  
+                  <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                    
+                    
+                    56
+                     分钟
+                  </span>
+                
+
+                
+                  <!-- 不蒜子统计文章PV -->
+                  
+                  <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
+                    <i class="iconfont icon-eye" aria-hidden="true"></i>
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>
+                
+              </div>
+            
+          </div>
+
+          
+        </div>
       </div>
-  </div>
-  
-  <article class="passage-article">
-    <p><code>CPU</code> 资源是有限的，任务的处理速度与线程个数并不是线性正相关。相反，过多的线程反而会导致 <code>CPU</code> 频繁切换，处理性能下降。所以，线程池的大小一般都是综合考虑要处理任务的特点和硬件环境，来事先设置的。</p>
+    </div>
+      <script>
+          var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+          // 依次判断 系统暗黑模式 指定时间 缓存 dark
+          if( matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+              if(!(isNight&&localStorage.getItem('noDark') === '1')) {
+                  document.body.classList.add('dark');
+              }
+          }
+          document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark")?"🌙":"☀";
+      </script>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：10 个月前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <!-- more -->
+<p><code>CPU</code> 资源是有限的，任务的处理速度与线程个数并不是线性正相关。相反，过多的线程反而会导致 <code>CPU</code> 频繁切换，处理性能下降。所以，线程池的大小一般都是综合考虑要处理任务的特点和硬件环境，来事先设置的。</p>
 <p><font color='green'>当向固定大小的线程池中请求一个线程时，如果线程池中没有空闲资源了，这个时候线程池如何处理这个请求？是拒绝请求还是排队请求？各种处理策略又是怎么实现的呢？</font></p>
 <h2 id="如何理解“队列”？"><a href="#如何理解“队列”？" class="headerlink" title="如何理解“队列”？"></a>如何理解“队列”？</h2><p>队列这个概念非常好理解。你可以把它想象成排队买票，先来的先买，后来的人只能站末尾，不允许插队。<strong>先进者先出，这就是典型的“队列”。</strong></p>
-<p>栈只支持两个基本操作：<strong>入栈 <code>push()</code> 和出栈 <code>pop()</code></strong>。队列跟栈非常相似，支持的操作也很有限，最基本的操作也是两个：<strong>入队 <code>enqueue()</code></strong>，放一个数据到队列尾部；<strong>出队 <code>dequeue()</code></strong>，从队列头部取一个元素。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/ce9ec840-d38e-11e9-b66f-d76c8c3e613a.png" alt="image.png"><br>所以，队列跟栈一样，也是一种<strong>操作受限的线性表数据结构。</strong></p>
+<p>栈只支持两个基本操作：<strong>入栈 <code>push()</code> 和出栈 <code>pop()</code></strong>。队列跟栈非常相似，支持的操作也很有限，最基本的操作也是两个：<strong>入队 <code>enqueue()</code></strong>，放一个数据到队列尾部；<strong>出队 <code>dequeue()</code></strong>，从队列头部取一个元素。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/ce9ec840-d38e-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>所以，队列跟栈一样，也是一种<strong>操作受限的线性表数据结构。</strong></p>
 <p>队列的概念很好理解，基本操作也很容易掌握。作为一种非常基础的数据结构，队列的应用也非常广泛，特别是一些具有某些额外特性的队列，比如循环队列、阻塞队列、并发队列。它们在很多偏底层系统、框架、中间件的开发中，起着关键性的作用。比如高性能队列 <code>Disruptor</code>、<code>Linux</code> 环形缓存，都用到了循环并发队列；<code>Java concurrent</code> 并发包利用 <code>ArrayBlockingQueue</code> 来实现公平锁等。</p>
 <h2 id="顺序队列和链式队列"><a href="#顺序队列和链式队列" class="headerlink" title="顺序队列和链式队列"></a>顺序队列和链式队列</h2><p>队列跟栈一样，也是一种抽象的数据结构。它具有先进先出的特性，支持在队尾插入元素，在队头删除元素，那究竟该如何实现一个队列呢？</p>
 <p>跟栈一样，队列可以用数组来实现，也可以用链表来实现。用数组实现的栈叫作<strong>顺序栈</strong>，用链表实现的栈叫作<strong>链式栈</strong>。同样，用数组实现的队列叫作<strong>顺序队列</strong>，用链表实现的队列叫作<strong>链式队列</strong>。</p>
 <p>先来看下基于数组的实现方法。下面用 <code>Java</code> 语言实现了一下，不过并不包含 <code>Java</code> 语言的高级语法，而且做了比较详细的注释，你应该可以看懂。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 用数组实现的队列</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ArrayQueue</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 数组：items，数组大小：n</span></span><br><span class="line">  <span class="keyword">private</span> String[] items;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span> n = <span class="number">0</span>;</span><br><span class="line">  <span class="comment">// head 表示队头下标，tail 表示队尾下标</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span> head = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span> tail = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 申请一个大小为 capacity 的数组</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">ArrayQueue</span><span class="params">(<span class="keyword">int</span> capacity)</span> </span>&#123;</span><br><span class="line">    items = <span class="keyword">new</span> String[capacity];</span><br><span class="line">    n = capacity;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 入队</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">enqueue</span><span class="params">(String item)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 如果 tail == n 表示队列已经满了</span></span><br><span class="line">    <span class="keyword">if</span> (tail == n) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    items[tail] = item;</span><br><span class="line">    ++tail;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 出队</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> String <span class="title">dequeue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 如果 head == tail 表示队列为空</span></span><br><span class="line">    <span class="keyword">if</span> (head == tail) <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    <span class="comment">// 为了让其他语言的同学看的更加明确，把 -- 操作放到单独一行来写了</span></span><br><span class="line">    String ret = items[head];</span><br><span class="line">    ++head;</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-comment">// 用数组实现的队列</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ArrayQueue</span> </span>&#123;
+  <span class="hljs-comment">// 数组：items，数组大小：n</span>
+  <span class="hljs-keyword">private</span> String[] items;
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> n = <span class="hljs-number">0</span>;
+  <span class="hljs-comment">// head 表示队头下标，tail 表示队尾下标</span>
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> head = <span class="hljs-number">0</span>;
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> tail = <span class="hljs-number">0</span>;
+
+  <span class="hljs-comment">// 申请一个大小为 capacity 的数组</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ArrayQueue</span><span class="hljs-params">(<span class="hljs-keyword">int</span> capacity)</span> </span>&#123;
+    items = <span class="hljs-keyword">new</span> String[capacity];
+    n = capacity;
+  &#125;
+
+  <span class="hljs-comment">// 入队</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">enqueue</span><span class="hljs-params">(String item)</span> </span>&#123;
+    <span class="hljs-comment">// 如果 tail == n 表示队列已经满了</span>
+    <span class="hljs-keyword">if</span> (tail == n) <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+    items[tail] = item;
+    ++tail;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+  &#125;
+
+  <span class="hljs-comment">// 出队</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">dequeue</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-comment">// 如果 head == tail 表示队列为空</span>
+    <span class="hljs-keyword">if</span> (head == tail) <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+    <span class="hljs-comment">// 为了让其他语言的同学看的更加明确，把 -- 操作放到单独一行来写了</span>
+    String ret = items[head];
+    ++head;
+    <span class="hljs-keyword">return</span> ret;
+  &#125;
+&#125;</code></pre>
 <p>比起栈的数组实现，队列的数组实现稍微有点儿复杂，但是没关系。稍微解释一下实现思路，很容易就能明白了。</p>
 <p>对于栈来说，只需要一个栈顶指针就可以了。但是队列需要两个指针：一个是 <code>head</code> 指针，指向队头；一个是 <code>tail</code> 指针，指向队尾。</p>
-<p>你可以结合下面这幅图来理解。当 <code>a</code>、<code>b</code>、<code>c</code>、<code>d</code> 依次入队之后，队列中的 <code>head</code> 指针指向下标为 <code>0</code> 的位置，<code>tail</code> 指针指向下标为 <code>4</code> 的位置。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/78401340-d38f-11e9-b66f-d76c8c3e613a.png" alt="image.png"><br>当调用两次出队操作之后，队列中 <code>head</code> 指针指向下标为 <code>2</code> 的位置，<code>tail</code> 指针仍然指向下标为 <code>4</code> 的位置。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/88a687f0-d38f-11e9-b66f-d76c8c3e613a.png" alt="image.png"><br>你肯定已经发现了，随着不停地进行入队、出队操作，<code>head</code> 和 <code>tail</code> 都会持续往后移动。当 <code>tail</code> 移动到最右边，即使数组中还有空闲空间，也无法继续往队列中添加数据了。这个问题该如何解决呢？</p>
+<p>你可以结合下面这幅图来理解。当 <code>a</code>、<code>b</code>、<code>c</code>、<code>d</code> 依次入队之后，队列中的 <code>head</code> 指针指向下标为 <code>0</code> 的位置，<code>tail</code> 指针指向下标为 <code>4</code> 的位置。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/78401340-d38f-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>当调用两次出队操作之后，队列中 <code>head</code> 指针指向下标为 <code>2</code> 的位置，<code>tail</code> 指针仍然指向下标为 <code>4</code> 的位置。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/88a687f0-d38f-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>你肯定已经发现了，随着不停地进行入队、出队操作，<code>head</code> 和 <code>tail</code> 都会持续往后移动。当 <code>tail</code> 移动到最右边，即使数组中还有空闲空间，也无法继续往队列中添加数据了。这个问题该如何解决呢？</p>
 <p>你是否还记得，在数组那一篇，也遇到过类似的问题，就是数组的删除操作会导致数组中的数据不连续。你还记得当时是怎么解决的吗？对，用<strong>数据搬移</strong>！但是，每次进行出队操作都相当于删除数组下标为 <code>0</code> 的数据，要搬移整个队列中的数据，这样出队操作的时间复杂度就会从原来的 $O(1)$ 变为 $O(n)$。能不能优化一下呢？</p>
 <p>实际上，在出队时可以不用搬移数据。如果没有空闲空间了，只需要在入队时，再集中触发一次数据的搬移操作。借助这个思想，出队函数 <code>dequeue()</code> 保持不变，稍加改造一下入队函数 <code>enqueue()</code> 的实现，就可以轻松解决刚才的问题了。下面是具体的代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">// 入队操作，将 item 放入队尾</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">enqueue</span><span class="params">(String item)</span> </span>&#123;</span><br><span class="line">  <span class="comment">// tail == n 表示队列末尾没有空间了</span></span><br><span class="line">  <span class="keyword">if</span> (tail == n) &#123;</span><br><span class="line">    <span class="comment">// tail ==n &amp;&amp; head==0，表示整个队列都占满了</span></span><br><span class="line">    <span class="keyword">if</span> (head == <span class="number">0</span>) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    <span class="comment">// 数据搬移</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = head; i &lt; tail; ++i) &#123;</span><br><span class="line">      items[i-head] = items[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 搬移完之后重新更新 head 和 tail</span></span><br><span class="line">    tail -= head;</span><br><span class="line">    head = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  items[tail] = item;</span><br><span class="line">  ++tail;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>从代码中看到，当队列的 <code>tail</code> 指针移动到数组的最右边后，如果有新的数据入队，可以将 <code>head</code> 到 <code>tail</code> 之间的数据，整体搬移到数组中 <code>0</code> 到 <code>tail-head</code> 的位置。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/f105bd20-d38f-11e9-b66f-d76c8c3e613a.png" alt="image.png"><br>这种实现思路中，出队操作的时间复杂度仍然是 $O(1)$，但入队操作的时间复杂度还是 $O(1)$ 吗？你可以用算法复杂度分析方法，自己试着分析一下。</p>
+<pre><code class="hljs java"> <span class="hljs-comment">// 入队操作，将 item 放入队尾</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">enqueue</span><span class="hljs-params">(String item)</span> </span>&#123;
+  <span class="hljs-comment">// tail == n 表示队列末尾没有空间了</span>
+  <span class="hljs-keyword">if</span> (tail == n) &#123;
+    <span class="hljs-comment">// tail ==n &amp;&amp; head==0，表示整个队列都占满了</span>
+    <span class="hljs-keyword">if</span> (head == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+    <span class="hljs-comment">// 数据搬移</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = head; i &lt; tail; ++i) &#123;
+      items[i-head] = items[i];
+    &#125;
+    <span class="hljs-comment">// 搬移完之后重新更新 head 和 tail</span>
+    tail -= head;
+    head = <span class="hljs-number">0</span>;
+  &#125;
+  
+  items[tail] = item;
+  ++tail;
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+&#125;</code></pre>
+<p>从代码中看到，当队列的 <code>tail</code> 指针移动到数组的最右边后，如果有新的数据入队，可以将 <code>head</code> 到 <code>tail</code> 之间的数据，整体搬移到数组中 <code>0</code> 到 <code>tail-head</code> 的位置。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/f105bd20-d38f-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>这种实现思路中，出队操作的时间复杂度仍然是 $O(1)$，但入队操作的时间复杂度还是 $O(1)$ 吗？你可以用算法复杂度分析方法，自己试着分析一下。</p>
 <p>接下来，再来看下基于链表的队列实现方法。</p>
-<p>基于链表的实现，同样需要两个指针：<code>head</code> 指针和 <code>tail</code> 指针。它们分别指向链表的第一个结点和最后一个结点。如图所示，入队时，<code>tail-&gt;next= new_node</code>, <code>tail = tail-&gt;next</code>；出队时，<code>head = head-&gt;next</code>。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/200af090-d390-11e9-b66f-d76c8c3e613a.png" alt="image.png"></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">QueueBasedOnLinkedList</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 队列的队首和队尾</span></span><br><span class="line">  <span class="keyword">private</span> Node head = <span class="keyword">null</span>;</span><br><span class="line">  <span class="keyword">private</span> Node tail = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 入队</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">enqueue</span><span class="params">(String value)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (tail == <span class="keyword">null</span>) &#123;</span><br><span class="line">      Node newNode = <span class="keyword">new</span> Node(value, <span class="keyword">null</span>);</span><br><span class="line">      head = newNode;</span><br><span class="line">      tail = newNode;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      tail.next = <span class="keyword">new</span> Node(value, <span class="keyword">null</span>);</span><br><span class="line">      tail = tail.next;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 出队</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> String <span class="title">dequeue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (head == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    String value = head.data;</span><br><span class="line">    head = head.next;</span><br><span class="line">    <span class="keyword">if</span> (head == <span class="keyword">null</span>) &#123;</span><br><span class="line">      tail = <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> value;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printAll</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Node p = head;</span><br><span class="line">    <span class="keyword">while</span> (p != <span class="keyword">null</span>) &#123;</span><br><span class="line">      System.out.print(p.data + <span class="string">" "</span>);</span><br><span class="line">      p = p.next;</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String data;</span><br><span class="line">    <span class="keyword">private</span> Node next;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Node</span><span class="params">(String data, Node next)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.data = data;</span><br><span class="line">      <span class="keyword">this</span>.next = next;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getData</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> data;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>基于链表的实现，同样需要两个指针：<code>head</code> 指针和 <code>tail</code> 指针。它们分别指向链表的第一个结点和最后一个结点。如图所示，入队时，<code>tail-&gt;next= new_node</code>, <code>tail = tail-&gt;next</code>；出队时，<code>head = head-&gt;next</code>。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/200af090-d390-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"></p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">QueueBasedOnLinkedList</span> </span>&#123;
+
+  <span class="hljs-comment">// 队列的队首和队尾</span>
+  <span class="hljs-keyword">private</span> Node head = <span class="hljs-keyword">null</span>;
+  <span class="hljs-keyword">private</span> Node tail = <span class="hljs-keyword">null</span>;
+
+  <span class="hljs-comment">// 入队</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">enqueue</span><span class="hljs-params">(String value)</span> </span>&#123;
+    <span class="hljs-keyword">if</span> (tail == <span class="hljs-keyword">null</span>) &#123;
+      Node newNode = <span class="hljs-keyword">new</span> Node(value, <span class="hljs-keyword">null</span>);
+      head = newNode;
+      tail = newNode;
+    &#125; <span class="hljs-keyword">else</span> &#123;
+      tail.next = <span class="hljs-keyword">new</span> Node(value, <span class="hljs-keyword">null</span>);
+      tail = tail.next;
+    &#125;
+  &#125;
+
+  <span class="hljs-comment">// 出队</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">dequeue</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-keyword">if</span> (head == <span class="hljs-keyword">null</span>) <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+
+    String value = head.data;
+    head = head.next;
+    <span class="hljs-keyword">if</span> (head == <span class="hljs-keyword">null</span>) &#123;
+      tail = <span class="hljs-keyword">null</span>;
+    &#125;
+    <span class="hljs-keyword">return</span> value;
+  &#125;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">printAll</span><span class="hljs-params">()</span> </span>&#123;
+    Node p = head;
+    <span class="hljs-keyword">while</span> (p != <span class="hljs-keyword">null</span>) &#123;
+      System.out.print(p.data + <span class="hljs-string">" "</span>);
+      p = p.next;
+    &#125;
+    System.out.println();
+  &#125;
+
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Node</span> </span>&#123;
+    <span class="hljs-keyword">private</span> String data;
+    <span class="hljs-keyword">private</span> Node next;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Node</span><span class="hljs-params">(String data, Node next)</span> </span>&#123;
+      <span class="hljs-keyword">this</span>.data = data;
+      <span class="hljs-keyword">this</span>.next = next;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getData</span><span class="hljs-params">()</span> </span>&#123;
+      <span class="hljs-keyword">return</span> data;
+    &#125;
+  &#125;
+
+&#125;</code></pre>
 
 <h2 id="循环队列"><a href="#循环队列" class="headerlink" title="循环队列"></a>循环队列</h2><p>刚才用数组来实现队列的时候，在 <code>tail==n</code> 时，会有数据搬移操作，这样入队操作性能就会受到影响。那有没有办法能够避免数据搬移呢？来看看循环队列的解决思路。</p>
-<p>循环队列，顾名思义，它长得像一个环。原本数组是有头有尾的，是一条直线。现在把首尾相连，扳成了一个环。下面有一张图，你可以直观地感受一下。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/99377290-d390-11e9-b66f-d76c8c3e613a.png" alt="image.png"><br>可以看到，图中这个队列的大小为 <code>8</code>，当前 <code>head=4，tail=7</code>。当有一个新的元素 <code>a</code> 入队时，放入下标为 <code>7</code> 的位置。但这个时候，并不把 <code>tail</code> 更新为 <code>8</code>，而是将其在环中后移一位，到下标为 <code>0</code> 的位置。当再有一个元素 <code>b</code> 入队时，将 <code>b</code> 放入下标为 <code>0</code> 的位置，然后 <code>tail</code> 加 <code>1</code> 更新为 <code>1</code>。所以，在 <code>a</code>，<code>b</code> 依次入队之后，循环队列中的元素就变成了下面的样子：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/be4476a0-d390-11e9-b66f-d76c8c3e613a.png" alt="image.png"><br>通过这样的方法，成功避免了数据搬移操作。看起来不难理解，但是循环队列的代码实现难度要比前面讲的非循环队列难多了。要想写出没有 <code>bug</code> 的循环队列的实现代码，个人觉得，最关键的是，<strong>确定好队空和队满的判定条件</strong>。</p>
+<p>循环队列，顾名思义，它长得像一个环。原本数组是有头有尾的，是一条直线。现在把首尾相连，扳成了一个环。下面有一张图，你可以直观地感受一下。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/99377290-d390-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>可以看到，图中这个队列的大小为 <code>8</code>，当前 <code>head=4，tail=7</code>。当有一个新的元素 <code>a</code> 入队时，放入下标为 <code>7</code> 的位置。但这个时候，并不把 <code>tail</code> 更新为 <code>8</code>，而是将其在环中后移一位，到下标为 <code>0</code> 的位置。当再有一个元素 <code>b</code> 入队时，将 <code>b</code> 放入下标为 <code>0</code> 的位置，然后 <code>tail</code> 加 <code>1</code> 更新为 <code>1</code>。所以，在 <code>a</code>，<code>b</code> 依次入队之后，循环队列中的元素就变成了下面的样子：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/be4476a0-d390-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>通过这样的方法，成功避免了数据搬移操作。看起来不难理解，但是循环队列的代码实现难度要比前面讲的非循环队列难多了。要想写出没有 <code>bug</code> 的循环队列的实现代码，个人觉得，最关键的是，<strong>确定好队空和队满的判定条件</strong>。</p>
 <p>在用数组实现的非循环队列中，队满的判断条件是 <code>tail == n</code>，队空的判断条件是 <code>head == tail</code>。那针对循环队列，如何判断队空和队满呢？</p>
-<p>队列为空的判断条件仍然是 <code>head == tail</code>。但队列满的判断条件就稍微有点复杂了。下面有一张队列满的图，你可以看一下，试着总结一下规律。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/e7058200-d390-11e9-b66f-d76c8c3e613a.png" alt="image.png"><br>就像图中画的队满的情况，<code>tail=3，head=4，n=8</code>，所以总结一下规律就是：<code>(3+1)%8=4</code>。多画几张队满的图，你就会发现，当队满时，<code>(tail+1)%n=head</code>。</p>
+<p>队列为空的判断条件仍然是 <code>head == tail</code>。但队列满的判断条件就稍微有点复杂了。下面有一张队列满的图，你可以看一下，试着总结一下规律。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/e7058200-d390-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>就像图中画的队满的情况，<code>tail=3，head=4，n=8</code>，所以总结一下规律就是：<code>(3+1)%8=4</code>。多画几张队满的图，你就会发现，当队满时，<code>(tail+1)%n=head</code>。</p>
 <p>你有没有发现，当队列满时，图中的 <code>tail</code> 指向的位置实际上是没有存储数据的。所以，循环队列会浪费一个数组的存储空间。</p>
 <p><code>Talk is cheap</code>，如果还是没怎么理解，那就 <code>show you code</code> 吧。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CircularQueue</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 数组：items，数组大小：n</span></span><br><span class="line">  <span class="keyword">private</span> String[] items;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span> n = <span class="number">0</span>;</span><br><span class="line">  <span class="comment">// head 表示队头下标，tail 表示队尾下标</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span> head = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span> tail = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 申请一个大小为 capacity 的数组</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">CircularQueue</span><span class="params">(<span class="keyword">int</span> capacity)</span> </span>&#123;</span><br><span class="line">    items = <span class="keyword">new</span> String[capacity];</span><br><span class="line">    n = capacity;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 入队</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">enqueue</span><span class="params">(String item)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 队列满了</span></span><br><span class="line">    <span class="keyword">if</span> ((tail + <span class="number">1</span>) % n == head) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    items[tail] = item;</span><br><span class="line">    tail = (tail + <span class="number">1</span>) % n;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 出队</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> String <span class="title">dequeue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 如果 head == tail 表示队列为空</span></span><br><span class="line">    <span class="keyword">if</span> (head == tail) <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    String ret = items[head];</span><br><span class="line">    head = (head + <span class="number">1</span>) % n;</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CircularQueue</span> </span>&#123;
+  <span class="hljs-comment">// 数组：items，数组大小：n</span>
+  <span class="hljs-keyword">private</span> String[] items;
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> n = <span class="hljs-number">0</span>;
+  <span class="hljs-comment">// head 表示队头下标，tail 表示队尾下标</span>
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> head = <span class="hljs-number">0</span>;
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> tail = <span class="hljs-number">0</span>;
+
+  <span class="hljs-comment">// 申请一个大小为 capacity 的数组</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">CircularQueue</span><span class="hljs-params">(<span class="hljs-keyword">int</span> capacity)</span> </span>&#123;
+    items = <span class="hljs-keyword">new</span> String[capacity];
+    n = capacity;
+  &#125;
+
+  <span class="hljs-comment">// 入队</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">enqueue</span><span class="hljs-params">(String item)</span> </span>&#123;
+    <span class="hljs-comment">// 队列满了</span>
+    <span class="hljs-keyword">if</span> ((tail + <span class="hljs-number">1</span>) % n == head) <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+    items[tail] = item;
+    tail = (tail + <span class="hljs-number">1</span>) % n;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+  &#125;
+
+  <span class="hljs-comment">// 出队</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">dequeue</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-comment">// 如果 head == tail 表示队列为空</span>
+    <span class="hljs-keyword">if</span> (head == tail) <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+    String ret = items[head];
+    head = (head + <span class="hljs-number">1</span>) % n;
+    <span class="hljs-keyword">return</span> ret;
+  &#125;
+&#125;</code></pre>
 
 <h2 id="阻塞队列和并发队列"><a href="#阻塞队列和并发队列" class="headerlink" title="阻塞队列和并发队列"></a>阻塞队列和并发队列</h2><p>前面讲的内容理论比较多，看起来很难跟实际的项目开发扯上关系。确实，队列这种数据结构很基础，平时的业务开发不大可能从零实现一个队列，甚至都不会直接用到。而一些具有特殊特性的队列应用却比较广泛，比如阻塞队列和并发队列。</p>
-<p><strong>阻塞队列</strong>其实就是在队列基础上增加了阻塞操作。简单来说，就是在队列为空的时候，从队头取数据会被阻塞。因为此时还没有数据可取，直到队列中有了数据才能返回；如果队列已经满了，那么插入数据的操作就会被阻塞，直到队列中有空闲位置后再插入数据，然后再返回。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/3efc46b0-d391-11e9-b66f-d76c8c3e613a.png" alt="image.png"><br>你应该已经发现了，上述的定义就是一个“生产者 - 消费者模型”！是的，可以使用阻塞队列，轻松实现一个“生产者 - 消费者模型”！</p>
+<p><strong>阻塞队列</strong>其实就是在队列基础上增加了阻塞操作。简单来说，就是在队列为空的时候，从队头取数据会被阻塞。因为此时还没有数据可取，直到队列中有了数据才能返回；如果队列已经满了，那么插入数据的操作就会被阻塞，直到队列中有空闲位置后再插入数据，然后再返回。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/3efc46b0-d391-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>你应该已经发现了，上述的定义就是一个“生产者 - 消费者模型”！是的，可以使用阻塞队列，轻松实现一个“生产者 - 消费者模型”！</p>
 <p>这种基于阻塞队列实现的“生产者 - 消费者模型”，可以有效地协调生产和消费的速度。当“生产者”生产数据的速度过快，“消费者”来不及消费时，存储数据的队列很快就会满了。这个时候，生产者就阻塞等待，直到“消费者”消费了数据，“生产者”才会被唤醒继续“生产”。</p>
-<p>而且不仅如此，基于阻塞队列，还可以通过协调“生产者”和“消费者”的个数，来提高数据的处理效率。比如前面的例子，可以多配置几个“消费者”，来应对一个“生产者”。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/662af240-d391-11e9-b66f-d76c8c3e613a.png" alt="image.png"><br>前面讲了阻塞队列，在多线程情况下，会有多个线程同时操作队列，这个时候就会存在线程安全问题，那如何实现一个线程安全的队列呢？</p>
+<p>而且不仅如此，基于阻塞队列，还可以通过协调“生产者”和“消费者”的个数，来提高数据的处理效率。比如前面的例子，可以多配置几个“消费者”，来应对一个“生产者”。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/662af240-d391-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>前面讲了阻塞队列，在多线程情况下，会有多个线程同时操作队列，这个时候就会存在线程安全问题，那如何实现一个线程安全的队列呢？</p>
 <p>线程安全的队列叫作<strong>并发队列</strong>。最简单直接的实现方式是直接在 <code>enqueue()</code>、<code>dequeue()</code> 方法上加锁，但是锁粒度大并发度会比较低，同一时刻仅允许一个存或者取操作。实际上，基于数组的循环队列，利用 <code>CAS</code> 原子操作，可以实现非常高效的并发队列。这也是循环队列比链式队列应用更加广泛的原因。在实战篇讲 <code>Disruptor</code> 的时候，会再详细讲并发队列的应用。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>上面讲了一种跟栈很相似的数据结构，队列。关于队列，能掌握下面的内容，就没问题了。</p>
 <p>队列最大的特点就是先进先出，主要的两个操作是<strong>入队和出队</strong>。跟栈一样，它既可以用数组来实现，也可以用链表来实现。用数组实现的叫顺序队列，用链表实现的叫链式队列。特别的是长得像一个环的循环队列。在数组实现队列的时候，会有数据搬移操作，要想解决数据搬移的问题，就需要像环一样的循环队列。</p>
@@ -299,305 +417,439 @@
 </blockquote>
 </li>
 </ul>
-  </article>
-  <aside class="table-content" id="site-toc">
-  <a id="toggle-menu-tree" class="" href="javascript:void(0);"><i class="fa fa-angle-left"></i></a>
-  <div class="table-content-title">
-    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
-    <span>目录</span>
-  </div>
-  <div class="table-content-main" id="table-toc">
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#如何理解“队列”？"><span class="toc-text">如何理解“队列”？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#顺序队列和链式队列"><span class="toc-text">顺序队列和链式队列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#循环队列"><span class="toc-text">循环队列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#阻塞队列和并发队列"><span class="toc-text">阻塞队列和并发队列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#思考"><span class="toc-text">思考</span></a></li></ol>
-  </div>
-</aside>
-  
-    <aside class="passage-copyright">
-      <div>本文作者: 沐晨</div>
-      
-        <div>
-          原文链接:
-          <a style="word-break: break-word;" href="" target="_blank">https://muchen.fun/passages/7/</a>
-        </div>
-      
-      <div>
-        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
-      </div>
-    </aside>
-  
-    
-    <div class="passage-tags">
-    
-      <a style="word-break: break-word;" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><i class="fa fa-tags"></i>数据结构</a>
-    
-      <a style="word-break: break-word;" href="/tags/%E9%98%9F%E5%88%97/"><i class="fa fa-tags"></i>队列</a>
-    
-    </div>
-  
-</div>
 
-<div class="left_prev_arrow_div">
-    <div class="left_prev_arrow arrow_div">
-        <a href="/passages/Kafka/" data-enable="true">
-            <i class="fa fa-angle-left" aria-hidden="true"></i>
-        </a>
-    </div>
-</div>
-<div class="right_prev_arrow_div">
-    <div class="right_prev_arrow arrow_div">
-        <a href="/passages/recursion/" data-enable="true">
-            <i class="fa fa-angle-right" aria-hidden="true"></i>
-        </a>
-    </div>
-</div>
-
-
-    </main>
-    
-      
-<div class="site-comment-contanier" data-plateform="leancloud">
-  
-    <p id="site-comment-info">
-      <i class="fa fa-spinner fa-spin"></i> 评论加载中
-    </p>
-    <div id="site-comment"></div>
-  
-</div>
-    
-    <div class="site-footer-wrapper">
-  <footer class="site-footer">
-    
-      
-        <div class="site-footer-col">
-          <h5 class="site-footer-title">博客推荐</h5>
-          
-            <span class="site-footer-item">
-              <a href="https://muchen.fun/" target="_blank">沐晨</a>
-            </span>
-          
-            <span class="site-footer-item">
-              <a href="http://www.wangdabo.com" target="_blank">王大博</a>
-            </span>
-          
-            <span class="site-footer-item">
-              <a href="https://inrgg.com/" target="_blank">任公公</a>
-            </span>
-          
-            <span class="site-footer-item">
-              <a href="https://naiyouhuameitang.club/" target="_blank">奶油话梅糖</a>
-            </span>
-          
-        </div>
-      
-        <div class="site-footer-col">
-          <h5 class="site-footer-title">系列教程</h5>
-          
-            <span class="site-footer-item">
-              <a href="https://muchen.fun/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/" target="_blank">数据结构与算法(中级)</a>
-            </span>
-          
-            <span class="site-footer-item">
-              <a href="/tags/设计模式/" target="_self">设计模式</a>
-            </span>
-          
-        </div>
-      
-        <div class="site-footer-col">
-          <h5 class="site-footer-title">找到我</h5>
-          
-            <span class="site-footer-item">
-              <a href="https://live.bilibili.com/10606164" target="_blank">哔哩哔哩</a>
-            </span>
-          
-            <span class="site-footer-item">
-              <a href="https://leetcode-cn.com/u/fancier/" target="_blank">Leetcode</a>
-            </span>
-          
-            <span class="site-footer-item">
-              <a href="https://juejin.im/user/5c1a2bf6e51d453073485c36" target="_blank">掘金</a>
-            </span>
-          
-        </div>
-      
-    
-    <div class="site-footer-info">
-      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
-    </div>
-    
-      <div class="site-footer-info">
-        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
-      </div>
-    
-    
-      <div class="site-footer-info">
-        <i class="fa fa-at"></i> Email: lcoder@qq.com
-      </div>
-    
-    <div class="site-footer-info">
-      <i class="fa fa-copyright"></i> 
-      2019-2020 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
-      Created by <a href="https://fanciercoder.github.io/" target="_blank">沐晨</a>.
-      All rights reserved.
-    </div>
-    <div class="site-footer-info">
-        <span style="position: relative;">
-        <a style=" position: absolute;
-            white-space: nowrap;" id="colorPrint">
-        </a>
-        </span>
-    </div>
-  </footer>
-</div>
-    <div id="site-layer" style="display:none;">
-  <div class="site-layer-content">
-    <div class="site-layer-header">
-      <span class="site-layer-header-title" id="site-layer-title"></span>
-      <i class="fa fa-close" id="site-layer-close"></i>
-    </div>
-    <div class="site-layer-body" id="site-layer-container">
-      <div class="site-layer-input" id="site-layer-search" style="display: none;">
-        <div class="site-layer-input-choose">
-          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
-        </div>
-        <input type="text">
-        <i class="fa fa-search"></i>
-      </div>
-      
-        <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
-          
+            </article>
+            <hr>
             <div>
-              <img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/wechat.png" alt="WeChat">
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/">数据结构与算法(中级)</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E9%98%9F%E5%88%97/">队列</a>
+                    
+                  </div>
+                
+              </div>
               
-                <p>WeChat</p>
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/passages/recursion/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">递归算法</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/passages/Kafka/">
+                        <span class="hidden-mobile">SpringBoot Kafka的配置</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
               
             </div>
-          
-            <div>
-              <img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/alipay.png" alt="AliPay">
-              
-                <p>AliPay</p>
-              
-            </div>
-          
-            <div>
-              <img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/BitCoin.jpg" alt="BitCoin">
-              
-                <p>BitCoin</p>
-              
-            </div>
-          
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <div id="vcomments"></div>
+  <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+  <script type="text/javascript">
+    var oldLoadVa = window.onload;
+    window.onload = function () {
+      oldLoadVa && oldLoadVa();
+
+      new Valine({
+        el: "#vcomments",
+        app_id: "O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",
+        app_key: "5Rl3Rhl9zc8BJNvrPcncKWFy",
+        placeholder: "说点什么吧~",
+        path: window.location.pathname,
+        avatar: "retro",
+        meta: ["nick","mail","link"],
+        pageSize: "10",
+        lang: "zh-CN",
+        highlight: true,
+        recordIP: true,
+        serverURLs: "",
+      });
+    };
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments
+      powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
         </div>
-      
-      <div id="site-layer-welcome" style="display:none;"></div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><br><div class="text-center">欢迎关注我的公众号</div>
+    </div>
+  </div>
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
     </div>
   </div>
 </div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    <div>
+      <span id="timeDate">载入天数...</span>
+      <span id="times">载入时分秒...</span>
+      <script>
+        var now = new Date();
+        function createtime(){
+          var grt= new Date("07/12/2019 00:00:00");//此处修改你的建站时间或者网站上线时间
+          now.setTime(now.getTime()+250);
+          days = (now - grt ) / 1000 / 60 / 60 / 24;
+          dnum = Math.floor(days);
+          hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum);
+          hnum = Math.floor(hours);
+          if(String(hnum).length ==1 ){
+            hnum = "0" + hnum;
+          }
+          minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+          mnum = Math.floor(minutes);
+          if(String(mnum).length ==1 ){
+            mnum = "0" + mnum;
+          }
+          seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+          snum = Math.round(seconds);
+          if(String(snum).length ==1 ){
+            snum = "0" + snum;
+          }
+          document.getElementById("timeDate").innerHTML = "本站已运行&nbsp"+dnum+"&nbsp天";
+          document.getElementById("times").innerHTML = hnum + "&nbsp小时&nbsp" + mnum + "&nbsp分&nbsp" + snum + "&nbsp秒";
+        }
+        setInterval("createtime()",250);
+      </script>
+    </div>
     
 
-<div class="bottom-bar">
-  <div class="bottom-bar-left">
-    <a href="/passages/recursion/" target="_self" data-enable="true">
-      <i class="fa fa-arrow-left"></i>
-    </a>
-    <a href="/passages/Kafka/" target="_self" data-enable="true">
-      <i class="fa fa-arrow-right"></i>
-    </a>
-  </div>
-  <div class="bottom-bar-right">
-    <a href="javascript:void(0);" target="_self" data-enable="true" id="site-toc-show-btn">
-      <i class="fa fa-bars"></i>
-    </a>
     
-      <a href="#site-comment" target="_self" data-enable="true">
-        <i class="fa fa-commenting"></i>
-      </a>
-    
-    <a href="javascript:void(0);" target="_self" id="site-toggle-share-btn">
-      <i class="fa fa-share-alt"></i>
-    </a>
-    
-      <a href="javascript:void(0);" target="_self" id="site-reward">
-        <i class="fa fa-thumbs-up"></i>
-      </a>
-    
-    <a href="javascript:void(0);" target="_self" id="back-top-btn">
-      <i class="fa fa-chevron-up"></i>
-    </a>
-  </div>
-</div>
-    <div id="share-btn">
-  
-    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
-      <i class="fa fa-twitter"></i>
-    </a>
-  
-  
-    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
-      <i class="fa fa-facebook"></i>
-    </a>
-  
-  
-    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
-      <i class="fa fa-weibo"></i>
-    </a>
-  
-  
-    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
-      <i class="fa fa-qq"></i>
-    </a>
-  
-  
-    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
-      <i class="fa fa-wechat"></i>
-    </a>
-  
-</div>
-    
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-144841374-1"></script>
-  <script async>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
 
-    gtag('config', 'UA-144841374-1');
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+  <script  src="/js/lazyload.js" ></script>
+
+
+
+  
+
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+  
+<script src="https://static.muchen.fun/js/custom.js"></script>
+
+
+
+<!-- Plugins -->
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+    <!-- Google Analytics -->
+    <script defer>
+      (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+          (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+          m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+      })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+      ga('create', 'UA-144841374-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "7.队列&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 60,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
   </script>
 
 
 
 
-  <script async>
-  (function(){
-      var bp = document.createElement('script');
-      var curProtocol = window.location.protocol.split(':')[0];
-      if (curProtocol === 'https') {
-          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
-      }
-      else {
-          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
-      }
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(bp, s);
-  })();
-  </script>
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+  
+
+
+
+  
+  
+    <script>
+      !function (e, t, a) {
+        function r() {
+          for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+          requestAnimationFrame(r)
+        }
+
+        function n() {
+          var t = "function" == typeof e.onclick && e.onclick;
+          e.onclick = function (e) {
+            t && t(), o(e)
+          }
+        }
+
+        function o(e) {
+          var a = t.createElement("div");
+          a.className = "heart", s.push({
+            el: a,
+            x: e.clientX - 5,
+            y: e.clientY - 5,
+            scale: 1,
+            alpha: 1,
+            color: c()
+          }), t.body.appendChild(a)
+        }
+
+        function i(e) {
+          var a = t.createElement("style");
+          a.type = "text/css";
+          try {
+            a.appendChild(t.createTextNode(e))
+          } catch (t) {
+            a.styleSheet.cssText = e
+          }
+          t.getElementsByTagName("head")[0].appendChild(a)
+        }
+
+        function c() {
+          return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+        }
+
+        var s = [];
+        e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+          setTimeout(e, 1e3 / 60)
+        }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+      }(window, document);
+    </script>
+  
 
 
 
 
- <script>
- //const element =  document.querySelector('.home-article-wrapper')
- //element.classList.add('animated', 'bounceInLeft')
- function testAnim(x) {
-     $('.home-article-wrapper').removeClass('animate').addClass(x + ' animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-       $(this).removeClass('animate');
-     });
-   };
 
-   testAnim('flipInX');
- </script>
 
-    
-      
-<script src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/js/footer.js"></script>
 
-    
-  </body>
+
+
+
+
+
+</body>
 </html>
