@@ -478,6 +478,16 @@ f(1,2,...n) &#x3D; &#123;最后一位是 1, f(n-1)&#125; + &#123;最后一位是
         setInterval("createtime()", 250);
       </script>
     </div>
+    <p id="hitokoto">:D 获取中...</p>
+    <script>
+      fetch('https://v1.hitokoto.cn')
+              .then(response => response.json())
+              .then(data => {
+                const hitokoto = document.getElementById('hitokoto')
+                hitokoto.innerText = data.hitokoto + '--「' + data.from + '」'
+              })
+              .catch(console.error)
+    </script>
     
 
     

@@ -707,6 +707,16 @@ T(n) &#x3D; T(n&#x2F;10) + T(9*n&#x2F;10) + n； n&gt;1</code></pre>
         setInterval("createtime()", 250);
       </script>
     </div>
+    <p id="hitokoto">:D 获取中...</p>
+    <script>
+      fetch('https://v1.hitokoto.cn')
+              .then(response => response.json())
+              .then(data => {
+                const hitokoto = document.getElementById('hitokoto')
+                hitokoto.innerText = data.hitokoto + '--「' + data.from + '」'
+              })
+              .catch(console.error)
+    </script>
     
 
     
