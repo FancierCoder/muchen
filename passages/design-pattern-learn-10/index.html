@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png">
+    <link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <meta name="theme-color" content="#2f4154">
+    <meta name="description" content="沐晨的个人博客,技术博客">
+    <meta name="author" content="Li Duo">
+    <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
+    <title>设计模式之美学习（十） - MuChen&#39;s Blog</title>
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+    
+<link rel="stylesheet" href="https://static.muchen.fun/css/custom.css?t=0.1423425.css">
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+<script>
+    var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+    // 依次判断 系统暗黑模式 指定时间 缓存 dark
+    if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+        if (!(isNight && localStorage.getItem('noDark') === '1')) {
+            document.body.classList.add('dark');
+        }
+    }
+    document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
+</script>
+<header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+    <div class="container">
+        <a class="navbar-brand"
+           href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a>
+
+        <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="animated-icon"><span></span><span></span><span></span></div>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto text-center">
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/archives/">
+                            <i class="iconfont icon-archive-fill"></i>
+                            归档</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/categories/">
+                            <i class="iconfont icon-category-fill"></i>
+                            分类</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tags/">
+                            <i class="iconfont icon-tags-fill"></i>
+                            标签</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/messageBoard/">
+                            <i class="iconfont icon-speakernotes"></i>
+                            留言</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about/">
+                            <i class="iconfont icon-user-fill"></i>
+                            关于</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/links/">
+                            <i class="iconfont icon-link-fill"></i>
+                            友链</a>
+                    </li>
+                
+                
+                    <li class="nav-item" id="search-btn">
+                        <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                                    class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+                    </li>
+                
+                <li class="nav-item">
+                    <a id="dark" class="nav-link" onclick="switchDarkMode()">
+                        <i class="iconfont icon-sun"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/images/07.jpg') no-repeat center center;
+                 background-size: cover;">
+        <div class="full-bg-img">
+            <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+                <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+                
+            </span>
+
+                    
+                        
+                            <div class="mt-3 post-meta">
+                                <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                                <time datetime="2019-11-30 22:10">
+                                    2019年11月30日 晚上
+                                </time>
+                            </div>
+                        
+
+                        <div class="mt-1">
+                            
+                                
+                                <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    5.6k 字
+                  </span>
+                            
+
+                            
+                                
+                                <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                                    
+                                    
+                                    79
+                                     分钟
+                  </span>
+                            
+
+                            
+                                <!-- 不蒜子统计文章PV -->
+                                
+                                <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
+                    <i class="iconfont icon-eye" aria-hidden="true"></i>
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>
+                            
+                        </div>
+                    
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    
+        
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：5 个月前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <!-- more -->
+<p>如何分别用基于贫血模型的传统开发模式，以及基于充血模型的 <code>DDD</code> 开发模式，设计实现一个钱包系统。</p>
+<h2 id="钱包业务背景介绍"><a href="#钱包业务背景介绍" class="headerlink" title="钱包业务背景介绍"></a>钱包业务背景介绍</h2><p>一般来讲，每个虚拟钱包账户都会对应用户的一个真实的支付账户，有可能是银行卡账户，也有可能是三方支付账户（比如支付宝、微信钱包）。为了方便后续的讲解，我们限定钱包暂时只支持充值、提现、支付、查询余额、查询交易流水这五个核心的功能，其他比如冻结、透支、转赠等不常用的功能，我们暂不考虑。为了让你理解这五个核心功能是如何工作的，接下来，我们来一块儿看下它们的业务实现流程。</p>
+<p><strong>1. 充值</strong></p>
+<p>用户通过三方支付渠道，把自己银行卡账户内的钱，充值到虚拟钱包账号中。这整个过程，我们可以分解为三个主要的操作流程：第一个操作是从用户的银行卡账户转账到应用的公共银行卡账户；第二个操作是将用户的充值金额加到虚拟钱包余额上；第三个操作是记录刚刚这笔交易流水。</p>
+<p><strong>2. 支付</strong></p>
+<p>用户用钱包内的余额，支付购买应用内的商品。实际上，支付的过程就是一个转账的过程，从用户的虚拟钱包账户划钱到商家的虚拟钱包账户上，然后触发真正的银行转账操作，从应用的公共银行账户转钱到商家的银行账户（注意，这里并不是从用户的银行账户转钱到商家的银行账户）。除此之外，我们也需要记录这笔支付的交易流水信息。</p>
+<p><strong>3. 提现</strong></p>
+<p>除了充值、支付之外，用户还可以将虚拟钱包中的余额，提现到自己的银行卡中。这个过程实际上就是扣减用户虚拟钱包中的余额，并且触发真正的银行转账操作，从应用的公共银行账户转钱到用户的银行账户。同样，我们也需要记录这笔提现的交易流水信息。</p>
+<p><strong>4. 查询余额</strong></p>
+<p>查询余额功能比较简单，我们看一下虚拟钱包中的余额数字即可。</p>
+<p><strong>5. 查询交易流水</strong></p>
+<p>查询交易流水也比较简单。我们只支持三种类型的交易流水：充值、支付、提现。在用户充值、支付、提现的时候，我们会记录相应的交易信息。在需要查询的时候，我们只需要将之前记录的交易流水，按照时间、类型等条件过滤之后，显示出来即可。</p>
+<h2 id="钱包系统的设计思路"><a href="#钱包系统的设计思路" class="headerlink" title="钱包系统的设计思路"></a>钱包系统的设计思路</h2><p>根据刚刚讲的业务实现流程和数据流转图，我们可以把整个钱包系统的业务划分为两部分，其中一部分单纯跟应用内的虚拟钱包账户打交道，另一部分单纯跟银行账户打交道。我们基于这样一个业务划分，给系统解耦，将整个钱包系统拆分为两个子系统：虚拟钱包系统和三方支付系统。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/11/30/f0f94c80-1376-11ea-9851-a125d350ec5f.png" srcset="/img/loading.gif" alt="image.png"><br>接来下只聚焦于虚拟钱包系统的设计与实现。对于三方支付系统以及整个钱包系统的设计与实现，你可以自己思考下。</p>
+<p><strong>现在我们来看下，如果要支持钱包的这五个核心功能，虚拟钱包系统需要对应实现哪些操作</strong>。下面有一张图，列出了这五个功能都会对应虚拟钱包的哪些操作。注意，交易流水的记录和查询，暂时在图中打了个问号，那是因为这块比较特殊，我们待会再讲。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/11/30/60d4b490-1377-11ea-9851-a125d350ec5f.png" srcset="/img/loading.gif" alt="image.png"><br>从图中我们可以看出，虚拟钱包系统要支持的操作非常简单，就是余额的加加减减。其中，充值、提现、查询余额三个功能，只涉及一个账户余额的加减操作，而支付功能涉及两个账户的余额加减操作：一个账户减余额，另一个账户加余额。</p>
+<p><strong>现在，我们再来看一下图中问号的那部分，也就是交易流水该如何记录和查询？</strong>我们先来看一下，交易流水都需要包含哪些信息。我觉得下面这几个信息是必须包含的。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/11/30/b493c300-1377-11ea-9851-a125d350ec5f.png" srcset="/img/loading.gif" alt="image2.png"></p>
+<p>从图中我们可以发现，交易流水的数据格式包含两个钱包账号，一个是入账钱包账号，一个是出账钱包账号。为什么要有两个账号信息呢？这主要是为了兼容支付这种涉及两个账户的交易类型。不过，对于充值、提现这两种交易类型来说，我们只需要记录一个钱包账户信息就够了，所以，这样的交易流水数据格式的设计稍微有点浪费存储空间。</p>
+<p>实际上，我们还有另外一种交易流水数据格式的设计思路，可以解决这个问题。我们把“支付”这个交易类型，拆为两个子类型：支付和被支付。支付单纯表示出账，余额扣减，被支付单纯表示入账，余额增加。这样我们在设计交易流水数据格式的时候，只需要记录一个账户信息即可。我画了一张两种交易流水数据格式的对比图，你可以对比着看一下。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/11/30/ed195dc0-1377-11ea-9851-a125d350ec5f.png" srcset="/img/loading.gif" alt="image3.png"></p>
+<p><strong>那以上两种交易流水数据格式的设计思路，你觉得哪一个更好呢？</strong></p>
+<p>答案是第一种设计思路更好些。因为交易流水有两个功能：一个是业务功能，比如，提供用户查询交易流水信息；另一个是非业务功能，保证数据的一致性。这里主要是指支付操作数据的一致性。</p>
+<p>支付实际上就是一个转账的操作，在一个账户上加上一定的金额，在另一个账户上减去相应的金额。我们需要保证加金额和减金额这两个操作，要么都成功，要么都失败。如果一个成功，一个失败，就会导致数据的不一致，一个账户明明减掉了钱，另一个账户却没有收到钱。</p>
+<p>保证数据一致性的方法有很多，比如依赖数据库事务的原子性，将两个操作放在同一个事务中执行。但是，这样的做法不够灵活，因为我们的有可能做了分库分表，支付涉及的两个账户可能存储在不同的库中，无法直接利用数据库本身的事务特性，在一个事务中执行两个账户的操作。当然，我们还有一些支持分布式事务的开源框架，但是，为了保证数据的强一致性，它们的实现逻辑一般都比较复杂、本身的性能也不高，会影响业务的执行时间。所以，更加权衡的一种做法就是，不保证数据的强一致性，只实现数据的最终一致性，也就是我们刚刚提到的交易流水要实现的非业务功能。</p>
+<p>对于支付这样的类似转账的操作，我们在操作两个钱包账户余额之前，先记录交易流水，并且标记为“待执行”，当两个钱包的加减金额都完成之后，我们再回过头来，将交易流水标记为“成功”。在给两个钱包加减金额的过程中，如果有任意一个操作失败，我们就将交易记录的状态标记为“失败”。我们通过后台补漏 <code>Job</code>，拉取状态为“失败”或者长时间处于“待执行”状态的交易记录，重新执行或者人工介入处理。</p>
+<p>如果选择第二种交易流水的设计思路，使用两条交易流水来记录支付操作，那记录两条交易流水本身又存在数据的一致性问题，有可能入账的交易流水记录成功，出账的交易流水信息记录失败。所以，权衡利弊，我们选择第一种稍微有些冗余的数据格式设计思路。</p>
+<p><strong>现在，我们再思考这样一个问题：充值、提现、支付这些业务交易类型，是否应该让虚拟钱包系统感知？换句话说，我们是否应该在虚拟钱包系统的交易流水中记录这三种类型？</strong></p>
+<p>答案是否定的。虚拟钱包系统不应该感知具体的业务交易类型。我们前面讲到，虚拟钱包支持的操作，仅仅是余额的加加减减操作，不涉及复杂业务概念，职责单一、功能通用。如果耦合太多业务概念到里面，势必影响系统的通用性，而且还会导致系统越做越复杂。因此，我们不希望将充值、支付、提现这样的业务概念添加到虚拟钱包系统中。</p>
+<p>但是，<strong>如果我们不在虚拟钱包系统的交易流水中记录交易类型，那在用户查询交易流水的时候，如何显示每条交易流水的交易类型呢？</strong></p>
+<p>从系统设计的角度，我们不应该在虚拟钱包系统的交易流水中记录交易类型。从产品需求的角度来说，我们又必须记录交易流水的交易类型。听起来比较矛盾，这个问题该如何解决呢？</p>
+<p>我们可以通过记录两条交易流水信息的方式来解决。我们前面讲到，整个钱包系统分为两个子系统，上层钱包系统的实现，依赖底层虚拟钱包系统和三方支付系统。对于钱包系统来说，它可以感知充值、支付、提现等业务概念，所以，我们在钱包系统这一层额外再记录一条包含交易类型的交易流水信息，而在底层的虚拟钱包系统中记录不包含交易类型的交易流水信息。</p>
+<p>为了让你更好地理解刚刚的设计思路，下面有一张图，你可以对比着上面的讲解一块儿来看。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/11/30/98a95960-1378-11ea-9851-a125d350ec5f.png" srcset="/img/loading.gif" alt="image4.png"><br>通过查询上层钱包系统的交易流水信息，去满足用户查询交易流水的功能需求，而虚拟钱包中的交易流水就只是用来解决数据一致性问题。实际上，它的作用还有很多，比如用来对账等。</p>
+<p>整个虚拟钱包的设计思路到此讲完了。接下来，我们来看一下，如何分别用基于贫血模型的传统开发模式和基于充血模型的 <code>DDD</code> 开发模式，来实现这样一个虚拟钱包系统？</p>
+<h2 id="基于贫血模型的传统开发模式"><a href="#基于贫血模型的传统开发模式" class="headerlink" title="基于贫血模型的传统开发模式"></a>基于贫血模型的传统开发模式</h2><p>这是一个典型的 <code>Web</code> 后端项目的三层结构。其中，<code>Controller</code> 和 <code>VO</code> 负责暴露接口，具体的代码实现如下所示。注意，<code>Controller</code> 中，接口实现比较简单，主要就是调用 <code>Service 的方法</code>，所以，我省略了具体的代码实现。</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">VirtualWalletController</span> </span>&#123;
+  <span class="hljs-comment">// 通过构造函数或者IOC框架注入</span>
+  <span class="hljs-keyword">private</span> VirtualWalletService virtualWalletService;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> BigDecimal <span class="hljs-title">getBalance</span><span class="hljs-params">(Long walletId)</span> </span>&#123; ... &#125; <span class="hljs-comment">//查询余额</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">debit</span><span class="hljs-params">(Long walletId, BigDecimal amount)</span> </span>&#123; ... &#125; <span class="hljs-comment">//出账</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">credit</span><span class="hljs-params">(Long walletId, BigDecimal amount)</span> </span>&#123; ... &#125; <span class="hljs-comment">//入账</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">transfer</span><span class="hljs-params">(Long fromWalletId, Long toWalletId, BigDecimal amount)</span> </span>&#123; ...&#125; <span class="hljs-comment">//转账</span>
+&#125;</code></pre>
+<p><code>Service</code> 和 <code>BO</code> 负责核心业务逻辑，<code>Repository</code> 和 <code>Entity</code> 负责数据存取。<code>Repository</code> 这一层的代码实现比较简单，不是讲解的重点，所以也省略掉了。<code>Service</code> 层的代码如下所示。注意，这里省略了一些不重要的校验代码，比如，对 <code>amount</code> 是否小于 <code>0</code>、钱包是否存在的校验等等。</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">VirtualWalletBo</span> </span>&#123;<span class="hljs-comment">//省略getter/setter/constructor方法</span>
+  <span class="hljs-keyword">private</span> Long id;
+  <span class="hljs-keyword">private</span> Long createTime;
+  <span class="hljs-keyword">private</span> BigDecimal balance;
+&#125;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">VirtualWalletService</span> </span>&#123;
+  <span class="hljs-comment">// 通过构造函数或者IOC框架注入</span>
+  <span class="hljs-keyword">private</span> VirtualWalletRepository walletRepo;
+  <span class="hljs-keyword">private</span> VirtualWalletTransactionRepository transactionRepo;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> VirtualWalletBo <span class="hljs-title">getVirtualWallet</span><span class="hljs-params">(Long walletId)</span> </span>&#123;
+    VirtualWalletEntity walletEntity = walletRepo.getWalletEntity(walletId);
+    VirtualWalletBo walletBo = convert(walletEntity);
+    <span class="hljs-keyword">return</span> walletBo;
+  &#125;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> BigDecimal <span class="hljs-title">getBalance</span><span class="hljs-params">(Long walletId)</span> </span>&#123;
+    <span class="hljs-keyword">return</span> virtualWalletRepo.getBalance(walletId);
+  &#125;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">debit</span><span class="hljs-params">(Long walletId, BigDecimal amount)</span> </span>&#123;
+    VirtualWalletEntity walletEntity = walletRepo.getWalletEntity(walletId);
+    BigDecimal balance = walletEntity.getBalance();
+    <span class="hljs-keyword">if</span> (balance.compareTo(amount) &lt; <span class="hljs-number">0</span>) &#123;
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> NoSufficientBalanceException(...);
+    &#125;
+    walletRepo.updateBalance(walletId, balance.subtract(amount));
+  &#125;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">credit</span><span class="hljs-params">(Long walletId, BigDecimal amount)</span> </span>&#123;
+    VirtualWalletEntity walletEntity = walletRepo.getWalletEntity(walletId);
+    BigDecimal balance = walletEntity.getBalance();
+    walletRepo.updateBalance(walletId, balance.add(amount));
+  &#125;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">transfer</span><span class="hljs-params">(Long fromWalletId, Long toWalletId, BigDecimal amount)</span> </span>&#123;
+    VirtualWalletTransactionEntity transactionEntity = <span class="hljs-keyword">new</span> VirtualWalletTransactionEntity();
+    transactionEntity.setAmount(amount);
+    transactionEntity.setCreateTime(System.currentTimeMillis());
+    transactionEntity.setFromWalletId(fromWalletId);
+    transactionEntity.setToWalletId(toWalletId);
+    transactionEntity.setStatus(Status.TO_BE_EXECUTED);
+    Long transactionId = transactionRepo.saveTransaction(transactionEntity);
+    <span class="hljs-keyword">try</span> &#123;
+      debit(fromWalletId, amount);
+      credit(toWalletId, amount);
+    &#125; <span class="hljs-keyword">catch</span> (InsufficientBalanceException e) &#123;
+      transactionRepo.updateStatus(transactionId, Status.CLOSED);
+      ...rethrow exception e...
+    &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;
+      transactionRepo.updateStatus(transactionId, Status.FAILED);
+      ...rethrow exception e...
+    &#125;
+    transactionRepo.updateStatus(transactionId, Status.EXECUTED);
+  &#125;
+&#125;</code></pre>
+<p>以上便是利用基于贫血模型的传统开发模式来实现的虚拟钱包系统。尽管我们对代码稍微做了简化，但整体的业务逻辑就是上面这样子。其中大部分代码逻辑都非常简单，最复杂的是 <code>Service</code> 中的 <code>transfer()</code> 转账函数。我们为了保证转账操作的数据一致性，添加了一些跟 <code>transaction</code> 相关的记录和状态更新的代码，理解起来稍微有点难度，你可以对照着之前讲的设计思路，自己多思考一下。</p>
+<h2 id="基于充血模型的-DDD-开发模式"><a href="#基于充血模型的-DDD-开发模式" class="headerlink" title="基于充血模型的 DDD 开发模式"></a>基于充血模型的 DDD 开发模式</h2><p>再来看一下，如何利用基于充血模型的 <code>DDD</code> 开发模式来实现这个系统？</p>
+<p>基于充血模型的 <code>DDD</code> 开发模式，跟基于贫血模型的传统开发模式的主要区别就在 <code>Service</code> 层，<code>Controller</code> 层和 <code>Repository</code> 层的代码基本上相同。所以，我们重点看一下，<code>Service</code> 层按照基于充血模型的 <code>DDD</code> 开发模式该如何来实现。</p>
+<p>在这种开发模式下，我们把虚拟钱包 <code>VirtualWallet</code> 类设计成一个充血的 <code>Domain</code> 领域模型，并且将原来在 <code>Service</code> 类中的部分业务逻辑移动到 <code>VirtualWallet</code> 类中，让 <code>Service</code> 类的实现依赖 <code>VirtualWallet</code> 类。具体的代码实现如下所示：</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">VirtualWallet</span> </span>&#123; <span class="hljs-comment">// Domain领域模型(充血模型)</span>
+  <span class="hljs-keyword">private</span> Long id;
+  <span class="hljs-keyword">private</span> Long createTime = System.currentTimeMillis();;
+  <span class="hljs-keyword">private</span> BigDecimal balance = BigDecimal.ZERO;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">VirtualWallet</span><span class="hljs-params">(Long preAllocatedId)</span> </span>&#123;
+    <span class="hljs-keyword">this</span>.id = preAllocatedId;
+  &#125;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> BigDecimal <span class="hljs-title">balance</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.balance;
+  &#125;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">debit</span><span class="hljs-params">(BigDecimal amount)</span> </span>&#123;
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.balance.compareTo(amount) &lt; <span class="hljs-number">0</span>) &#123;
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> InsufficientBalanceException(...);
+    &#125;
+    <span class="hljs-keyword">this</span>.balance.subtract(amount);
+  &#125;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">credit</span><span class="hljs-params">(BigDecimal amount)</span> </span>&#123;
+    <span class="hljs-keyword">if</span> (amount.compareTo(BigDecimal.ZERO) &lt; <span class="hljs-number">0</span>) &#123;
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> InvalidAmountException(...);
+    &#125;
+    <span class="hljs-keyword">this</span>.balance.add(amount);
+  &#125;
+&#125;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">VirtualWalletService</span> </span>&#123;
+  <span class="hljs-comment">// 通过构造函数或者IOC框架注入</span>
+  <span class="hljs-keyword">private</span> VirtualWalletRepository walletRepo;
+  <span class="hljs-keyword">private</span> VirtualWalletTransactionRepository transactionRepo;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> VirtualWallet <span class="hljs-title">getVirtualWallet</span><span class="hljs-params">(Long walletId)</span> </span>&#123;
+    VirtualWalletEntity walletEntity = walletRepo.getWalletEntity(walletId);
+    VirtualWallet wallet = convert(walletEntity);
+    <span class="hljs-keyword">return</span> wallet;
+  &#125;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> BigDecimal <span class="hljs-title">getBalance</span><span class="hljs-params">(Long walletId)</span> </span>&#123;
+    <span class="hljs-keyword">return</span> virtualWalletRepo.getBalance(walletId);
+  &#125;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">debit</span><span class="hljs-params">(Long walletId, BigDecimal amount)</span> </span>&#123;
+    VirtualWalletEntity walletEntity = walletRepo.getWalletEntity(walletId);
+    VirtualWallet wallet = convert(walletEntity);
+    wallet.debit(amount);
+    walletRepo.updateBalance(walletId, wallet.balance());
+  &#125;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">credit</span><span class="hljs-params">(Long walletId, BigDecimal amount)</span> </span>&#123;
+    VirtualWalletEntity walletEntity = walletRepo.getWalletEntity(walletId);
+    VirtualWallet wallet = convert(walletEntity);
+    wallet.credit(amount);
+    walletRepo.updateBalance(walletId, wallet.balance());
+  &#125;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">transfer</span><span class="hljs-params">(Long fromWalletId, Long toWalletId, BigDecimal amount)</span> </span>&#123;
+    <span class="hljs-comment">//...跟基于贫血模型的传统开发模式的代码一样...</span>
+  &#125;
+&#125;</code></pre>
+<p>看了上面的代码，你可能会说，领域模型 <code>VirtualWallet</code> 类很单薄，包含的业务逻辑很简单。相对于原来的贫血模型的设计思路，这种充血模型的设计思路，貌似并没有太大优势。这也是大部分业务系统都使用基于贫血模型开发的原因。不过，如果虚拟钱包系统需要支持更复杂的业务逻辑，那充血模型的优势就显现出来了。比如，我们要支持透支一定额度和冻结部分余额的功能。这个时候，我们重新来看一下 <code>VirtualWallet</code> 类的实现代码。</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">VirtualWallet</span> </span>&#123;
+  <span class="hljs-keyword">private</span> Long id;
+  <span class="hljs-keyword">private</span> Long createTime = System.currentTimeMillis();;
+  <span class="hljs-keyword">private</span> BigDecimal balance = BigDecimal.ZERO;
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> isAllowedOverdraft = <span class="hljs-keyword">true</span>;
+  <span class="hljs-keyword">private</span> BigDecimal overdraftAmount = BigDecimal.ZERO;
+  <span class="hljs-keyword">private</span> BigDecimal frozenAmount = BigDecimal.ZERO;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">VirtualWallet</span><span class="hljs-params">(Long preAllocatedId)</span> </span>&#123;
+    <span class="hljs-keyword">this</span>.id = preAllocatedId;
+  &#125;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">freeze</span><span class="hljs-params">(BigDecimal amount)</span> </span>&#123; ... &#125;
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">unfreeze</span><span class="hljs-params">(BigDecimal amount)</span> </span>&#123; ...&#125;
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">increaseOverdraftAmount</span><span class="hljs-params">(BigDecimal amount)</span> </span>&#123; ... &#125;
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">decreaseOverdraftAmount</span><span class="hljs-params">(BigDecimal amount)</span> </span>&#123; ... &#125;
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">closeOverdraft</span><span class="hljs-params">()</span> </span>&#123; ... &#125;
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">openOverdraft</span><span class="hljs-params">()</span> </span>&#123; ... &#125;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> BigDecimal <span class="hljs-title">balance</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.balance;
+  &#125;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> BigDecimal <span class="hljs-title">getAvaliableBalance</span><span class="hljs-params">()</span> </span>&#123;
+    BigDecimal totalAvaliableBalance = <span class="hljs-keyword">this</span>.balance.subtract(<span class="hljs-keyword">this</span>.frozenAmount);
+    <span class="hljs-keyword">if</span> (isAllowedOverdraft) &#123;
+      totalAvaliableBalance += <span class="hljs-keyword">this</span>.overdraftAmount;
+    &#125;
+    <span class="hljs-keyword">return</span> totalAvaliableBalance;
+  &#125;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">debit</span><span class="hljs-params">(BigDecimal amount)</span> </span>&#123;
+    BigDecimal totalAvaliableBalance = getAvaliableBalance();
+    <span class="hljs-keyword">if</span> (totoalAvaliableBalance.compareTo(amount) &lt; <span class="hljs-number">0</span>) &#123;
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> InsufficientBalanceException(...);
+    &#125;
+    <span class="hljs-keyword">this</span>.balance.subtract(amount);
+  &#125;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">credit</span><span class="hljs-params">(BigDecimal amount)</span> </span>&#123;
+    <span class="hljs-keyword">if</span> (amount.compareTo(BigDecimal.ZERO) &lt; <span class="hljs-number">0</span>) &#123;
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> InvalidAmountException(...);
+    &#125;
+    <span class="hljs-keyword">this</span>.balance.add(amount);
+  &#125;
+&#125;</code></pre>
+<p>领域模型 <code>VirtualWallet</code> 类添加了简单的冻结和透支逻辑之后，功能看起来就丰富了很多，代码也没那么单薄了。如果功能继续演进，我们可以增加更加细化的冻结策略、透支策略、支持钱包账号（<code>VirtualWallet id</code> 字段）自动生成的逻辑（不是通过构造函数经外部传入 <code>ID</code>，而是通过分布式 <code>ID</code> 生成算法来自动生成 <code>ID</code>）等等。<code>VirtualWallet</code> 类的业务逻辑会变得越来越复杂，也就很值得设计成充血模型了。</p>
+<h2 id="辩证思考与灵活应用"><a href="#辩证思考与灵活应用" class="headerlink" title="辩证思考与灵活应用"></a>辩证思考与灵活应用</h2><p>对于虚拟钱包系统的设计与两种开发模式的代码实现，你应该有个比较清晰的了解了。不过，还有两个问题值得讨论一下。</p>
+<p>第一个要讨论的问题是：<strong>在基于充血模型的 <code>DDD</code> 开发模式中，将业务逻辑移动到 <code>Domain</code> 中，<code>Service</code> 类变得很薄，但在我们的代码设计与实现中，并没有完全将 <code>Servic</code>e 类去掉，这是为什么？或者说，<code>Service</code> 类在这种情况下担当的职责是什么？哪些功能逻辑会放到 <code>Service</code> 类中？</strong></p>
+<p>区别于 <code>Domain</code> 的职责，<code>Service</code> 类主要有下面这样几个职责。</p>
+<p>1.<code>Service</code> 类负责与 <code>Repository</code> 交流。在上面的设计与代码实现中，<code>VirtualWalletService</code> 类负责与 <code>Repository</code> 层打交道，调用 <code>Respository</code> 类的方法，获取数据库中的数据，转化成领域模型 <code>VirtualWallet</code>，然后由领域模型 <code>VirtualWallet</code> 来完成业务逻辑，最后调用 <code>Repository</code> 类的方法，将数据存回数据库。</p>
+<p>之所以让 <code>VirtualWalletService</code> 类与 <code>Repository</code> 打交道，而不是让领域模型 <code>VirtualWallet</code> 与 <code>Repository</code> 打交道，那是因为我们想保持领域模型的独立性，不与任何其他层的代码（<code>Repository</code> 层的代码）或开发框架（比如 <code>Spring</code>、<code>MyBatis</code>）耦合在一起，将流程性的代码逻辑（比如从 <code>DB</code> 中取数据、映射数据）与领域模型的业务逻辑解耦，让领域模型更加可复用。</p>
+<p>2.<code>Service</code> 类负责跨领域模型的业务聚合功能。<code>VirtualWalletService</code> 类中的 <code>transfer()</code> 转账函数会涉及两个钱包的操作，因此这部分业务逻辑无法放到 <code>VirtualWallet</code> 类中，所以，我们暂且把转账业务放到 <code>VirtualWalletService</code> 类中了。当然，虽然功能演进，使得转账业务变得复杂起来之后，也可以将转账业务抽取出来，设计成一个独立的领域模型。</p>
+<p>3.<code>Service</code> 类负责一些非功能性及与三方系统交互的工作。比如幂等、事务、发邮件、发消息、记录日志、调用其他系统的 <code>RPC</code> 接口等，都可以放到 <code>Service</code> 类中。</p>
+<p><strong>第二个要讨论问题是：在基于充血模型的 <code>DDD</code> 开发模式中，尽管 <code>Service</code> 层被改造成了充血模型，但是 <code>Controller</code> 层和 <code>Repository</code> 层还是贫血模型，是否有必要也进行充血领域建模呢？</strong></p>
+<p>答案是没有必要。<code>Controller</code> 层主要负责接口的暴露，<code>Repository</code> 层主要负责与数据库打交道，这两层包含的业务逻辑并不多，前面我们也提到了，如果业务逻辑比较简单，就没必要做充血建模，即便设计成充血模型，类也非常单薄，看起来也很奇怪。</p>
+<p>尽管这样的设计是一种面向过程的编程风格，但我们只要控制好面向过程编程风格的副作用，照样可以开发出优秀的软件。那这里的副作用怎么控制呢？</p>
+<p>就拿 <code>Repository</code> 的 <code>Entity</code> 来说，即便它被设计成贫血模型，违反面相对象编程的封装特性，有被任意代码修改数据的风险，但 <code>Entity</code> 的生命周期是有限的。一般来讲，我们把它传递到 <code>Service</code> 层之后，就会转化成 <code>BO</code> 或者 <code>Domain</code> 来继续后面的业务逻辑。<code>Entity</code> 的生命周期到此就结束了，所以也并不会被到处任意修改。</p>
+<p>再来说说 <code>Controller</code> 层的 <code>VO</code>。实际上 <code>VO</code> 是一种 <code>DTO</code>（<code>Data Transfer Object</code>，数据传输对象）。它主要是作为接口的数据传输承载体，将数据发送给其他系统。从功能上来讲，它理应不包含业务逻辑、只包含数据。所以，将它设计成贫血模型也是比较合理的。</p>
+<h2 id="重点回顾"><a href="#重点回顾" class="headerlink" title="重点回顾"></a>重点回顾</h2><p>基于充血模型的 <code>DDD</code> 开发模式跟基于贫血模型的传统开发模式相比，主要区别在 <code>Service</code> 层。在基于充血模型的开发模式下，我们将部分原来在 <code>Service</code> 类中的业务逻辑移动到了一个充血的 <code>Domain</code> 领域模型中，让 <code>Service</code> 类的实现依赖这个 <code>Domain</code> 类。</p>
+<p>在基于充血模型的 <code>DDD</code> 开发模式下，<code>Service</code> 类并不会完全移除，而是负责一些不适合放在 <code>Domain</code> 类中的功能。比如，负责与 <code>Repository</code> 层打交道、跨领域模型的业务聚合功能、幂等事务等非功能性的工作。</p>
+<p>基于充血模型的 <code>DDD</code> 开发模式跟基于贫血模型的传统开发模式相比，<code>Controller</code> 层和 <code>Repository</code> 层的代码基本上相同。这是因为，<code>Repository</code> 层的 <code>Entity</code> 生命周期有限，<code>Controller</code> 层的 <code>VO</code> 只是单纯作为一种 <code>DTO</code>。两部分的业务逻辑都不会太复杂。业务逻辑主要集中在 <code>Service</code> 层。所以，<code>Repository</code> 层和 <code>Controller</code> 层继续沿用贫血模型的设计思路是没有问题的。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ul>
+<li>欢迎在留言区说一说你对 <code>DDD</code> 的看法。</li>
+</ul>
+<p>参考：<a href="https://time.geekbang.org/column/article/169631" target="_blank" rel="noopener">实战一（下）：如何利用基于充血模型的DDD开发一个虚拟钱包系统？</a></p>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">设计模式(面向对象)</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/passages/design-pattern-learn-11/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">设计模式之美学习（十一）</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/passages/design-pattern-learn-9/">
+                        <span class="hidden-mobile">设计模式之美学习（九）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+    <div id="vcomments"></div>
+    <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+    <script type="text/javascript">
+        var oldLoadVa = window.onload;
+        window.onload = function () {
+            oldLoadVa && oldLoadVa();
+
+            new Valine({
+                el: "#vcomments",
+                app_id: "O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",
+                app_key: "5Rl3Rhl9zc8BJNvrPcncKWFy",
+                placeholder: "说点什么吧~",
+                path: window.location.pathname,
+                avatar: "retro",
+                meta: ["nick","mail","link"],
+                pageSize: "10",
+                lang: "zh-CN",
+                highlight: true,
+                recordIP: true,
+                serverURLs: "https://lean.muchen.fun",
+            });
+        };
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments
+            powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><br><div class="text-center">欢迎关注我的公众号</div>
+    </div>
+  </div>
+
+
+    
+</main>
+
+
+    <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+
+
+
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+                <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mx-3">
+                <div class="md-form mb-5">
+                    <input type="text" id="local-search-input" class="form-control validate">
+                    <label data-error="x"
+                           data-success="v"
+                           for="local-search-input">关键词</label>
+                </div>
+                <div class="list-group" id="local-search-result"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    <div>
+      <span id="timeDate">载入天数...</span>
+      <span id="times">载入时分秒...</span>
+      <script>
+        var now = new Date();
+
+        function createtime() {
+          var grt = new Date("07/12/2019 00:00:00");//此处修改你的建站时间或者网站上线时间
+          now.setTime(now.getTime() + 250);
+          days = (now - grt) / 1000 / 60 / 60 / 24;
+          dnum = Math.floor(days);
+          hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+          hnum = Math.floor(hours);
+          if (String(hnum).length == 1) {
+            hnum = "0" + hnum;
+          }
+          minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+          mnum = Math.floor(minutes);
+          if (String(mnum).length == 1) {
+            mnum = "0" + mnum;
+          }
+          seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+          snum = Math.round(seconds);
+          if (String(snum).length == 1) {
+            snum = "0" + snum;
+          }
+          document.getElementById("timeDate").innerHTML = "本站已运行&nbsp" + dnum + "&nbsp天";
+          document.getElementById("times").innerHTML = hnum + "&nbsp小时&nbsp" + mnum + "&nbsp分&nbsp" + snum + "&nbsp秒";
+        }
+
+        setInterval("createtime()", 250);
+      </script>
+    </div>
+    <p id="hitokoto">:D 获取中...</p>
+    <script>
+      fetch('https://v1.hitokoto.cn')
+              .then(response => response.json())
+              .then(data => {
+                const hitokoto = document.getElementById('hitokoto')
+                hitokoto.innerText = data.hitokoto + '--「' + data.from + '」'
+              })
+              .catch(console.error)
+    </script>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+    <script  src="/js/lazyload.js" ></script>
+
+
+
+    
+
+
+
+
+    <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+    <script  src="/js/clipboard-use.js" ></script>
+
+
+
+    <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+    
+<script src="https://static.muchen.fun/js/custom.js"></script>
+
+
+
+<!-- Plugins -->
+
+
+    
+        <!-- Baidu Analytics -->
+        <script defer>
+            var _hmt = _hmt || [];
+            (function () {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    
+
+    
+        <!-- Google Analytics -->
+        <script defer>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-144841374-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+    <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+    <script>
+        var typed = new Typed('#subtitle', {
+            strings: [
+                '  ',
+                "设计模式之美学习（十）&nbsp;",
+            ],
+            cursorChar: "_",
+            typeSpeed: 60,
+            loop: false,
+        });
+        typed.stop();
+        $(document).ready(function () {
+            $(".typed-cursor").addClass("h2");
+            typed.start();
+        });
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+    <script>
+        anchors.options = {
+            placement: "right",
+            visible: "hover",
+            
+        };
+        var el = "h1,h2,h3,h4,h5,h6".split(",");
+        var res = [];
+        for (item of el) {
+            res.push(".markdown-body > " + item)
+        }
+        anchors.add(res.join(", "))
+    </script>
+
+
+
+    <script  src="/js/local-search.js" ></script>
+    <script>
+        var path = "/local-search.xml";
+        var inputArea = document.querySelector("#local-search-input");
+        inputArea.onclick = function () {
+            searchFunc(path, 'local-search-input', 'local-search-result');
+            this.onclick = null
+        }
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+    <script>
+        $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+            function () {
+                var element = document.createElement('a');
+                $(element).attr('data-fancybox', 'images');
+                $(element).attr('href', $(this).attr('src'));
+                $(this).wrap(element);
+            }
+        );
+    </script>
+
+
+
+
+
+    
+
+    
+        <!-- MathJax -->
+        <script>
+            MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']]
+                },
+                options: {
+                    renderActions: {
+                        findScript: [10, doc => {
+                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                                const display = !!node.type.match(/; *mode=display/);
+                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                                const text = document.createTextNode('');
+                                node.parentNode.replaceChild(text, node);
+                                math.start = {node: text, delim: '', n: 0};
+                                math.end = {node: text, delim: '', n: 0};
+                                doc.math.push(math);
+                            });
+                        }, '', false],
+                        insertedScript: [200, () => {
+                            document.querySelectorAll('mjx-container').forEach(node => {
+                                let target = node.parentNode;
+                                if (target.nodeName.toLowerCase() === 'li') {
+                                    target.parentNode.classList.add('has-jax');
+                                }
+                            });
+                        }, '', false]
+                    }
+                }
+            };
+        </script>
+
+        <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+    
+
+
+
+    
+    
+        <script>
+            !function (e, t, a) {
+                function r() {
+                    for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+                    requestAnimationFrame(r)
+                }
+
+                function n() {
+                    var t = "function" == typeof e.onclick && e.onclick;
+                    e.onclick = function (e) {
+                        t && t(), o(e)
+                    }
+                }
+
+                function o(e) {
+                    var a = t.createElement("div");
+                    a.className = "heart", s.push({
+                        el: a,
+                        x: e.clientX - 5,
+                        y: e.clientY - 5,
+                        scale: 1,
+                        alpha: 1,
+                        color: c()
+                    }), t.body.appendChild(a)
+                }
+
+                function i(e) {
+                    var a = t.createElement("style");
+                    a.type = "text/css";
+                    try {
+                        a.appendChild(t.createTextNode(e))
+                    } catch (t) {
+                        a.styleSheet.cssText = e
+                    }
+                    t.getElementsByTagName("head")[0].appendChild(a)
+                }
+
+                function c() {
+                    return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+                }
+
+                var s = [];
+                e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+                    setTimeout(e, 1e3 / 60)
+                }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+            }(window, document);
+        </script>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

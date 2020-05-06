@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png">
+    <link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <meta name="theme-color" content="#2f4154">
+    <meta name="description" content="沐晨的个人博客,技术博客">
+    <meta name="author" content="Li Duo">
+    <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
+    <title>26.堆的应用 - MuChen&#39;s Blog</title>
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+    
+<link rel="stylesheet" href="https://static.muchen.fun/css/custom.css?t=0.1423425.css">
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+<script>
+    var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+    // 依次判断 系统暗黑模式 指定时间 缓存 dark
+    if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+        if (!(isNight && localStorage.getItem('noDark') === '1')) {
+            document.body.classList.add('dark');
+        }
+    }
+    document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
+</script>
+<header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+    <div class="container">
+        <a class="navbar-brand"
+           href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a>
+
+        <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="animated-icon"><span></span><span></span><span></span></div>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto text-center">
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/archives/">
+                            <i class="iconfont icon-archive-fill"></i>
+                            归档</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/categories/">
+                            <i class="iconfont icon-category-fill"></i>
+                            分类</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tags/">
+                            <i class="iconfont icon-tags-fill"></i>
+                            标签</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/messageBoard/">
+                            <i class="iconfont icon-speakernotes"></i>
+                            留言</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about/">
+                            <i class="iconfont icon-user-fill"></i>
+                            关于</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/links/">
+                            <i class="iconfont icon-link-fill"></i>
+                            友链</a>
+                    </li>
+                
+                
+                    <li class="nav-item" id="search-btn">
+                        <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                                    class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+                    </li>
+                
+                <li class="nav-item">
+                    <a id="dark" class="nav-link" onclick="switchDarkMode()">
+                        <i class="iconfont icon-sun"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/images/07.jpg') no-repeat center center;
+                 background-size: cover;">
+        <div class="full-bg-img">
+            <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+                <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+                
+            </span>
+
+                    
+                        
+                            <div class="mt-3 post-meta">
+                                <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                                <time datetime="2019-08-02 13:39">
+                                    2019年8月2日 下午
+                                </time>
+                            </div>
+                        
+
+                        <div class="mt-1">
+                            
+                                
+                                <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    5k 字
+                  </span>
+                            
+
+                            
+                                
+                                <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                                    
+                                    
+                                    65
+                                     分钟
+                  </span>
+                            
+
+                            
+                                <!-- 不蒜子统计文章PV -->
+                                
+                                <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
+                    <i class="iconfont icon-eye" aria-hidden="true"></i>
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>
+                            
+                        </div>
+                    
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    
+        
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：9 个月前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <!-- more -->
+<p>搜索引擎的热门搜索排行榜功能你用过吗？你知道这个功能是如何实现的吗？实际上，它的实现并不复杂。搜索引擎每天会接收大量的用户搜索请求，它会把这些用户输入的搜索关键词记录下来，然后再离线地统计分析，得到最热门的 <code>Top 10</code> 搜索关键词。</p>
+<p>那请你思考下，假设现在有一个包含 <code>10</code> 亿个搜索关键词的日志文件，如何能快速获取到热门榜 <code>Top 10</code> 的搜索关键词呢？</p>
+<p>下面就来讲一讲，堆这种数据结构几个非常重要的应用：优先级队列、求 <code>Top K</code> 和求中位数。</p>
+<h2 id="堆的应用一：优先级队列"><a href="#堆的应用一：优先级队列" class="headerlink" title="堆的应用一：优先级队列"></a>堆的应用一：优先级队列</h2><p>优先级队列，顾名思义，它首先应该是一个队列。队列最大的特性就是先进先出。不过，在优先级队列中，数据的出队顺序不是先进先出，而是按照优先级来，优先级最高的，最先出队。</p>
+<p>如何实现一个优先级队列呢？方法有很多，但是用堆来实现是最直接、最高效的。这是因为，堆和优先级队列非常相似。一个堆就可以看作一个优先级队列。很多时候，它们只是概念上的区分而已。往优先级队列中插入一个元素，就相当于往堆中插入一个元素；从优先级队列中取出优先级最高的元素，就相当于取出堆顶元素。</p>
+<p>优先级队列，它的应用场景非常多。很多数据结构和算法都要依赖它。比如，赫夫曼编码、图的最短路径、最小生成树算法等等。不仅如此，很多语言中，都提供了优先级队列的实现，比如，<code>Java</code> 的 <code>PriorityQueue</code>，<code>C++</code> 的 <code>priority_queue</code> 等。</p>
+<p>这里有两个具体的例子：</p>
+<p><strong>1. 合并有序小文件</strong></p>
+<p>假设有 <code>100</code> 个小文件，每个文件的大小是 <code>100MB</code>，每个文件中存储的都是有序的字符串。现在希望将这些 <code>100</code> 个小文件合并成一个有序的大文件。这里就会用到优先级队列。</p>
+<p>整体思路有点像归并排序中的合并函数。从这 <code>100</code> 个文件中，各取第一个字符串，放入数组中，然后比较大小，把最小的那个字符串放入合并后的大文件中，并从数组中删除。</p>
+<p>假设，这个最小的字符串来自于 <code>13.txt</code> 这个小文件，就再从这个小文件取下一个字符串，放到数组中，重新比较大小，并且选择最小的放入合并后的大文件，将它从数组中删除。依次类推，直到所有的文件中的数据都放入到大文件为止。</p>
+<p>这里用数组这种数据结构，来存储从小文件中取出来的字符串。每次从数组中取最小字符串，都需要循环遍历整个数组，显然，这不是很高效。有没有更加高效方法呢？</p>
+<p>这里就可以用到优先级队列，也可以说是堆。将从小文件中取出来的字符串放入到小顶堆中，那堆顶的元素，也就是优先级队列队首的元素，就是最小的字符串。将这个字符串放入到大文件中，并将其从堆中删除。然后再从小文件中取出下一个字符串，放入到堆中。循环这个过程，就可以将 <code>100</code> 个小文件中的数据依次放入到大文件中。</p>
+<p>删除堆顶数据和往堆中插入数据的时间复杂度都是 $O(logn)$，$n$ 表示堆中的数据个数，这里就是 <code>100</code>。是不是比原来数组存储的方式高效了很多呢？</p>
+<p><strong>2. 高性能定时器</strong></p>
+<p>假设有一个定时器，定时器中维护了很多定时任务，每个任务都设定了一个要触发执行的时间点。定时器每过一个很小的单位时间（比如 <code>1</code> 秒），就扫描一遍任务，看是否有任务到达设定的执行时间。如果到达了，就拿出来执行。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/96236510-ddb2-11e9-9c38-2bb533c1f573.png" srcset="/img/loading.gif" alt="image.png"><br>但是，这样每过 <code>1</code> 秒就扫描一遍任务列表的做法比较低效，主要原因有两点：第一，任务的约定执行时间离当前时间可能还有很久，这样前面很多次扫描其实都是徒劳的；第二，每次都要扫描整个任务列表，如果任务列表很大的话，势必会比较耗时。</p>
+<p>针对这些问题，就可以用优先级队列来解决。按照任务设定的执行时间，将这些任务存储在优先级队列中，队列首部（也就是小顶堆的堆顶）存储的是最先执行的任务。</p>
+<p>这样，定时器就不需要每隔 <code>1</code> 秒就扫描一遍任务列表了。它拿队首任务的执行时间点，与当前时间点相减，得到一个时间间隔 <code>T</code>。</p>
+<p>这个时间间隔 <code>T</code> 就是，从当前时间开始，需要等待多久，才会有第一个任务需要被执行。这样，定时器就可以设定在 <code>T</code> 秒之后，再来执行任务。从当前时间点到（<code>T - 1</code>）秒这段时间里，定时器都不需要做任何事情。</p>
+<p>当 <code>T</code> 秒时间过去之后，定时器取优先级队列中队首的任务执行。然后再计算新的队首任务的执行时间点与当前时间点的差值，把这个值作为定时器执行下一个任务需要等待的时间。</p>
+<p>这样，定时器既不用间隔 <code>1</code> 秒就轮询一次，也不用遍历整个任务列表，性能也就提高了。</p>
+<h2 id="堆的应用二：利用堆求-Top-K"><a href="#堆的应用二：利用堆求-Top-K" class="headerlink" title="堆的应用二：利用堆求 Top K"></a>堆的应用二：利用堆求 Top K</h2><p><code>Top K</code> 的问题可以抽象成两类。一类是针对静态数据集合，也就是说数据集合事先确定，不会再变。另一类是针对动态数据集合，也就是说数据集合事先并不确定，有数据动态地加入到集合中。</p>
+<p>针对静态数据，如何在一个包含 <code>n</code> 个数据的数组中，查找前 <code>K</code> 大数据呢？可以维护一个大小为 <code>K</code> 的小顶堆，顺序遍历数组，从数组中取出数据与堆顶元素比较。如果比堆顶元素大，就把堆顶元素删除，并且将这个元素插入到堆中；如果比堆顶元素小，则不做处理，继续遍历数组。这样等数组中的数据都遍历完之后，堆中的数据就是前 <code>K</code> 大数据了。</p>
+<p>遍历数组需要 $O(n)$ 的时间复杂度，一次堆化操作需要 $O(logK)$ 的时间复杂度，所以最坏情况下，$n$ 个元素都入堆一次，时间复杂度就是 $O(nlogK)$。</p>
+<p>针对动态数据求得 <code>Top K</code> 就是实时 <code>Top K</code>。怎么理解呢？举一个例子。一个数据集合中有两个操作，一个是添加数据，另一个询问当前的前 <code>K</code> 大数据。</p>
+<p>如果每次询问前 <code>K</code> 大数据，都基于当前的数据重新计算的话，那时间复杂度就是 $O(nlogK)$，$n$ 表示当前的数据的大小。实际上，可以一直都维护一个 <code>K</code> 大小的小顶堆，当有数据被添加到集合中时，就拿它与堆顶的元素对比。如果比堆顶元素大，就把堆顶元素删除，并且将这个元素插入到堆中；如果比堆顶元素小，则不做处理。这样，无论任何时候需要查询当前的前 <code>K</code> 大数据，都可以立刻返回给他。</p>
+<h2 id="堆的应用三：利用堆求中位数"><a href="#堆的应用三：利用堆求中位数" class="headerlink" title="堆的应用三：利用堆求中位数"></a>堆的应用三：利用堆求中位数</h2><p>中位数，顾名思义，就是处在中间位置的那个数。如果数据的个数是奇数，把数据从小到大排列，那第 $\frac n 2+1$ 个数据就是中位数；如果数据的个数是偶数的话，那处于中间位置的数据有两个，第 $\frac n 2$ 个和第 $\frac n 2 +1$ 个数据，这个时候，可以随意取一个作为中位数，比如取两个数中靠前的那个，就是第 $\frac n2$ 个数据。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/a8cd8830-ddb2-11e9-9c38-2bb533c1f573.png" srcset="/img/loading.gif" alt="image.png"><br>对于一组<strong>静态数据</strong>，中位数是固定的，可以先排序，第 $\frac n2$ 个数据就是中位数。每次询问中位数的时候，直接返回这个固定的值就好了。所以，尽管排序的代价比较大，但是边际成本会很小。但是，如果面对的是<strong>动态数据</strong>集合，中位数在不停地变动，如果再用先排序的方法，每次询问中位数的时候，都要先进行排序，那效率就不高了。</p>
+<p><strong>借助堆这种数据结构，不用排序，就可以非常高效地实现求中位数操作。它是如何做到的？</strong></p>
+<p>需要维护两个堆，一个大顶堆，一个小顶堆。大顶堆中存储前半部分数据，小顶堆中存储后半部分数据，且小顶堆中的数据都大于大顶堆中的数据。</p>
+<p>也就是说，如果有 $n$ 个数据，$n$ 是偶数，从小到大排序，那前 $\frac n 2$ 个数据存储在大顶堆中，后 $\frac n 2$ 个数据存储在小顶堆中。这样，大顶堆中的堆顶元素就是要找的中位数。如果 $n$ 是奇数，情况是类似的，大顶堆就存储 $\frac n 2+1$ 个数据，小顶堆中就存储 $\frac n 2$ 个数据。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/b31473d0-ddb2-11e9-9c38-2bb533c1f573.png" srcset="/img/loading.gif" alt="image.png"><br>数据是动态变化的，当新添加一个数据的时候，如何调整两个堆，让大顶堆中的堆顶元素继续是中位数呢？</p>
+<p>如果新加入的数据小于等于大顶堆的堆顶元素，就将这个新数据插入到大顶堆；否则，就将这个新数据插入到小顶堆。</p>
+<p>这个时候就有可能出现，两个堆中的数据个数不符合前面约定的情况：如果 $n$ 是偶数，两个堆中的数据个数都是 $\frac n2$；如果 $n$ 是奇数，大顶堆有 $\frac n2 +1$ 个数据，小顶堆有 $\frac n2$ 个数据。这个时候，可以从一个堆中不停地将堆顶元素移动到另一个堆，通过这样的调整，来让两个堆中的数据满足上面的约定。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/b7784320-ddb2-11e9-9c38-2bb533c1f573.png" srcset="/img/loading.gif" alt="image.png"><br>于是，就可以利用两个堆，一个大顶堆、一个小顶堆，实现在动态数据集合中求中位数的操作。插入数据因为需要涉及堆化，所以时间复杂度变成了 $O(logn)$，但是求中位数只需要返回大顶堆的堆顶元素就可以了，所以时间复杂度就是 $O(1)$。</p>
+<p>实际上，利用两个堆不仅可以快速求出中位数，还可以快速求其他百分位的数据，原理是类似的。“如何快速求接口的 <code>99%</code> 响应时间？”现在就来看下，利用两个堆如何来实现。</p>
+<p>先解释一下，什么是“<code>99%</code> 响应时间”。</p>
+<p>中位数的概念就是将数据从小到大排列，处于中间位置，就叫中位数，这个数据会大于等于前面 <code>50%</code> 的数据。<code>99</code> 百分位数的概念可以类比中位数，如果将一组数据从小到大排列，这个 <code>99</code> 百分位数就是大于前面 <code>99%</code> 数据的那个数据。</p>
+<p>如果还是不太理解，再举个例子。假设有 <code>100</code> 个数据，分别是 <code>1，2，3，……，100</code>，那 <code>99</code> 百分位数就是 <code>99</code>，因为小于等于 <code>99</code> 的数占总个数的 <code>99%</code>。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/ffaa9f80-ddb2-11e9-9c38-2bb533c1f573.png" srcset="/img/loading.gif" alt="image.png"><br>再来看 <code>99%</code> 响应时间。如果有 <code>100</code> 个接口访问请求，每个接口请求的响应时间都不同，比如 <code>55</code> 毫秒、<code>100</code> 毫秒、<code>23</code> 毫秒等，把这 <code>100</code> 个接口的响应时间按照从小到大排列，排在第 <code>99</code> 的那个数据就是 <code>99%</code> 响应时间，也叫 <code>99</code> 百分位响应时间。</p>
+<p>总结一下，如果有 <code>n</code> 个数据，将数据从小到大排列之后，<code>99</code> 百分位数大约就是第 <code>n*99%</code> 个数据，同类，<code>80</code> 百分位数大约就是第 <code>n*80%</code> 个数据。</p>
+<p>弄懂了这些，再来看如何求 <code>99%</code> 响应时间。</p>
+<p>维护两个堆，一个大顶堆，一个小顶堆。假设当前总数据的个数是 <code>n</code>，大顶堆中保存 <code>n*99%</code> 个数据，小顶堆中保存 <code>n*1%</code> 个数据。大顶堆堆顶的数据就是要找的 <code>99%</code> 响应时间。</p>
+<p>每次插入一个数据的时候，要判断这个数据跟大顶堆和小顶堆堆顶数据的大小关系，然后决定插入到哪个堆中。如果这个新插入的数据比大顶堆的堆顶数据小，那就插入大顶堆；如果这个新插入的数据比小顶堆的堆顶数据大，那就插入小顶堆。</p>
+<p>但是，为了保持大顶堆中的数据占 <code>99%</code>，小顶堆中的数据占 <code>1%</code>，在每次新插入数据之后，都要重新计算，这个时候大顶堆和小顶堆中的数据个数，是否还符合 <code>99:1</code> 这个比例。如果不符合，就将一个堆中的数据移动到另一个堆，直到满足这个比例。移动的方法类似前面求中位数的方法.</p>
+<p>通过这样的方法，每次插入数据，可能会涉及几个数据的堆化操作，所以时间复杂度是 $O(logn)$。每次求 <code>99%</code> 响应时间的时候，直接返回大顶堆中的堆顶数据即可，时间复杂度是 $O(1)$。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>优先级队列是一种特殊的队列，优先级高的数据先出队，而不再像普通的队列那样，先进先出。实际上，堆就可以看作优先级队列，只是称谓不一样罢了。求 <code>Top K</code> 问题又可以分为针对静态数据和针对动态数据，只需要利用一个堆，就可以做到非常高效率的查询 <code>Top K</code> 的数据。求中位数实际上还有很多变形，比如求 <code>99</code> 百分位数据、<code>90</code> 百分位数据等，处理的思路都是一样的，即利用两个堆，一个大顶堆，一个小顶堆，随着数据的动态添加，动态调整两个堆中的数据，最后大顶堆的堆顶元素就是要求的数据。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ul>
+<li><p>假设现在有一个包含 <code>10</code> 亿个搜索关键词的日志文件，如何快速获取到 <code>Top 10</code> 最热门的搜索关键词呢？</p>
+<blockquote>
+<p>处理这个问题，有很多高级的解决方法，比如使用 <code>MapReduce</code> 等。但是，如果将处理的场景限定为单机，可以使用的内存为 <code>1GB</code>。那这个问题该如何解决呢？</p>
+<p>因为用户搜索的关键词，有很多可能都是重复的，所以首先要统计每个搜索关键词出现的频率。可以通过散列表、平衡二叉查找树或者其他一些支持快速查找、插入的数据结构，来记录关键词及其出现的次数。</p>
+<p>假设选用散列表。就顺序扫描这 <code>10</code> 亿个搜索关键词。当扫描到某个关键词时，去散列表中查询。如果存在，就将对应的次数加一；如果不存在，就将它插入到散列表，并记录次数为 <code>1</code>。以此类推，等遍历完这 <code>10</code> 亿个搜索关键词之后，散列表中就存储了不重复的搜索关键词以及出现的次数。</p>
+<p>然后，再根据前面讲的用堆求 <code>Top K</code> 的方法，建立一个大小为 <code>10</code> 的小顶堆，遍历散列表，依次取出每个搜索关键词及对应出现的次数，然后与堆顶的搜索关键词对比。如果出现次数比堆顶搜索关键词的次数多，那就删除堆顶的关键词，将这个出现次数更多的关键词加入到堆中。</p>
+<p>以此类推，当遍历完整个散列表中的搜索关键词之后，堆中的搜索关键词就是出现次数最多的 <code>Top 10</code> 搜索关键词了。</p>
+<p>不知道你发现了没有，上面的解决思路其实存在漏洞。<code>10</code> 亿的关键词还是很多的。假设 <code>10</code> 亿条搜索关键词中不重复的有 <code>1</code> 亿条，如果每个搜索关键词的平均长度是 <code>50</code> 个字节，那存储 <code>1</code> 亿个关键词起码需要 <code>5GB</code> 的内存空间，而散列表因为要避免频繁冲突，不会选择太大的装载因子，所以消耗的内存空间就更多了。而机器只有 <code>1GB</code> 的可用内存空间，所以无法一次性将所有的搜索关键词加入到内存中。这个时候该怎么办呢？</p>
+<p>在哈希算法那一节讲过，相同数据经过哈希算法得到的哈希值是一样的。可以根据哈希算法的这个特点，将 <code>10</code> 亿条搜索关键词先通过哈希算法分片到 <code>10</code> 个文件中。</p>
+<p>具体可以这样做：创建 <code>10</code> 个空文件 <code>00，01，02，……，09</code>。遍历这 <code>10</code> 亿个关键词，并且通过某个哈希算法对其求哈希值，然后哈希值同 <code>10</code> 取模，得到的结果就是这个搜索关键词应该被分到的文件编号。</p>
+<p>对这 <code>10</code> 亿个关键词分片之后，每个文件都只有 <code>1</code> 亿的关键词，去除掉重复的，可能就只有 <code>1000</code> 万个，每个关键词平均 <code>50</code> 个字节，所以总的大小就是 <code>500MB</code>。<code>1GB</code> 的内存完全可以放得下。</p>
+<p>针对每个包含 <code>1</code> 亿条搜索关键词的文件，利用散列表和堆，分别求出 <code>Top 10</code>，然后把这个 <code>10</code> 个 <code>Top 10</code> 放在一块，然后取这 <code>100</code> 个关键词中，出现次数最多的 <code>10</code> 个关键词，这就是这 <code>10</code> 亿数据中的 <code>Top 10</code> 最频繁的搜索关键词了。</p>
+</blockquote>
+</li>
+<li><p>有一个访问量非常大的新闻网站，希望将点击量排名 <code>Top 10</code> 的新闻摘要，滚动显示在网站首页 <code>banner</code> 上，并且每隔 <code>1</code> 小时更新一次。如果你是负责开发这个功能的工程师，会如何来实现呢？</p>
+<blockquote>
+<p>大致思路是这样子，</p>
+<ul>
+<li>对每篇新闻摘要计算一个<code>hashcode</code>，并建立摘要与<code>hashcode</code>的关联关系，使用<code>map</code>存储，以<code>hashCode</code>为<code>key</code>，新闻摘要为值</li>
+<li>按每小时一个文件的方式记录下被点击的摘要的<code>hashCode</code></li>
+<li>当一个小时结果后，上一个小时的文件被关闭，开始计算上一个小时的点击<code>top10</code></li>
+<li>将<code>hashcode</code>分片到多个文件中，通过对<code>hashCode</code>取模运算，即可将相同的<code>hashCode</code>分片到相同的文件中</li>
+<li>针对每个文件取<code>top10</code>的<code>hashCode</code>，使用<code>Map&lt;hashCode,int&gt;</code>的方式，统计出所有的摘要点击次数，然后再使用小顶堆（大小为<code>10</code>）计算<code>top10</code>,</li>
+<li>再针对所有分片计算一个总的<code>top10</code>,最后合并的逻辑也是使用小顶堆，计算<code>top10</code></li>
+<li>如果仅展示前一个小时的<code>top10</code>,计算结束</li>
+<li>如果需要展示全天，需要与上一次的计算按<code>hashCode</code>进行合并，然后在这合并的数据中取<code>top10</code></li>
+<li>在展示时，将计算得到的<code>top10</code>的<code>hashcode</code>，转化为新闻摘要显示即可</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/">数据结构与算法(中级)</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%A0%86/">堆</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/passages/27/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">27.图的表示</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/passages/25/">
+                        <span class="hidden-mobile">25.堆和堆排序</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+    <div id="vcomments"></div>
+    <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+    <script type="text/javascript">
+        var oldLoadVa = window.onload;
+        window.onload = function () {
+            oldLoadVa && oldLoadVa();
+
+            new Valine({
+                el: "#vcomments",
+                app_id: "O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",
+                app_key: "5Rl3Rhl9zc8BJNvrPcncKWFy",
+                placeholder: "说点什么吧~",
+                path: window.location.pathname,
+                avatar: "retro",
+                meta: ["nick","mail","link"],
+                pageSize: "10",
+                lang: "zh-CN",
+                highlight: true,
+                recordIP: true,
+                serverURLs: "https://lean.muchen.fun",
+            });
+        };
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments
+            powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><br><div class="text-center">欢迎关注我的公众号</div>
+    </div>
+  </div>
+
+
+    
+</main>
+
+
+    <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+
+
+
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+                <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mx-3">
+                <div class="md-form mb-5">
+                    <input type="text" id="local-search-input" class="form-control validate">
+                    <label data-error="x"
+                           data-success="v"
+                           for="local-search-input">关键词</label>
+                </div>
+                <div class="list-group" id="local-search-result"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    <div>
+      <span id="timeDate">载入天数...</span>
+      <span id="times">载入时分秒...</span>
+      <script>
+        var now = new Date();
+
+        function createtime() {
+          var grt = new Date("07/12/2019 00:00:00");//此处修改你的建站时间或者网站上线时间
+          now.setTime(now.getTime() + 250);
+          days = (now - grt) / 1000 / 60 / 60 / 24;
+          dnum = Math.floor(days);
+          hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+          hnum = Math.floor(hours);
+          if (String(hnum).length == 1) {
+            hnum = "0" + hnum;
+          }
+          minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+          mnum = Math.floor(minutes);
+          if (String(mnum).length == 1) {
+            mnum = "0" + mnum;
+          }
+          seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+          snum = Math.round(seconds);
+          if (String(snum).length == 1) {
+            snum = "0" + snum;
+          }
+          document.getElementById("timeDate").innerHTML = "本站已运行&nbsp" + dnum + "&nbsp天";
+          document.getElementById("times").innerHTML = hnum + "&nbsp小时&nbsp" + mnum + "&nbsp分&nbsp" + snum + "&nbsp秒";
+        }
+
+        setInterval("createtime()", 250);
+      </script>
+    </div>
+    <p id="hitokoto">:D 获取中...</p>
+    <script>
+      fetch('https://v1.hitokoto.cn')
+              .then(response => response.json())
+              .then(data => {
+                const hitokoto = document.getElementById('hitokoto')
+                hitokoto.innerText = data.hitokoto + '--「' + data.from + '」'
+              })
+              .catch(console.error)
+    </script>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+    <script  src="/js/lazyload.js" ></script>
+
+
+
+    
+
+
+
+
+    <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+    <script  src="/js/clipboard-use.js" ></script>
+
+
+
+    <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+    
+<script src="https://static.muchen.fun/js/custom.js"></script>
+
+
+
+<!-- Plugins -->
+
+
+    
+        <!-- Baidu Analytics -->
+        <script defer>
+            var _hmt = _hmt || [];
+            (function () {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    
+
+    
+        <!-- Google Analytics -->
+        <script defer>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-144841374-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+    <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+    <script>
+        var typed = new Typed('#subtitle', {
+            strings: [
+                '  ',
+                "26.堆的应用&nbsp;",
+            ],
+            cursorChar: "_",
+            typeSpeed: 60,
+            loop: false,
+        });
+        typed.stop();
+        $(document).ready(function () {
+            $(".typed-cursor").addClass("h2");
+            typed.start();
+        });
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+    <script>
+        anchors.options = {
+            placement: "right",
+            visible: "hover",
+            
+        };
+        var el = "h1,h2,h3,h4,h5,h6".split(",");
+        var res = [];
+        for (item of el) {
+            res.push(".markdown-body > " + item)
+        }
+        anchors.add(res.join(", "))
+    </script>
+
+
+
+    <script  src="/js/local-search.js" ></script>
+    <script>
+        var path = "/local-search.xml";
+        var inputArea = document.querySelector("#local-search-input");
+        inputArea.onclick = function () {
+            searchFunc(path, 'local-search-input', 'local-search-result');
+            this.onclick = null
+        }
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+    <script>
+        $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+            function () {
+                var element = document.createElement('a');
+                $(element).attr('data-fancybox', 'images');
+                $(element).attr('href', $(this).attr('src'));
+                $(this).wrap(element);
+            }
+        );
+    </script>
+
+
+
+
+
+    
+
+    
+        <!-- MathJax -->
+        <script>
+            MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']]
+                },
+                options: {
+                    renderActions: {
+                        findScript: [10, doc => {
+                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                                const display = !!node.type.match(/; *mode=display/);
+                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                                const text = document.createTextNode('');
+                                node.parentNode.replaceChild(text, node);
+                                math.start = {node: text, delim: '', n: 0};
+                                math.end = {node: text, delim: '', n: 0};
+                                doc.math.push(math);
+                            });
+                        }, '', false],
+                        insertedScript: [200, () => {
+                            document.querySelectorAll('mjx-container').forEach(node => {
+                                let target = node.parentNode;
+                                if (target.nodeName.toLowerCase() === 'li') {
+                                    target.parentNode.classList.add('has-jax');
+                                }
+                            });
+                        }, '', false]
+                    }
+                }
+            };
+        </script>
+
+        <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+    
+
+
+
+    
+    
+        <script>
+            !function (e, t, a) {
+                function r() {
+                    for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+                    requestAnimationFrame(r)
+                }
+
+                function n() {
+                    var t = "function" == typeof e.onclick && e.onclick;
+                    e.onclick = function (e) {
+                        t && t(), o(e)
+                    }
+                }
+
+                function o(e) {
+                    var a = t.createElement("div");
+                    a.className = "heart", s.push({
+                        el: a,
+                        x: e.clientX - 5,
+                        y: e.clientY - 5,
+                        scale: 1,
+                        alpha: 1,
+                        color: c()
+                    }), t.body.appendChild(a)
+                }
+
+                function i(e) {
+                    var a = t.createElement("style");
+                    a.type = "text/css";
+                    try {
+                        a.appendChild(t.createTextNode(e))
+                    } catch (t) {
+                        a.styleSheet.cssText = e
+                    }
+                    t.getElementsByTagName("head")[0].appendChild(a)
+                }
+
+                function c() {
+                    return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+                }
+
+                var s = [];
+                e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+                    setTimeout(e, 1e3 / 60)
+                }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+            }(window, document);
+        </script>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

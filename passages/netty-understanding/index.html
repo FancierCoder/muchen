@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png">
+    <link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <meta name="theme-color" content="#2f4154">
+    <meta name="description" content="沐晨的个人博客,技术博客">
+    <meta name="author" content="Li Duo">
+    <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
+    <title>对Netty的一些理解 - MuChen&#39;s Blog</title>
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+    
+<link rel="stylesheet" href="https://static.muchen.fun/css/custom.css?t=0.1423425.css">
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+<script>
+    var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+    // 依次判断 系统暗黑模式 指定时间 缓存 dark
+    if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+        if (!(isNight && localStorage.getItem('noDark') === '1')) {
+            document.body.classList.add('dark');
+        }
+    }
+    document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
+</script>
+<header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+    <div class="container">
+        <a class="navbar-brand"
+           href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a>
+
+        <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="animated-icon"><span></span><span></span><span></span></div>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto text-center">
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/archives/">
+                            <i class="iconfont icon-archive-fill"></i>
+                            归档</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/categories/">
+                            <i class="iconfont icon-category-fill"></i>
+                            分类</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tags/">
+                            <i class="iconfont icon-tags-fill"></i>
+                            标签</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/messageBoard/">
+                            <i class="iconfont icon-speakernotes"></i>
+                            留言</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about/">
+                            <i class="iconfont icon-user-fill"></i>
+                            关于</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/links/">
+                            <i class="iconfont icon-link-fill"></i>
+                            友链</a>
+                    </li>
+                
+                
+                    <li class="nav-item" id="search-btn">
+                        <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                                    class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+                    </li>
+                
+                <li class="nav-item">
+                    <a id="dark" class="nav-link" onclick="switchDarkMode()">
+                        <i class="iconfont icon-sun"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/images/07.jpg') no-repeat center center;
+                 background-size: cover;">
+        <div class="full-bg-img">
+            <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+                <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+                
+            </span>
+
+                    
+                        
+                            <div class="mt-3 post-meta">
+                                <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                                <time datetime="2019-10-29 16:53">
+                                    2019年10月29日 下午
+                                </time>
+                            </div>
+                        
+
+                        <div class="mt-1">
+                            
+                                
+                                <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    3.4k 字
+                  </span>
+                            
+
+                            
+                                
+                                <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                                    
+                                    
+                                    47
+                                     分钟
+                  </span>
+                            
+
+                            
+                                <!-- 不蒜子统计文章PV -->
+                                
+                                <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
+                    <i class="iconfont icon-eye" aria-hidden="true"></i>
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>
+                            
+                        </div>
+                    
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    
+        
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：6 个月前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <!-- more -->
+<p><code>Netty</code>是一个高性能、异步事件驱动的<code>NIO</code>框架，它提供了对<code>TCP</code>、<code>UDP</code>和文件传输的支持。作为当前最流行的<code>NIO</code>框架，<code>Netty</code>在互联网领域、大数据分布式计算领域、游戏行业、通信行业等获得了广泛的应用，一些业界著名的开源组件也是基于<code>Netty</code>的<code>NIO</code>框架构建。</p>
+<p><code>Netty</code> 利用 <code>Java</code> 高级网络的能力，隐藏其背后的复杂性而提供一个易于使用的 <code>API</code> 构建一个客户端/服务端，其具有高并发、传输快、封装好等特点。</p>
+<p><strong>高并发</strong><br><code>Netty</code>是一款基于<code>NIO</code>（<code>Nonblocking I/O</code>，非阻塞<code>IO</code>）开发的网络通信框架，对比于<code>BIO</code>（<code>Blocking I/O</code>，阻塞<code>IO</code>），它的并发性能得到了很大提高 。</p>
+<p><strong>传输快</strong><br><code>Netty</code>的传输快其实也是依赖了<code>NIO</code>的一个特性——<strong>零拷贝</strong>。</p>
+<p><strong>封装好</strong><br>Netty封装了NIO操作的很多细节，提供易于使用的API，还有心跳、重连机制、拆包粘包方案等特性，使开发者能能够快速高效的构建一个稳健的高并发应用。</p>
+<h2 id="为什么要用-Netty-？"><a href="#为什么要用-Netty-？" class="headerlink" title="为什么要用 Netty ？"></a>为什么要用 Netty ？</h2><p><strong><code>JDK</code> 原生 <code>NIO</code> 程序的问题</strong></p>
+<p><code>JDK</code> 原生也有一套网络应用程序 <code>API</code>，但是存在一系列问题，主要如下：</p>
+<ul>
+<li><code>NIO</code> 的类库和 <code>API</code> 繁杂，使用麻烦。你需要熟练掌握 <code>Selector</code>、<code>ServerSocketChannel</code>、<code>SocketChannel</code>、<code>ByteBuffer</code> 等。</li>
+<li>需要具备其他的额外技能做铺垫。例如熟悉 <code>Java</code> 多线程编程，因为 <code>NIO</code> 编程涉及到 <code>Reactor</code> 模式，你必须对多线程和网路编程非常熟悉，才能编写出高质量的 <code>NIO</code> 程序。</li>
+<li>可靠性能力补齐，开发工作量和难度都非常大。例如客户端面临断连重连、网络闪断、半包读写、失败缓存、网络拥塞和异常码流的处理等等。<code>NIO</code> 编程的特点是功能开发相对容易，但是可靠性能力补齐工作量和难度都非常大。</li>
+<li><code>JDK NIO</code> 的 <code>Bug</code>。例如臭名昭著的 <code>Epoll Bug</code>，它会导致 <code>Selector</code> 空轮询，最终导致 <code>CPU 100%</code>。 官方声称在 <code>JDK 1.6</code> 版本的 <code>update 18</code> 修复了该问题，但是直到 <code>JDK 1.7</code> 版本该问题仍旧存在，只不过该 <code>Bug</code> 发生概率降低了一些而已，它并没有被根本解决。</li>
+</ul>
+<p><strong><code>Netty</code> 的特点</strong></p>
+<p><code>Netty</code> 对 <code>JDK</code> 自带的 <code>NIO</code> 的 <code>API</code> 进行封装，解决上述问题，主要特点有：</p>
+<ul>
+<li>设计优雅，适用于各种传输类型的统一 <code>API</code> 阻塞和非阻塞 <code>Socket</code>；基于灵活且可扩展的事件模型，可以清晰地分离关注点；高度可定制的线程模型 - 单线程，一个或多个线程池；真正的无连接数据报套接字支持（自 <code>3.1</code> 起）。</li>
+<li>使用方便，详细记录的 <code>Javadoc</code>，用户指南和示例；没有其他依赖项，<code>JDK 5</code>（<code>Netty 3.x</code>）或 <code>6</code>（<code>Netty 4.x</code>）就足够了。</li>
+<li>高性能，吞吐量更高，延迟更低；减少资源消耗；最小化不必要的内存复制。<br>安全，完整的 <code>SSL/TLS</code> 和 <code>StartTLS</code> 支持。</li>
+<li>社区活跃，不断更新，社区活跃，版本迭代周期短，发现的 <code>Bug</code> 可以被及时修复，同时，更多的新功能会被加入。</li>
+</ul>
+<h2 id="Netty-内部执行流程"><a href="#Netty-内部执行流程" class="headerlink" title="Netty 内部执行流程"></a>Netty 内部执行流程</h2><p>服务端：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/10/29/d121cd40-fa28-11e9-aa0e-cb7fb94f2463.png" srcset="/img/loading.gif" alt="image.png"><br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/10/29/d7574f50-fa28-11e9-aa0e-cb7fb94f2463.png" srcset="/img/loading.gif" alt="image.png"></p>
+<ol>
+<li><p>创建<code>ServerBootStrap</code>实例</p>
+</li>
+<li><p>设置并绑定<code>Reactor</code>线程池：<code>EventLoopGroup</code>，<code>EventLoop</code>就是处理所有注册到本线程的<code>Selector</code>上面的<code>Channel</code></p>
+</li>
+<li><p>设置并绑定服务端的<code>Channel</code></p>
+</li>
+</ol>
+<p>4.5. 创建处理网络事件的<code>ChannelPipeline</code>和<code>handler</code>，网络时间以流的形式在其中流转，<code>handler</code>完成多数的功能定制：比如编解码 <code>SSl</code>安全认证</p>
+<ol start="6">
+<li><p>绑定并启动监听端口</p>
+</li>
+<li><p>当轮训到准备就绪的<code>channel</code>后，由<code>Reactor</code>线程：<code>NioEventLoop</code>执行<code>pipline</code>中的方法，最终调度并执行<code>channelHandler</code></p>
+</li>
+</ol>
+<p>客户端：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/10/29/431634d0-fa2a-11e9-aa0e-cb7fb94f2463.png" srcset="/img/loading.gif" alt="Netty客户端创建时序图.png"><br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/10/29/65cd7e80-fa29-11e9-aa0e-cb7fb94f2463.png" srcset="/img/loading.gif" alt="image.png"></p>
+<h2 id="Netty-架构设计"><a href="#Netty-架构设计" class="headerlink" title="Netty 架构设计"></a>Netty 架构设计</h2><p>主要功能特性如下图：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/10/29/3761fa60-fa26-11e9-aa0e-cb7fb94f2463.png" srcset="/img/loading.gif" alt="image.png"></p>
+<p><code>Netty</code> 功能特性如下：</p>
+<ul>
+<li>传输服务，支持 <code>BIO</code> 和 <code>NIO</code>。</li>
+<li>容器集成，支持 <code>OSGI</code>、<code>JBossMC</code>、<code>Spring</code>、<code>Guice</code> 容器。</li>
+<li>协议支持，<code>HTTP</code>、<code>Protobuf</code>、二进制、文本、<code>WebSocket</code> 等一系列常见协议都支持。还支持通过实行编码解码逻辑来实现自定义协议。</li>
+<li><code>Core</code> 核心，可扩展事件模型、通用通信 <code>API</code>、支持零拷贝的 <code>ByteBuf</code> 缓冲对象。</li>
+</ul>
+<p><strong>模块组件</strong></p>
+<p><strong><code>Bootstrap</code>、<code>ServerBootstrap</code></strong></p>
+<p><code>Bootstrap</code> 意思是引导，一个 <code>Netty</code> 应用通常由一个 <code>Bootstrap</code> 开始，主要作用是配置整个 <code>Netty</code> 程序，串联各个组件，<code>Netty</code> 中 <code>Bootstrap</code> 类是客户端程序的启动引导类，<code>ServerBootstrap</code> 是服务端启动引导类。</p>
+<p><strong><code>Future</code>、<code>ChannelFuture</code></strong></p>
+<p>正如前面介绍，在 <code>Netty</code> 中所有的 <code>IO</code> 操作都是异步的，不能立刻得知消息是否被正确处理。</p>
+<p>但是可以过一会等它执行完成或者直接注册一个监听，具体的实现就是通过 <code>Future</code> 和 <code>ChannelFutures</code>，它们可以注册一个监听，当操作执行成功或失败时监听会自动触发注册的监听事件。</p>
+<p><strong><code>Channel</code></strong></p>
+<p><code>Netty</code> 网络通信的组件，能够用于执行网络 <code>I/O</code> 操作。<br><code>Channel</code> 为用户提供：</p>
+<ul>
+<li>当前网络连接的通道的状态（例如是否打开？是否已连接？）</li>
+<li>网络连接的配置参数 （例如接收缓冲区大小）</li>
+<li>提供异步的网络 <code>I/O</code> 操作(如建立连接，读写，绑定端口)，异步调用意味着任何 <code>I/O</code> 调用都将立即返回，并且不保证在调用结束时所请求的 <code>I/O</code> 操作已完成。调用立即返回一个 <code>ChannelFuture</code> 实例，通过注册监听器到 <code>ChannelFuture</code> 上，可以在 <code>I/O</code> 操作成功、失败或取消时回调通知调用方。</li>
+<li>支持关联 <code>I/O</code> 操作与对应的处理程序。</li>
+</ul>
+<p>不同协议、不同的阻塞类型的连接都有不同的 <code>Channel</code> 类型与之对应。下面是一些常用的 <code>Channel</code> 类型：</p>
+<ul>
+<li><code>NioSocketChannel</code>，异步的客户端 <code>TCP Socket</code> 连接。</li>
+<li><code>NioServerSocketChannel</code>，异步的服务器端 <code>TCP Socket</code> 连接。</li>
+<li><code>NioDatagramChannel</code>，异步的 <code>UDP</code> 连接。</li>
+<li><code>NioSctpChannel</code>，异步的客户端 <code>Sctp</code> 连接。</li>
+<li><code>NioSctpServerChannel</code>，异步的 <code>Sctp</code> 服务器端连接，这些通道涵盖了 <code>UDP</code> 和 <code>TCP</code> 网络 <code>IO</code> 以及文件 <code>IO</code>。</li>
+</ul>
+<p><strong><code>Selector</code></strong></p>
+<p><code>Netty</code> 基于 <code>Selector</code> 对象实现 <code>I/O</code> 多路复用，通过 <code>Selector</code> 一个线程可以监听多个连接的 <code>Channel</code> 事件。</p>
+<p>当向一个 <code>Selector</code> 中注册 <code>Channel</code> 后，<code>Selector</code> 内部的机制就可以自动不断地查询(<code>Select</code>) 这些注册的 <code>Channel</code> 是否有已就绪的 <code>I/O</code> 事件（例如可读，可写，网络连接完成等），这样程序就可以很简单地使用一个线程高效地管理多个 <code>Channel</code>。</p>
+<p><strong><code>NioEventLoop</code></strong></p>
+<p><code>NioEventLoop</code> 中维护了一个线程和任务队列，支持异步提交执行任务，线程启动时会调用 <code>NioEventLoop</code> 的 <code>run</code> 方法，执行 <code>I/O</code> 任务和非 <code>I/O</code> 任务：</p>
+<ul>
+<li><code>I/O</code> 任务，即 <code>selectionKey</code> 中 <code>ready</code> 的事件，如 <code>accept</code>、<code>connect</code>、<code>read</code>、<code>write</code> 等，由 <code>processSelectedKeys</code> 方法触发。</li>
+<li>非 <code>IO</code> 任务，添加到 <code>taskQueue</code> 中的任务，如 <code>register0</code>、<code>bind0</code> 等任务，由 <code>runAllTasks</code> 方法触发。<br>两种任务的执行时间比由变量 <code>ioRatio</code> 控制，默认为 <code>50</code>，则表示允许非 <code>IO</code> 任务执行的时间与 <code>IO</code> 任务的执行时间相等。</li>
+</ul>
+<p><strong><code>NioEventLoopGroup</code></strong></p>
+<p><code>NioEventLoopGroup</code>，主要管理 <code>eventLoop</code> 的生命周期，可以理解为一个线程池，内部维护了一组线程，每个线程(<code>NioEventLoop</code>)负责处理多个 <code>Channel</code> 上的事件，而一个 <code>Channel</code> 只对应于一个线程。</p>
+<p><strong><code>ChannelHandler</code></strong></p>
+<p><code>ChannelHandler</code> 是一个接口，处理 <code>I/O</code> 事件或拦截 <code>I/O</code> 操作，并将其转发到其 <code>ChannelPipeline</code>(业务处理链)中的下一个处理程序。</p>
+<p><code>ChannelHandler</code> 本身并没有提供很多方法，因为这个接口有许多的方法需要实现，方便使用期间，可以继承它的子类：</p>
+<ul>
+<li><p><code>ChannelInboundHandler</code> 用于处理入站 <code>I/O</code> 事件。</p>
+</li>
+<li><p><code>ChannelOutboundHandler</code> 用于处理出站 <code>I/O</code> 操作。<br>或者使用以下适配器类：</p>
+</li>
+<li><p><code>ChannelInboundHandlerAdapter</code> 用于处理入站 <code>I/O</code> 事件。</p>
+</li>
+<li><p><code>ChannelOutboundHandlerAdapter</code> 用于处理出站 <code>I/O</code> 操作。</p>
+</li>
+<li><p><code>ChannelDuplexHandler</code> 用于处理入站和出站事件。</p>
+</li>
+<li><p><code>ChannelHandlerContext</code> 保存 <code>Channel</code> 相关的所有上下文信息，同时关联一个 <code>ChannelHandler</code> 对象。</p>
+</li>
+</ul>
+<p><strong><code>ChannelPipline</code></strong></p>
+<p>保存 <code>ChannelHandler</code> 的 <code>List</code>，用于处理或拦截 <code>Channel</code> 的入站事件和出站操作。</p>
+<p><code>ChannelPipeline</code> 实现了一种高级形式的拦截过滤器模式，使用户可以完全控制事件的处理方式，以及 <code>Channel</code> 中各个的 <code>ChannelHandler</code> 如何相互交互。</p>
+<h2 id="Netty-高性能设计"><a href="#Netty-高性能设计" class="headerlink" title="Netty 高性能设计"></a>Netty 高性能设计</h2><p><code>Netty</code> 作为异步事件驱动的网络，高性能之处主要来自于其 <code>I/O</code> 模型和线程处理模型，前者决定如何收发数据，后者决定如何处理数据。</p>
+<p><strong>I/O 模型</strong></p>
+<p>用什么样的通道将数据发送给对方，<code>BIO</code>、<code>NIO</code> 或者 <code>AIO</code>，<code>I/O</code> 模型在很大程度上决定了框架的性能。</p>
+<p><strong>阻塞 I/O</strong></p>
+<p>传统阻塞型 <code>I/O</code>(<code>BIO</code>)可以用下图表示：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/10/29/d5a1fb00-fa24-11e9-aa0e-cb7fb94f2463.png" srcset="/img/loading.gif" alt="image.png"></p>
+<p>特点以及缺点如下：</p>
+<ul>
+<li>每个请求都需要独立的线程完成数据 <code>Read</code>，业务处理，数据 <code>Write</code> 的完整操作问题。</li>
+<li>当并发数较大时，需要创建大量线程来处理连接，系统资源占用较大。</li>
+<li>连接建立后，如果当前线程暂时没有数据可读，则线程就阻塞在 <code>Read</code> 操作上，造成线程资源浪费。</li>
+</ul>
+<p><strong>I/O 复用模型</strong><br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/10/29/10a67870-fa25-11e9-aa0e-cb7fb94f2463.png" srcset="/img/loading.gif" alt="image.png"><br>在 <code>I/O</code> 复用模型中，会用到 <code>Select</code>，这个函数也会使进程阻塞，但是和阻塞 <code>I/O</code> 所不同的是这个函数可以同时阻塞多个 <code>I/O</code> 操作。</p>
+<p>而且可以同时对多个读操作，多个写操作的 <code>I/O</code> 函数进行检测，直到有数据可读或可写时，才真正调用 <code>I/O</code> 操作函数。</p>
+<p><code>Netty</code> 的非阻塞 <code>I/O</code> 的实现关键是<strong>基于 <code>I/O</code> 复用模型</strong>，这里用 <code>Selector</code> 对象表示：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/10/29/49e1cea0-fa25-11e9-aa0e-cb7fb94f2463.png" srcset="/img/loading.gif" alt="image.png"></p>
+<p><code>Netty</code> 的 <code>IO</code> 线程 <code>NioEventLoop</code> 由于聚合了多路复用器 <code>Selector</code>，可以同时并发处理成百上千个客户端连接。</p>
+<p>当线程从某客户端 <code>Socket</code> 通道进行读写数据时，若没有数据可用时，该线程可以进行其他任务。</p>
+<p>线程通常将非阻塞 <code>IO</code> 的空闲时间用于在其他通道上执行 <code>IO</code> 操作，所以单独的线程可以管理多个输入和输出通道。</p>
+<p>由于读写操作都是非阻塞的，这就可以充分提升 <code>IO</code> 线程的运行效率，避免由于频繁 <code>I/O</code> 阻塞导致的线程挂起。</p>
+<p>一个 <code>I/O</code> 线程可以并发处理 <code>N</code> 个客户端连接和读写操作，这从根本上解决了传统同步阻塞 <code>I/O</code> 一连接一线程模型，架构的性能、弹性伸缩能力和可靠性都得到了极大的提升。</p>
+<p><strong><code>Netty</code> 线程模型</strong></p>
+<p><code>Netty</code> 主要基于<strong>主从 <code>Reactors</code> 多线程模型</strong>（如下图）做了一定的修改，其中主从 <code>Reactor</code> 多线程模型有多个 <code>Reactor</code>：</p>
+<p><code>MainReactor</code> 负责客户端的连接请求，并将请求转交给 <code>SubReactor</code>。<br><code>SubReactor</code> 负责相应通道的 <code>IO</code> 读写请求。<br>非 <code>IO</code> 请求（具体逻辑处理）的任务则会直接写入队列，等待 <code>worker threads</code> 进行处理。<br>这里引用 <code>Doug Lee</code> 大神的 <code>Reactor</code> 介绍：<code>Scalable IO in Java</code> 里面关于主从 <code>Reactor</code> 多线程模型的图：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/10/29/dc696760-fa25-11e9-aa0e-cb7fb94f2463.png" srcset="/img/loading.gif" alt="image.png"><br>特别说明的是：虽然 <code>Netty</code> 的线程模型基于主从 <code>Reactor</code> 多线程，借用了 <code>MainReactor</code> 和 <code>SubReactor</code> 的结构。但是实际实现上 <code>SubReactor</code> 和 <code>Worker</code> 线程在同一个线程池中。</p>
+<p><strong><code>Netty</code> 的零拷贝</strong></p>
+<p>是在发送数据的时候，传统的实现方式是：</p>
+<pre><code class="hljs java">File.read(bytes);
+Socket.send(bytes);</code></pre>
+<p>这种方式需要四次数据拷贝和四次上下文切换：</p>
+<ul>
+<li>数据从磁盘读取到内核的<code>read buffer</code></li>
+<li>数据从内核缓冲区拷贝到用户缓冲区</li>
+<li>数据从用户缓冲区拷贝到内核的<code>socket buffer</code></li>
+<li>数据从内核的<code>socket buffer</code>拷贝到网卡接口（硬件）的缓冲区</li>
+</ul>
+<p><strong>零拷贝的概念</strong></p>
+<p>明显上面的第二步和第三步是没有必要的，通过<code>java</code>的<code>FileChannel.transferTo</code>方法，可以避免上面两次多余的拷贝（当然这需要底层操作系统支持）</p>
+<ul>
+<li>调用<code>transferTo</code>,数据从文件由<code>DMA</code>引擎拷贝到内核<code>read buffer</code></li>
+<li>接着<code>DMA</code>从内核<code>read buffer</code>将数据拷贝到网卡接口<code>buffer</code></li>
+</ul>
+<p>上面的两次操作都不需要<code>CPU</code>参与，所以就达到了零拷贝。</p>
+<p><code>Netty</code>中的零拷贝主要体现在三个方面：</p>
+<ul>
+<li><p><code>bytebuffer</code></p>
+<blockquote>
+<p><code>Netty</code>发送和接收消息主要使用<code>bytebuffer</code>，<code>bytebuffer</code>使用对外内存（<code>DirectMemory</code>）直接进行<code>Socket</code>读写。</p>
+<p>原因：如果使用传统的堆内存进行<code>Socket</code>读写，<code>JVM</code>会将堆内存<code>buffer</code>拷贝一份到直接内存中然后再写入<code>socket</code>，多了一次缓冲区的内存拷贝。<code>DirectMemory</code>中可以直接通过DMA发送到网卡接口。</p>
+</blockquote>
+</li>
+<li><p><code>Composite Buffers</code></p>
+<blockquote>
+<p>传统的<code>ByteBuffer</code>，如果需要将两个<code>ByteBuffer</code>中的数据组合到一起，我们需要首先创建一个<code>size=size1+size2</code>大小的新的数组，然后将两个数组中的数据拷贝到新的数组中。<br>但是使用<code>Netty</code>提供的组合<code>ByteBuf</code>，就可以避免这样的操作，因为<code>CompositeByteBuf</code>并没有真正将多个<code>Buffer</code>组合起来，而是保存了它们的引用，从而避免了数据的拷贝，实现了零拷贝。</p>
+</blockquote>
+</li>
+<li><p>对于<code>FileChannel.transferTo</code>的使用</p>
+<blockquote>
+<p><code>Netty</code>中使用了<code>FileChannel的transferTo</code>方法，该方法依赖于操作系统实现零拷贝。</p>
+</blockquote>
+</li>
+</ul>
+<p>参考博客<br><a href="https://www.sohu.com/a/272879207_463994" target="_blank" rel="noopener">这可能是目前最透彻的Netty原理架构解析</a></p>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%90%8E%E7%AB%AF/">后端</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Netty/">Netty</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/passages/design-pattern-learn-1/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">设计模式之美学习（一）</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/passages/java-optional/">
+                        <span class="hidden-mobile">Java Optional</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+    <div id="vcomments"></div>
+    <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+    <script type="text/javascript">
+        var oldLoadVa = window.onload;
+        window.onload = function () {
+            oldLoadVa && oldLoadVa();
+
+            new Valine({
+                el: "#vcomments",
+                app_id: "O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",
+                app_key: "5Rl3Rhl9zc8BJNvrPcncKWFy",
+                placeholder: "说点什么吧~",
+                path: window.location.pathname,
+                avatar: "retro",
+                meta: ["nick","mail","link"],
+                pageSize: "10",
+                lang: "zh-CN",
+                highlight: true,
+                recordIP: true,
+                serverURLs: "https://lean.muchen.fun",
+            });
+        };
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments
+            powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><br><div class="text-center">欢迎关注我的公众号</div>
+    </div>
+  </div>
+
+
+    
+</main>
+
+
+    <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+
+
+
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+                <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mx-3">
+                <div class="md-form mb-5">
+                    <input type="text" id="local-search-input" class="form-control validate">
+                    <label data-error="x"
+                           data-success="v"
+                           for="local-search-input">关键词</label>
+                </div>
+                <div class="list-group" id="local-search-result"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    <div>
+      <span id="timeDate">载入天数...</span>
+      <span id="times">载入时分秒...</span>
+      <script>
+        var now = new Date();
+
+        function createtime() {
+          var grt = new Date("07/12/2019 00:00:00");//此处修改你的建站时间或者网站上线时间
+          now.setTime(now.getTime() + 250);
+          days = (now - grt) / 1000 / 60 / 60 / 24;
+          dnum = Math.floor(days);
+          hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+          hnum = Math.floor(hours);
+          if (String(hnum).length == 1) {
+            hnum = "0" + hnum;
+          }
+          minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+          mnum = Math.floor(minutes);
+          if (String(mnum).length == 1) {
+            mnum = "0" + mnum;
+          }
+          seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+          snum = Math.round(seconds);
+          if (String(snum).length == 1) {
+            snum = "0" + snum;
+          }
+          document.getElementById("timeDate").innerHTML = "本站已运行&nbsp" + dnum + "&nbsp天";
+          document.getElementById("times").innerHTML = hnum + "&nbsp小时&nbsp" + mnum + "&nbsp分&nbsp" + snum + "&nbsp秒";
+        }
+
+        setInterval("createtime()", 250);
+      </script>
+    </div>
+    <p id="hitokoto">:D 获取中...</p>
+    <script>
+      fetch('https://v1.hitokoto.cn')
+              .then(response => response.json())
+              .then(data => {
+                const hitokoto = document.getElementById('hitokoto')
+                hitokoto.innerText = data.hitokoto + '--「' + data.from + '」'
+              })
+              .catch(console.error)
+    </script>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+    <script  src="/js/lazyload.js" ></script>
+
+
+
+    
+
+
+
+
+    <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+    <script  src="/js/clipboard-use.js" ></script>
+
+
+
+    <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+    
+<script src="https://static.muchen.fun/js/custom.js"></script>
+
+
+
+<!-- Plugins -->
+
+
+    
+        <!-- Baidu Analytics -->
+        <script defer>
+            var _hmt = _hmt || [];
+            (function () {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    
+
+    
+        <!-- Google Analytics -->
+        <script defer>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-144841374-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+    <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+    <script>
+        var typed = new Typed('#subtitle', {
+            strings: [
+                '  ',
+                "对Netty的一些理解&nbsp;",
+            ],
+            cursorChar: "_",
+            typeSpeed: 60,
+            loop: false,
+        });
+        typed.stop();
+        $(document).ready(function () {
+            $(".typed-cursor").addClass("h2");
+            typed.start();
+        });
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+    <script>
+        anchors.options = {
+            placement: "right",
+            visible: "hover",
+            
+        };
+        var el = "h1,h2,h3,h4,h5,h6".split(",");
+        var res = [];
+        for (item of el) {
+            res.push(".markdown-body > " + item)
+        }
+        anchors.add(res.join(", "))
+    </script>
+
+
+
+    <script  src="/js/local-search.js" ></script>
+    <script>
+        var path = "/local-search.xml";
+        var inputArea = document.querySelector("#local-search-input");
+        inputArea.onclick = function () {
+            searchFunc(path, 'local-search-input', 'local-search-result');
+            this.onclick = null
+        }
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+    <script>
+        $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+            function () {
+                var element = document.createElement('a');
+                $(element).attr('data-fancybox', 'images');
+                $(element).attr('href', $(this).attr('src'));
+                $(this).wrap(element);
+            }
+        );
+    </script>
+
+
+
+
+
+    
+
+    
+        <!-- MathJax -->
+        <script>
+            MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']]
+                },
+                options: {
+                    renderActions: {
+                        findScript: [10, doc => {
+                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                                const display = !!node.type.match(/; *mode=display/);
+                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                                const text = document.createTextNode('');
+                                node.parentNode.replaceChild(text, node);
+                                math.start = {node: text, delim: '', n: 0};
+                                math.end = {node: text, delim: '', n: 0};
+                                doc.math.push(math);
+                            });
+                        }, '', false],
+                        insertedScript: [200, () => {
+                            document.querySelectorAll('mjx-container').forEach(node => {
+                                let target = node.parentNode;
+                                if (target.nodeName.toLowerCase() === 'li') {
+                                    target.parentNode.classList.add('has-jax');
+                                }
+                            });
+                        }, '', false]
+                    }
+                }
+            };
+        </script>
+
+        <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+    
+
+
+
+    
+    
+        <script>
+            !function (e, t, a) {
+                function r() {
+                    for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+                    requestAnimationFrame(r)
+                }
+
+                function n() {
+                    var t = "function" == typeof e.onclick && e.onclick;
+                    e.onclick = function (e) {
+                        t && t(), o(e)
+                    }
+                }
+
+                function o(e) {
+                    var a = t.createElement("div");
+                    a.className = "heart", s.push({
+                        el: a,
+                        x: e.clientX - 5,
+                        y: e.clientY - 5,
+                        scale: 1,
+                        alpha: 1,
+                        color: c()
+                    }), t.body.appendChild(a)
+                }
+
+                function i(e) {
+                    var a = t.createElement("style");
+                    a.type = "text/css";
+                    try {
+                        a.appendChild(t.createTextNode(e))
+                    } catch (t) {
+                        a.styleSheet.cssText = e
+                    }
+                    t.getElementsByTagName("head")[0].appendChild(a)
+                }
+
+                function c() {
+                    return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+                }
+
+                var s = [];
+                e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+                    setTimeout(e, 1e3 / 60)
+                }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+            }(window, document);
+        </script>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

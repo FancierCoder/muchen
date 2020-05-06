@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png">
+    <link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <meta name="theme-color" content="#2f4154">
+    <meta name="description" content="沐晨的个人博客,技术博客">
+    <meta name="author" content="Li Duo">
+    <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
+    <title>设计模式之美学习（五） - MuChen&#39;s Blog</title>
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+    
+<link rel="stylesheet" href="https://static.muchen.fun/css/custom.css?t=0.1423425.css">
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+<script>
+    var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+    // 依次判断 系统暗黑模式 指定时间 缓存 dark
+    if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+        if (!(isNight && localStorage.getItem('noDark') === '1')) {
+            document.body.classList.add('dark');
+        }
+    }
+    document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
+</script>
+<header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+    <div class="container">
+        <a class="navbar-brand"
+           href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a>
+
+        <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="animated-icon"><span></span><span></span><span></span></div>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto text-center">
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/archives/">
+                            <i class="iconfont icon-archive-fill"></i>
+                            归档</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/categories/">
+                            <i class="iconfont icon-category-fill"></i>
+                            分类</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tags/">
+                            <i class="iconfont icon-tags-fill"></i>
+                            标签</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/messageBoard/">
+                            <i class="iconfont icon-speakernotes"></i>
+                            留言</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about/">
+                            <i class="iconfont icon-user-fill"></i>
+                            关于</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/links/">
+                            <i class="iconfont icon-link-fill"></i>
+                            友链</a>
+                    </li>
+                
+                
+                    <li class="nav-item" id="search-btn">
+                        <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                                    class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+                    </li>
+                
+                <li class="nav-item">
+                    <a id="dark" class="nav-link" onclick="switchDarkMode()">
+                        <i class="iconfont icon-sun"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/images/07.jpg') no-repeat center center;
+                 background-size: cover;">
+        <div class="full-bg-img">
+            <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+                <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+                
+            </span>
+
+                    
+                        
+                            <div class="mt-3 post-meta">
+                                <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                                <time datetime="2019-11-18 18:11">
+                                    2019年11月18日 晚上
+                                </time>
+                            </div>
+                        
+
+                        <div class="mt-1">
+                            
+                                
+                                <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    4.8k 字
+                  </span>
+                            
+
+                            
+                                
+                                <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                                    
+                                    
+                                    65
+                                     分钟
+                  </span>
+                            
+
+                            
+                                <!-- 不蒜子统计文章PV -->
+                                
+                                <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
+                    <i class="iconfont icon-eye" aria-hidden="true"></i>
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>
+                            
+                        </div>
+                    
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    
+        
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：6 个月前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <!-- more -->
+<p>常见的编程范式或者说编程风格有三种，面向过程编程、面向对象编程、函数式编程，而面向对象编程又是这其中最主流的编程范式。现如今，大部分编程语言都是面向对象编程语言，大部分软件都是基于面向对象编程这种编程范式来开发的。</p>
+<p>不过，在实际的开发工作中，总以为把所有代码都塞到类里，自然就是在进行面向对象编程了。实际上，这样的认识是不正确的。有时候，从表面上看似是面向对象编程风格的代码，从本质上看却是面向过程编程风格的。</p>
+<h2 id="哪些代码设计看似是面向对象，实际是面向过程的？"><a href="#哪些代码设计看似是面向对象，实际是面向过程的？" class="headerlink" title="哪些代码设计看似是面向对象，实际是面向过程的？"></a>哪些代码设计看似是面向对象，实际是面向过程的？</h2><p>在用面向对象编程语言进行软件开发的时候，我们有时候会写出面向过程风格的代码。有些是有意为之，并无不妥；而有些是无意为之，会影响到代码的质量。</p>
+<p><strong>1. 滥用 <code>getter</code>、<code>setter</code> 方法</strong></p>
+<p>它违反了面向对象编程的封装特性，相当于将面向对象编程风格退化成了面向过程编程风格。通过下面这个例子来给你解释一下这句话。</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ShoppingCart</span> </span>&#123;
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> itemsCount;
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">double</span> totalPrice;
+  <span class="hljs-keyword">private</span> List&lt;ShoppingCartItem&gt; items = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getItemsCount</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.itemsCount;
+  &#125;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setItemsCount</span><span class="hljs-params">(<span class="hljs-keyword">int</span> itemsCount)</span> </span>&#123;
+    <span class="hljs-keyword">this</span>.itemsCount = itemsCount;
+  &#125;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">double</span> <span class="hljs-title">getTotalPrice</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.totalPrice;
+  &#125;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setTotalPrice</span><span class="hljs-params">(<span class="hljs-keyword">double</span> totalPrice)</span> </span>&#123;
+    <span class="hljs-keyword">this</span>.totalPrice = totalPrice;
+  &#125;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> List&lt;ShoppingCartItem&gt; <span class="hljs-title">getItems</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.items;
+  &#125;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">addItem</span><span class="hljs-params">(ShoppingCartItem item)</span> </span>&#123;
+    items.add(item);
+    itemsCount++;
+    totalPrice += item.getPrice();
+  &#125;
+  <span class="hljs-comment">// ...省略其他方法...</span>
+&#125;</code></pre>
+<p>在这段代码中，<code>ShoppingCart</code> 是一个简化后的购物车类，有三个私有（<code>private</code>）属性：<code>itemsCount</code>、<code>totalPrice</code>、<code>items</code>。对于 <code>itemsCount</code>、<code>totalPrice</code> 两个属性，我们定义了它们的 <code>getter</code>、<code>setter</code> 方法。对于 <code>items</code> 属性，我们定义了它的 <code>getter</code> 方法和 <code>addItem()</code> 方法。代码很简单，理解起来不难。那你有没有发现，这段代码有什么问题呢？</p>
+<p>我们先来看前两个属性，<code>itemsCount</code> 和 <code>totalPrice</code>。虽然我们将它们定义成 <code>private</code> 私有属性，但是提供了 <code>public</code> 的 <code>getter</code>、<code>setter</code> 方法，这就跟将这两个属性定义为 <code>public</code> 公有属性，没有什么两样了。外部可以通过 <code>setter</code> 方法随意地修改这两个属性的值。除此之外，任何代码都可以随意调用 <code>setter</code> 方法，来重新设置 <code>itemsCount</code>、<code>totalPrice</code> 属性的值，这也会导致其跟 <code>items</code> 属性的值不一致。</p>
+<p>而面向对象封装的定义是：通过访问权限控制，隐藏内部数据，外部仅能通过类提供的有限的接口访问、修改内部数据。所以，暴露不应该暴露的 <code>setter</code> 方法，明显违反了面向对象的封装特性。数据没有访问权限控制，任何代码都可以随意修改它，代码就退化成了面向过程编程风格的了。</p>
+<p>看完了前两个属性，我们再来看 <code>items</code> 这个属性。对于 <code>items</code> 这个属性，我们定义了它的 <code>getter</code> 方法和 <code>addItem()</code> 方法，并没有定义它的 <code>setter</code> 方法。这样的设计貌似看起来没有什么问题，但实际上并不是。</p>
+<p>对于 <code>itemsCount</code> 和 <code>totalPrice</code> 这两个属性来说，定义一个 <code>public</code> 的 <code>getter</code> 方法，确实无伤大雅，毕竟 <code>getter</code> 方法不会修改数据。但是，对于 <code>items</code> 属性就不一样了，这是因为 <code>items</code> 属性的 <code>getter</code> 方法，返回的是一个 <code>List</code>集合容器。外部调用者在拿到这个容器之后，是可以操作容器内部数据的，也就是说，外部代码还是能修改 <code>items</code> 中的数据。比如像下面这样：</p>
+<pre><code class="hljs java">ShoppingCart cart = <span class="hljs-keyword">new</span> ShoppCart();
+...
+cart.getItems().clear(); <span class="hljs-comment">// 清空购物车</span></code></pre>
+<p>你可能会说，清空购物车这样的功能需求看起来合情合理啊，上面的代码没有什么不妥啊。你说得没错，需求是合理的，但是这样的代码写法，会导致 <code>itemsCount</code>、<code>totalPrice</code>、<code>items</code> 三者数据不一致。我们不应该将清空购物车的业务逻辑暴露给上层代码。正确的做法应该是，在 <code>ShoppingCart</code> 类中定义一个 <code>clear()</code> 方法，将清空购物车的业务逻辑封装在里面，透明地给调用者使用。<code>ShoppingCart</code> 类的 <code>clear()</code> 方法的具体代码实现如下：</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ShoppingCart</span> </span>&#123;
+  <span class="hljs-comment">// ...省略其他代码...</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">clear</span><span class="hljs-params">()</span> </span>&#123;
+    items.clear();
+    itemsCount = <span class="hljs-number">0</span>;
+    totalPrice = <span class="hljs-number">0.0</span>;
+  &#125;
+&#125;</code></pre>
+<p>你可能还会说，我有一个需求，需要查看购物车中都买了啥，那这个时候，<code>ShoppingCart</code> 类不得不提供 <code>items</code> 属性的 <code>getter</code> 方法了，那又该怎么办才好呢？</p>
+<p>如果你熟悉 <code>Java</code> 语言，那解决这个问题的方法还是挺简单的。我们可以通过 <code>Java</code> 提供的 <code>Collections.unmodifiableList()</code> 方法，让 <code>getter</code> 方法返回一个不可被修改的 <code>UnmodifiableList</code> 集合容器，而这个容器类重写了 <code>List</code> 容器中跟修改数据相关的方法，比如 <code>add()</code>、<code>clear()</code> 等方法。一旦我们调用这些修改数据的方法，代码就会抛出 <code>UnsupportedOperationException</code> 异常，这样就避免了容器中的数据被修改。具体的代码实现如下所示。</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ShoppingCart</span> </span>&#123;
+  <span class="hljs-comment">// ...省略其他代码...</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> List&lt;ShoppingCartItem&gt; <span class="hljs-title">getItems</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-keyword">return</span> Collections.unmodifiableList(<span class="hljs-keyword">this</span>.items);
+  &#125;
+&#125;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UnmodifiableList</span>&lt;<span class="hljs-title">E</span>&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title">UnmodifiableCollection</span>&lt;<span class="hljs-title">E</span>&gt;
+                          <span class="hljs-keyword">implements</span> <span class="hljs-title">List</span>&lt;<span class="hljs-title">E</span>&gt; </span>&#123;
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">add</span><span class="hljs-params">(E e)</span> </span>&#123;
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> UnsupportedOperationException();
+  &#125;
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">clear</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> UnsupportedOperationException();
+  &#125;
+  <span class="hljs-comment">// ...省略其他代码...</span>
+&#125;
+
+ShoppingCart cart = <span class="hljs-keyword">new</span> ShoppingCart();
+List&lt;ShoppingCartItem&gt; items = cart.getItems();
+items.clear();<span class="hljs-comment">//抛出UnsupportedOperationException异常</span></code></pre>
+<p>不过，这样的实现思路还是有点问题。因为当调用者通过 <code>ShoppingCart</code> 的 <code>getItems()</code> 获取到 <code>items</code> 之后，虽然我们没法修改容器中的数据，但我们仍然可以修改容器中每个对象（<code>ShoppingCartItem</code>）的数据。听起来有点绕，看看下面这几行代码你就明白了。</p>
+<pre><code class="hljs java">ShoppingCart cart = <span class="hljs-keyword">new</span> ShoppingCart();
+cart.add(<span class="hljs-keyword">new</span> ShoppingCartItem(...));
+List&lt;ShoppingCartItem&gt; items = cart.getItems();
+ShoppingCartItem item = items.get(<span class="hljs-number">0</span>);
+item.setPrice(<span class="hljs-number">19.0</span>); <span class="hljs-comment">// 这里修改了item的价格属性</span></code></pre>
+
+<p>总结一下，在设计实现类的时候，除非真的需要，否则，尽量不要给属性定义 <code>setter</code> 方法。除此之外，尽管 <code>getter</code> 方法相对 <code>setter</code> 方法要安全些，但是如果返回的是集合容器（比如例子中的 <code>List</code> 容器），也要防范集合内部数据被修改的危险。</p>
+<p><strong>2. 滥用全局变量和全局方法</strong></p>
+<p>在面向对象编程中，常见的全局变量有单例类对象、静态成员变量、常量等，常见的全局方法有静态方法。单例类对象在全局代码中只有一份，所以，它相当于一个全局变量。静态成员变量归属于类上的数据，被所有的实例化对象所共享，也相当于一定程度上的全局变量。而常量是一种非常常见的全局变量，比如一些代码中的配置参数，一般都设置为常量，放到一个 <code>Constants</code> 类中。静态方法一般用来操作静态变量或者外部数据。你可以联想一下我们常用的各种 <code>Utils</code> 类，里面的方法一般都会定义成静态方法，可以在不用创建对象的情况下，直接拿来使用。静态方法将方法与数据分离，破坏了封装特性，是典型的面向过程风格。</p>
+<p>在刚刚介绍的这些全局变量和全局方法中，<code>Constants</code> 类和 <code>Utils</code> 类最常用到。现在，我们就结合这两个几乎在每个软件开发中都会用到的类，来深入探讨一下全局变量和全局方法的利与弊。</p>
+<p><strong>我们先来看一下，在我过去参与的项目中，一种常见的 <code>Constants</code> 类的定义方法。</strong></p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Constants</span> </span>&#123;
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String MYSQL_ADDR_KEY = <span class="hljs-string">"mysql_addr"</span>;
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String MYSQL_DB_NAME_KEY = <span class="hljs-string">"db_name"</span>;
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String MYSQL_USERNAME_KEY = <span class="hljs-string">"mysql_username"</span>;
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String MYSQL_PASSWORD_KEY = <span class="hljs-string">"mysql_password"</span>;
+  
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String REDIS_DEFAULT_ADDR = <span class="hljs-string">"192.168.7.2:7234"</span>;
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> REDIS_DEFAULT_MAX_TOTAL = <span class="hljs-number">50</span>;
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> REDIS_DEFAULT_MAX_IDLE = <span class="hljs-number">50</span>;
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> REDIS_DEFAULT_MIN_IDLE = <span class="hljs-number">20</span>;
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String REDIS_DEFAULT_KEY_PREFIX = <span class="hljs-string">"rt:"</span>;
+  
+  <span class="hljs-comment">// ...省略更多的常量定义...</span>
+&#125;</code></pre>
+<p>在这段代码中，我们把程序中所有用到的常量，都集中地放到这个 <code>Constants</code> 类中。不过，定义一个如此大而全的 <code>Constants</code> 类，并不是一种很好的设计思路。为什么这么说呢？原因主要有以下几点。</p>
+<p>首先，这样的设计会影响代码的可维护性。</p>
+<p>如果参与开发同一个项目的工程师有很多，在开发过程中，可能都要涉及修改这个类，比如往这个类里添加常量，那这个类就会变得越来越大，成百上千行都有可能，查找修改某个常量也会变得比较费时，而且还会增加提交代码冲突的概率。</p>
+<p>其次，这样的设计还会增加代码的编译时间。</p>
+<p>当 <code>Constants</code> 类中包含很多常量定义的时候，依赖这个类的代码就会很多。那每次修改 <code>Constants</code> 类，都会导致依赖它的类文件重新编译，因此会浪费很多不必要的编译时间。不要小看编译花费的时间，对于一个非常大的工程项目来说，编译一次项目花费的时间可能是几分钟，甚至几十分钟。而我们在开发过程中，每次运行单元测试，都会触发一次编译的过程，这个编译时间就有可能会影响到我们的开发效率。</p>
+<p>最后，这样的设计还会影响代码的复用性。</p>
+<p>如果我们要在另一个项目中，复用本项目开发的某个类，而这个类又依赖 <code>Constants</code> 类。即便这个类只依赖 <code>Constants</code> 类中的一小部分常量，我们仍然需要把整个 <code>Constants</code> 类也一并引入，也就引入了很多无关的常量到新的项目中。</p>
+<p>那如何改进 <code>Constants</code> 类的设计呢？这里有两种思路可以借鉴。</p>
+<p>第一种是将 <code>Constants</code> 类拆解为功能更加单一的多个类，比如跟 <code>MySQL</code> 配置相关的常量，我们放到 <code>MysqlConstants</code> 类中；跟 <code>Redis</code> 配置相关的常量，我们放到 <code>RedisConstants</code> 类中。当然，还有一种觉得更好的设计思路，那就是并不单独地设计 <code>Constants</code> 常量类，而是哪个类用到了某个常量，我们就把这个常量定义到这个类中。比如，<code>RedisConfig</code> 类用到了 <code>Redis</code> 配置相关的常量，那我们就直接将这些常量定义在 <code>RedisConfig</code> 中，这样也提高了类设计的内聚性和代码的复用性。</p>
+<p>讲完了 <code>Constants</code> 类，我们再来讨论一下 <code>Utils</code> 类。首先，想问你这样一个问题，我们为什么需要 <code>Utils</code> 类？<code>Utils</code> 类存在的意义是什么？</p>
+<p>在讲面向对象特性的时候，讲过继承可以实现代码复用。利用继承特性，我们把相同的属性和方法，抽取出来，定义到父类中。子类复用父类中的属性和方法，达到代码复用的目的。但是，有的时候，从业务含义上，<code>A</code> 类和 <code>B</code> 类并不一定具有继承关系，比如 <code>Crawler</code> 类和 <code>PageAnalyzer</code> 类，它们都用到了 <code>URL</code> 拼接和分割的功能，但并不具有继承关系（既不是父子关系，也不是兄弟关系）。仅仅为了代码复用，生硬地抽象出一个父类出来，会影响到代码的可读性。如果不熟悉背后设计思路的同事，发现 <code>Crawler</code> 类和 <code>PageAnalyzer</code> 类继承同一个父类，而父类中定义的却是 <code>URL</code> 相关的操作，会觉得这个代码写得莫名其妙，理解不了。</p>
+<p>既然继承不能解决这个问题，我们可以定义一个新的类，实现 <code>URL</code> 拼接和分割的方法。而拼接和分割两个方法，不需要共享任何数据，所以新的类不需要定义任何属性，这个时候，我们就可以把它定义为只包含静态方法的 <code>Utils</code> 类了。</p>
+<p>实际上，只包含静态方法不包含任何属性的 <code>Utils</code> 类，是彻彻底底的面向过程的编程风格。但这并不是说，我们就要杜绝使用 <code>Utils</code> 类了。实际上，从刚刚讲的 <code>Utils</code> 类存在的目的来看，它在软件开发中还是挺有用的，能解决代码复用问题。所以，这里并不是说完全不能用 <code>Utils</code> 类，而是说，要尽量避免滥用，不要不加思考地随意去定义 <code>Utils</code> 类。</p>
+<p>在定义 <code>Utils</code> 类之前，你要问一下自己，你真的需要单独定义这样一个 <code>Utils</code> 类吗？是否可以把 <code>Utils</code> 类中的某些方法定义到其他类中呢？如果在回答完这些问题之后，你还是觉得确实有必要去定义这样一个 <code>Utils</code> 类，那就大胆地去定义它吧。因为即便在面向对象编程中，我们也并不是完全排斥面向过程风格的代码。只要它能为我们写出好的代码贡献力量，我们就可以适度地去使用。</p>
+<p>除此之外，类比 <code>Constants</code> 类的设计，我们设计 <code>Utils</code> 类的时候，最好也能细化一下，针对不同的功能，设计不同的 <code>Utils</code> 类，比如 <code>FileUtils</code>、<code>IOUtils</code>、<code>StringUtils</code>、<code>UrlUtils</code> 等，不要设计一个过于大而全的 <code>Utils</code> 类。</p>
+<p><strong>3. 定义数据和方法分离的类</strong></p>
+<p>最后一种面向对象编程过程中，常见的面向过程风格的代码。那就是，数据定义在一个类中，方法定义在另一个类中。</p>
+<p>传统的 <code>MVC</code> 结构分为 <code>Model</code> 层、<code>Controller</code> 层、<code>View</code> 层这三层。不过，在做前后端分离之后，三层结构在后端开发中，会稍微有些调整，被分为 <code>Controller</code> 层、<code>Service</code> 层、<code>Repository</code> 层。<code>Controller</code> 层负责暴露接口给前端调用，<code>Service</code> 层负责核心业务逻辑，<code>Repository</code> 层负责数据读写。而在每一层中，我们又会定义相应的 <code>VO</code>（<code>View Object</code>）、<code>BO</code>（<code>Business Object</code>）、<code>Entity</code>。一般情况下，<code>VO</code>、<code>BO</code>、<code>Entity</code> 中只会定义数据，不会定义方法，所有操作这些数据的业务逻辑都定义在对应的 <code>Controller</code> 类、<code>Service</code> 类、<code>Repository</code> 类中。这就是典型的面向过程的编程风格。</p>
+<p>实际上，这种开发模式叫作<strong>基于贫血模型的开发模式</strong>，也是我们现在非常常用的一种 <code>Web</code> 项目的开发模式。</p>
+<h2 id="在面向对象编程中，为什么容易写出面向过程风格的代码？"><a href="#在面向对象编程中，为什么容易写出面向过程风格的代码？" class="headerlink" title="在面向对象编程中，为什么容易写出面向过程风格的代码？"></a>在面向对象编程中，为什么容易写出面向过程风格的代码？</h2><p>可以联想一下，在生活中，你去完成一个任务，你一般都会思考，应该先做什么、后做什么，如何一步一步地顺序执行一系列操作，最后完成整个任务。面向过程编程风格恰恰符合人的这种流程化思维方式。而面向对象编程风格正好相反。它是一种自底向上的思考方式。它不是先去按照执行流程来分解任务，而是将任务翻译成一个一个的小的模块（也就是类），设计类之间的交互，最后按照流程将类组装起来，完成整个任务。我们在上一节课讲到了，这样的思考路径比较适合复杂程序的开发，但并不是特别符合人类的思考习惯。</p>
+<p>除此之外，面向对象编程要比面向过程编程难一些。在面向对象编程中，类的设计还是挺需要技巧，挺需要一定设计经验的。你要去思考如何封装合适的数据和方法到一个类里，如何设计类之间的关系，如何设计类之间的交互等等诸多设计问题。</p>
+<p>所以，基于这两点原因，很多工程师在开发的过程，更倾向于用不太需要动脑子的方式去实现需求，也就不由自主地就将代码写成面向过程风格的了。</p>
+<h2 id="面向过程编程及面向过程编程语言就真的无用武之地了吗？"><a href="#面向过程编程及面向过程编程语言就真的无用武之地了吗？" class="headerlink" title="面向过程编程及面向过程编程语言就真的无用武之地了吗？"></a>面向过程编程及面向过程编程语言就真的无用武之地了吗？</h2><p>前面我们有讲到，如果我们开发的是微小程序，或者是一个数据处理相关的代码，以算法为主，数据为辅，那脚本式的面向过程的编程风格就更适合一些。当然，面向过程编程的用武之地还不止这些。实际上，面向过程编程是面向对象编程的基础，面向对象编程离不开基础的面向过程编程。为什么这么说？我们仔细想想，类中每个方法的实现逻辑，不就是面向过程风格的代码吗？</p>
+<p>除此之外，面向对象和面向过程两种编程风格，也并不是非黑即白、完全对立的。在用面向对象编程语言开发的软件中，面向过程风格的代码并不少见，甚至在一些标准的开发库（比如 <code>JDK</code>、<code>Apache Commons</code>、<code>Google Guava</code>）中，也有很多面向过程风格的代码。</p>
+<p>不管使用面向过程还是面向对象哪种风格来写代码，我们最终的目的还是写出易维护、易读、易复用、易扩展的高质量代码。只要我们能避免面向过程编程风格的一些弊端，控制好它的副作用，在掌控范围内为我们所用，我们就大可不用避讳在面向对象编程中写面向过程风格的代码。</p>
+<h2 id="重点回顾"><a href="#重点回顾" class="headerlink" title="重点回顾"></a>重点回顾</h2><p><strong>1. 滥用 <code>getter</code>、<code>setter</code> 方法</strong></p>
+<p>在设计实现类的时候，除非真的需要，否则尽量不要给属性定义 <code>setter</code> 方法。除此之外，尽管 <code>getter</code> 方法相对 <code>setter</code> 方法要安全些，但是如果返回的是集合容器，那也要防范集合内部数据被修改的风险。</p>
+<p><strong>2.<code>Constants</code> 类、<code>Utils</code> 类的设计问题</strong></p>
+<p>对于这两种类的设计，我们尽量能做到职责单一，定义一些细化的小类，比如 <code>RedisConstants</code>、<code>FileUtils</code>，而不是定义一个大而全的 <code>Constants</code> 类、<code>Utils</code> 类。除此之外，如果能将这些类中的属性和方法，划分归并到其他业务类中，那是最好不过的了，能极大地提高类的内聚性和代码的可复用性。</p>
+<ol start="3">
+<li>基于贫血模型的开发模式</li>
+</ol>
+<p>讲了为什么这种开发模式是彻彻底底的面向过程编程风格的。这是因为数据和操作是分开定义在 <code>VO/BO/Entity</code> 和 <code>Controler/Service/Repository</code> 中的。</p>
+<p>参考：<a href="https://time.geekbang.org/column/article/164907" target="_blank" rel="noopener">哪些代码设计看似是面向对象，实际是面向过程的？</a></p>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">设计模式(面向对象)</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/passages/design-pattern-learn-6/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">设计模式之美学习（六）</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/passages/design-pattern-learn-4/">
+                        <span class="hidden-mobile">设计模式之美学习（四）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+    <div id="vcomments"></div>
+    <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+    <script type="text/javascript">
+        var oldLoadVa = window.onload;
+        window.onload = function () {
+            oldLoadVa && oldLoadVa();
+
+            new Valine({
+                el: "#vcomments",
+                app_id: "O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",
+                app_key: "5Rl3Rhl9zc8BJNvrPcncKWFy",
+                placeholder: "说点什么吧~",
+                path: window.location.pathname,
+                avatar: "retro",
+                meta: ["nick","mail","link"],
+                pageSize: "10",
+                lang: "zh-CN",
+                highlight: true,
+                recordIP: true,
+                serverURLs: "https://lean.muchen.fun",
+            });
+        };
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments
+            powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><br><div class="text-center">欢迎关注我的公众号</div>
+    </div>
+  </div>
+
+
+    
+</main>
+
+
+    <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+
+
+
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+                <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mx-3">
+                <div class="md-form mb-5">
+                    <input type="text" id="local-search-input" class="form-control validate">
+                    <label data-error="x"
+                           data-success="v"
+                           for="local-search-input">关键词</label>
+                </div>
+                <div class="list-group" id="local-search-result"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    <div>
+      <span id="timeDate">载入天数...</span>
+      <span id="times">载入时分秒...</span>
+      <script>
+        var now = new Date();
+
+        function createtime() {
+          var grt = new Date("07/12/2019 00:00:00");//此处修改你的建站时间或者网站上线时间
+          now.setTime(now.getTime() + 250);
+          days = (now - grt) / 1000 / 60 / 60 / 24;
+          dnum = Math.floor(days);
+          hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+          hnum = Math.floor(hours);
+          if (String(hnum).length == 1) {
+            hnum = "0" + hnum;
+          }
+          minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+          mnum = Math.floor(minutes);
+          if (String(mnum).length == 1) {
+            mnum = "0" + mnum;
+          }
+          seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+          snum = Math.round(seconds);
+          if (String(snum).length == 1) {
+            snum = "0" + snum;
+          }
+          document.getElementById("timeDate").innerHTML = "本站已运行&nbsp" + dnum + "&nbsp天";
+          document.getElementById("times").innerHTML = hnum + "&nbsp小时&nbsp" + mnum + "&nbsp分&nbsp" + snum + "&nbsp秒";
+        }
+
+        setInterval("createtime()", 250);
+      </script>
+    </div>
+    <p id="hitokoto">:D 获取中...</p>
+    <script>
+      fetch('https://v1.hitokoto.cn')
+              .then(response => response.json())
+              .then(data => {
+                const hitokoto = document.getElementById('hitokoto')
+                hitokoto.innerText = data.hitokoto + '--「' + data.from + '」'
+              })
+              .catch(console.error)
+    </script>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+    <script  src="/js/lazyload.js" ></script>
+
+
+
+    
+
+
+
+
+    <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+    <script  src="/js/clipboard-use.js" ></script>
+
+
+
+    <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+    
+<script src="https://static.muchen.fun/js/custom.js"></script>
+
+
+
+<!-- Plugins -->
+
+
+    
+        <!-- Baidu Analytics -->
+        <script defer>
+            var _hmt = _hmt || [];
+            (function () {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    
+
+    
+        <!-- Google Analytics -->
+        <script defer>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-144841374-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+    <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+    <script>
+        var typed = new Typed('#subtitle', {
+            strings: [
+                '  ',
+                "设计模式之美学习（五）&nbsp;",
+            ],
+            cursorChar: "_",
+            typeSpeed: 60,
+            loop: false,
+        });
+        typed.stop();
+        $(document).ready(function () {
+            $(".typed-cursor").addClass("h2");
+            typed.start();
+        });
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+    <script>
+        anchors.options = {
+            placement: "right",
+            visible: "hover",
+            
+        };
+        var el = "h1,h2,h3,h4,h5,h6".split(",");
+        var res = [];
+        for (item of el) {
+            res.push(".markdown-body > " + item)
+        }
+        anchors.add(res.join(", "))
+    </script>
+
+
+
+    <script  src="/js/local-search.js" ></script>
+    <script>
+        var path = "/local-search.xml";
+        var inputArea = document.querySelector("#local-search-input");
+        inputArea.onclick = function () {
+            searchFunc(path, 'local-search-input', 'local-search-result');
+            this.onclick = null
+        }
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+    <script>
+        $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+            function () {
+                var element = document.createElement('a');
+                $(element).attr('data-fancybox', 'images');
+                $(element).attr('href', $(this).attr('src'));
+                $(this).wrap(element);
+            }
+        );
+    </script>
+
+
+
+
+
+    
+
+    
+        <!-- MathJax -->
+        <script>
+            MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']]
+                },
+                options: {
+                    renderActions: {
+                        findScript: [10, doc => {
+                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                                const display = !!node.type.match(/; *mode=display/);
+                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                                const text = document.createTextNode('');
+                                node.parentNode.replaceChild(text, node);
+                                math.start = {node: text, delim: '', n: 0};
+                                math.end = {node: text, delim: '', n: 0};
+                                doc.math.push(math);
+                            });
+                        }, '', false],
+                        insertedScript: [200, () => {
+                            document.querySelectorAll('mjx-container').forEach(node => {
+                                let target = node.parentNode;
+                                if (target.nodeName.toLowerCase() === 'li') {
+                                    target.parentNode.classList.add('has-jax');
+                                }
+                            });
+                        }, '', false]
+                    }
+                }
+            };
+        </script>
+
+        <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+    
+
+
+
+    
+    
+        <script>
+            !function (e, t, a) {
+                function r() {
+                    for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+                    requestAnimationFrame(r)
+                }
+
+                function n() {
+                    var t = "function" == typeof e.onclick && e.onclick;
+                    e.onclick = function (e) {
+                        t && t(), o(e)
+                    }
+                }
+
+                function o(e) {
+                    var a = t.createElement("div");
+                    a.className = "heart", s.push({
+                        el: a,
+                        x: e.clientX - 5,
+                        y: e.clientY - 5,
+                        scale: 1,
+                        alpha: 1,
+                        color: c()
+                    }), t.body.appendChild(a)
+                }
+
+                function i(e) {
+                    var a = t.createElement("style");
+                    a.type = "text/css";
+                    try {
+                        a.appendChild(t.createTextNode(e))
+                    } catch (t) {
+                        a.styleSheet.cssText = e
+                    }
+                    t.getElementsByTagName("head")[0].appendChild(a)
+                }
+
+                function c() {
+                    return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+                }
+
+                var s = [];
+                e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+                    setTimeout(e, 1e3 / 60)
+                }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+            }(window, document);
+        </script>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png">
+    <link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <meta name="theme-color" content="#2f4154">
+    <meta name="description" content="沐晨的个人博客,技术博客">
+    <meta name="author" content="Li Duo">
+    <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
+    <title>6.栈 - MuChen&#39;s Blog</title>
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+    
+<link rel="stylesheet" href="https://static.muchen.fun/css/custom.css?t=0.1423425.css">
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+<script>
+    var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+    // 依次判断 系统暗黑模式 指定时间 缓存 dark
+    if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+        if (!(isNight && localStorage.getItem('noDark') === '1')) {
+            document.body.classList.add('dark');
+        }
+    }
+    document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
+</script>
+<header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+    <div class="container">
+        <a class="navbar-brand"
+           href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a>
+
+        <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="animated-icon"><span></span><span></span><span></span></div>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto text-center">
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/archives/">
+                            <i class="iconfont icon-archive-fill"></i>
+                            归档</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/categories/">
+                            <i class="iconfont icon-category-fill"></i>
+                            分类</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tags/">
+                            <i class="iconfont icon-tags-fill"></i>
+                            标签</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/messageBoard/">
+                            <i class="iconfont icon-speakernotes"></i>
+                            留言</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about/">
+                            <i class="iconfont icon-user-fill"></i>
+                            关于</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/links/">
+                            <i class="iconfont icon-link-fill"></i>
+                            友链</a>
+                    </li>
+                
+                
+                    <li class="nav-item" id="search-btn">
+                        <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                                    class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+                    </li>
+                
+                <li class="nav-item">
+                    <a id="dark" class="nav-link" onclick="switchDarkMode()">
+                        <i class="iconfont icon-sun"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/images/07.jpg') no-repeat center center;
+                 background-size: cover;">
+        <div class="full-bg-img">
+            <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+                <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+                
+            </span>
+
+                    
+                        
+                            <div class="mt-3 post-meta">
+                                <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                                <time datetime="2019-07-15 16:03">
+                                    2019年7月15日 下午
+                                </time>
+                            </div>
+                        
+
+                        <div class="mt-1">
+                            
+                                
+                                <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    4.3k 字
+                  </span>
+                            
+
+                            
+                                
+                                <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                                    
+                                    
+                                    57
+                                     分钟
+                  </span>
+                            
+
+                            
+                                <!-- 不蒜子统计文章PV -->
+                                
+                                <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
+                    <i class="iconfont icon-eye" aria-hidden="true"></i>
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>
+                            
+                        </div>
+                    
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    
+        
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：10 个月前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <!-- more -->
+<p>浏览器的前进、后退功能，你肯定很熟悉吧？</p>
+<p>当你依次访问完一串页面 <code>a-b-c</code> 之后，点击浏览器的后退按钮，就可以查看之前浏览过的页面 <code>b</code> 和 <code>a</code>。当你后退到页面 <code>a</code>，点击前进按钮，就可以重新查看页面 <code>b</code> 和 <code>c</code>。但是，如果你后退到页面 <code>b</code> 后，点击了新的页面 <code>d</code>，那就无法再通过前进、后退功能查看页面 <code>c</code> 了。</p>
+<p><font color='green'>假设你是 <code>Chrome</code> 浏览器的开发工程师，你会如何实现这个功能呢？</font></p>
+<h2 id="如何理解“栈”？"><a href="#如何理解“栈”？" class="headerlink" title="如何理解“栈”？"></a>如何理解“栈”？</h2><p>关于“栈”，有一个非常贴切的例子，就是一摞叠在一起的盘子。平时放盘子的时候，都是从下往上一个一个放；取的时候，也是从上往下一个一个地依次取，不能从中间任意抽出。<strong>后进者先出，先进者后出，这就是典型的“栈”结构。</strong><br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/06/c3929f00-d0a8-11e9-913b-a197b4ae75d3.png" srcset="/img/loading.gif" alt="image.png"><br>从栈的操作特性上来看，<strong>栈是一种“操作受限”的线性表</strong>，只允许在一端插入和删除数据。</p>
+<p>第一次接触这种数据结构的时候，就对它存在的意义产生了很大的疑惑。因为我觉得，相比数组和链表，栈带给我的只有限制，并没有任何优势。那直接使用数组或者链表不就好了吗？为什么还要用这个“操作受限”的“栈”呢？</p>
+<p>事实上，从功能上来说，数组或链表确实可以替代栈，但你要知道，特定的数据结构是对特定场景的抽象，而且，数组或链表暴露了太多的操作接口，操作上的确灵活自由，但使用时就比较不可控，自然也就更容易出错。</p>
+<p><strong>当某个数据集合只涉及在一端插入和删除数据，并且满足后进先出、先进后出的特性，就应该首选“栈”这种数据结构。</strong></p>
+<h2 id="如何实现一个“栈”？"><a href="#如何实现一个“栈”？" class="headerlink" title="如何实现一个“栈”？"></a>如何实现一个“栈”？</h2><p>从刚才栈的定义里，可以看出，栈主要包含两个操作，入栈和出栈，也就是在栈顶插入一个数据和从栈顶删除一个数据。理解了栈的定义之后，来看一看如何用代码实现一个栈。</p>
+<p>实际上，栈既可以用数组来实现，也可以用链表来实现。用数组实现的栈，我们叫作<strong>顺序栈</strong>，用链表实现的栈，我们叫作<strong>链式栈</strong>。</p>
+<p>这里实现一个基于数组的顺序栈。基于链表实现的链式栈的代码，你可以自己试着写一下。</p>
+<p>下面这段代码是用 <code>Java</code> 来实现的，但是不涉及任何高级语法，并且还用中文做了详细的注释，所以你应该是可以看懂的。</p>
+<pre><code class="hljs java"><span class="hljs-comment">// 基于数组实现的顺序栈</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ArrayStack</span> </span>&#123;
+  <span class="hljs-keyword">private</span> String[] items;  <span class="hljs-comment">// 数组</span>
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> count;       <span class="hljs-comment">// 栈中元素个数</span>
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> n;           <span class="hljs-comment">// 栈的大小</span>
+
+  <span class="hljs-comment">// 初始化数组，申请一个大小为 n 的数组空间</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ArrayStack</span><span class="hljs-params">(<span class="hljs-keyword">int</span> n)</span> </span>&#123;
+    <span class="hljs-keyword">this</span>.items = <span class="hljs-keyword">new</span> String[n];
+    <span class="hljs-keyword">this</span>.n = n;
+    <span class="hljs-keyword">this</span>.count = <span class="hljs-number">0</span>;
+  &#125;
+
+  <span class="hljs-comment">// 入栈操作</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">push</span><span class="hljs-params">(String item)</span> </span>&#123;
+    <span class="hljs-comment">// 数组空间不够了，直接返回 false，入栈失败。</span>
+    <span class="hljs-keyword">if</span> (count == n) <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+    <span class="hljs-comment">// 将 item 放到下标为 count 的位置，并且 count 加一</span>
+    items[count] = item;
+    ++count;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+  &#125;
+  
+  <span class="hljs-comment">// 出栈操作</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">pop</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-comment">// 栈为空，则直接返回 null</span>
+    <span class="hljs-keyword">if</span> (count == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+    <span class="hljs-comment">// 返回下标为 count-1 的数组元素，并且栈中元素个数 count 减一</span>
+    String tmp = items[count-<span class="hljs-number">1</span>];
+    --count;
+    <span class="hljs-keyword">return</span> tmp;
+  &#125;
+&#125;</code></pre>
+<p>链表实现</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">StackOfLinked</span>&lt;<span class="hljs-title">Item</span>&gt; <span class="hljs-keyword">implements</span> <span class="hljs-title">Iterable</span>&lt;<span class="hljs-title">Item</span>&gt; </span>&#123;
+    <span class="hljs-comment">//定义一个内部类，就可以直接使用类型参数</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Node</span> </span>&#123;
+        Item item;
+        Node next;
+    &#125;
+
+    <span class="hljs-keyword">private</span> Node first;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> N;
+
+    <span class="hljs-comment">//构造器</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">StackOfLinked</span><span class="hljs-params">()</span> </span>&#123;
+    &#125;
+
+    <span class="hljs-comment">//添加</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">push</span><span class="hljs-params">(Item item)</span> </span>&#123;
+        Node oldFirst = first;
+        first = <span class="hljs-keyword">new</span> Node();
+        first.item = item;
+        first.next = oldFirst;
+        N++;
+    &#125;
+
+    <span class="hljs-comment">//删除</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Item <span class="hljs-title">pop</span><span class="hljs-params">()</span> </span>&#123;
+        Item item = first.item;
+        first = first.next;
+        N--;
+        <span class="hljs-keyword">return</span> item;
+    &#125;
+
+    <span class="hljs-comment">//是否为空</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">isEmpty</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">return</span> N == <span class="hljs-number">0</span>;
+    &#125;
+
+    <span class="hljs-comment">//元素数量</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">size</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">return</span> N;
+    &#125;
+
+    <span class="hljs-comment">//返回栈中最近添加的元素而不删除它</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Item <span class="hljs-title">peek</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">return</span> first.item;
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Iterator&lt;Item&gt; <span class="hljs-title">iterator</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> LinkedIterator();
+    &#125;
+
+    <span class="hljs-comment">//内部类：迭代器</span>
+    <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">LinkedIterator</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Iterator</span> </span>&#123;
+        <span class="hljs-keyword">int</span> i = N;
+        Node t = first;
+
+        <span class="hljs-meta">@Override</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">hasNext</span><span class="hljs-params">()</span> </span>&#123;
+            <span class="hljs-keyword">return</span> i &gt; <span class="hljs-number">0</span>;
+        &#125;
+
+        <span class="hljs-meta">@Override</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> Item <span class="hljs-title">next</span><span class="hljs-params">()</span> </span>&#123;
+            Item item = t.item;
+            t = t.next;
+            i--;
+            <span class="hljs-keyword">return</span> item;
+        &#125;
+    &#125;
+&#125;</code></pre>
+<p>了解了定义和基本操作，那它的操作的时间、空间复杂度是多少呢？</p>
+<p>不管是顺序栈还是链式栈，存储数据只需要一个大小为 <code>n</code> 的数组就够了。在入栈和出栈过程中，只需要一两个临时变量存储空间，所以空间复杂度是 $O(1)$。</p>
+<p>注意，这里存储数据需要一个大小为 <code>n</code> 的数组，并不是说空间复杂度就是 $O(n)$。因为，这 <code>n</code> 个空间是必须的，无法省掉。所以<strong>在说空间复杂度的时候，是指除了原本的数据存储空间外，算法运行还需要额外的存储空间。</strong></p>
+<p>空间复杂度分析是不是很简单？时间复杂度也不难。不管是顺序栈还是链式栈，入栈、出栈只涉及栈顶个别数据的操作，所以时间复杂度都是 $O(1)$。</p>
+<h2 id="支持动态扩容的顺序栈"><a href="#支持动态扩容的顺序栈" class="headerlink" title="支持动态扩容的顺序栈"></a>支持动态扩容的顺序栈</h2><p>刚才那个基于数组实现的栈，是一个固定大小的栈，也就是说，在初始化栈时需要事先指定栈的大小。当栈满之后，就无法再往栈里添加数据了。尽管链式栈的大小不受限，但要存储 <code>next</code> 指针，内存消耗相对较多。那如何基于数组实现一个可以支持动态扩容的栈呢？</p>
+<p>你还记得，在数组那一篇，是如何来实现一个支持动态扩容的数组的吗？当数组空间不够时，就重新申请一块更大的内存，将原来数组中数据统统拷贝过去。这样就实现了一个支持动态扩容的数组。</p>
+<p>所以，如果要实现一个支持动态扩容的栈，只需要底层依赖一个支持动态扩容的数组就可以了。当栈满了之后，就申请一个更大的数组，将原来的数据搬移到新数组中。下面有一张图，你可以对照着理解一下。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/06/dc56d780-d0a9-11e9-913b-a197b4ae75d3.png" srcset="/img/loading.gif" alt="image.png"><br>实际上，支持动态扩容的顺序栈，平时开发中并不常用到。讲这一块的目的，主要还是希望练习一下前面讲的复杂度分析方法。所以这一小节的重点是复杂度分析。</p>
+<p>你不用死记硬背入栈、出栈的时间复杂度，你需要掌握的是分析方法。能够自己分析才算是真正掌握了。现在就分析一下支持动态扩容的顺序栈的入栈、出栈操作的时间复杂度。</p>
+<p>对于出栈操作来说，不会涉及内存的重新申请和数据的搬移，所以出栈的时间复杂度仍然是 $O(1)$。但是，对于入栈操作来说，情况就不一样了。当栈中有空闲空间时，入栈操作的时间复杂度为 $O(1)$。但当空间不够时，就需要重新申请内存和数据搬移，所以时间复杂度就变成了 $O(n)$。</p>
+<p>也就是说，对于入栈操作来说，最好情况时间复杂度是 $O(1)$，最坏情况时间复杂度是 $O(n)$。那平均情况下的时间复杂度又是多少呢？还记得在复杂度分析那一节中讲的摊还分析法吗？这个入栈操作的平均情况下的时间复杂度可以用摊还分析法来分析。也正好借此来实战一下摊还分析法。</p>
+<p>为了分析的方便，需要事先做一些假设和定义：</p>
+<ul>
+<li><p>栈空间不够时，重新申请一个是原来大小两倍的数组；</p>
+</li>
+<li><p>为了简化分析，假设只有入栈操作没有出栈操作；</p>
+</li>
+<li><p>定义不涉及内存搬移的入栈操作为 <code>simple-push</code> 操作，时间复杂度为 $O(1)$。</p>
+</li>
+</ul>
+<p>如果当前栈大小为 <code>K</code>，并且已满，当再有新的数据要入栈时，就需要重新申请 <code>2</code> 倍大小的内存，并且做 <code>K</code> 个数据的搬移操作，然后再入栈。但是，接下来的 <code>K-1</code> 次入栈操作，都不需要再重新申请内存和搬移数据，所以这 <code>K-1</code> 次入栈操作都只需要一个 <code>simple-push</code> 操作就可以完成。为了更加直观地理解这个过程，下面有一张图。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/06/49128900-d0aa-11e9-913b-a197b4ae75d3.png" srcset="/img/loading.gif" alt="image.png"><br>你应该可以看出来，这 <code>K</code> 次入栈操作，总共涉及了 <code>K</code> 个数据的搬移，以及 <code>K</code> 次 <code>simple-push</code> 操作。将 <code>K</code> 个数据搬移均摊到 <code>K</code> 次入栈操作，那每个入栈操作只需要一个数据搬移和一个 <code>simple-push</code> 操作。以此类推，入栈操作的均摊时间复杂度就为 $O(1)$。</p>
+<p>通过这个例子的实战分析，也印证了前面讲到的，均摊时间复杂度一般都等于最好情况时间复杂度。因为在大部分情况下，入栈操作的时间复杂度都是 $O(1)$，只有在个别时刻才会退化为 $O(n)$，所以把耗时多的入栈操作的时间均摊到其他入栈操作上，平均情况下的耗时就接近 $O(1)$。</p>
+<h2 id="栈在函数调用中的应用"><a href="#栈在函数调用中的应用" class="headerlink" title="栈在函数调用中的应用"></a>栈在函数调用中的应用</h2><p>前面的都比较偏理论，现在来看下，栈在软件工程中的实际应用。栈作为一个比较基础的数据结构，应用场景还是蛮多的。其中，比较经典的一个应用场景就是<strong>函数调用栈</strong>。</p>
+<p>操作系统给每个线程分配了一块独立的内存空间，这块内存被组织成“栈”这种结构, 用来存储函数调用时的临时变量。每进入一个函数，就会将临时变量作为一个栈帧入栈，当被调用函数执行完成，返回之后，将这个函数对应的栈帧出栈。为了更好地理解，下面一块来看下这段代码的执行过程。</p>
+<pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
+   <span class="hljs-keyword">int</span> a = <span class="hljs-number">1</span>; 
+   <span class="hljs-keyword">int</span> ret = <span class="hljs-number">0</span>;
+   <span class="hljs-keyword">int</span> res = <span class="hljs-number">0</span>;
+   ret = add(<span class="hljs-number">3</span>, <span class="hljs-number">5</span>);
+   res = a + ret;
+   <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d"</span>, res);
+   reuturn <span class="hljs-number">0</span>;
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">add</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x, <span class="hljs-keyword">int</span> y)</span> </span>&#123;
+   <span class="hljs-keyword">int</span> sum = <span class="hljs-number">0</span>;
+   sum = x + y;
+   <span class="hljs-keyword">return</span> sum;
+&#125;</code></pre>
+<p>从代码中可以看出，<code>main()</code> 函数调用了 <code>add()</code> 函数，获取计算结果，并且与临时变量 <code>a</code> 相加，最后打印 <code>res</code> 的值。为了清晰地看到这个过程对应的函数栈里出栈、入栈的操作，下面有一张图。图中显示的是，在执行到 <code>add()</code> 函数时，函数调用栈的情况。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/06/df55ca30-d0aa-11e9-913b-a197b4ae75d3.png" srcset="/img/loading.gif" alt="image.png"></p>
+<h2 id="栈在表达式求值中的应用"><a href="#栈在表达式求值中的应用" class="headerlink" title="栈在表达式求值中的应用"></a>栈在表达式求值中的应用</h2><p>再来看栈的另一个常见的应用场景，编译器如何利用栈来实现<strong>表达式求值</strong>。</p>
+<p>为了方便解释，这里将算术表达式简化为只包含加减乘除四则运算，比如：<code>34 + 13 * 9 + 44 - 12 / 3</code>。对于这个四则运算，人脑可以很快求解出答案，但是对于计算机来说，理解这个表达式本身就是个挺难的事儿。如果换作你，让你来实现这样一个表达式求值的功能，你会怎么做呢？</p>
+<p>实际上，编译器就是通过两个栈来实现的。其中一个保存操作数的栈，另一个是保存运算符的栈。从左向右遍历表达式，当遇到数字，就直接压入操作数栈；当遇到运算符，就与运算符栈的栈顶元素进行比较。</p>
+<p>如果比运算符栈顶元素的优先级高，就将当前运算符压入栈；如果比运算符栈顶元素的优先级低或者相同，从运算符栈中取栈顶运算符，从操作数栈的栈顶取 <code>2</code> 个操作数，然后进行计算，再把计算完的结果压入操作数栈，继续比较。</p>
+<p>下面将 <code>3 + 5 * 8 - 6</code> 这个表达式的计算过程画成了一张图，可以结合图来理解刚讲的计算过程。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/06/3bee9fb0-d0ab-11e9-913b-a197b4ae75d3.png" srcset="/img/loading.gif" alt="image.png"><br>这样用两个栈来解决的思路是不是非常巧妙？你有没有想到呢？</p>
+<h2 id="栈在括号匹配中的应用"><a href="#栈在括号匹配中的应用" class="headerlink" title="栈在括号匹配中的应用"></a>栈在括号匹配中的应用</h2><p>除了用栈来实现表达式求值，还可以借助栈来检查表达式中的括号是否匹配。</p>
+<p>同样简化一下背景。假设表达式中只包含三种括号，圆括号 <code>()</code>、方括号 <code>[]</code> 和花括号 <code>{}</code>，并且它们可以任意嵌套。比如，<code>{[{}]}</code>或 <code>[{()}([])]</code> 等都为合法格式，而 <code>{[}()]</code> 或 <code>[({)]</code> 为不合法的格式。现在给你一个包含三种括号的表达式字符串，如何检查它是否合法呢？</p>
+<p>这里也可以用栈来解决。用栈来保存未匹配的左括号，从左到右依次扫描字符串。当扫描到左括号时，则将其压入栈中；当扫描到右括号时，从栈顶取出一个左括号。如果能够匹配，比如“(”跟“)”匹配，“[”跟“]”匹配，“{”跟“}”匹配，则继续扫描剩下的字符串。如果扫描的过程中，遇到不能配对的右括号，或者栈中没有数据，则说明为非法格式。</p>
+<p>当所有的括号都扫描完成之后，如果栈为空，则说明字符串为合法格式；否则，说明有未匹配的左括号，为非法格式。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>来回顾一下上面讲的内容。栈是一种操作受限的数据结构，只支持入栈和出栈操作。后进先出是它最大的特点。栈既可以通过数组实现，也可以通过链表来实现。不管基于数组还是链表，入栈、出栈的时间复杂度都为 $O(1)$。除此之外，还讲了一种支持动态扩容的顺序栈，需要重点掌握它的均摊时间复杂度分析方法。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ul>
+<li><p>如何实现浏览器的前进、后退功能？</p>
+<blockquote>
+<p>其实，用两个栈就可以非常完美地解决这个问题。<br>使用两个栈，<code>X</code> 和 <code>Y</code>，把首次浏览的页面依次压入栈 <code>X</code>，当点击后退按钮时，再依次从栈 <code>X</code> 中出栈，并将出栈的数据依次放入栈 <code>Y</code>。当点击前进按钮时，依次从栈 <code>Y</code> 中取出数据，放入栈 <code>X</code> 中。当栈 <code>X</code> 中没有数据时，那就说明没有页面可以继续后退浏览了。当栈 <code>Y</code> 中没有数据，那就说明没有页面可以点击前进按钮浏览了。</p>
+<p>比如你顺序查看了 <code>a</code>，<code>b</code>，<code>c</code> 三个页面，就依次把 <code>a</code>，<code>b</code>，<code>c</code> 压入栈，这个时候，两个栈的数据就是这个样子：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/06/d3c10c60-d0ab-11e9-913b-a197b4ae75d3.png" srcset="/img/loading.gif" alt="image.png"><br>当你通过浏览器的后退按钮，从页面 <code>c</code> 后退到页面 <code>a</code> 之后，就依次把 <code>c</code> 和 <code>b</code> 从栈 <code>X</code> 中弹出，并且依次放入到栈 <code>Y</code>。这个时候，两个栈的数据就是这个样子：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/06/e749cfb0-d0ab-11e9-913b-a197b4ae75d3.png" srcset="/img/loading.gif" alt="image.png"><br>这个时候你又想看页面 <code>b</code>，于是你又点击前进按钮回到 <code>b</code> 页面，就把 <code>b</code> 再从栈 <code>Y</code> 中出栈，放入栈 <code>X</code> 中。此时两个栈的数据是这个样子：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/06/0ffad580-d0ac-11e9-913b-a197b4ae75d3.png" srcset="/img/loading.gif" alt="image.png"><br>这个时候，你通过页面 <code>b</code> 又跳转到新的页面 <code>d</code> 了，页面 <code>c</code> 就无法再通过前进、后退按钮重复查看了，所以需要清空栈 <code>Y</code>。此时两个栈的数据这个样子：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/06/218f1bd0-d0ac-11e9-913b-a197b4ae75d3.png" srcset="/img/loading.gif" alt="image.png"></p>
+</blockquote>
+</li>
+<li><p>在讲栈的应用时，讲到用函数调用栈来保存临时变量，为什么函数调用要用“栈”来保存临时变量呢？用其他数据结构不行吗？</p>
+<blockquote>
+<p>答：因为函数调用的执行顺序符合后进者先出，先进者后出的特点。<br>  比如函数中的局部变量的生命周期的长短是先定义的生命周期长，后定义的生命周期短；<br>  还有函数中调用函数也是这样，先开始执行的函数只有等到内部调用的其他函数执行完毕，该函数才能执行结束。<br>  正是由于函数调用的这些特点，根据数据结构是特定应用场景的抽象的原则，优先考虑栈结构。</p>
+</blockquote>
+</li>
+<li><p><code>JVM</code> 内存管理中有个“堆栈”的概念。栈内存用来存储局部变量和方法调用，堆内存用来存储 <code>Java</code> 中的对象。那 <code>JVM</code> 里面的“栈”跟我们这里说的“栈”是不是一回事呢？如果不是，那它为什么又叫作“栈”呢？</p>
+<blockquote>
+<p>答：<code>JVM</code>里面的栈和我们这里说的是一回事，被称为方法栈。<br>  和前面函数调用的作用是一致的，用来存储方法中的局部变量。</p>
+</blockquote>
+</li>
+</ul>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E5%88%9D%E7%BA%A7/">数据结构与算法(初级)</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%A0%88/">栈</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/passages/Kafka/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">SpringBoot Kafka的配置</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/passages/5/">
+                        <span class="hidden-mobile">5.链表（下）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+    <div id="vcomments"></div>
+    <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+    <script type="text/javascript">
+        var oldLoadVa = window.onload;
+        window.onload = function () {
+            oldLoadVa && oldLoadVa();
+
+            new Valine({
+                el: "#vcomments",
+                app_id: "O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",
+                app_key: "5Rl3Rhl9zc8BJNvrPcncKWFy",
+                placeholder: "说点什么吧~",
+                path: window.location.pathname,
+                avatar: "retro",
+                meta: ["nick","mail","link"],
+                pageSize: "10",
+                lang: "zh-CN",
+                highlight: true,
+                recordIP: true,
+                serverURLs: "https://lean.muchen.fun",
+            });
+        };
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments
+            powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><br><div class="text-center">欢迎关注我的公众号</div>
+    </div>
+  </div>
+
+
+    
+</main>
+
+
+    <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+
+
+
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+                <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mx-3">
+                <div class="md-form mb-5">
+                    <input type="text" id="local-search-input" class="form-control validate">
+                    <label data-error="x"
+                           data-success="v"
+                           for="local-search-input">关键词</label>
+                </div>
+                <div class="list-group" id="local-search-result"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    <div>
+      <span id="timeDate">载入天数...</span>
+      <span id="times">载入时分秒...</span>
+      <script>
+        var now = new Date();
+
+        function createtime() {
+          var grt = new Date("07/12/2019 00:00:00");//此处修改你的建站时间或者网站上线时间
+          now.setTime(now.getTime() + 250);
+          days = (now - grt) / 1000 / 60 / 60 / 24;
+          dnum = Math.floor(days);
+          hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+          hnum = Math.floor(hours);
+          if (String(hnum).length == 1) {
+            hnum = "0" + hnum;
+          }
+          minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+          mnum = Math.floor(minutes);
+          if (String(mnum).length == 1) {
+            mnum = "0" + mnum;
+          }
+          seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+          snum = Math.round(seconds);
+          if (String(snum).length == 1) {
+            snum = "0" + snum;
+          }
+          document.getElementById("timeDate").innerHTML = "本站已运行&nbsp" + dnum + "&nbsp天";
+          document.getElementById("times").innerHTML = hnum + "&nbsp小时&nbsp" + mnum + "&nbsp分&nbsp" + snum + "&nbsp秒";
+        }
+
+        setInterval("createtime()", 250);
+      </script>
+    </div>
+    <p id="hitokoto">:D 获取中...</p>
+    <script>
+      fetch('https://v1.hitokoto.cn')
+              .then(response => response.json())
+              .then(data => {
+                const hitokoto = document.getElementById('hitokoto')
+                hitokoto.innerText = data.hitokoto + '--「' + data.from + '」'
+              })
+              .catch(console.error)
+    </script>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+    <script  src="/js/lazyload.js" ></script>
+
+
+
+    
+
+
+
+
+    <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+    <script  src="/js/clipboard-use.js" ></script>
+
+
+
+    <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+    
+<script src="https://static.muchen.fun/js/custom.js"></script>
+
+
+
+<!-- Plugins -->
+
+
+    
+        <!-- Baidu Analytics -->
+        <script defer>
+            var _hmt = _hmt || [];
+            (function () {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    
+
+    
+        <!-- Google Analytics -->
+        <script defer>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-144841374-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+    <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+    <script>
+        var typed = new Typed('#subtitle', {
+            strings: [
+                '  ',
+                "6.栈&nbsp;",
+            ],
+            cursorChar: "_",
+            typeSpeed: 60,
+            loop: false,
+        });
+        typed.stop();
+        $(document).ready(function () {
+            $(".typed-cursor").addClass("h2");
+            typed.start();
+        });
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+    <script>
+        anchors.options = {
+            placement: "right",
+            visible: "hover",
+            
+        };
+        var el = "h1,h2,h3,h4,h5,h6".split(",");
+        var res = [];
+        for (item of el) {
+            res.push(".markdown-body > " + item)
+        }
+        anchors.add(res.join(", "))
+    </script>
+
+
+
+    <script  src="/js/local-search.js" ></script>
+    <script>
+        var path = "/local-search.xml";
+        var inputArea = document.querySelector("#local-search-input");
+        inputArea.onclick = function () {
+            searchFunc(path, 'local-search-input', 'local-search-result');
+            this.onclick = null
+        }
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+    <script>
+        $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+            function () {
+                var element = document.createElement('a');
+                $(element).attr('data-fancybox', 'images');
+                $(element).attr('href', $(this).attr('src'));
+                $(this).wrap(element);
+            }
+        );
+    </script>
+
+
+
+
+
+    
+
+    
+        <!-- MathJax -->
+        <script>
+            MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']]
+                },
+                options: {
+                    renderActions: {
+                        findScript: [10, doc => {
+                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                                const display = !!node.type.match(/; *mode=display/);
+                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                                const text = document.createTextNode('');
+                                node.parentNode.replaceChild(text, node);
+                                math.start = {node: text, delim: '', n: 0};
+                                math.end = {node: text, delim: '', n: 0};
+                                doc.math.push(math);
+                            });
+                        }, '', false],
+                        insertedScript: [200, () => {
+                            document.querySelectorAll('mjx-container').forEach(node => {
+                                let target = node.parentNode;
+                                if (target.nodeName.toLowerCase() === 'li') {
+                                    target.parentNode.classList.add('has-jax');
+                                }
+                            });
+                        }, '', false]
+                    }
+                }
+            };
+        </script>
+
+        <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+    
+
+
+
+    
+    
+        <script>
+            !function (e, t, a) {
+                function r() {
+                    for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+                    requestAnimationFrame(r)
+                }
+
+                function n() {
+                    var t = "function" == typeof e.onclick && e.onclick;
+                    e.onclick = function (e) {
+                        t && t(), o(e)
+                    }
+                }
+
+                function o(e) {
+                    var a = t.createElement("div");
+                    a.className = "heart", s.push({
+                        el: a,
+                        x: e.clientX - 5,
+                        y: e.clientY - 5,
+                        scale: 1,
+                        alpha: 1,
+                        color: c()
+                    }), t.body.appendChild(a)
+                }
+
+                function i(e) {
+                    var a = t.createElement("style");
+                    a.type = "text/css";
+                    try {
+                        a.appendChild(t.createTextNode(e))
+                    } catch (t) {
+                        a.styleSheet.cssText = e
+                    }
+                    t.getElementsByTagName("head")[0].appendChild(a)
+                }
+
+                function c() {
+                    return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+                }
+
+                var s = [];
+                e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+                    setTimeout(e, 1e3 / 60)
+                }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+            }(window, document);
+        </script>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

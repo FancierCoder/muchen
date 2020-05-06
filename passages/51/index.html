@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png">
+    <link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <meta name="theme-color" content="#2f4154">
+    <meta name="description" content="沐晨的个人博客,技术博客">
+    <meta name="author" content="Li Duo">
+    <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
+    <title>51.算法实战（三） - MuChen&#39;s Blog</title>
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+    
+<link rel="stylesheet" href="https://static.muchen.fun/css/custom.css?t=0.1423425.css">
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+<script>
+    var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+    // 依次判断 系统暗黑模式 指定时间 缓存 dark
+    if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+        if (!(isNight && localStorage.getItem('noDark') === '1')) {
+            document.body.classList.add('dark');
+        }
+    }
+    document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
+</script>
+<header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+    <div class="container">
+        <a class="navbar-brand"
+           href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a>
+
+        <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="animated-icon"><span></span><span></span><span></span></div>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto text-center">
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/archives/">
+                            <i class="iconfont icon-archive-fill"></i>
+                            归档</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/categories/">
+                            <i class="iconfont icon-category-fill"></i>
+                            分类</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tags/">
+                            <i class="iconfont icon-tags-fill"></i>
+                            标签</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/messageBoard/">
+                            <i class="iconfont icon-speakernotes"></i>
+                            留言</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about/">
+                            <i class="iconfont icon-user-fill"></i>
+                            关于</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/links/">
+                            <i class="iconfont icon-link-fill"></i>
+                            友链</a>
+                    </li>
+                
+                
+                    <li class="nav-item" id="search-btn">
+                        <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                                    class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+                    </li>
+                
+                <li class="nav-item">
+                    <a id="dark" class="nav-link" onclick="switchDarkMode()">
+                        <i class="iconfont icon-sun"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/images/07.jpg') no-repeat center center;
+                 background-size: cover;">
+        <div class="full-bg-img">
+            <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+                <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+                
+            </span>
+
+                    
+                        
+                            <div class="mt-3 post-meta">
+                                <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                                <time datetime="2019-08-27 11:31">
+                                    2019年8月27日 中午
+                                </time>
+                            </div>
+                        
+
+                        <div class="mt-1">
+                            
+                                
+                                <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    3.3k 字
+                  </span>
+                            
+
+                            
+                                
+                                <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                                    
+                                    
+                                    45
+                                     分钟
+                  </span>
+                            
+
+                            
+                                <!-- 不蒜子统计文章PV -->
+                                
+                                <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
+                    <i class="iconfont icon-eye" aria-hidden="true"></i>
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>
+                            
+                        </div>
+                    
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    
+        
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：8 个月前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <!-- more -->
+<p><code>Disruptor</code> 你是否听说过呢？它是一种内存消息队列。从功能上讲，它其实有点儿类似 <code>Kafka</code>。不过，和 <code>Kafka</code> 不同的是，<code>Disruptor</code> 是线程之间用于消息传递的队列。它在 <code>Apache Storm</code>、<code>Camel</code>、<code>Log4j 2</code> 等很多知名项目中都有广泛应用。</p>
+<p>之所以如此受青睐，主要还是因为它的性能表现非常优秀。它比 <code>Java</code> 中另外一个非常常用的内存消息队列 <code>ArrayBlockingQueue</code>（<code>ABS</code>）的性能，要高一个数量级，可以算得上是最快的内存消息队列了。它还因此获得过 <code>Oracle</code> 官方的 <code>Duke</code> 大奖。</p>
+<p>如此高性能的内存消息队列，在设计和实现上，必然有它独到的地方。下面来看下 <strong><code>Disruptor</code> 是如何做到如此高性能的？其底层依赖了哪些数据结构和算法？</strong></p>
+<h2 id="基于循环队列的“生产者-消费者模型”"><a href="#基于循环队列的“生产者-消费者模型”" class="headerlink" title="基于循环队列的“生产者 - 消费者模型”"></a>基于循环队列的“生产者 - 消费者模型”</h2><p>什么是内存消息队列？对很多业务工程师或者前端工程师来说，可能会比较陌生。不过，如果说“生产者 - 消费者模型”，估计大部分人都知道。在这个模型中，“生产者”生产数据，并且将数据放到一个中心存储容器中。之后，“消费者”从中心存储容器中，取出数据消费。</p>
+<p>这个模型非常简单、好理解，那你有没有思考过，这里面存储数据的中心存储容器，是用什么样的数据结构来实现的呢？</p>
+<p>实际上，实现中心存储容器最常用的一种数据结构，就是在<a href="../7/">第 7 篇</a>讲的<strong>队列</strong>。队列支持数据的先进先出。正是这个特性，使得数据被消费的顺序性可以得到保证，也就是说，早被生产的数据就会早被消费。</p>
+<p><a href="../7/">第 7 篇</a>讲过，队列有两种实现思路。一种是基于链表实现的<strong>链式队列</strong>，另一种是基于数组实现的<strong>顺序队列</strong>。不同的需求背景下，会选择不同的实现方式。</p>
+<p>如果要实现一个无界队列，也就是说，队列的大小事先不确定，理论上可以支持无限大。这种情况下，适合选用链表来实现队列。因为链表支持快速地动态扩容。如果要实现一个有界队列，也就是说，队列的大小事先确定，当队列中数据满了之后，生产者就需要等待。直到消费者消费了数据，队列有空闲位置的时候，生产者才能将数据放入。这种情况下，适合选用数组来实现队列。</p>
+<p>实际上，相较于无界队列，有界队列的应用场景更加广泛。毕竟，机器内存是有限的。而无界队列占用的内存数量是不可控的。对于实际的软件开发来说，这种不可控的因素，就会有潜在的风险。在某些极端情况下，无界队列就有可能因为内存持续增长，而导致 <code>OOM</code>（<code>Out of Memory</code>）错误。</p>
+<p>在<a href="../7/">第 7 篇</a>中，还讲过一种特殊的顺序队列，<strong>循环队列</strong>。非循环的顺序队列在添加、删除数据的工程中，会涉及数据的搬移操作，导致性能变差。而循环队列正好可以解决这个数据搬移的问题，所以性能更加好。所以，大部分用到顺序队列的场景中，都选择用顺序队列中的循环队列。</p>
+<p>实际上，<strong>循环队列这种数据结构，就是内存消息队列的雏形</strong>。借助循环队列，可以实现一个最简单的“生产者 - 消费者模型”。对应的代码贴到下面，你可以看看。</p>
+<p>为了方便理解，对于生产者和消费者之间操作的同步，并没有用到线程相关的操作。而是采用了“当队列满了之后，生产者就轮训等待；当队列空了之后，消费者就轮训等待”这样的措施。</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Queue</span> </span>&#123;
+  <span class="hljs-keyword">private</span> Long[] data;
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> size = <span class="hljs-number">0</span>, head = <span class="hljs-number">0</span>, tail = <span class="hljs-number">0</span>;
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Queue</span><span class="hljs-params">(<span class="hljs-keyword">int</span> size)</span> </span>&#123;
+    <span class="hljs-keyword">this</span>.data = <span class="hljs-keyword">new</span> Long[size];
+    <span class="hljs-keyword">this</span>.size = size;
+  &#125;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">add</span><span class="hljs-params">(Long element)</span> </span>&#123;
+    <span class="hljs-keyword">if</span> ((tail + <span class="hljs-number">1</span>) % size == head) <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+    data[tail] = element;
+    tail = (tail + <span class="hljs-number">1</span>) % size;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+  &#125;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> Long <span class="hljs-title">poll</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-keyword">if</span> (head == tail) <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+    <span class="hljs-keyword">long</span> ret = data[head];
+    head = (head + <span class="hljs-number">1</span>) % size;
+    <span class="hljs-keyword">return</span> ret;
+  &#125;
+&#125;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Producer</span> </span>&#123;
+  <span class="hljs-keyword">private</span> Queue queue;
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Producer</span><span class="hljs-params">(Queue queue)</span> </span>&#123;
+    <span class="hljs-keyword">this</span>.queue = queue;
+  &#125;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">produce</span><span class="hljs-params">(Long data)</span> <span class="hljs-keyword">throws</span> InterruptedException </span>&#123;
+    <span class="hljs-keyword">while</span> (!queue.add(data)) &#123;
+      Thread.sleep(<span class="hljs-number">100</span>);
+    &#125;
+  &#125;
+&#125;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Consumer</span> </span>&#123;
+  <span class="hljs-keyword">private</span> Queue queue;
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Consumer</span><span class="hljs-params">(Queue queue)</span> </span>&#123;
+    <span class="hljs-keyword">this</span>.queue = queue;
+  &#125;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">comsume</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> InterruptedException </span>&#123;
+    <span class="hljs-keyword">while</span> (<span class="hljs-keyword">true</span>) &#123;
+      Long data = queue.poll();
+      <span class="hljs-keyword">if</span> (data == <span class="hljs-keyword">null</span>) &#123;
+        Thread.sleep(<span class="hljs-number">100</span>);
+      &#125; <span class="hljs-keyword">else</span> &#123;
+        <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span>... 消费数据的业务逻辑...</span>
+      &#125;
+    &#125;
+  &#125;
+&#125;</code></pre>
+
+<h2 id="基于加锁的并发“生产者-消费者模型”"><a href="#基于加锁的并发“生产者-消费者模型”" class="headerlink" title="基于加锁的并发“生产者 - 消费者模型”"></a>基于加锁的并发“生产者 - 消费者模型”</h2><p>实际上，刚刚的“生产者 - 消费者模型”实现代码，是不完善的。为什么这么说呢？</p>
+<p>如果只有一个生产者往队列中写数据，一个消费者从队列中读取数据，那上面的代码是没有问题的。但是，如果有多个生产者在并发地往队列中写入数据，或者多个消费者并发地从队列中消费数据，那上面的代码就不能正确工作了。为什么呢？</p>
+<p>在多个生产者或者多个消费者并发操作队列的情况下，刚刚的代码主要会有下面两个问题：</p>
+<ul>
+<li><p>多个生产者写入的数据可能会互相覆盖；</p>
+</li>
+<li><p>多个消费者可能会读取重复的数据。</p>
+</li>
+</ul>
+<p>因为第一个问题和第二个问题产生的原理是类似的。所以，着重讲解第一个问题是如何产生的以及该如何解决。对于第二个问题，你可以类比对第一个问题的解决思路自己来想一想。</p>
+<p>两个线程同时往队列中添加数据，也就相当于两个线程同时执行类 <code>Queue</code> 中的 <code>add()</code> 函数。假设队列的大小 <code>size</code> 是 <code>10</code>，当前的 <code>tail</code> 指向下标 <code>7</code>，<code>head</code> 指向下标 <code>3</code>，也就是说，队列中还有空闲空间。这个时候，线程 <code>1</code> 调用 <code>add()</code> 函数，往队列中添加一个值为 <code>12</code> 的数据；线程 <code>2</code> 调用 <code>add()</code> 函数，往队列中添加一个值为 <code>15</code> 的数据。在极端情况下，本来是往队列中添加了两个数据（<code>12</code> 和 <code>15</code>），最终可能只有一个数据添加成功，另一个数据会被覆盖。这是为什么呢？<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/27/3d641d00-c879-11e9-bbe3-f1168c942eb3.png" srcset="/img/loading.gif" alt="image.png"><br>为了方便你查看队列 <code>Queue</code> 中的 <code>add()</code> 函数，这里把它从上面的代码中摘录出来，贴在这里。</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">add</span><span class="hljs-params">(Long element)</span> </span>&#123;
+  <span class="hljs-keyword">if</span> ((tail + <span class="hljs-number">1</span>) % size == head) <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+  data[tail] = element;
+  tail = (tail + <span class="hljs-number">1</span>) % size;
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+&#125;</code></pre>
+<p>从这段代码中，可以看到，第 <code>3</code> 行给 <code>data[tail]</code> 赋值，然后第 <code>4</code> 行才给 <code>tail</code> 的值加一。赋值和 <code>tail</code> 加一两个操作，并非原子操作。这就会导致这样的情况发生：当线程 <code>1</code> 和线程 <code>2</code> 同时执行 <code>add()</code> 函数的时候，线程 <code>1</code> 先执行完了第 <code>3</code> 行语句，将 <code>data[7]</code>（<code>tail</code> 等于 <code>7</code>）的值设置为 <code>12</code>。在线程 <code>1</code> 还未执行到第 <code>4</code> 行语句之前，也就是还未将 <code>tail</code> 加一之前，线程 <code>2</code> 执行了第 <code>3</code> 行语句，又将 <code>data[7]</code> 的值设置为 <code>15</code>，也就是说，那线程 <code>2</code> 插入的数据覆盖了线程 <code>1</code> 插入的数据。原本应该插入两个数据（<code>12</code> 和 <code>15</code>）的，现在只插入了一个数据（<code>15</code>）。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/27/bda6bd10-c879-11e9-bbe3-f1168c942eb3.png" srcset="/img/loading.gif" alt="image.png"><br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/27/c0361a80-c879-11e9-bbe3-f1168c942eb3.png" srcset="/img/loading.gif" alt="image.png"><br>那如何解决这种线程并发往队列中添加数据时，导致的数据覆盖、运行不正确问题呢？</p>
+<p>最简单的处理方法就是给这段代码加锁，同一时间只允许一个线程执行 <code>add()</code> 函数。这就相当于将这段代码的执行，由并行改成了串行，也就不存在刚刚说的问题了。</p>
+<p>不过，天下没有免费的午餐，加锁将并行改成串行，必然导致多个生产者同时生产数据的时候，执行效率的下降。当然，可以继续优化代码，用 <code>CAS</code>（<code>compare and swap</code>，比较并交换）操作等减少加锁的粒度，但是，这不是这里的重点。直接看 <code>Disruptor</code> 的处理方法。</p>
+<h2 id="基于无锁的并发“生产者-消费者模型”"><a href="#基于无锁的并发“生产者-消费者模型”" class="headerlink" title="基于无锁的并发“生产者 - 消费者模型”"></a>基于无锁的并发“生产者 - 消费者模型”</h2><p>尽管 <code>Disruptor</code> 的源码读起来很复杂，但是基本思想其实非常简单。实际上，它是换了一种队列和“生产者 - 消费者模型”的实现思路。</p>
+<p>之前的实现思路中，队列只支持两个操作，添加数据和读取并移除数据，分别对应代码中的 <code>add()</code> 函数和 <code>poll()</code> 函数，而 <code>Disruptor</code> 采用了另一种实现思路。</p>
+<p>对于生产者来说，它往队列中添加数据之前，先申请可用空闲存储单元，并且是批量地申请连续的 <code>n</code> 个（<code>n ≥ 1</code>）存储单元。当申请到这组连续的存储单元之后，后续往队列中添加元素，就可以不用加锁了，因为这组存储单元是这个线程独享的。不过，从刚刚的描述中，可以看出，申请存储单元的过程是需要加锁的。</p>
+<p>对于消费者来说，处理的过程跟生产者是类似的。它先去申请一批连续可读的存储单元（这个申请的过程也是需要加锁的），当申请到这批存储单元之后，后续的读取操作就可以不用加锁了。</p>
+<p>不过，还有一个需要特别注意的地方，那就是，如果生产者 <code>A</code> 申请到了一组连续的存储单元，假设是下标为 <code>3</code> 到 <code>6</code> 的存储单元，生产者 <code>B</code> 紧跟着申请到了下标是 <code>7</code> 到 <code>9</code> 的存储单元，那在 <code>3</code> 到 <code>6</code> 没有完全写入数据之前，<code>7</code> 到 <code>9</code> 的数据是无法读取的。这个也是 <code>Disruptor</code> 实现思路的一个弊端。</p>
+<p>文字描述不好理解，下面有一幅图可以展示一下这个操作过程。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/27/6055c5b0-c87a-11e9-bbe3-f1168c942eb3.png" srcset="/img/loading.gif" alt="image.png"><br>实际上，<code>Disruptor</code> 采用的是 <code>RingBuffer</code> 和 <code>AvailableBuffer</code> 这两个结构，来实现刚刚提到的功能。不过，因为这里主要聚焦在数据结构和算法上，所以这里对这两种结构做了简化，但是基本思想是一致的。如果你对 <code>Disruptor</code> 感兴趣，可以去阅读一下它的<a href="https://github.com/LMAX-Exchange/disruptor" target="_blank" rel="noopener">源码</a>。</p>
+<h2 id="总结引申"><a href="#总结引申" class="headerlink" title="总结引申"></a>总结引申</h2><p>上面讲了如何实现一个高性能的并发队列。这里的“并发”两个字，实际上就是<strong>多线程安全</strong>的意思。</p>
+<p>常见的内存队列往往采用循环队列来实现。这种实现方法，对于只有一个生产者和一个消费者的场景，已经足够了。但是，当存在多个生产者或者多个消费者的时候，单纯的循环队列的实现方式，就无法正确工作了。</p>
+<p>这主要是因为，多个生产者在同时往队列中写入数据的时候，在某些情况下，会存在数据覆盖的问题。而多个消费者同时消费数据，在某些情况下，会存在消费重复数据的问题。</p>
+<p>针对这个问题，最简单、暴力的解决方法就是，对写入和读取过程加锁。这种处理方法，相当于将原来可以并行执行的操作，强制串行执行，相应地就会导致操作性能的下降。</p>
+<p>为了在保证逻辑正确的前提下，尽可能地提高队列在并发情况下的性能，<code>Disruptor</code> 采用了“两阶段写入”的方法。在写入数据之前，先加锁申请批量的空闲存储单元，之后往队列中写入数据的操作就不需要加锁了，写入的性能因此就提高了。<code>Disruptor</code> 对消费过程的改造，跟对生产过程的改造是类似的。它先加锁申请批量的可读取的存储单元，之后从队列中读取数据的操作也就不需要加锁了，读取的性能因此也就提高了。</p>
+<p>你可能会觉得这个优化思路非常简单。实际上，不管架构设计还是产品设计，<strong>往往越简单的设计思路，越能更好地解决问题</strong>。正所谓“大道至简”，就是这个意思。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ul>
+<li>为了提高存储性能，往往通过分库分表的方式设计数据库表。假设有 <code>8</code> 张表用来存储用户信息。这个时候，每张用户表中的 <code>ID</code> 字段就不能通过自增的方式来产生了。因为这样的话，就会导致不同表之间的用户 <code>ID</code> 值重复。<br>为了解决这个问题，需要实现一个 <code>ID</code> 生成器，可以为所有的用户表生成唯一的 <code>ID</code> 号。那现在问题是，如何设计一个高性能、支持并发的、能够生成全局唯一 <code>ID</code> 的 <code>ID</code> 生成器呢？欢迎留言和我分享。</li>
+</ul>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E7%AE%97%E6%B3%95%E5%AE%9E%E6%88%98/">算法实战</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/passages/52/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">52.算法实战（四）</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/passages/reverse-single-list/">
+                        <span class="hidden-mobile">单向链表的反转</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+    <div id="vcomments"></div>
+    <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+    <script type="text/javascript">
+        var oldLoadVa = window.onload;
+        window.onload = function () {
+            oldLoadVa && oldLoadVa();
+
+            new Valine({
+                el: "#vcomments",
+                app_id: "O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",
+                app_key: "5Rl3Rhl9zc8BJNvrPcncKWFy",
+                placeholder: "说点什么吧~",
+                path: window.location.pathname,
+                avatar: "retro",
+                meta: ["nick","mail","link"],
+                pageSize: "10",
+                lang: "zh-CN",
+                highlight: true,
+                recordIP: true,
+                serverURLs: "https://lean.muchen.fun",
+            });
+        };
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments
+            powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><br><div class="text-center">欢迎关注我的公众号</div>
+    </div>
+  </div>
+
+
+    
+</main>
+
+
+    <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+
+
+
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+                <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mx-3">
+                <div class="md-form mb-5">
+                    <input type="text" id="local-search-input" class="form-control validate">
+                    <label data-error="x"
+                           data-success="v"
+                           for="local-search-input">关键词</label>
+                </div>
+                <div class="list-group" id="local-search-result"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    <div>
+      <span id="timeDate">载入天数...</span>
+      <span id="times">载入时分秒...</span>
+      <script>
+        var now = new Date();
+
+        function createtime() {
+          var grt = new Date("07/12/2019 00:00:00");//此处修改你的建站时间或者网站上线时间
+          now.setTime(now.getTime() + 250);
+          days = (now - grt) / 1000 / 60 / 60 / 24;
+          dnum = Math.floor(days);
+          hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+          hnum = Math.floor(hours);
+          if (String(hnum).length == 1) {
+            hnum = "0" + hnum;
+          }
+          minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+          mnum = Math.floor(minutes);
+          if (String(mnum).length == 1) {
+            mnum = "0" + mnum;
+          }
+          seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+          snum = Math.round(seconds);
+          if (String(snum).length == 1) {
+            snum = "0" + snum;
+          }
+          document.getElementById("timeDate").innerHTML = "本站已运行&nbsp" + dnum + "&nbsp天";
+          document.getElementById("times").innerHTML = hnum + "&nbsp小时&nbsp" + mnum + "&nbsp分&nbsp" + snum + "&nbsp秒";
+        }
+
+        setInterval("createtime()", 250);
+      </script>
+    </div>
+    <p id="hitokoto">:D 获取中...</p>
+    <script>
+      fetch('https://v1.hitokoto.cn')
+              .then(response => response.json())
+              .then(data => {
+                const hitokoto = document.getElementById('hitokoto')
+                hitokoto.innerText = data.hitokoto + '--「' + data.from + '」'
+              })
+              .catch(console.error)
+    </script>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+    <script  src="/js/lazyload.js" ></script>
+
+
+
+    
+
+
+
+
+    <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+    <script  src="/js/clipboard-use.js" ></script>
+
+
+
+    <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+    
+<script src="https://static.muchen.fun/js/custom.js"></script>
+
+
+
+<!-- Plugins -->
+
+
+    
+        <!-- Baidu Analytics -->
+        <script defer>
+            var _hmt = _hmt || [];
+            (function () {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    
+
+    
+        <!-- Google Analytics -->
+        <script defer>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-144841374-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+    <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+    <script>
+        var typed = new Typed('#subtitle', {
+            strings: [
+                '  ',
+                "51.算法实战（三）&nbsp;",
+            ],
+            cursorChar: "_",
+            typeSpeed: 60,
+            loop: false,
+        });
+        typed.stop();
+        $(document).ready(function () {
+            $(".typed-cursor").addClass("h2");
+            typed.start();
+        });
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+    <script>
+        anchors.options = {
+            placement: "right",
+            visible: "hover",
+            
+        };
+        var el = "h1,h2,h3,h4,h5,h6".split(",");
+        var res = [];
+        for (item of el) {
+            res.push(".markdown-body > " + item)
+        }
+        anchors.add(res.join(", "))
+    </script>
+
+
+
+    <script  src="/js/local-search.js" ></script>
+    <script>
+        var path = "/local-search.xml";
+        var inputArea = document.querySelector("#local-search-input");
+        inputArea.onclick = function () {
+            searchFunc(path, 'local-search-input', 'local-search-result');
+            this.onclick = null
+        }
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+    <script>
+        $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+            function () {
+                var element = document.createElement('a');
+                $(element).attr('data-fancybox', 'images');
+                $(element).attr('href', $(this).attr('src'));
+                $(this).wrap(element);
+            }
+        );
+    </script>
+
+
+
+
+
+    
+
+    
+        <!-- MathJax -->
+        <script>
+            MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']]
+                },
+                options: {
+                    renderActions: {
+                        findScript: [10, doc => {
+                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                                const display = !!node.type.match(/; *mode=display/);
+                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                                const text = document.createTextNode('');
+                                node.parentNode.replaceChild(text, node);
+                                math.start = {node: text, delim: '', n: 0};
+                                math.end = {node: text, delim: '', n: 0};
+                                doc.math.push(math);
+                            });
+                        }, '', false],
+                        insertedScript: [200, () => {
+                            document.querySelectorAll('mjx-container').forEach(node => {
+                                let target = node.parentNode;
+                                if (target.nodeName.toLowerCase() === 'li') {
+                                    target.parentNode.classList.add('has-jax');
+                                }
+                            });
+                        }, '', false]
+                    }
+                }
+            };
+        </script>
+
+        <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+    
+
+
+
+    
+    
+        <script>
+            !function (e, t, a) {
+                function r() {
+                    for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+                    requestAnimationFrame(r)
+                }
+
+                function n() {
+                    var t = "function" == typeof e.onclick && e.onclick;
+                    e.onclick = function (e) {
+                        t && t(), o(e)
+                    }
+                }
+
+                function o(e) {
+                    var a = t.createElement("div");
+                    a.className = "heart", s.push({
+                        el: a,
+                        x: e.clientX - 5,
+                        y: e.clientY - 5,
+                        scale: 1,
+                        alpha: 1,
+                        color: c()
+                    }), t.body.appendChild(a)
+                }
+
+                function i(e) {
+                    var a = t.createElement("style");
+                    a.type = "text/css";
+                    try {
+                        a.appendChild(t.createTextNode(e))
+                    } catch (t) {
+                        a.styleSheet.cssText = e
+                    }
+                    t.getElementsByTagName("head")[0].appendChild(a)
+                }
+
+                function c() {
+                    return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+                }
+
+                var s = [];
+                e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+                    setTimeout(e, 1e3 / 60)
+                }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+            }(window, document);
+        </script>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

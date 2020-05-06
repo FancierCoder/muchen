@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png">
+    <link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <meta name="theme-color" content="#2f4154">
+    <meta name="description" content="沐晨的个人博客,技术博客">
+    <meta name="author" content="Li Duo">
+    <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
+    <title>Java Atomic简介 - MuChen&#39;s Blog</title>
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+    
+<link rel="stylesheet" href="https://static.muchen.fun/css/custom.css?t=0.1423425.css">
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+<script>
+    var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+    // 依次判断 系统暗黑模式 指定时间 缓存 dark
+    if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+        if (!(isNight && localStorage.getItem('noDark') === '1')) {
+            document.body.classList.add('dark');
+        }
+    }
+    document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
+</script>
+<header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+    <div class="container">
+        <a class="navbar-brand"
+           href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a>
+
+        <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="animated-icon"><span></span><span></span><span></span></div>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto text-center">
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/archives/">
+                            <i class="iconfont icon-archive-fill"></i>
+                            归档</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/categories/">
+                            <i class="iconfont icon-category-fill"></i>
+                            分类</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tags/">
+                            <i class="iconfont icon-tags-fill"></i>
+                            标签</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/messageBoard/">
+                            <i class="iconfont icon-speakernotes"></i>
+                            留言</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about/">
+                            <i class="iconfont icon-user-fill"></i>
+                            关于</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/links/">
+                            <i class="iconfont icon-link-fill"></i>
+                            友链</a>
+                    </li>
+                
+                
+                    <li class="nav-item" id="search-btn">
+                        <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                                    class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+                    </li>
+                
+                <li class="nav-item">
+                    <a id="dark" class="nav-link" onclick="switchDarkMode()">
+                        <i class="iconfont icon-sun"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/images/07.jpg') no-repeat center center;
+                 background-size: cover;">
+        <div class="full-bg-img">
+            <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+                <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+                
+            </span>
+
+                    
+                        
+                            <div class="mt-3 post-meta">
+                                <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                                <time datetime="2019-10-16 16:03">
+                                    2019年10月16日 下午
+                                </time>
+                            </div>
+                        
+
+                        <div class="mt-1">
+                            
+                                
+                                <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    3.3k 字
+                  </span>
+                            
+
+                            
+                                
+                                <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                                    
+                                    
+                                    56
+                                     分钟
+                  </span>
+                            
+
+                            
+                                <!-- 不蒜子统计文章PV -->
+                                
+                                <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
+                    <i class="iconfont icon-eye" aria-hidden="true"></i>
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>
+                            
+                        </div>
+                    
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    
+        
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：7 个月前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <!-- more -->
+<!-- more -->
+<p>所谓 <code>Atomic</code>，翻译过来就是原子。原子被认为是操作中最小的单位，一段代码如果是原子的，则表示这段代码在执行过程中，要么执行成功，要么执行失败。原子操作一般都是底层通过 <code>CPU</code> 的指令来实现。而 <code>atomic</code> 包下的这些类，则可以让我们在多线程环境下，通过一种无锁的原子操作来实现线程安全。</p>
+<p><code>atomic</code> 包下的类基本上都是借助 <code>Unsafe</code> 类，通过 <code>CAS</code> 操作来封装实现的。<code>Unsafe</code> 这个类不属于 <code>Java</code> 标准，或者说这个类是 <code>Java</code> 预留的一个后门类，<code>JDK</code> 中，有关提升性能的 <code>concurrent</code> 或者 <code>NIO</code> 等操作，大部分都是借助于这个类来封装操作的。<br><code>Java</code> 是种编译型语言，不像 <code>C</code> 语言能支持操作内存，正常情况下都是由 <code>JVM</code> 进行内存的创建回收等操作，但这个类提供了一些直接操作内存相关的底层操作，使得我们也可以手动操作内存，但从类的名字就可以看出，这个类不是安全的，官方也是不建议我们使用的。</p>
+<h2 id="CAS原理"><a href="#CAS原理" class="headerlink" title="CAS原理"></a>CAS原理</h2><p><code>CAS</code> 包含 <code>3</code> 个参数 <code>CAS(V,E,N)</code>. <code>V</code> 表示要更新的变量, <code>E</code> 表示预期值, <code>N</code> 表示新值.</p>
+<p>仅当<code>V</code>值等于<code>E</code>值时, 才会将<code>V</code>的值设为<code>N</code>, 如果<code>V</code>值和<code>E</code>值不同, 则说明已经有其他线程做了更新, 则当前线程什么都不做. 最后, <code>CAS</code>返回当前<code>V</code>的真实值. <code>CAS</code>操作是抱着乐观的态度进行的, 它总是认为自己可以成功完成操作.</p>
+<p>当多个线程同时使用<code>CAS</code>操作一个变量时, 只有一个会胜出, 并成功更新, 其余均会失败.失败的线程不会被挂起,仅是被告知失败, 并且允许再次尝试, 当然也允许失败的线程放弃操作.基于这样的原理, <code>CAS</code>操作即时没有锁,也可以发现其他线程对当前线程的干扰, 并进行恰当的处理.</p>
+<p>在 <code>JDK8</code> 的 <code>atomic</code> 包下，大概有 <code>16</code> 个类，按照原子的更新方式，大概可以分为 <code>4</code> 类：<strong>原子更新普通类型</strong>，<strong>原子更新数组</strong>，<strong>原子更新引用</strong>，<strong>原子更新字段</strong>。</p>
+<h2 id="原子更新普通类型"><a href="#原子更新普通类型" class="headerlink" title="原子更新普通类型"></a>原子更新普通类型</h2><p><code>atomic</code> 包下提供了三种基本类型的原子更新，分别是 <code>AtomicBoolean</code>，<code>AtomicInteger</code>，<code>AtomicLong</code>，这几个原子类对应于基础类型的布尔，整形，长整形，至于 <code>Java</code> 中其他的基本类型，如 <code>float</code> 等，如果需要，可以参考这几个类的源码自行实现。</p>
+<h3 id="AtomicBoolean"><a href="#AtomicBoolean" class="headerlink" title="AtomicBoolean"></a>AtomicBoolean</h3><p><strong>主要接口</strong></p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">get</span><span class="hljs-params">()</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">compareAndSet</span><span class="hljs-params">(<span class="hljs-keyword">boolean</span> expect, <span class="hljs-keyword">boolean</span> update)</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">weakCompareAndSet</span><span class="hljs-params">(<span class="hljs-keyword">boolean</span> expect, <span class="hljs-keyword">boolean</span> update)</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title">set</span><span class="hljs-params">(<span class="hljs-keyword">boolean</span> newValue)</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title">lazySet</span><span class="hljs-params">(<span class="hljs-keyword">boolean</span> newValue)</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">getAndSet</span><span class="hljs-params">(<span class="hljs-keyword">boolean</span> newValue)</span></span>;</code></pre>
+
+<p>这里面的操作都很正常，主要都是用到了 <code>CAS</code>。这个类中的方法不多，基本上上面都介绍了，而内部的计算则是先将布尔转换为数字<code>0/1</code>，然后再进行后续计算。</p>
+<h3 id="AtomicLong"><a href="#AtomicLong" class="headerlink" title="AtomicLong"></a>AtomicLong</h3><p><strong>主要接口</strong></p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">long</span> <span class="hljs-title">get</span><span class="hljs-params">()</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title">set</span><span class="hljs-params">(<span class="hljs-keyword">long</span> newValue)</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title">lazySet</span><span class="hljs-params">(<span class="hljs-keyword">long</span> newValue)</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">long</span> <span class="hljs-title">getAndSet</span><span class="hljs-params">(<span class="hljs-keyword">long</span> newValue)</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">compareAndSet</span><span class="hljs-params">(<span class="hljs-keyword">long</span> expect, <span class="hljs-keyword">long</span> update)</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">weakCompareAndSet</span><span class="hljs-params">(<span class="hljs-keyword">long</span> expect, <span class="hljs-keyword">long</span> update)</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">long</span> <span class="hljs-title">getAndIncrement</span><span class="hljs-params">()</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">long</span> <span class="hljs-title">getAndDecrement</span><span class="hljs-params">()</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">long</span> <span class="hljs-title">getAndAdd</span><span class="hljs-params">(<span class="hljs-keyword">long</span> delta)</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">long</span> <span class="hljs-title">incrementAndGet</span><span class="hljs-params">()</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">long</span> <span class="hljs-title">decrementAndGet</span><span class="hljs-params">()</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">long</span> <span class="hljs-title">addAndGet</span><span class="hljs-params">(<span class="hljs-keyword">long</span> delta)</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">long</span> <span class="hljs-title">getAndUpdate</span><span class="hljs-params">(LongUnaryOperator updateFunction)</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">long</span> <span class="hljs-title">updateAndGet</span><span class="hljs-params">(LongUnaryOperator updateFunction)</span></span>;</code></pre>
+
+<p>这个和下面要讲的 <code>AtomicInteger</code> 类似，下面具体说下。</p>
+<h3 id="AtomicInteger"><a href="#AtomicInteger" class="headerlink" title="AtomicInteger"></a>AtomicInteger</h3><p><strong>主要接口</strong></p>
+<pre><code class="hljs java"><span class="hljs-comment">// 取得当前值</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> <span class="hljs-title">get</span><span class="hljs-params">()</span></span>;
+<span class="hljs-comment">// 设置当前值</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title">set</span><span class="hljs-params">(<span class="hljs-keyword">int</span> newValue)</span></span>;
+<span class="hljs-comment">// 设置新值，并返回旧值</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getAndSet</span><span class="hljs-params">(<span class="hljs-keyword">int</span> newValue)</span></span>;
+<span class="hljs-comment">// 如果当前值为expect，则设置为u</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">compareAndSet</span><span class="hljs-params">(<span class="hljs-keyword">int</span> expect, <span class="hljs-keyword">int</span> u)</span></span>;
+<span class="hljs-comment">// 当前值加1，返回旧值</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getAndIncrement</span><span class="hljs-params">()</span></span>;
+<span class="hljs-comment">// 当前值减1，返回旧值</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getAndDecrement</span><span class="hljs-params">()</span></span>;
+<span class="hljs-comment">// 当前值增加delta，返回旧值</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getAndAdd</span><span class="hljs-params">(<span class="hljs-keyword">int</span> delta)</span></span>;
+<span class="hljs-comment">// 当前值加1，返回新值</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> <span class="hljs-title">incrementAndGet</span><span class="hljs-params">()</span></span>;
+<span class="hljs-comment">// 当前值减1，返回新值</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> <span class="hljs-title">decrementAndGet</span><span class="hljs-params">()</span></span>;
+<span class="hljs-comment">// 当前值增加delta，返回新值</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> <span class="hljs-title">addAndGet</span><span class="hljs-params">(<span class="hljs-keyword">int</span> delta)</span></span>;</code></pre>
+
+<p><strong>实现</strong></p>
+<pre><code class="hljs java"><span class="hljs-comment">// 封装了一个int对其加减</span>
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">volatile</span> <span class="hljs-keyword">int</span> value;
+.......
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">compareAndSet</span><span class="hljs-params">(<span class="hljs-keyword">int</span> expect, <span class="hljs-keyword">int</span> update)</span> </span>&#123;
+<span class="hljs-comment">// 通过unsafe 基于CPU的CAS指令来实现, 可以认为无阻塞.</span>
+    <span class="hljs-keyword">return</span> unsafe.compareAndSwapInt(<span class="hljs-keyword">this</span>, valueOffset, expect, update);
+&#125;
+.......
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getAndIncrement</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-keyword">for</span> (;;) &#123;
+    <span class="hljs-comment">// 当前值</span>
+        <span class="hljs-keyword">int</span> current = get();
+    <span class="hljs-comment">// 预期值</span>
+        <span class="hljs-keyword">int</span> next = current + <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">if</span> (compareAndSet(current, next)) &#123;
+    <span class="hljs-comment">// 如果加成功了, 则返回当前值</span>
+            <span class="hljs-keyword">return</span> current;
+    &#125;
+    <span class="hljs-comment">// 如果加失败了, 说明其他线程已经修改了数据, 与期望不相符,</span>
+    <span class="hljs-comment">// 则继续无限循环, 直到成功. 这种乐观锁, 理论上只要等两三个时钟周期就可以设值成功</span>
+    <span class="hljs-comment">// 相比于直接通过synchronized独占锁的方式操作int, 要大大节约等待时间.</span>
+    &#125;
+&#125;</code></pre>
+
+<p>用一个简单的例子测试下：</p>
+<pre><code class="hljs java">AtomicInteger atomicInteger = <span class="hljs-keyword">new</span> AtomicInteger(<span class="hljs-number">1</span>);
+System.out.println(atomicInteger.incrementAndGet());                       <span class="hljs-comment">// 2</span>
+System.out.println(atomicInteger.getAndIncrement());                       <span class="hljs-comment">// 2</span>
+System.out.println(atomicInteger.getAndAccumulate(<span class="hljs-number">2</span>, (i, j) -&gt; i + j));    <span class="hljs-comment">// 3</span>
+System.out.println(atomicInteger.get());                                   <span class="hljs-comment">// 5</span>
+System.out.println(atomicInteger.addAndGet(<span class="hljs-number">5</span>));</code></pre>
+
+<h2 id="原子更新数组"><a href="#原子更新数组" class="headerlink" title="原子更新数组"></a>原子更新数组</h2><p><code>atomic</code> 包下提供了三种数组相关类型的原子更新，分别是 <code>AtomicIntegerArray</code>，<code>AtomicLongArray</code>，<code>AtomicReferenceArray</code>，对应于整型，长整形，引用类型，要说明的一点是，这里说的更新是指更新数组中的某一个元素的操作。</p>
+<p>由于方法和更新基本类型方法相同，这里只简单看下 <code>AtomicIntegerArray</code> 这个类的几个方法，其他的方法类似。</p>
+<h3 id="AtomicIntegerArray"><a href="#AtomicIntegerArray" class="headerlink" title="AtomicIntegerArray"></a>AtomicIntegerArray</h3><p><strong>主要接口</strong></p>
+<pre><code class="hljs java"><span class="hljs-comment">// 获得数组第i个下标的元素</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> <span class="hljs-title">get</span><span class="hljs-params">(<span class="hljs-keyword">int</span> i)</span></span>;
+<span class="hljs-comment">// 获得数组的长度</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> <span class="hljs-title">length</span><span class="hljs-params">()</span></span>;
+<span class="hljs-comment">// 将数组第i个下标设置为newValue，并返回旧的值</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getAndSet</span><span class="hljs-params">(<span class="hljs-keyword">int</span> i, <span class="hljs-keyword">int</span> newValue)</span></span>;
+<span class="hljs-comment">// 进行CAS操作，如果第i个下标的元素等于expect，则设置为update，设置成功返回true</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">compareAndSet</span><span class="hljs-params">(<span class="hljs-keyword">int</span> i, <span class="hljs-keyword">int</span> expect, <span class="hljs-keyword">int</span> update)</span></span>;
+<span class="hljs-comment">// 将第i个下标的元素加1</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getAndIncrement</span><span class="hljs-params">(<span class="hljs-keyword">int</span> i)</span></span>;
+<span class="hljs-comment">// 将第i个下标的元素减1</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getAndDecrement</span><span class="hljs-params">(<span class="hljs-keyword">int</span> i)</span></span>;
+<span class="hljs-comment">// 将第i个下标的元素增加delta（delta可以是负数）</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getAndAdd</span><span class="hljs-params">(<span class="hljs-keyword">int</span> i, <span class="hljs-keyword">int</span> delta)</span></span>;</code></pre>
+
+<p><strong>实现</strong></p>
+<pre><code class="hljs java"><span class="hljs-comment">// 数组本身基地址</span>
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> base = unsafe.arrayBaseOffset(<span class="hljs-keyword">int</span>[].class);
+
+<span class="hljs-comment">// 封装了一个数组</span>
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span>[] array;
+
+<span class="hljs-keyword">static</span> &#123;
+    <span class="hljs-comment">// 数组中对象的宽度, int类型, 4个字节, scale = 4;</span>
+    <span class="hljs-keyword">int</span> scale = unsafe.arrayIndexScale(<span class="hljs-keyword">int</span>[].class);
+    <span class="hljs-keyword">if</span> ((scale &amp; (scale - <span class="hljs-number">1</span>)) != <span class="hljs-number">0</span>)
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Error(<span class="hljs-string">"data type scale not a power of two"</span>);
+    <span class="hljs-comment">// 前导0 : 一个数字转为二进制后, 他前面0的个数</span>
+    <span class="hljs-comment">// 对于4来讲, 他就是00000000 00000000 00000000 00000100, 他的前导0 就是29</span>
+    <span class="hljs-comment">// 所以shift = 2</span>
+    shift = <span class="hljs-number">31</span> - Integer.numberOfLeadingZeros(scale);
+&#125;
+
+<span class="hljs-comment">// 获取第i个元素</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> <span class="hljs-title">get</span><span class="hljs-params">(<span class="hljs-keyword">int</span> i)</span> </span>&#123;
+    <span class="hljs-keyword">return</span> getRaw(checkedByteOffset(i));
+&#125;
+
+<span class="hljs-comment">// 第i个元素, 在数组中的偏移量是多少</span>
+<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">long</span> <span class="hljs-title">checkedByteOffset</span><span class="hljs-params">(<span class="hljs-keyword">int</span> i)</span> </span>&#123;
+    <span class="hljs-keyword">if</span> (i &lt; <span class="hljs-number">0</span> || i &gt;= array.length)
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IndexOutOfBoundsException(<span class="hljs-string">"index "</span> + i);
+
+    <span class="hljs-keyword">return</span> byteOffset(i);
+&#125;
+
+<span class="hljs-comment">// base : 数组基地址, i &lt;&lt; shift, 其实就是i * 4, 因为这边是int array.</span>
+<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">long</span> <span class="hljs-title">byteOffset</span><span class="hljs-params">(<span class="hljs-keyword">int</span> i)</span> </span>&#123;
+    <span class="hljs-comment">// i * 4 + base</span>
+    <span class="hljs-keyword">return</span> ((<span class="hljs-keyword">long</span>) i &lt;&lt; shift) + base;
+&#125;
+
+<span class="hljs-comment">// 根据偏移量从数组中获取数据</span>
+<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getRaw</span><span class="hljs-params">(<span class="hljs-keyword">long</span> offset)</span> </span>&#123;
+    <span class="hljs-keyword">return</span> unsafe.getIntVolatile(array, offset);
+&#125;</code></pre>
+
+<p>用一个简单的例子测试一下：</p>
+<pre><code class="hljs java">AtomicIntegerArray array = <span class="hljs-keyword">new</span> AtomicIntegerArray(<span class="hljs-number">5</span>);
+array.set(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>);                                        <span class="hljs-comment">// 设置数组第一个值为1</span>
+System.out.println(array.getAndDecrement(<span class="hljs-number">0</span>));         <span class="hljs-comment">// 1</span>
+System.out.println(array.addAndGet(<span class="hljs-number">0</span>, <span class="hljs-number">5</span>));      <span class="hljs-comment">// 5</span></code></pre>
+
+<h2 id="原子更新引用"><a href="#原子更新引用" class="headerlink" title="原子更新引用"></a>原子更新引用</h2><p>更新引用类型的原子类包含了<code>AtomicReference</code>（更新引用类型），<code>AtomicReferenceFieldUpdater</code>（抽象类，更新引用类型里的字段），<code>AtomicMarkableReference</code>（更新带有标记的引用类型）这三个类，这几个类能同时更新多个变量。</p>
+<h3 id="AtomicReference"><a href="#AtomicReference" class="headerlink" title="AtomicReference"></a>AtomicReference</h3><p>与 <code>AtomicInteger</code> 类似, 只是里面封装了一个对象, 而不是 <code>int</code>, 对引用进行修改。</p>
+<p><strong>主要接口</strong></p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> V <span class="hljs-title">get</span><span class="hljs-params">()</span></span>;
+
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title">set</span><span class="hljs-params">(V newValue)</span></span>;
+
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">compareAndSet</span><span class="hljs-params">(V expect, V update)</span></span>;
+
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> V <span class="hljs-title">getAndSet</span><span class="hljs-params">(V newValue)</span></span>;</code></pre>
+
+<p><strong>测试</strong><br>使用 <code>10</code> 个线程, 同时尝试修改 <code>AtomicReference</code> 中的 <code>String</code>, 最终只有一个线程可以成功。</p>
+<pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.concurrent.atomic.AtomicReference;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AtomicReferenceTest</span> </span>&#123;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">static</span> AtomicReference&lt;String&gt; attxnicStr = <span class="hljs-keyword">new</span> AtomicReference&lt;String&gt;(<span class="hljs-string">"abc"</span>);
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++) &#123;
+            <span class="hljs-keyword">new</span> Thread() &#123;
+                <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>&#123;
+                    <span class="hljs-keyword">try</span> &#123;
+                        Thread.sleep(Math.abs((<span class="hljs-keyword">int</span>) (Math.random() * <span class="hljs-number">100</span>)));
+                    &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;
+                        e.printStackTrace();
+                    &#125;
+                    <span class="hljs-keyword">if</span> (attxnicStr.compareAndSet(<span class="hljs-string">"abc"</span>, <span class="hljs-string">"def"</span>)) &#123;
+                        System.out.println(<span class="hljs-string">"Thread:"</span> + Thread.currentThread().getId() + <span class="hljs-string">" change value to "</span> + attxnicStr.get());
+                    &#125; <span class="hljs-keyword">else</span> &#123;
+                        System.out.println(<span class="hljs-string">"Thread:"</span> + Thread.currentThread().getId() + <span class="hljs-string">" change failed!"</span>);
+                    &#125;
+                &#125;
+            &#125;.start();
+        &#125;
+    &#125;
+&#125;</code></pre>
+
+<h2 id="原子更新字段"><a href="#原子更新字段" class="headerlink" title="原子更新字段"></a>原子更新字段</h2><p>如果更新的时候只更新对象中的某一个字段，则可以使用 <code>atomic</code> 包提供的更新字段类型：<code>AtomicIntegerFieldUpdater</code>，<code>AtomicLongFieldUpdater</code> 和 <code>AtomicStampedReference</code>，前两个顾名思义，就是更新 <code>int</code> 和 <code>long</code> 类型，最后一个是更新引用类型，该类提供了版本号，用于解决通过 <code>CAS</code> 进行原子更新过程中，可能出现的 <code>ABA</code> 问题。<br>前面这两个类和上面介绍的 <code>AtomicReferenceFieldUpdater</code> 有些相似，都是抽象类，都需要通过 <code>newUpdater</code> 方法进行实例化，并且对字段的要求也是一样的。</p>
+<h3 id="AtomicStampedReference"><a href="#AtomicStampedReference" class="headerlink" title="AtomicStampedReference"></a>AtomicStampedReference</h3><p><strong>ABA问题</strong></p>
+<p>线程一准备用 <code>CAS</code> 将变量的值由 <code>A</code> 替换为 <code>B</code>, 在此之前线程二将变量的值由 <code>A</code> 替换为 <code>C</code>, 线程三又将 <code>C</code> 替换为<code>A</code>, 然后线程一执行 <code>CAS</code> 时发现变量的值仍然为 <code>A</code>, 所以线程一 <code>CAS</code> 成功.</p>
+<p><strong>主要接口</strong></p>
+<pre><code class="hljs java"><span class="hljs-comment">// 比较设置 参数依次为：期望值 写入新值 期望时间戳 新时间戳</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">compareAndSet</span><span class="hljs-params">(V expectedReference,V newReference,<span class="hljs-keyword">int</span> expectedStamp,<span class="hljs-keyword">int</span> newStamp)</span>
+<span class="hljs-comment">// 获得当前对象引用</span>
+<span class="hljs-keyword">public</span> V <span class="hljs-title">getReference</span><span class="hljs-params">()</span>
+<span class="hljs-comment">// 获得当前时间戳</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getStamp</span><span class="hljs-params">()</span>
+<span class="hljs-comment">// 设置当前对象引用和时间戳</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">set</span><span class="hljs-params">(V newReference, <span class="hljs-keyword">int</span> newStamp)</span></span></code></pre>
+
+<p><strong>分析</strong></p>
+<pre><code class="hljs java"><span class="hljs-comment">// 内部封装了一个Pair对象, 每次对对象操作的时候, stamp + 1</span>
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Pair</span>&lt;<span class="hljs-title">T</span>&gt; </span>&#123;
+    <span class="hljs-keyword">final</span> T reference;
+    <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> stamp;
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">Pair</span><span class="hljs-params">(T reference, <span class="hljs-keyword">int</span> stamp)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.reference = reference;
+        <span class="hljs-keyword">this</span>.stamp = stamp;
+    &#125;
+    <span class="hljs-keyword">static</span> &lt;T&gt; <span class="hljs-function">Pair&lt;T&gt; <span class="hljs-title">of</span><span class="hljs-params">(T reference, <span class="hljs-keyword">int</span> stamp)</span> </span>&#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Pair&lt;T&gt;(reference, stamp);
+    &#125;
+&#125;
+
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">volatile</span> Pair&lt;V&gt; pair;
+
+<span class="hljs-comment">// 进行cas操作的时候, 会对比stamp的值</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">compareAndSet</span><span class="hljs-params">(V   expectedReference,
+                             V   newReference,
+                             <span class="hljs-keyword">int</span> expectedStamp,
+                             <span class="hljs-keyword">int</span> newStamp)</span> </span>&#123;
+    Pair&lt;V&gt; current = pair;
+    <span class="hljs-keyword">return</span>
+        expectedReference == current.reference &amp;&amp;
+        expectedStamp == current.stamp &amp;&amp;
+        ((newReference == current.reference &amp;&amp;
+          newStamp == current.stamp) ||
+         casPair(current, Pair.of(newReference, newStamp)));
+&#125;</code></pre>
+
+<p><strong>测试</strong></p>
+<p>要求：后台使用多个线程对用户充值, 要求只能充值一次.</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AtomicStampedReferenceDemo</span> </span>&#123;
+ <span class="hljs-keyword">static</span> AtomicStampedReference&lt;Integer&gt; money=<span class="hljs-keyword">new</span> AtomicStampedReference&lt;Integer&gt;(<span class="hljs-number">19</span>,<span class="hljs-number">0</span>);
+    <span class="hljs-function"><span class="hljs-keyword">public</span> staticvoid <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;
+        <span class="hljs-comment">//模拟多个线程同时更新后台数据库，为用户充值</span>
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span> ; i &lt; <span class="hljs-number">3</span> ; i++) &#123;
+            <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> timestamp=money.getStamp();
+            newThread() &#123;  
+                <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>&#123; 
+                    <span class="hljs-keyword">while</span>(<span class="hljs-keyword">true</span>)&#123;
+                       <span class="hljs-keyword">while</span>(<span class="hljs-keyword">true</span>)&#123;
+                           Integerm=money.getReference();
+                            <span class="hljs-keyword">if</span>(m&lt;<span class="hljs-number">20</span>)&#123;
+                         <span class="hljs-keyword">if</span>(money.compareAndSet(m,m+<span class="hljs-number">20</span>,timestamp,timestamp+<span class="hljs-number">1</span>))&#123;
+          　　　　　　　　　　　　　　　 System.out.println(<span class="hljs-string">"余额小于20元，充值成功，余额:"</span>+money.getReference()+<span class="hljs-string">"元"</span>);
+                                    <span class="hljs-keyword">break</span>;
+                                &#125;
+                            &#125;<span class="hljs-keyword">else</span>&#123;
+                               <span class="hljs-comment">//System.out.println("余额大于20元，无需充值");</span>
+                                <span class="hljs-keyword">break</span> ;
+                             &#125;
+                       &#125;
+                    &#125;
+                &#125; 
+            &#125;.start();
+         &#125;
+        
+       <span class="hljs-comment">//用户消费线程，模拟消费行为</span>
+        <span class="hljs-keyword">new</span> Thread() &#123; 
+             <span class="hljs-function">publicvoid <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>&#123; 
+                <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>;i&lt;<span class="hljs-number">100</span>;i++)&#123;
+                   <span class="hljs-keyword">while</span>(<span class="hljs-keyword">true</span>)&#123;
+                        <span class="hljs-keyword">int</span> timestamp=money.getStamp();
+                        Integer m=money.getReference();
+                        <span class="hljs-keyword">if</span>(m&gt;<span class="hljs-number">10</span>)&#123;
+                             System.out.println(<span class="hljs-string">"大于10元"</span>);
+                          　　<span class="hljs-keyword">if</span>(money.compareAndSet(m, m-<span class="hljs-number">10</span>,timestamp,timestamp+<span class="hljs-number">1</span>))&#123;
+                      　　　　　　 System.out.println(<span class="hljs-string">"成功消费10元，余额:"</span>+money.getReference());
+                                 <span class="hljs-keyword">break</span>;
+                             &#125;
+                        &#125;<span class="hljs-keyword">else</span>&#123;
+                           System.out.println(<span class="hljs-string">"没有足够的金额"</span>);
+                             <span class="hljs-keyword">break</span>;
+                        &#125;
+                    &#125;
+                    <span class="hljs-keyword">try</span> &#123;Thread.sleep(<span class="hljs-number">100</span>);&#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;&#125;
+                 &#125;
+            &#125; 
+        &#125;.start(); 
+    &#125;
+ &#125;</code></pre>
+
+<h3 id="AtomicIntegerFieldUpdater"><a href="#AtomicIntegerFieldUpdater" class="headerlink" title="AtomicIntegerFieldUpdater"></a>AtomicIntegerFieldUpdater</h3><p>能够让普通变量也能够进行原子操作。</p>
+<p><strong>主要接口</strong></p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> &lt;U&gt; <span class="hljs-function">AtomicIntegerFieldUpdater&lt;U&gt; <span class="hljs-title">newUpdater</span><span class="hljs-params">(Class&lt;U&gt; tclass,
+                                                              String fieldName)</span></span>;
+
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">incrementAndGet</span><span class="hljs-params">(T obj)</span></span>;</code></pre>
+
+<ul>
+<li><p><code>Updater</code>只能修改它可见范围内的变量。因为<code>Updater</code>使用反射得到这个变量。如果变量不可见，就会出错。比如如果<code>score</code>申明为<code>private</code>，就是不可行的。</p>
+</li>
+<li><p>为了确保变量被正确的读取，它必须是<code>volatile</code>类型的。如果我们原有代码中未申明这个类型，那么简单得申明一下就行。</p>
+</li>
+<li><p>由于<code>CAS</code>操作会通过对象实例中的偏移量直接进行赋值，因此，它不支持<code>static</code>字段（<code>Unsafe.objectFieldOffset()</code>不支持静态变量）。</p>
+</li>
+</ul>
+<p><strong>测试</strong></p>
+<pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.concurrent.atomic.AtomicInteger;
+<span class="hljs-keyword">import</span> java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AtomicIntegerFieldUpdaterDemo</span> </span>&#123;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Candidate</span> </span>&#123;
+        <span class="hljs-keyword">int</span> id;
+        <span class="hljs-comment">// 如果直接把int改成atomicinteger, 可能对代码破坏比较大</span>
+        <span class="hljs-comment">// 因此使用AtomicIntegerFieldUpdater对score进行封装</span>
+        <span class="hljs-keyword">volatile</span> <span class="hljs-keyword">int</span> score;
+    &#125;
+
+    <span class="hljs-comment">// 通过反射实现</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">static</span> AtomicIntegerFieldUpdater&lt;Candidate&gt; scoreUpdater = AtomicIntegerFieldUpdater.newUpdater(Candidate.class, <span class="hljs-string">"score"</span>);
+    <span class="hljs-comment">// 检查Updater是否工作正确, allScore的结果应该跟score一致</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> AtomicInteger allScore = <span class="hljs-keyword">new</span> AtomicInteger(<span class="hljs-number">0</span>);
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> InterruptedException </span>&#123;
+        <span class="hljs-keyword">final</span> Candidate stu = <span class="hljs-keyword">new</span> Candidate();
+        Thread[] t = <span class="hljs-keyword">new</span> Thread[<span class="hljs-number">10000</span>];
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10000</span>; i++) &#123;
+            t[i] = <span class="hljs-keyword">new</span> Thread() &#123;
+                <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>&#123;
+                    <span class="hljs-keyword">if</span> (Math.random() &gt; <span class="hljs-number">0.4</span>) &#123;
+                        scoreUpdater.incrementAndGet(stu);
+                        allScore.incrementAndGet();
+                    &#125;
+                &#125;
+            &#125;;
+            t[i].start();
+        &#125;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10000</span>; i++) &#123;
+            t[i].join();
+        &#125;
+
+        System.out.println(<span class="hljs-string">"score="</span> + stu.score);
+        System.out.println(<span class="hljs-string">"allScore="</span> + allScore);
+    &#125;
+&#125;</code></pre>
+
+<h2 id="JDK8之后引入的类型"><a href="#JDK8之后引入的类型" class="headerlink" title="JDK8之后引入的类型"></a>JDK8之后引入的类型</h2><p>在<code>JDK8</code>之前，针对原子操作，我们基本上可以通过上面提供的这些类来完成我们的多线程下的原子操作，不过在并发高的情况下，上面这些单一的 <code>CAS</code> + 自旋操作的性能将会是一个问题，所以上述这些类一般用于低并发操作。<br>而针对这个问题，<code>JDK8</code>又引入了下面几个类：<code>DoubleAdder</code>，<code>LongAdder</code>，<code>DoubleAccumulator</code>，<code>LongAccumulator</code>，这些类是对<code>AtomicLong</code>这些类的改进与增强，这些类都继承自<code>Striped64</code>这个类。</p>
+<p><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/10/16/67ad3b70-efeb-11e9-8a30-f58a35fb4bc0.png" srcset="/img/loading.gif" alt="Java Atomic.png"></p>
+<p>参考博客：<br><a href="https://www.cnblogs.com/xdecode/p/9022525.html" target="_blank" rel="noopener">Java高并发之无锁与Atomic源码分析</a></p>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%90%8E%E7%AB%AF/">后端</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Java-Atomic/">Java Atomic</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/passages/java-optional/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Java Optional</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/passages/java-lock/">
+                        <span class="hidden-mobile">Java锁机制</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+    <div id="vcomments"></div>
+    <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+    <script type="text/javascript">
+        var oldLoadVa = window.onload;
+        window.onload = function () {
+            oldLoadVa && oldLoadVa();
+
+            new Valine({
+                el: "#vcomments",
+                app_id: "O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",
+                app_key: "5Rl3Rhl9zc8BJNvrPcncKWFy",
+                placeholder: "说点什么吧~",
+                path: window.location.pathname,
+                avatar: "retro",
+                meta: ["nick","mail","link"],
+                pageSize: "10",
+                lang: "zh-CN",
+                highlight: true,
+                recordIP: true,
+                serverURLs: "https://lean.muchen.fun",
+            });
+        };
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments
+            powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><br><div class="text-center">欢迎关注我的公众号</div>
+    </div>
+  </div>
+
+
+    
+</main>
+
+
+    <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+
+
+
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+                <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mx-3">
+                <div class="md-form mb-5">
+                    <input type="text" id="local-search-input" class="form-control validate">
+                    <label data-error="x"
+                           data-success="v"
+                           for="local-search-input">关键词</label>
+                </div>
+                <div class="list-group" id="local-search-result"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    <div>
+      <span id="timeDate">载入天数...</span>
+      <span id="times">载入时分秒...</span>
+      <script>
+        var now = new Date();
+
+        function createtime() {
+          var grt = new Date("07/12/2019 00:00:00");//此处修改你的建站时间或者网站上线时间
+          now.setTime(now.getTime() + 250);
+          days = (now - grt) / 1000 / 60 / 60 / 24;
+          dnum = Math.floor(days);
+          hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+          hnum = Math.floor(hours);
+          if (String(hnum).length == 1) {
+            hnum = "0" + hnum;
+          }
+          minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+          mnum = Math.floor(minutes);
+          if (String(mnum).length == 1) {
+            mnum = "0" + mnum;
+          }
+          seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+          snum = Math.round(seconds);
+          if (String(snum).length == 1) {
+            snum = "0" + snum;
+          }
+          document.getElementById("timeDate").innerHTML = "本站已运行&nbsp" + dnum + "&nbsp天";
+          document.getElementById("times").innerHTML = hnum + "&nbsp小时&nbsp" + mnum + "&nbsp分&nbsp" + snum + "&nbsp秒";
+        }
+
+        setInterval("createtime()", 250);
+      </script>
+    </div>
+    <p id="hitokoto">:D 获取中...</p>
+    <script>
+      fetch('https://v1.hitokoto.cn')
+              .then(response => response.json())
+              .then(data => {
+                const hitokoto = document.getElementById('hitokoto')
+                hitokoto.innerText = data.hitokoto + '--「' + data.from + '」'
+              })
+              .catch(console.error)
+    </script>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+    <script  src="/js/lazyload.js" ></script>
+
+
+
+    
+
+
+
+
+    <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+    <script  src="/js/clipboard-use.js" ></script>
+
+
+
+    <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+    
+<script src="https://static.muchen.fun/js/custom.js"></script>
+
+
+
+<!-- Plugins -->
+
+
+    
+        <!-- Baidu Analytics -->
+        <script defer>
+            var _hmt = _hmt || [];
+            (function () {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    
+
+    
+        <!-- Google Analytics -->
+        <script defer>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-144841374-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+    <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+    <script>
+        var typed = new Typed('#subtitle', {
+            strings: [
+                '  ',
+                "Java Atomic简介&nbsp;",
+            ],
+            cursorChar: "_",
+            typeSpeed: 60,
+            loop: false,
+        });
+        typed.stop();
+        $(document).ready(function () {
+            $(".typed-cursor").addClass("h2");
+            typed.start();
+        });
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+    <script>
+        anchors.options = {
+            placement: "right",
+            visible: "hover",
+            
+        };
+        var el = "h1,h2,h3,h4,h5,h6".split(",");
+        var res = [];
+        for (item of el) {
+            res.push(".markdown-body > " + item)
+        }
+        anchors.add(res.join(", "))
+    </script>
+
+
+
+    <script  src="/js/local-search.js" ></script>
+    <script>
+        var path = "/local-search.xml";
+        var inputArea = document.querySelector("#local-search-input");
+        inputArea.onclick = function () {
+            searchFunc(path, 'local-search-input', 'local-search-result');
+            this.onclick = null
+        }
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+    <script>
+        $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+            function () {
+                var element = document.createElement('a');
+                $(element).attr('data-fancybox', 'images');
+                $(element).attr('href', $(this).attr('src'));
+                $(this).wrap(element);
+            }
+        );
+    </script>
+
+
+
+
+
+    
+
+    
+        <!-- MathJax -->
+        <script>
+            MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']]
+                },
+                options: {
+                    renderActions: {
+                        findScript: [10, doc => {
+                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                                const display = !!node.type.match(/; *mode=display/);
+                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                                const text = document.createTextNode('');
+                                node.parentNode.replaceChild(text, node);
+                                math.start = {node: text, delim: '', n: 0};
+                                math.end = {node: text, delim: '', n: 0};
+                                doc.math.push(math);
+                            });
+                        }, '', false],
+                        insertedScript: [200, () => {
+                            document.querySelectorAll('mjx-container').forEach(node => {
+                                let target = node.parentNode;
+                                if (target.nodeName.toLowerCase() === 'li') {
+                                    target.parentNode.classList.add('has-jax');
+                                }
+                            });
+                        }, '', false]
+                    }
+                }
+            };
+        </script>
+
+        <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+    
+
+
+
+    
+    
+        <script>
+            !function (e, t, a) {
+                function r() {
+                    for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+                    requestAnimationFrame(r)
+                }
+
+                function n() {
+                    var t = "function" == typeof e.onclick && e.onclick;
+                    e.onclick = function (e) {
+                        t && t(), o(e)
+                    }
+                }
+
+                function o(e) {
+                    var a = t.createElement("div");
+                    a.className = "heart", s.push({
+                        el: a,
+                        x: e.clientX - 5,
+                        y: e.clientY - 5,
+                        scale: 1,
+                        alpha: 1,
+                        color: c()
+                    }), t.body.appendChild(a)
+                }
+
+                function i(e) {
+                    var a = t.createElement("style");
+                    a.type = "text/css";
+                    try {
+                        a.appendChild(t.createTextNode(e))
+                    } catch (t) {
+                        a.styleSheet.cssText = e
+                    }
+                    t.getElementsByTagName("head")[0].appendChild(a)
+                }
+
+                function c() {
+                    return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+                }
+
+                var s = [];
+                e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+                    setTimeout(e, 1e3 / 60)
+                }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+            }(window, document);
+        </script>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

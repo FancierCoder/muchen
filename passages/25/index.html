@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png">
+    <link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <meta name="theme-color" content="#2f4154">
+    <meta name="description" content="沐晨的个人博客,技术博客">
+    <meta name="author" content="Li Duo">
+    <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
+    <title>25.堆和堆排序 - MuChen&#39;s Blog</title>
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+    
+<link rel="stylesheet" href="https://static.muchen.fun/css/custom.css?t=0.1423425.css">
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+<script>
+    var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+    // 依次判断 系统暗黑模式 指定时间 缓存 dark
+    if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+        if (!(isNight && localStorage.getItem('noDark') === '1')) {
+            document.body.classList.add('dark');
+        }
+    }
+    document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
+</script>
+<header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+    <div class="container">
+        <a class="navbar-brand"
+           href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a>
+
+        <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="animated-icon"><span></span><span></span><span></span></div>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto text-center">
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/archives/">
+                            <i class="iconfont icon-archive-fill"></i>
+                            归档</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/categories/">
+                            <i class="iconfont icon-category-fill"></i>
+                            分类</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tags/">
+                            <i class="iconfont icon-tags-fill"></i>
+                            标签</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/messageBoard/">
+                            <i class="iconfont icon-speakernotes"></i>
+                            留言</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about/">
+                            <i class="iconfont icon-user-fill"></i>
+                            关于</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/links/">
+                            <i class="iconfont icon-link-fill"></i>
+                            友链</a>
+                    </li>
+                
+                
+                    <li class="nav-item" id="search-btn">
+                        <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                                    class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+                    </li>
+                
+                <li class="nav-item">
+                    <a id="dark" class="nav-link" onclick="switchDarkMode()">
+                        <i class="iconfont icon-sun"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/images/07.jpg') no-repeat center center;
+                 background-size: cover;">
+        <div class="full-bg-img">
+            <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+                <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+                
+            </span>
+
+                    
+                        
+                            <div class="mt-3 post-meta">
+                                <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                                <time datetime="2019-08-01 13:48">
+                                    2019年8月1日 下午
+                                </time>
+                            </div>
+                        
+
+                        <div class="mt-1">
+                            
+                                
+                                <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    4.5k 字
+                  </span>
+                            
+
+                            
+                                
+                                <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                                    
+                                    
+                                    62
+                                     分钟
+                  </span>
+                            
+
+                            
+                                <!-- 不蒜子统计文章PV -->
+                                
+                                <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
+                    <i class="iconfont icon-eye" aria-hidden="true"></i>
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>
+                            
+                        </div>
+                    
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    
+        
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：9 个月前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <!-- more -->
+<p>“堆”（<code>Heap</code>）这种数据结构的应用场景非常多，最经典的莫过于堆排序了。堆排序是一种原地的、时间复杂度为 $O(nlog⁡n)$ 的排序算法。</p>
+<p>快速排序，平均情况下，它的时间复杂度为 $O(nlog⁡n)$。尽管这两种排序算法的时间复杂度都是 $O(nlog⁡n)$，甚至堆排序比快速排序的时间复杂度还要稳定，但是，在实际的软件开发中，快速排序的性能要比堆排序好，这是为什么呢？</p>
+<h2 id="如何理解“堆”？"><a href="#如何理解“堆”？" class="headerlink" title="如何理解“堆”？"></a>如何理解“堆”？</h2><p>堆是一种特殊的树。什么样的树才是堆? 只要满足这两点，它就是一个堆:</p>
+<ul>
+<li>堆是一个完全二叉树；</li>
+<li>堆中每一个节点的值都必须大于等于（或小于等于）其子树中每个节点的值。</li>
+</ul>
+<p>第一点，堆必须是一个完全二叉树。完全二叉树要求，除了最后一层，其他层的节点个数都是满的，最后一层的节点都靠左排列。</p>
+<p>第二点，堆中的每个节点的值必须大于等于（或者小于等于）其子树中每个节点的值。换一种说法，堆中每个节点的值都大于等于（或者小于等于）其左右子节点的值。这两种表述是等价的。</p>
+<p>对于每个节点的值都大于等于子树中每个节点值的堆，我们叫作“大顶堆”。对于每个节点的值都小于等于子树中每个节点值的堆，我们叫作“小顶堆”。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/6098fe60-ddb1-11e9-9c38-2bb533c1f573.png" srcset="/img/loading.gif" alt="image.png"><br>其中第 <code>1</code> 个和第 <code>2</code> 个是大顶堆，第 <code>3</code> 个是小顶堆，第 <code>4</code> 个不是堆。除此之外，从图中还可以看出来，对于同一组数据，可以构建多种不同形态的堆。</p>
+<h2 id="如何实现一个堆？"><a href="#如何实现一个堆？" class="headerlink" title="如何实现一个堆？"></a>如何实现一个堆？</h2><p>要实现一个堆，先要知道，<strong>堆都支持哪些操作</strong>以及<strong>如何存储一个堆</strong>。</p>
+<p>完全二叉树比较适合用数组来存储。用数组来存储完全二叉树是非常节省存储空间的。因为不需要存储左右子节点的指针，单纯地通过数组的下标，就可以找到一个节点的左右子节点和父节点。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/79230980-ddb1-11e9-9c38-2bb533c1f573.png" srcset="/img/loading.gif" alt="image.png"><br>从图中可以看到，数组中下标为 $i$ 的节点的左子节点，就是下标为 $i∗2$ 的节点，右子节点就是下标为 $i∗2+1$ 的节点，父节点就是下标为 $\frac i 2$ 的节点。</p>
+<p><strong>1. 往堆中插入一个元素</strong></p>
+<p>往堆中插入一个元素后，需要继续满足堆的两个特性。</p>
+<p>如果把新插入的元素放到堆的最后，可以看下面的这个图，是不是不符合堆的特性了？于是，就需要进行调整，让其重新满足堆的特性，这个过程我们起了一个名字，就叫作堆化（<code>heapify</code>）。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/95dd02b0-ddb1-11e9-9c38-2bb533c1f573.png" srcset="/img/loading.gif" alt="image.png"><br>堆化实际上有两种，从下往上和从上往下。这里先谈谈从下往上的堆化方法。</p>
+<p>堆化非常简单，就是顺着节点所在的路径，向上或者向下，对比，然后交换。</p>
+<p>这里有一张堆化的过程分解图。让新插入的节点与父节点对比大小。如果不满足子节点小于等于父节点的大小关系，我们就互换两个节点。一直重复这个过程，直到父子节点之间满足刚说的那种大小关系。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/9c04c920-ddb1-11e9-9c38-2bb533c1f573.png" srcset="/img/loading.gif" alt="image.png"><br>代码如下：</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Heap</span> </span>&#123;
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span>[] a; <span class="hljs-comment">// 数组，从下标 1 开始存储数据</span>
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> n;  <span class="hljs-comment">// 堆可以存储的最大数据个数</span>
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> count; <span class="hljs-comment">// 堆中已经存储的数据个数</span>
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Heap</span><span class="hljs-params">(<span class="hljs-keyword">int</span> capacity)</span> </span>&#123;
+    a = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span>[capacity + <span class="hljs-number">1</span>];
+    n = capacity;
+    count = <span class="hljs-number">0</span>;
+  &#125;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">insert</span><span class="hljs-params">(<span class="hljs-keyword">int</span> data)</span> </span>&#123;
+    <span class="hljs-keyword">if</span> (count &gt;= n) <span class="hljs-keyword">return</span>; <span class="hljs-comment">// 堆满了</span>
+    ++count;
+    a[count] = data;
+    <span class="hljs-keyword">int</span> i = count;
+    <span class="hljs-keyword">while</span> (i/<span class="hljs-number">2</span> &gt; <span class="hljs-number">0</span> &amp;&amp; a[i] &gt; a[i/<span class="hljs-number">2</span>]) &#123; <span class="hljs-comment">// 自下往上堆化</span>
+      swap(a, i, i/<span class="hljs-number">2</span>); <span class="hljs-comment">// swap() 函数作用：交换下标为 i 和 i/2 的两个元素</span>
+      i = i/<span class="hljs-number">2</span>;
+    &#125;
+  &#125;
+ &#125;</code></pre>
+
+<p><strong>2. 删除堆顶元素</strong></p>
+<p>从堆的定义的第二条中，任何节点的值都大于等于（或小于等于）子树节点的值，可以发现，堆顶元素存储的就是堆中数据的最大值或者最小值。</p>
+<p>假设构造的是大顶堆，堆顶元素就是最大的元素。当删除堆顶元素之后，就需要把第二大的元素放到堆顶，那第二大元素肯定会出现在左右子节点中。然后再迭代地删除第二大节点，以此类推，直到叶子节点被删除。</p>
+<p>这里有一个分解图。不过这种方法有点问题，就是最后堆化出来的堆并不满足完全二叉树的特性。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/aa873b90-ddb1-11e9-9c38-2bb533c1f573.png" srcset="/img/loading.gif" alt="image.png"><br>实际上，稍微改变一下思路，就可以解决这个问题。你看下面这幅图。把最后一个节点放到堆顶，然后利用同样的父子节点对比方法。对于不满足父子节点大小关系的，互换两个节点，并且重复进行这个过程，直到父子节点之间满足大小关系为止。这就是<strong>从上往下的堆化方法</strong>。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/addc5a00-ddb1-11e9-9c38-2bb533c1f573.png" srcset="/img/loading.gif" alt="image.png"><br>因为移除的是数组中的最后一个元素，而在堆化的过程中，都是交换操作，不会出现数组中的“空洞”，所以这种方法堆化之后的结果，肯定满足完全二叉树的特性。</p>
+<p>代码如下：</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">removeMax</span><span class="hljs-params">()</span> </span>&#123;
+  <span class="hljs-keyword">if</span> (count == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>; <span class="hljs-comment">// 堆中没有数据</span>
+  a[<span class="hljs-number">1</span>] = a[count];
+  --count;
+  heapify(a, count, <span class="hljs-number">1</span>);
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">heapify</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] a, <span class="hljs-keyword">int</span> n, <span class="hljs-keyword">int</span> i)</span> </span>&#123; <span class="hljs-comment">// 自上往下堆化</span>
+  <span class="hljs-keyword">while</span> (<span class="hljs-keyword">true</span>) &#123;
+    <span class="hljs-keyword">int</span> maxPos = i;
+    <span class="hljs-keyword">if</span> (i*<span class="hljs-number">2</span> &lt;= n &amp;&amp; a[i] &lt; a[i*<span class="hljs-number">2</span>]) maxPos = i*<span class="hljs-number">2</span>;
+    <span class="hljs-keyword">if</span> (i*<span class="hljs-number">2</span>+<span class="hljs-number">1</span> &lt;= n &amp;&amp; a[maxPos] &lt; a[i*<span class="hljs-number">2</span>+<span class="hljs-number">1</span>]) maxPos = i*<span class="hljs-number">2</span>+<span class="hljs-number">1</span>;
+    <span class="hljs-keyword">if</span> (maxPos == i) <span class="hljs-keyword">break</span>;
+    swap(a, i, maxPos);
+    i = maxPos;
+  &#125;
+&#125;</code></pre>
+<p>我们知道，一个包含 $n$ 个节点的完全二叉树，树的高度不会超过 $log_2⁡n$。堆化的过程是顺着节点所在路径比较交换的，所以堆化的时间复杂度跟树的高度成正比，也就是 $O(log⁡n)$。插入数据和删除堆顶元素的主要逻辑就是堆化，所以，往堆中插入一个元素和删除堆顶元素的时间复杂度都是 $O(log⁡n)$。</p>
+<h2 id="如何基于堆实现排序？"><a href="#如何基于堆实现排序？" class="headerlink" title="如何基于堆实现排序？"></a>如何基于堆实现排序？</h2><p>前面文章讲过好几种排序算法，回忆一下，有时间复杂度是 $O(n^2)$ 的冒泡排序、插入排序、选择排序，有时间复杂度是 $O(nlog⁡n)$ 的归并排序、快速排序，还有线性排序。</p>
+<p>这里借助于堆这种数据结构实现的排序算法，就叫作堆排序。这种排序方法的时间复杂度非常稳定，是 $O(nlog⁡n)$，并且它还是原地排序算法。如此优秀，它是怎么做到的呢？</p>
+<p>我们可以把堆排序的过程大致分解成两个大的步骤，<strong>建堆</strong>和<strong>排序</strong>。</p>
+<p><strong>1. 建堆</strong></p>
+<p>首先将数组原地建成一个堆。所谓“原地”就是，不借助另一个数组，就在原数组上操作。建堆的过程，有两种思路。</p>
+<p>第一种是借助我们前面讲的，在堆中插入一个元素的思路。尽管数组中包含 $n$ 个数据，但是我们可以假设，起初堆中只包含一个数据，就是下标为 $1$ 的数据。然后，我们调用前面讲的插入操作，将下标从 $2$ 到 $n$ 的数据依次插入到堆中。这样我们就将包含 $n$ 个数据的数组，组织成了堆。</p>
+<p>第二种实现思路，跟第一种截然相反，也是这里要详细讲的。第一种建堆思路的处理过程是从前往后处理数组数据，并且每个数据插入堆中时，都是从下往上堆化。而第二种实现思路，是从后往前处理数组，并且每个数据都是从上往下堆化。</p>
+<p>下图画了一个第二种实现思路的建堆分解步骤图。因为叶子节点往下堆化只能自己跟自己比较，所以直接从第一个非叶子节点开始，依次堆化就行了。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/c71087d0-ddb1-11e9-9c38-2bb533c1f573.png" srcset="/img/loading.gif" alt="image.png">)<img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/cdd9e570-ddb1-11e9-9c38-2bb533c1f573.png" srcset="/img/loading.gif" alt="image.png"><br>对于程序员来说，看代码可能更好理解一些，代码如下：</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">buildHeap</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] a, <span class="hljs-keyword">int</span> n)</span> </span>&#123;
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = n/<span class="hljs-number">2</span>; i &gt;= <span class="hljs-number">1</span>; --i) &#123;
+    heapify(a, n, i);
+  &#125;
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">heapify</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] a, <span class="hljs-keyword">int</span> n, <span class="hljs-keyword">int</span> i)</span> </span>&#123;
+  <span class="hljs-keyword">while</span> (<span class="hljs-keyword">true</span>) &#123;
+    <span class="hljs-keyword">int</span> maxPos = i;
+    <span class="hljs-keyword">if</span> (i*<span class="hljs-number">2</span> &lt;= n &amp;&amp; a[i] &lt; a[i*<span class="hljs-number">2</span>]) maxPos = i*<span class="hljs-number">2</span>;
+    <span class="hljs-keyword">if</span> (i*<span class="hljs-number">2</span>+<span class="hljs-number">1</span> &lt;= n &amp;&amp; a[maxPos] &lt; a[i*<span class="hljs-number">2</span>+<span class="hljs-number">1</span>]) maxPos = i*<span class="hljs-number">2</span>+<span class="hljs-number">1</span>;
+    <span class="hljs-keyword">if</span> (maxPos == i) <span class="hljs-keyword">break</span>;
+    swap(a, i, maxPos);
+    i = maxPos;
+  &#125;
+&#125;</code></pre>
+<p>在这段代码中，对下标从 $\frac n 2$ 开始到 $1$ 的数据进行堆化，下标是 $\frac n 2 +1$ 到 $n$ 的节点是叶子节点，我们不需要堆化。实际上，对于完全二叉树来说，下标从 $\frac n 2 +1$ 到 $n$ 的节点都是叶子节点。</p>
+<p>建堆操作的时间复杂度是多少呢？</p>
+<p>每个节点堆化的时间复杂度是 $O(log⁡n)$，那 $\frac n 2+1$ 个节点堆化的总时间复杂度是不是就是 $O(nlog⁡n)$ 呢？这个答案虽然也没错，但是这个值还是不够精确。实际上，堆排序的建堆过程的时间复杂度是 $O(n)$。</p>
+<p>因为叶子节点不需要堆化，所以需要堆化的节点从倒数第二层开始。每个节点堆化的过程中，需要比较和交换的节点个数，跟这个节点的高度 $k$ 成正比。</p>
+<p>只需要将每个节点的高度求和，得出的就是建堆的时间复杂度。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/d9e82390-ddb1-11e9-9c38-2bb533c1f573.png" srcset="/img/loading.gif" alt="image.png"><br>将每个非叶子节点的高度求和，就是下面这个公式：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/dd6144c0-ddb1-11e9-9c38-2bb533c1f573.png" srcset="/img/loading.gif" alt="image.png"><br>这个公式的求解稍微有点技巧，不过高中应该都学过：把公式左右都乘以 $2$，就得到另一个公式 $S2$。我们将 $S2$ 错位对齐，并且用 $S2$ 减去 $S1$，可以得到 $S$。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/e09323c0-ddb1-11e9-9c38-2bb533c1f573.png" srcset="/img/loading.gif" alt="image.png"><br>$S$ 的中间部分是一个等比数列，所以最后可以用等比数列的求和公式来计算，最终的结果就是下面图中画的这个样子。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/e3b59970-ddb1-11e9-9c38-2bb533c1f573.png" srcset="/img/loading.gif" alt="image.png"><br>因为 $h=log_2⁡n$，代入公式 $S$，就能得到 $S=O(n)$，所以，建堆的时间复杂度就是 $O(n)$。</p>
+<p><strong>2. 排序</strong></p>
+<p>建堆结束之后，数组中的数据已经是按照大顶堆的特性来组织的。数组中的第一个元素就是堆顶，也就是最大的元素。把它跟最后一个元素交换，那最大元素就放到了下标为 $n$ 的位置。</p>
+<p>这个过程有点类似上面的“删除堆顶元素”的操作，当堆顶元素移除之后，把下标为 $n$ 的元素放到堆顶，然后再通过堆化的方法，将剩下的 $n−1$ 个元素重新构建成堆。堆化完成之后，再取堆顶的元素，放到下标是 $n−1$ 的位置，一直重复这个过程，直到最后堆中只剩下标为 $1$ 的一个元素，排序工作就完成了。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/edeb6e10-ddb1-11e9-9c38-2bb533c1f573.png" srcset="/img/loading.gif" alt="image.png"><br>代码如下：</p>
+<pre><code class="hljs java"><span class="hljs-comment">// n 表示数据的个数，数组 a 中的数据从下标 1 到 n 的位置。</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">sort</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] a, <span class="hljs-keyword">int</span> n)</span> </span>&#123;
+  buildHeap(a, n);
+  <span class="hljs-keyword">int</span> k = n;
+  <span class="hljs-keyword">while</span> (k &gt; <span class="hljs-number">1</span>) &#123;
+    swap(a, <span class="hljs-number">1</span>, k);
+    --k;
+    heapify(a, k, <span class="hljs-number">1</span>);
+  &#125;
+&#125;</code></pre>
+<p>现在分析一下堆排序的时间复杂度、空间复杂度以及稳定性。</p>
+<p>整个堆排序的过程，都只需要极个别临时存储空间，所以堆排序是原地排序算法。堆排序包括建堆和排序两个操作，建堆过程的时间复杂度是 $O(n)$，排序过程的时间复杂度是 $O(nlog⁡n)$，所以，堆排序整体的时间复杂度是 $O(nlog⁡n)$。</p>
+<p>堆排序不是稳定的排序算法，因为在排序的过程，存在将堆的最后一个节点跟堆顶节点互换的操作，所以就有可能改变值相同数据的原始相对顺序。</p>
+<p>这里要稍微解释一下，在前面的讲述以及代码中，都假设，堆中的数据是从数组下标为 $1$ 的位置开始存储。那如果从 $0$ 开始存储，实际上处理思路是没有任何变化的，唯一变化的，可能就是，代码实现的时候，计算子节点和父节点的下标的公式改变了。</p>
+<p>如果节点的下标是 $i$，那左子节点的下标就是 $2∗i+1$，右子节点的下标就是 $2∗i+2$，父节点的下标就是 $\frac {i−1}{2}$。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>堆是一种完全二叉树。它最大的特性是：每个节点的值都大于等于（或小于等于）其子树节点的值。因此，堆被分成了两类，大顶堆和小顶堆。</p>
+<p>堆中比较重要的两个操作是插入一个数据和删除堆顶元素。这两个操作都要用到堆化。插入一个数据的时候，我们把新插入的数据放到数组的最后，然后从下往上堆化；删除堆顶数据的时候，我们把数组中的最后一个元素放到堆顶，然后从上往下堆化。这两个操作时间复杂度都是 $O(log⁡n)$。</p>
+<p>除此之外，还有堆排序。堆排序包含两个过程，<strong>建堆和排序</strong>。将下标从 $\frac n 2$ 到 $1$ 的节点，依次进行从上到下的堆化操作，然后就可以将数组中的数据组织成堆这种数据结构。接下来，迭代地将堆顶的元素放到堆的末尾，并将堆的大小减一，然后再堆化，重复这个过程，直到堆中只剩下一个元素，整个数组中的数据就都有序排列了。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ul>
+<li><p>在实际开发中，为什么快速排序要比堆排序性能好？</p>
+<blockquote>
+<p>主要有两方面的原因:</p>
+<p><strong>第一点，堆排序数据访问的方式没有快速排序友好。</strong><br>对于快速排序来说，数据是顺序访问的。而对于堆排序来说，数据是跳着访问的。<br>比如，堆排序中，最重要的一个操作就是数据的堆化。比如下面这个例子，对堆顶节点进行堆化，会依次访问数组下标是 $1，2，4，8$ 的元素，而不是像快速排序那样，局部顺序访问，所以，这样对 <code>CPU</code> 缓存是不友好的。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/02d12950-ddb2-11e9-9c38-2bb533c1f573.png" srcset="/img/loading.gif" alt="image.png"><br><strong>第二点，对于同样的数据，在排序过程中，堆排序算法的数据交换次数要多于快速排序。</strong><br>在写排序的时候，提过两个概念，<strong>有序度</strong>和<strong>逆序度</strong>。对于基于比较的排序算法来说，整个排序过程就是由两个基本的操作组成的，比较和交换（或移动）。快速排序数据交换的次数不会比逆序度多。</p>
+<p>但是堆排序的第一步是建堆，建堆的过程会打乱数据原有的相对先后顺序，导致原数据的有序度降低。比如，对于一组已经有序的数据来说，经过建堆之后，数据反而变得更无序了。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/23/0a9d7800-ddb2-11e9-9c38-2bb533c1f573.png" srcset="/img/loading.gif" alt="image.png"><br>对于第二点，可以自己做个试验看下。用一个记录交换次数的变量，在代码中，每次交换的时候，就对这个变量加一，排序完成之后，这个变量的值就是总的数据交换次数。这样就能很直观地理解刚刚说的，堆排序比快速排序交换次数多。</p>
+</blockquote>
+</li>
+<li><p>对于完全二叉树来说，下标从 $\frac n 2 +1$ 到 $n$ 的都是叶子节点，这个结论是怎么推导出来的呢？</p>
+<blockquote>
+<p>使用数组存储表示完全二叉树时，从数组下标为$1$开始存储数据，数组下标为$i$的节点，左子节点为$2i$, 右子节点为$2i + 1$. 这个结论很重要（可以用数学归纳法证明)，将此结论记为『原理1』，以下证明会用到这个原理。</p>
+<p>为什么，对于完全二叉树来说，下标从 $\frac n 2 +1$ 到 $n$ 的节点都是叶子节点？ 使用反证法证明即可：</p>
+<p>如果下标为$\frac n 2 +1$的节点不是叶子节点，即它存在子节点，按照『原理1』，它的左子节点为：$2(\frac n 2 +1) = n + 2$，明显可以看出，这个数字已经大于$n + 1$，超出了实现完全二叉树所用数组的大小（数组下标从$1$开始记录数据，对于$n$个节点来说，数组大小是$n + 1$），左子节点都已经超出了数组容量，更何况右子节点。以此类推，很容易得出：下标大于$\frac n 2 +1$的节点肯定都是也叶子节点了，故而得出结论：对于完全二叉树来说，下标从 $\frac n 2 +1$ 到 $n$ 的节点都是叶子节点</p>
+</blockquote>
+</li>
+<li><p>堆的一种经典应用是堆排序。关于堆，你还能想到它的其他应用吗？</p>
+<blockquote>
+<p>堆的应用除了堆排以外，还有如下一些应用：</p>
+<ul>
+<li>从大数量级数据中筛选出$top n$ 条数据； 比如：从几十亿条订单日志中筛选出金额靠前的<code>1000</code>条数据</li>
+<li>在一些场景中，会根据不同优先级来处理网络请求，此时也可以用到优先队列(用堆实现的数据结构)；比如：网络框架<code>Volley</code>就用了<code>Java</code>中<code>PriorityBlockingQueue</code>，当然它是线程安全的</li>
+<li>可以用堆来实现多路归并，从而实现有序，<code>leetcode</code>上也有相关的一题：<a href="https://leetcode-cn.com/problems/merge-k-sorted-lists/" target="_blank" rel="noopener">Merge K Sorted Lists</a></li>
+</ul>
+</blockquote>
+</li>
+</ul>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/">数据结构与算法(中级)</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/">时间复杂度</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%A0%86/">堆</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/passages/26/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">26.堆的应用</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/passages/24/">
+                        <span class="hidden-mobile">24.递归树</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+    <div id="vcomments"></div>
+    <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+    <script type="text/javascript">
+        var oldLoadVa = window.onload;
+        window.onload = function () {
+            oldLoadVa && oldLoadVa();
+
+            new Valine({
+                el: "#vcomments",
+                app_id: "O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",
+                app_key: "5Rl3Rhl9zc8BJNvrPcncKWFy",
+                placeholder: "说点什么吧~",
+                path: window.location.pathname,
+                avatar: "retro",
+                meta: ["nick","mail","link"],
+                pageSize: "10",
+                lang: "zh-CN",
+                highlight: true,
+                recordIP: true,
+                serverURLs: "https://lean.muchen.fun",
+            });
+        };
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments
+            powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><br><div class="text-center">欢迎关注我的公众号</div>
+    </div>
+  </div>
+
+
+    
+</main>
+
+
+    <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+
+
+
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+                <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mx-3">
+                <div class="md-form mb-5">
+                    <input type="text" id="local-search-input" class="form-control validate">
+                    <label data-error="x"
+                           data-success="v"
+                           for="local-search-input">关键词</label>
+                </div>
+                <div class="list-group" id="local-search-result"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    <div>
+      <span id="timeDate">载入天数...</span>
+      <span id="times">载入时分秒...</span>
+      <script>
+        var now = new Date();
+
+        function createtime() {
+          var grt = new Date("07/12/2019 00:00:00");//此处修改你的建站时间或者网站上线时间
+          now.setTime(now.getTime() + 250);
+          days = (now - grt) / 1000 / 60 / 60 / 24;
+          dnum = Math.floor(days);
+          hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+          hnum = Math.floor(hours);
+          if (String(hnum).length == 1) {
+            hnum = "0" + hnum;
+          }
+          minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+          mnum = Math.floor(minutes);
+          if (String(mnum).length == 1) {
+            mnum = "0" + mnum;
+          }
+          seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+          snum = Math.round(seconds);
+          if (String(snum).length == 1) {
+            snum = "0" + snum;
+          }
+          document.getElementById("timeDate").innerHTML = "本站已运行&nbsp" + dnum + "&nbsp天";
+          document.getElementById("times").innerHTML = hnum + "&nbsp小时&nbsp" + mnum + "&nbsp分&nbsp" + snum + "&nbsp秒";
+        }
+
+        setInterval("createtime()", 250);
+      </script>
+    </div>
+    <p id="hitokoto">:D 获取中...</p>
+    <script>
+      fetch('https://v1.hitokoto.cn')
+              .then(response => response.json())
+              .then(data => {
+                const hitokoto = document.getElementById('hitokoto')
+                hitokoto.innerText = data.hitokoto + '--「' + data.from + '」'
+              })
+              .catch(console.error)
+    </script>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+    <script  src="/js/lazyload.js" ></script>
+
+
+
+    
+
+
+
+
+    <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+    <script  src="/js/clipboard-use.js" ></script>
+
+
+
+    <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+    
+<script src="https://static.muchen.fun/js/custom.js"></script>
+
+
+
+<!-- Plugins -->
+
+
+    
+        <!-- Baidu Analytics -->
+        <script defer>
+            var _hmt = _hmt || [];
+            (function () {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    
+
+    
+        <!-- Google Analytics -->
+        <script defer>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-144841374-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+    <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+    <script>
+        var typed = new Typed('#subtitle', {
+            strings: [
+                '  ',
+                "25.堆和堆排序&nbsp;",
+            ],
+            cursorChar: "_",
+            typeSpeed: 60,
+            loop: false,
+        });
+        typed.stop();
+        $(document).ready(function () {
+            $(".typed-cursor").addClass("h2");
+            typed.start();
+        });
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+    <script>
+        anchors.options = {
+            placement: "right",
+            visible: "hover",
+            
+        };
+        var el = "h1,h2,h3,h4,h5,h6".split(",");
+        var res = [];
+        for (item of el) {
+            res.push(".markdown-body > " + item)
+        }
+        anchors.add(res.join(", "))
+    </script>
+
+
+
+    <script  src="/js/local-search.js" ></script>
+    <script>
+        var path = "/local-search.xml";
+        var inputArea = document.querySelector("#local-search-input");
+        inputArea.onclick = function () {
+            searchFunc(path, 'local-search-input', 'local-search-result');
+            this.onclick = null
+        }
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+    <script>
+        $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+            function () {
+                var element = document.createElement('a');
+                $(element).attr('data-fancybox', 'images');
+                $(element).attr('href', $(this).attr('src'));
+                $(this).wrap(element);
+            }
+        );
+    </script>
+
+
+
+
+
+    
+
+    
+        <!-- MathJax -->
+        <script>
+            MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']]
+                },
+                options: {
+                    renderActions: {
+                        findScript: [10, doc => {
+                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                                const display = !!node.type.match(/; *mode=display/);
+                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                                const text = document.createTextNode('');
+                                node.parentNode.replaceChild(text, node);
+                                math.start = {node: text, delim: '', n: 0};
+                                math.end = {node: text, delim: '', n: 0};
+                                doc.math.push(math);
+                            });
+                        }, '', false],
+                        insertedScript: [200, () => {
+                            document.querySelectorAll('mjx-container').forEach(node => {
+                                let target = node.parentNode;
+                                if (target.nodeName.toLowerCase() === 'li') {
+                                    target.parentNode.classList.add('has-jax');
+                                }
+                            });
+                        }, '', false]
+                    }
+                }
+            };
+        </script>
+
+        <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+    
+
+
+
+    
+    
+        <script>
+            !function (e, t, a) {
+                function r() {
+                    for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+                    requestAnimationFrame(r)
+                }
+
+                function n() {
+                    var t = "function" == typeof e.onclick && e.onclick;
+                    e.onclick = function (e) {
+                        t && t(), o(e)
+                    }
+                }
+
+                function o(e) {
+                    var a = t.createElement("div");
+                    a.className = "heart", s.push({
+                        el: a,
+                        x: e.clientX - 5,
+                        y: e.clientY - 5,
+                        scale: 1,
+                        alpha: 1,
+                        color: c()
+                    }), t.body.appendChild(a)
+                }
+
+                function i(e) {
+                    var a = t.createElement("style");
+                    a.type = "text/css";
+                    try {
+                        a.appendChild(t.createTextNode(e))
+                    } catch (t) {
+                        a.styleSheet.cssText = e
+                    }
+                    t.getElementsByTagName("head")[0].appendChild(a)
+                }
+
+                function c() {
+                    return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+                }
+
+                var s = [];
+                e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+                    setTimeout(e, 1e3 / 60)
+                }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+            }(window, document);
+        </script>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

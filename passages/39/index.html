@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png">
+    <link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <meta name="theme-color" content="#2f4154">
+    <meta name="description" content="沐晨的个人博客,技术博客">
+    <meta name="author" content="Li Duo">
+    <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
+    <title>39.动态规划实战 - MuChen&#39;s Blog</title>
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+    
+<link rel="stylesheet" href="https://static.muchen.fun/css/custom.css?t=0.1423425.css">
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+<script>
+    var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+    // 依次判断 系统暗黑模式 指定时间 缓存 dark
+    if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+        if (!(isNight && localStorage.getItem('noDark') === '1')) {
+            document.body.classList.add('dark');
+        }
+    }
+    document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
+</script>
+<header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+    <div class="container">
+        <a class="navbar-brand"
+           href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a>
+
+        <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="animated-icon"><span></span><span></span><span></span></div>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto text-center">
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/archives/">
+                            <i class="iconfont icon-archive-fill"></i>
+                            归档</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/categories/">
+                            <i class="iconfont icon-category-fill"></i>
+                            分类</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tags/">
+                            <i class="iconfont icon-tags-fill"></i>
+                            标签</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/messageBoard/">
+                            <i class="iconfont icon-speakernotes"></i>
+                            留言</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about/">
+                            <i class="iconfont icon-user-fill"></i>
+                            关于</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/links/">
+                            <i class="iconfont icon-link-fill"></i>
+                            友链</a>
+                    </li>
+                
+                
+                    <li class="nav-item" id="search-btn">
+                        <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                                    class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+                    </li>
+                
+                <li class="nav-item">
+                    <a id="dark" class="nav-link" onclick="switchDarkMode()">
+                        <i class="iconfont icon-sun"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/images/07.jpg') no-repeat center center;
+                 background-size: cover;">
+        <div class="full-bg-img">
+            <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+                <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+                
+            </span>
+
+                    
+                        
+                            <div class="mt-3 post-meta">
+                                <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                                <time datetime="2019-08-15 11:42">
+                                    2019年8月15日 中午
+                                </time>
+                            </div>
+                        
+
+                        <div class="mt-1">
+                            
+                                
+                                <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    4.1k 字
+                  </span>
+                            
+
+                            
+                                
+                                <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                                    
+                                    
+                                    62
+                                     分钟
+                  </span>
+                            
+
+                            
+                                <!-- 不蒜子统计文章PV -->
+                                
+                                <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
+                    <i class="iconfont icon-eye" aria-hidden="true"></i>
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>
+                            
+                        </div>
+                    
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    
+        
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：9 个月前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <p>当你在搜索框中，一不小心输错单词时，搜索引擎会非常智能地检测出你的拼写错误，并且用对应的正确单词来进行搜索。作为一名软件开发工程师，你是否想过，这个功能是怎么实现的呢？</p>
+<h2 id="如何量化两个字符串的相似度？"><a href="#如何量化两个字符串的相似度？" class="headerlink" title="如何量化两个字符串的相似度？"></a>如何量化两个字符串的相似度？</h2><p>如何量化两个字符串之间的相似程度呢？有一个非常著名的量化方法，那就是编辑距离（<code>Edit Distance</code>）。</p>
+<p>顾名思义，<strong>编辑距离</strong>指的就是，将一个字符串转化成另一个字符串，需要的最少编辑操作次数（比如增加一个字符、删除一个字符、替换一个字符）。编辑距离越大，说明两个字符串的相似程度越小；相反，编辑距离就越小，说明两个字符串的相似程度越大。对于两个完全相同的字符串来说，编辑距离就是 <code>0</code>。</p>
+<p>根据所包含的编辑操作种类的不同，编辑距离有多种不同的计算方式，比较著名的有<strong>莱文斯坦距离</strong>（<code>Levenshtein distance</code>）和<strong>最长公共子串长度</strong>（<code>Longest common substring length</code>）。其中，莱文斯坦距离允许增加、删除、替换字符这三个编辑操作，最长公共子串长度只允许增加、删除字符这两个编辑操作。</p>
+<p>而且，莱文斯坦距离和最长公共子串长度，从两个截然相反的角度，分析字符串的相似程度。莱文斯坦距离的大小，表示两个字符串差异的大小；而最长公共子串的大小，表示两个字符串相似程度的大小。</p>
+<p>关于这两个计算方法，举个例子给你说明一下。这里面，两个字符串 <code>mitcmu</code> 和 <code>mtacnu</code> 的莱文斯坦距离是 <code>3</code>，最长公共子串长度是 <code>4</code>。如下图所示：<br><img src="./48f6d0eb.jpeg" srcset="/img/loading.gif" alt="image"></p>
+<h2 id="如何编程计算莱文斯坦距离？"><a href="#如何编程计算莱文斯坦距离？" class="headerlink" title="如何编程计算莱文斯坦距离？"></a>如何编程计算莱文斯坦距离？</h2><p>这个问题是求把一个字符串变成另一个字符串，需要的最少编辑次数。整个求解过程，涉及多个决策阶段，需要依次考察一个字符串中的每个字符，跟另一个字符串中的字符是否匹配，匹配的话如何处理，不匹配的话又如何处理。所以，这个问题符合<strong>多阶段决策最优解模型</strong>。</p>
+<p>前面讲了，贪心、回溯、动态规划可以解决的问题，都可以抽象成这样一个模型。要解决这个问题，可以先看一看，用最简单的回溯算法，该如何来解决。</p>
+<p>回溯是一个递归处理的过程。如果 <code>a[i]</code> 与 <code>b[j]</code> 匹配，递归考察 <code>a[i+1]</code> 和 <code>b[j+1]</code>。如果 <code>a[i]</code> 与 <code>b[j]</code> 不匹配，有多种处理方式可选：</p>
+<ul>
+<li><p>可以删除 <code>a[i]</code>，然后递归考察 <code>a[i+1]</code> 和 <code>b[j]</code>；</p>
+</li>
+<li><p>可以删除 <code>b[j]</code>，然后递归考察 <code>a[i]</code> 和 <code>b[j+1]</code>；</p>
+</li>
+<li><p>可以在 <code>a[i]</code> 前面添加一个跟 <code>b[j]</code> 相同的字符，然后递归考察 <code>a[i]</code> 和 <code>b[j+1]</code>;</p>
+</li>
+<li><p>可以在 <code>b[j]</code> 前面添加一个跟 <code>a[i]</code> 相同的字符，然后递归考察 <code>a[i+1]</code> 和 <code>b[j]</code>；</p>
+</li>
+<li><p>可以将 <code>a[i]</code> 替换成 <code>b[j]</code>，或者将 <code>b[j]</code> 替换成 <code>a[i]</code>，然后递归考察 <code>a[i+1]</code> 和 <code>b[j+1]</code>。</p>
+</li>
+</ul>
+<p>将上面的回溯算法的处理思路，翻译成代码，就是下面这个样子：</p>
+<pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">char</span>[] a = <span class="hljs-string">"mitcmu"</span>.toCharArray();
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">char</span>[] b = <span class="hljs-string">"mtacnu"</span>.toCharArray();
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> n = <span class="hljs-number">6</span>;
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> m = <span class="hljs-number">6</span>;
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> minDist = Integer.MAX_VALUE; <span class="hljs-comment">// 存储结果</span>
+<span class="hljs-comment">// 调用方式 lwstBT(0, 0, 0);</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">lwstBT</span><span class="hljs-params">(<span class="hljs-keyword">int</span> i, <span class="hljs-keyword">int</span> j, <span class="hljs-keyword">int</span> edist)</span> </span>&#123;
+  <span class="hljs-keyword">if</span> (i == n || j == m) &#123;
+    <span class="hljs-keyword">if</span> (i &lt; n) edist += (n - i);
+    <span class="hljs-keyword">if</span> (j &lt; m) edist += (m - j);
+    <span class="hljs-keyword">if</span> (edist &lt; minDist) minDist = edist;
+    <span class="hljs-keyword">return</span>;
+  &#125;
+  <span class="hljs-keyword">if</span> (a[i] == b[j]) &#123; <span class="hljs-comment">// 两个字符匹配</span>
+    lwstBT(i+<span class="hljs-number">1</span>, j+<span class="hljs-number">1</span>, edist);
+  &#125; <span class="hljs-keyword">else</span> &#123; <span class="hljs-comment">// 两个字符不匹配</span>
+    lwstBT(i + <span class="hljs-number">1</span>, j, edist + <span class="hljs-number">1</span>); <span class="hljs-comment">// 删除 a[i] 或者 b[j] 前添加一个字符</span>
+    lwstBT(i, j + <span class="hljs-number">1</span>, edist + <span class="hljs-number">1</span>); <span class="hljs-comment">// 删除 b[j] 或者 a[i] 前添加一个字符</span>
+    lwstBT(i + <span class="hljs-number">1</span>, j + <span class="hljs-number">1</span>, edist + <span class="hljs-number">1</span>); <span class="hljs-comment">// 将 a[i] 和 b[j] 替换为相同字符</span>
+  &#125;
+&#125;</code></pre>
+<p>根据回溯算法的代码实现，可以画出递归树，看是否存在重复子问题。如果存在重复子问题，那就可以考虑能否用动态规划来解决；如果不存在重复子问题，那回溯就是最好的解决方法。<br><img src="./79d5874b.jpeg" srcset="/img/loading.gif" alt="image"><br>在递归树中，每个节点代表一个状态，状态包含三个变量 <code>(i, j, edist)</code>，其中，<code>edist</code> 表示处理到 <code>a[i]</code> 和 <code>b[j]</code> 时，已经执行的编辑操作的次数。</p>
+<p>在递归树中，<code>(i, j)</code> 两个变量重复的节点很多，比如 <code>(3, 2)</code> 和 <code>(2, 3)</code>。对于 <code>(i, j)</code> 相同的节点，只需要保留 <code>edist</code> 最小的，继续递归处理就可以了，剩下的节点都可以舍弃。所以，状态就从 <code>(i, j, edist)</code> 变成了 <code>(i, j, min_edist)</code>，其中 <code>min_edist</code> 表示处理到 <code>a[i]</code> 和 <code>b[j]</code>，已经执行的最少编辑次数。</p>
+<p>看到这里，有没有觉得，这个问题跟上两篇的动态规划例子非常相似？不过，这个问题的状态转移方式，要比之前的例子都要复杂很多。上一篇的矩阵最短路径问题中，到达状态 <code>(i, j)</code> 只能通过 <code>(i-1, j)</code> 或 <code>(i, j-1)</code> 两个状态转移过来，而这个问题，状态 <code>(i, j)</code> 可能从 <code>(i-1, j)</code>，<code>(i, j-1)</code>，<code>(i-1, j-1)</code> 三个状态中的任意一个转移过来。<br><img src="./9b87cf29.jpeg" srcset="/img/loading.gif" alt="image"><br>基于刚刚的分析，可以尝试着将把状态转移的过程，用公式写出来。这就是前面讲的状态转移方程。</p>
+<pre><code class="hljs java">如果：a[i]!=b[j]，那么：min_edist(i, j) 就等于：
+min(min_edist(i-<span class="hljs-number">1</span>,j)+<span class="hljs-number">1</span>, min_edist(i,j-<span class="hljs-number">1</span>)+<span class="hljs-number">1</span>, min_edist(i-<span class="hljs-number">1</span>,j-<span class="hljs-number">1</span>)+<span class="hljs-number">1</span>)
+
+如果：a[i]==b[j]，那么：min_edist(i, j) 就等于：
+min(min_edist(i-<span class="hljs-number">1</span>,j)+<span class="hljs-number">1</span>, min_edist(i,j-<span class="hljs-number">1</span>)+<span class="hljs-number">1</span>，min_edist(i-<span class="hljs-number">1</span>,j-<span class="hljs-number">1</span>))
+
+其中，min 表示求三数中的最小值。</code></pre>
+<p>了解了状态与状态之间的递推关系，画出一个二维的状态表，按行依次来填充状态表中的每个值。<br><img src="./f68d773e.jpeg" srcset="/img/loading.gif" alt="image"><br>现在既有状态转移方程，又理清了完整的填表过程，代码实现就非常简单了。代码贴在下面，你可以对比着文字解释，一起看下。</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">lwstDP</span><span class="hljs-params">(<span class="hljs-keyword">char</span>[] a, <span class="hljs-keyword">int</span> n, <span class="hljs-keyword">char</span>[] b, <span class="hljs-keyword">int</span> m)</span> </span>&#123;
+  <span class="hljs-keyword">int</span>[][] minDist = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span>[n][m];
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; m; ++j) &#123; <span class="hljs-comment">// 初始化第 0 行:a[0..0] 与 b[0..j] 的编辑距离</span>
+    <span class="hljs-keyword">if</span> (a[<span class="hljs-number">0</span>] == b[j]) minDist[<span class="hljs-number">0</span>][j] = j;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (j != <span class="hljs-number">0</span>) minDist[<span class="hljs-number">0</span>][j] = minDist[<span class="hljs-number">0</span>][j-<span class="hljs-number">1</span>]+<span class="hljs-number">1</span>;
+    <span class="hljs-keyword">else</span> minDist[<span class="hljs-number">0</span>][j] = <span class="hljs-number">1</span>;
+  &#125;
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) &#123; <span class="hljs-comment">// 初始化第 0 列:a[0..i] 与 b[0..0] 的编辑距离</span>
+    <span class="hljs-keyword">if</span> (a[i] == b[<span class="hljs-number">0</span>]) minDist[i][<span class="hljs-number">0</span>] = i;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (i != <span class="hljs-number">0</span>) minDist[i][<span class="hljs-number">0</span>] = minDist[i-<span class="hljs-number">1</span>][<span class="hljs-number">0</span>]+<span class="hljs-number">1</span>;
+    <span class="hljs-keyword">else</span> minDist[i][<span class="hljs-number">0</span>] = <span class="hljs-number">1</span>;
+  &#125;
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; n; ++i) &#123; <span class="hljs-comment">// 按行填表</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j &lt; m; ++j) &#123;
+      <span class="hljs-keyword">if</span> (a[i] == b[j]) minDist[i][j] = min(
+          minDist[i-<span class="hljs-number">1</span>][j]+<span class="hljs-number">1</span>, minDist[i][j-<span class="hljs-number">1</span>]+<span class="hljs-number">1</span>, minDist[i-<span class="hljs-number">1</span>][j-<span class="hljs-number">1</span>]);
+      <span class="hljs-keyword">else</span> minDist[i][j] = min(
+          minDist[i-<span class="hljs-number">1</span>][j]+<span class="hljs-number">1</span>, minDist[i][j-<span class="hljs-number">1</span>]+<span class="hljs-number">1</span>, minDist[i-<span class="hljs-number">1</span>][j-<span class="hljs-number">1</span>]+<span class="hljs-number">1</span>);
+    &#125;
+  &#125;
+  <span class="hljs-keyword">return</span> minDist[n-<span class="hljs-number">1</span>][m-<span class="hljs-number">1</span>];
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> <span class="hljs-title">min</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x, <span class="hljs-keyword">int</span> y, <span class="hljs-keyword">int</span> z)</span> </span>&#123;
+  <span class="hljs-keyword">int</span> minv = Integer.MAX_VALUE;
+  <span class="hljs-keyword">if</span> (x &lt; minv) minv = x;
+  <span class="hljs-keyword">if</span> (y &lt; minv) minv = y;
+  <span class="hljs-keyword">if</span> (z &lt; minv) minv = z;
+  <span class="hljs-keyword">return</span> minv;
+&#125;</code></pre>
+<p>你可能会说，虽然能看懂思路，但是遇到新的问题的时候，还是会感觉到无从下手。这种感觉是非常正常的。关于复杂算法问题的解决思路，有一些经验、小技巧，可以分享给你。</p>
+<p>当拿到一个问题的时候，<strong>可以先不思考计算机会如何实现这个问题，而是单纯考虑“人脑”会如何去解决这个问题</strong>。人脑比较倾向于思考具象化的、摸得着看得见的东西，不适合思考过于抽象的问题。所以，需要把抽象问题具象化。那如何具象化呢？可以实例化几个测试数据，通过人脑去分析具体实例的解，然后总结规律，再尝试套用学过的算法，看是否能够解决。</p>
+<p>除此之外，还有一个非常有效、但也算不上技巧的东西，那就是<strong>多练</strong>。实际上，等你做多了题目之后，自然就会有感觉，看到问题，立马就能想到能否用动态规划解决，然后直接就可以寻找最优子结构，写出动态规划方程，然后将状态转移方程翻译成代码。</p>
+<h2 id="如何编程计算最长公共子串长度？"><a href="#如何编程计算最长公共子串长度？" class="headerlink" title="如何编程计算最长公共子串长度？"></a>如何编程计算最长公共子串长度？</h2><p>最长公共子串作为编辑距离中的一种，只允许增加、删除字符两种编辑操作。从名字上，你可能觉得它看起来跟编辑距离没什么关系。实际上，从本质上来说，它表征的也是两个字符串之间的相似程度。</p>
+<p>这个问题的解决思路，跟莱文斯坦距离的解决思路非常相似，也可以用动态规划解决。刚刚已经详细讲解了莱文斯坦距离的动态规划解决思路，所以，针对这个问题，这里直接定义状态，然后写状态转移方程。</p>
+<p>每个状态还是包括三个变量 <code>(i, j, max_lcs)</code>，<code>max_lcs</code> 表示 <code>a[0…i]</code> 和 <code>b[0…j]</code> 的最长公共子串长度。那 <code>(i, j)</code> 这个状态都是由哪些状态转移过来的呢？</p>
+<p>先来看回溯的处理思路。从 <code>a[0]</code> 和 <code>b[0]</code> 开始，依次考察两个字符串中的字符是否匹配。</p>
+<ul>
+<li><p>如果 <code>a[i]</code> 与 <code>b[j]</code> 互相匹配，将最大公共子串长度加一，并且继续考察 <code>a[i+1]</code> 和 <code>b[j+1]</code>。</p>
+</li>
+<li><p>如果 <code>a[i]</code> 与 <code>b[j]</code> 不匹配，最长公共子串长度不变，这个时候，有两个不同的决策路线：</p>
+</li>
+<li><p>删除 <code>a[i]</code>，或者在 <code>b[j]</code> 前面加上一个字符 <code>a[i]</code>，然后继续考察 <code>a[i+1]</code> 和 <code>b[j]</code>；</p>
+</li>
+<li><p>删除 <code>b[j]</code>，或者在 <code>a[i]</code> 前面加上一个字符 <code>b[j]</code>，然后继续考察 <code>a[i]</code> 和 <code>b[j+1]</code>。</p>
+</li>
+</ul>
+<p>反过来也就是说，如果要求 <code>a[0…i]</code> 和 <code>b[0…j]</code> 的最长公共长度 <code>max_lcs(i, j)</code>，只有可能通过下面三个状态转移过来：</p>
+<p><code>(i-1, j-1, max_lcs)</code>，其中 <code>max_lcs</code> 表示 <code>a[0…i-1</code>] 和 <code>b[0…j-1]</code> 的最长公共子串长度；</p>
+<p><code>(i-1, j, max_lcs)</code>，其中 <code>max_lcs</code> 表示 <code>a[0…i-1]</code> 和<code>b[0…j]</code> 的最长公共子串长度；</p>
+<p><code>(i, j-1, max_lcs)</code>，其中 <code>max_lcs</code> 表示 <code>a[0…i]</code> 和 <code>b[0…j-1]</code> 的最长公共子串长度。</p>
+<p>如果把这个转移过程，用状态转移方程写出来，就是下面这个样子：</p>
+<pre><code class="hljs java">如果：a[i]==b[j]，那么：max_lcs(i, j) 就等于：
+max(max_lcs(i-<span class="hljs-number">1</span>,j-<span class="hljs-number">1</span>)+<span class="hljs-number">1</span>, max_lcs(i-<span class="hljs-number">1</span>, j), max_lcs(i, j-<span class="hljs-number">1</span>))；
+
+如果：a[i]!=b[j]，那么：max_lcs(i, j) 就等于：
+max(max_lcs(i-<span class="hljs-number">1</span>,j-<span class="hljs-number">1</span>), max_lcs(i-<span class="hljs-number">1</span>, j), max_lcs(i, j-<span class="hljs-number">1</span>))；
+
+其中 max 表示求三数中的最大值。</code></pre>
+<p>有了状态转移方程，代码实现就简单多了。代码贴到了下面，你可以对比着文字一块儿看。</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">lcs</span><span class="hljs-params">(<span class="hljs-keyword">char</span>[] a, <span class="hljs-keyword">int</span> n, <span class="hljs-keyword">char</span>[] b, <span class="hljs-keyword">int</span> m)</span> </span>&#123;
+  <span class="hljs-keyword">int</span>[][] maxlcs = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span>[n][m];
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; m; ++j) &#123;<span class="hljs-comment">// 初始化第 0 行：a[0..0] 与 b[0..j] 的 maxlcs</span>
+    <span class="hljs-keyword">if</span> (a[<span class="hljs-number">0</span>] == b[j]) maxlcs[<span class="hljs-number">0</span>][j] = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (j != <span class="hljs-number">0</span>) maxlcs[<span class="hljs-number">0</span>][j] = maxlcs[<span class="hljs-number">0</span>][j-<span class="hljs-number">1</span>];
+    <span class="hljs-keyword">else</span> maxlcs[<span class="hljs-number">0</span>][j] = <span class="hljs-number">0</span>;
+  &#125;
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) &#123;<span class="hljs-comment">// 初始化第 0 列：a[0..i] 与 b[0..0] 的 maxlcs</span>
+    <span class="hljs-keyword">if</span> (a[i] == b[<span class="hljs-number">0</span>]) maxlcs[i][<span class="hljs-number">0</span>] = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (i != <span class="hljs-number">0</span>) maxlcs[i][<span class="hljs-number">0</span>] = maxlcs[i-<span class="hljs-number">1</span>][<span class="hljs-number">0</span>];
+    <span class="hljs-keyword">else</span> maxlcs[i][<span class="hljs-number">0</span>] = <span class="hljs-number">0</span>;
+  &#125;
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; n; ++i) &#123; <span class="hljs-comment">// 填表</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j &lt; m; ++j) &#123;
+      <span class="hljs-keyword">if</span> (a[i] == b[j]) maxlcs[i][j] = max(
+          maxlcs[i-<span class="hljs-number">1</span>][j], maxlcs[i][j-<span class="hljs-number">1</span>], maxlcs[i-<span class="hljs-number">1</span>][j-<span class="hljs-number">1</span>]+<span class="hljs-number">1</span>);
+      <span class="hljs-keyword">else</span> maxlcs[i][j] = max(
+          maxlcs[i-<span class="hljs-number">1</span>][j], maxlcs[i][j-<span class="hljs-number">1</span>], maxlcs[i-<span class="hljs-number">1</span>][j-<span class="hljs-number">1</span>]);
+    &#125;
+  &#125;
+  <span class="hljs-keyword">return</span> maxlcs[n-<span class="hljs-number">1</span>][m-<span class="hljs-number">1</span>];
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> <span class="hljs-title">max</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x, <span class="hljs-keyword">int</span> y, <span class="hljs-keyword">int</span> z)</span> </span>&#123;
+  <span class="hljs-keyword">int</span> maxv = Integer.MIN_VALUE;
+  <span class="hljs-keyword">if</span> (x &gt; maxv) maxv = x;
+  <span class="hljs-keyword">if</span> (y &gt; maxv) maxv = y;
+  <span class="hljs-keyword">if</span> (z &gt; maxv) maxv = z;
+  <span class="hljs-keyword">return</span> maxv;
+&#125;</code></pre>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>动态规划的理论尽管并不复杂，总结起来就是“<strong>一个模型三个特征</strong>”。但是，要想灵活应用并不简单。要想能真正理解、掌握动态规划，只有多练习。</p>
+<p>这三篇中，加上课后思考题，总共有 <code>8</code> 个动态规划问题。这 <code>8</code> 个问题都非常经典。很多动态规划问题其实都可以抽象成这几个问题模型，所以，一定要多看几遍，多思考一下，争取真正搞懂它们。</p>
+<p>只要弄懂了这几个问题，一般的动态规划问题，你应该都可以应付。对于动态规划这个知识点，就算是入门了，再学习更加复杂的就会简单很多。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ul>
+<li><p>如何实现搜索引擎中的拼写纠错功能？</p>
+<blockquote>
+<p>当用户在搜索框内，输入一个拼写错误的单词时，就拿这个单词跟词库中的单词一一进行比较，计算编辑距离，将编辑距离最小的单词，作为纠正之后的单词，提示给用户。</p>
+<p>这就是拼写纠错最基本的原理。不过，真正用于商用的搜索引擎，拼写纠错功能显然不会就这么简单。一方面，单纯利用编辑距离来纠错，效果并不一定好；另一方面，词库中的数据量可能很大，搜索引擎每天要支持海量的搜索，所以对纠错的性能要求很高。<br>针对纠错效果不好的问题，有很多种优化思路，这里介绍几种。</p>
+<ul>
+<li><p>并不仅仅取出编辑距离最小的那个单词，而是取出编辑距离最小的 <code>TOP 10</code>，然后根据其他参数，决策选择哪个单词作为拼写纠错单词。比如使用搜索热门程度来决定哪个单词作为拼写纠错单词。</p>
+</li>
+<li><p>还可以用多种编辑距离计算方法，比如上面讲到的两种，然后分别编辑距离最小的 <code>TOP 10</code>，然后求交集，用交集的结果，再继续优化处理。</p>
+</li>
+<li><p>还可以通过统计用户的搜索日志，得到最常被拼错的单词列表，以及对应的拼写正确的单词。搜索引擎在拼写纠错的时候，首先在这个最长被拼错单词列表中查找。如果一旦找到，直接返回对应的正确的单词。这样纠错的效果非常好。</p>
+</li>
+<li><p>还有更加高级一点的做法，引入个性化因素。针对每个用户，维护这个用户特有的搜索喜好，也就是常用的搜索关键词。当用户输入错误的单词的时候，首先在这个用户常用的搜索关键词中，计算编辑距离，查找编辑距离最小的单词。</p>
+</li>
+</ul>
+<p>针对纠错性能方面，也有相应的优化方式。这里讲两种分治的优化思路。</p>
+<ul>
+<li><p>如果纠错功能的 <code>TPS</code> 不高，可以部署多台机器，每台机器运行一个独立的纠错功能。当有一个纠错请求的时候，通过负载均衡，分配到其中一台机器，来计算编辑距离，得到纠错单词。</p>
+</li>
+<li><p>如果纠错系统的响应时间太长，也就是，每个纠错请求处理时间过长，可以将纠错的词库，分割到很多台机器。当有一个纠错请求的时候，就将这个拼写错误的单词，同时发送到这多台机器，让多台机器并行处理，分别得到编辑距离最小的单词，然后再比对合并，最终决定出一个最优的纠错单词。</p>
+</li>
+</ul>
+<p>真正的搜索引擎的拼写纠错优化，肯定不止这么简单，但是万变不离其宗。掌握了核心原理，就是掌握了解决问题的方法，剩下就靠你自己的灵活运用和实战操练了。</p>
+</blockquote>
+</li>
+<li><p>有一个数字序列包含 <code>n</code> 个不同的数字，如何求出这个序列中的最长递增子序列长度？比如 <code>2, 9, 3, 6, 5, 1, 7</code> 这样一组数字序列，它的最长递增子序列就是 <code>2, 3, 5, 7</code>，所以最长递增子序列的长度是 <code>4</code>。欢迎留言和我分享。</p>
+</li>
+</ul>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/">数据结构与算法(中级)</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/passages/40/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">40.拓扑排序</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/passages/38/">
+                        <span class="hidden-mobile">38.动态规划理论</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+    <div id="vcomments"></div>
+    <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+    <script type="text/javascript">
+        var oldLoadVa = window.onload;
+        window.onload = function () {
+            oldLoadVa && oldLoadVa();
+
+            new Valine({
+                el: "#vcomments",
+                app_id: "O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",
+                app_key: "5Rl3Rhl9zc8BJNvrPcncKWFy",
+                placeholder: "说点什么吧~",
+                path: window.location.pathname,
+                avatar: "retro",
+                meta: ["nick","mail","link"],
+                pageSize: "10",
+                lang: "zh-CN",
+                highlight: true,
+                recordIP: true,
+                serverURLs: "https://lean.muchen.fun",
+            });
+        };
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments
+            powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><br><div class="text-center">欢迎关注我的公众号</div>
+    </div>
+  </div>
+
+
+    
+</main>
+
+
+    <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+
+
+
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+                <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mx-3">
+                <div class="md-form mb-5">
+                    <input type="text" id="local-search-input" class="form-control validate">
+                    <label data-error="x"
+                           data-success="v"
+                           for="local-search-input">关键词</label>
+                </div>
+                <div class="list-group" id="local-search-result"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    <div>
+      <span id="timeDate">载入天数...</span>
+      <span id="times">载入时分秒...</span>
+      <script>
+        var now = new Date();
+
+        function createtime() {
+          var grt = new Date("07/12/2019 00:00:00");//此处修改你的建站时间或者网站上线时间
+          now.setTime(now.getTime() + 250);
+          days = (now - grt) / 1000 / 60 / 60 / 24;
+          dnum = Math.floor(days);
+          hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+          hnum = Math.floor(hours);
+          if (String(hnum).length == 1) {
+            hnum = "0" + hnum;
+          }
+          minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+          mnum = Math.floor(minutes);
+          if (String(mnum).length == 1) {
+            mnum = "0" + mnum;
+          }
+          seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+          snum = Math.round(seconds);
+          if (String(snum).length == 1) {
+            snum = "0" + snum;
+          }
+          document.getElementById("timeDate").innerHTML = "本站已运行&nbsp" + dnum + "&nbsp天";
+          document.getElementById("times").innerHTML = hnum + "&nbsp小时&nbsp" + mnum + "&nbsp分&nbsp" + snum + "&nbsp秒";
+        }
+
+        setInterval("createtime()", 250);
+      </script>
+    </div>
+    <p id="hitokoto">:D 获取中...</p>
+    <script>
+      fetch('https://v1.hitokoto.cn')
+              .then(response => response.json())
+              .then(data => {
+                const hitokoto = document.getElementById('hitokoto')
+                hitokoto.innerText = data.hitokoto + '--「' + data.from + '」'
+              })
+              .catch(console.error)
+    </script>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+    <script  src="/js/lazyload.js" ></script>
+
+
+
+    
+
+
+
+
+    <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+    <script  src="/js/clipboard-use.js" ></script>
+
+
+
+    <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+    
+<script src="https://static.muchen.fun/js/custom.js"></script>
+
+
+
+<!-- Plugins -->
+
+
+    
+        <!-- Baidu Analytics -->
+        <script defer>
+            var _hmt = _hmt || [];
+            (function () {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    
+
+    
+        <!-- Google Analytics -->
+        <script defer>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-144841374-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+    <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+    <script>
+        var typed = new Typed('#subtitle', {
+            strings: [
+                '  ',
+                "39.动态规划实战&nbsp;",
+            ],
+            cursorChar: "_",
+            typeSpeed: 60,
+            loop: false,
+        });
+        typed.stop();
+        $(document).ready(function () {
+            $(".typed-cursor").addClass("h2");
+            typed.start();
+        });
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+    <script>
+        anchors.options = {
+            placement: "right",
+            visible: "hover",
+            
+        };
+        var el = "h1,h2,h3,h4,h5,h6".split(",");
+        var res = [];
+        for (item of el) {
+            res.push(".markdown-body > " + item)
+        }
+        anchors.add(res.join(", "))
+    </script>
+
+
+
+    <script  src="/js/local-search.js" ></script>
+    <script>
+        var path = "/local-search.xml";
+        var inputArea = document.querySelector("#local-search-input");
+        inputArea.onclick = function () {
+            searchFunc(path, 'local-search-input', 'local-search-result');
+            this.onclick = null
+        }
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+    <script>
+        $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+            function () {
+                var element = document.createElement('a');
+                $(element).attr('data-fancybox', 'images');
+                $(element).attr('href', $(this).attr('src'));
+                $(this).wrap(element);
+            }
+        );
+    </script>
+
+
+
+
+
+    
+
+    
+        <!-- MathJax -->
+        <script>
+            MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']]
+                },
+                options: {
+                    renderActions: {
+                        findScript: [10, doc => {
+                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                                const display = !!node.type.match(/; *mode=display/);
+                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                                const text = document.createTextNode('');
+                                node.parentNode.replaceChild(text, node);
+                                math.start = {node: text, delim: '', n: 0};
+                                math.end = {node: text, delim: '', n: 0};
+                                doc.math.push(math);
+                            });
+                        }, '', false],
+                        insertedScript: [200, () => {
+                            document.querySelectorAll('mjx-container').forEach(node => {
+                                let target = node.parentNode;
+                                if (target.nodeName.toLowerCase() === 'li') {
+                                    target.parentNode.classList.add('has-jax');
+                                }
+                            });
+                        }, '', false]
+                    }
+                }
+            };
+        </script>
+
+        <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+    
+
+
+
+    
+    
+        <script>
+            !function (e, t, a) {
+                function r() {
+                    for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+                    requestAnimationFrame(r)
+                }
+
+                function n() {
+                    var t = "function" == typeof e.onclick && e.onclick;
+                    e.onclick = function (e) {
+                        t && t(), o(e)
+                    }
+                }
+
+                function o(e) {
+                    var a = t.createElement("div");
+                    a.className = "heart", s.push({
+                        el: a,
+                        x: e.clientX - 5,
+                        y: e.clientY - 5,
+                        scale: 1,
+                        alpha: 1,
+                        color: c()
+                    }), t.body.appendChild(a)
+                }
+
+                function i(e) {
+                    var a = t.createElement("style");
+                    a.type = "text/css";
+                    try {
+                        a.appendChild(t.createTextNode(e))
+                    } catch (t) {
+                        a.styleSheet.cssText = e
+                    }
+                    t.getElementsByTagName("head")[0].appendChild(a)
+                }
+
+                function c() {
+                    return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+                }
+
+                var s = [];
+                e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+                    setTimeout(e, 1e3 / 60)
+                }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+            }(window, document);
+        </script>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

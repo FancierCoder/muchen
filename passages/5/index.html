@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png">
+    <link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <meta name="theme-color" content="#2f4154">
+    <meta name="description" content="沐晨的个人博客,技术博客">
+    <meta name="author" content="Li Duo">
+    <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
+    <title>5.链表（下） - MuChen&#39;s Blog</title>
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+    
+<link rel="stylesheet" href="https://static.muchen.fun/css/custom.css?t=0.1423425.css">
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+<script>
+    var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+    // 依次判断 系统暗黑模式 指定时间 缓存 dark
+    if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+        if (!(isNight && localStorage.getItem('noDark') === '1')) {
+            document.body.classList.add('dark');
+        }
+    }
+    document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
+</script>
+<header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+    <div class="container">
+        <a class="navbar-brand"
+           href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a>
+
+        <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="animated-icon"><span></span><span></span><span></span></div>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto text-center">
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/archives/">
+                            <i class="iconfont icon-archive-fill"></i>
+                            归档</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/categories/">
+                            <i class="iconfont icon-category-fill"></i>
+                            分类</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tags/">
+                            <i class="iconfont icon-tags-fill"></i>
+                            标签</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/messageBoard/">
+                            <i class="iconfont icon-speakernotes"></i>
+                            留言</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about/">
+                            <i class="iconfont icon-user-fill"></i>
+                            关于</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/links/">
+                            <i class="iconfont icon-link-fill"></i>
+                            友链</a>
+                    </li>
+                
+                
+                    <li class="nav-item" id="search-btn">
+                        <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                                    class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+                    </li>
+                
+                <li class="nav-item">
+                    <a id="dark" class="nav-link" onclick="switchDarkMode()">
+                        <i class="iconfont icon-sun"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/images/07.jpg') no-repeat center center;
+                 background-size: cover;">
+        <div class="full-bg-img">
+            <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+                <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+                
+            </span>
+
+                    
+                        
+                            <div class="mt-3 post-meta">
+                                <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                                <time datetime="2019-07-14 12:20">
+                                    2019年7月14日 中午
+                                </time>
+                            </div>
+                        
+
+                        <div class="mt-1">
+                            
+                                
+                                <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    3.5k 字
+                  </span>
+                            
+
+                            
+                                
+                                <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                                    
+                                    
+                                    47
+                                     分钟
+                  </span>
+                            
+
+                            
+                                <!-- 不蒜子统计文章PV -->
+                                
+                                <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
+                    <i class="iconfont icon-eye" aria-hidden="true"></i>
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>
+                            
+                        </div>
+                    
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    
+        
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：10 个月前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <!-- more -->
+<p>为什么链表代码这么难写？究竟怎样才能比较轻松地写出正确的链表代码呢？</p>
+<h2 id="技巧一：理解指针或引用的含义"><a href="#技巧一：理解指针或引用的含义" class="headerlink" title="技巧一：理解指针或引用的含义"></a>技巧一：理解指针或引用的含义</h2><p>事实上，看懂链表的结构并不是很难，但是一旦把它和指针混在一起，就很容易让人摸不着头脑。所以，要想写对链表代码，首先就要理解好指针。</p>
+<p>有些语言有“指针”的概念，比如 <code>C</code> 语言；有些语言没有指针，取而代之的是“引用”，比如 <code>Java</code>、<code>Python</code>。不管是“指针”还是“引用”，实际上，它们的意思都是一样的，都是存储所指对象的内存地址。</p>
+<p>接下来，拿 <code>C</code> 语言中的“指针”来讲解，如果你用的是 <code>Java</code> 或者其他没有指针的语言也没关系，把它理解成“引用”就可以了。</p>
+<p>实际上，对于指针的理解，只需要记住下面这句话就可以了：</p>
+<p><strong>将某个变量赋值给指针，实际上就是将这个变量的地址赋值给指针，或者反过来说，指针中存储了这个变量的内存地址，指向了这个变量，通过指针就能找到这个变量。</strong></p>
+<p>这句话听起来还挺拗口的，你可以先记住。回到链表代码的编写过程中，慢慢解释。</p>
+<p>在编写链表代码的时候，经常会有这样的代码：<code>p-&gt;next = q</code>。这行代码是说，<code>p</code> 结点中的 <code>next</code> 指针存储了 <code>q</code> 结点的内存地址。</p>
+<p>还有一个更复杂的，也是写链表代码经常会用到的：<code>p-&gt;next = p-&gt;next-&gt;next</code>。这行代码表示，<code>p</code> 结点的 <code>next</code> 指针存储了 <code>p</code> 结点的下下一个结点的内存地址。</p>
+<p>掌握了指针或引用的概念，你应该可以很轻松地看懂链表代码。恭喜你，已经离写出链表代码近了一步！</p>
+<h2 id="技巧二：警惕指针丢失和内存泄漏"><a href="#技巧二：警惕指针丢失和内存泄漏" class="headerlink" title="技巧二：警惕指针丢失和内存泄漏"></a>技巧二：警惕指针丢失和内存泄漏</h2><p>不知道你有没有这样的感觉，写链表代码的时候，指针指来指去，一会儿就不知道指到哪里了。所以，在写的时候，一定注意不要弄丢了指针。</p>
+<p>指针往往都是怎么弄丢的呢？拿单链表的插入操作为例来分析一下。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/26/0e021610-c7d5-11e9-bd0a-57cc00d1a72f.png" srcset="/img/loading.gif" alt="image.png"><br>如图所示，希望在结点 <code>a</code> 和相邻的结点 <code>b</code> 之间插入结点 <code>x</code>，假设当前指针 <code>p</code> 指向结点 <code>a</code>。如果将代码实现变成下面这个样子，就会发生指针丢失和内存泄露。</p>
+<pre><code class="hljs c">p-&gt;next = x;  <span class="hljs-comment">// 将 p 的 next 指针指向 x 结点；</span>
+x-&gt;next = p-&gt;next;  <span class="hljs-comment">// 将 x 的结点的 next 指针指向 b 结点；</span></code></pre>
+<p><code>p-&gt;next</code> 指针在完成第一步操作之后，已经不再指向结点 <code>b</code> 了，而是指向结点 <code>x</code>。第 <code>2</code> 行代码相当于将 <code>x</code> 赋值给 <code>x-&gt;next</code>，自己指向自己。因此，整个链表也就断成了两半，从结点 <code>b</code> 往后的所有结点都无法访问到了。</p>
+<p>对于有些语言来说，比如 <code>C</code> 语言，内存管理是由程序员负责的，如果没有手动释放结点对应的内存空间，就会产生内存泄露。所以，<strong>插入结点时，一定要注意操作的顺序</strong>，要先将结点 <code>x</code> 的 <code>next</code> 指针指向结点 <code>b</code>，再把结点 <code>a</code> 的 <code>next</code> 指针指向结点 <code>x</code>，这样才不会丢失指针，导致内存泄漏。所以，对于刚刚的插入代码，只需要把第 <code>1</code> 行和第 <code>2</code> 行代码的顺序颠倒一下就可以了。</p>
+<p>同理，<strong>删除链表结点时，也一定要记得手动释放内存空间</strong>，否则，也会出现内存泄漏的问题。当然，对于像 <code>Java</code> 这种虚拟机自动管理内存的编程语言来说，就不需要考虑这么多了。</p>
+<h2 id="技巧三：利用哨兵简化实现难度"><a href="#技巧三：利用哨兵简化实现难度" class="headerlink" title="技巧三：利用哨兵简化实现难度"></a>技巧三：利用哨兵简化实现难度</h2><p>首先，先来回顾一下单链表的插入和删除操作。如果在结点 <code>p</code> 后面插入一个新的结点，只需要下面两行代码就可以搞定。</p>
+<pre><code class="hljs c">new_node-&gt;next = p-&gt;next;
+p-&gt;next = new_node;</code></pre>
+<p>但是，当要向一个空链表中插入第一个结点，刚刚的逻辑就不能用了。需要进行下面这样的特殊处理，其中 <code>head</code> 表示链表的头结点。所以，从这段代码，可以发现，对于单链表的插入操作，第一个结点和其他结点的插入逻辑是不一样的。</p>
+<pre><code class="hljs c"><span class="hljs-keyword">if</span> (head == null) &#123;
+  head = new_node;
+&#125;</code></pre>
+<p>再来看单链表结点删除操作。如果要删除结点 <code>p</code> 的后继结点，只需要一行代码就可以搞定。</p>
+<pre><code class="hljs c">p-&gt;next = p-&gt;next-&gt;next;</code></pre>
+<p>但是，如果要删除链表中的最后一个结点，前面的删除代码就不 <code>work</code> 了。跟插入类似，也需要对于这种情况特殊处理。写成代码是这样子的：</p>
+<pre><code class="hljs c"><span class="hljs-keyword">if</span> (head-&gt;next == null) &#123;
+   head = null;
+&#125;</code></pre>
+<p>从前面的一步一步分析，可以看出，<strong>针对链表的插入、删除操作，需要对插入第一个结点和删除最后一个结点的情况进行特殊处理</strong>。这样代码实现起来就会很繁琐，不简洁，而且也容易因为考虑不全而出错。如何来解决这个问题呢？</p>
+<p>技巧三中提到的哨兵就要登场了。哨兵，解决的是国家之间的边界问题。同理，这里说的哨兵也是解决“边界问题”的，不直接参与业务逻辑。</p>
+<p>还记得如何表示一个空链表吗？<code>head=null</code> 表示链表中没有结点了。其中 <code>head</code> 表示头结点指针，指向链表中的第一个结点。</p>
+<p>如果引入哨兵结点，在任何时候，不管链表是不是空，<code>head</code> 指针都会一直指向这个哨兵结点。也把这种有哨兵结点的链表叫<strong>带头链表</strong>。相反，没有哨兵结点的链表就叫作<strong>不带头链表</strong>。</p>
+<p>下图是一个带头链表，你可以发现，哨兵结点是不存储数据的。因为哨兵结点一直存在，所以插入第一个结点和插入其他结点，删除最后一个结点和删除其他结点，都可以统一为相同的代码实现逻辑了。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/26/17368ad0-c7d6-11e9-bd0a-57cc00d1a72f.png" srcset="/img/loading.gif" alt="image.png"><br>实际上，这种利用哨兵简化编程难度的技巧，在很多代码实现中都有用到，比如插入排序、归并排序、动态规划等。现在为了让你感受更深，再举一个非常简单的例子。代码是用 <code>C</code> 语言实现的，不涉及语言方面的高级语法，很容易看懂，你可以类比到你熟悉的语言。</p>
+<p>代码一：</p>
+<pre><code class="hljs c"><span class="hljs-comment">// 在数组 a 中，查找 key，返回 key 所在的位置</span>
+<span class="hljs-comment">// 其中，n 表示数组 a 的长度</span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">find</span><span class="hljs-params">(<span class="hljs-keyword">char</span>* a, <span class="hljs-keyword">int</span> n, <span class="hljs-keyword">char</span> key)</span> </span>&#123;
+  <span class="hljs-comment">// 边界条件处理，如果 a 为空，或者 n&lt;=0，说明数组中没有数据，就不用 while 循环比较了</span>
+  <span class="hljs-keyword">if</span>(a == null || n &lt;= <span class="hljs-number">0</span>) &#123;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+  &#125;
+  
+  <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>;
+  <span class="hljs-comment">// 这里有两个比较操作：i&lt;n 和 a[i]==key.</span>
+  <span class="hljs-keyword">while</span> (i &lt; n) &#123;
+    <span class="hljs-keyword">if</span> (a[i] == key) &#123;
+      <span class="hljs-keyword">return</span> i;
+    &#125;
+    ++i;
+  &#125;
+  
+  <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+&#125;</code></pre>
+<p>代码二：</p>
+<pre><code class="hljs c"><span class="hljs-comment">// 在数组 a 中，查找 key，返回 key 所在的位置</span>
+<span class="hljs-comment">// 其中，n 表示数组 a 的长度</span>
+<span class="hljs-comment">// 我举 2 个例子，你可以拿例子走一下代码</span>
+<span class="hljs-comment">// a = &#123;4, 2, 3, 5, 9, 6&#125;  n=6 key = 7</span>
+<span class="hljs-comment">// a = &#123;4, 2, 3, 5, 9, 6&#125;  n=6 key = 6</span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">find</span><span class="hljs-params">(<span class="hljs-keyword">char</span>* a, <span class="hljs-keyword">int</span> n, <span class="hljs-keyword">char</span> key)</span> </span>&#123;
+  <span class="hljs-keyword">if</span>(a == null || n &lt;= <span class="hljs-number">0</span>) &#123;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+  &#125;
+  
+  <span class="hljs-comment">// 这里因为要将 a[n-1] 的值替换成 key，所以要特殊处理这个值</span>
+  <span class="hljs-keyword">if</span> (a[n<span class="hljs-number">-1</span>] == key) &#123;
+    <span class="hljs-keyword">return</span> n<span class="hljs-number">-1</span>;
+  &#125;
+  
+  <span class="hljs-comment">// 把 a[n-1] 的值临时保存在变量 tmp 中，以便之后恢复。tmp=6。</span>
+  <span class="hljs-comment">// 之所以这样做的目的是：希望 find() 代码不要改变 a 数组中的内容</span>
+  <span class="hljs-keyword">char</span> tmp = a[n<span class="hljs-number">-1</span>];
+  <span class="hljs-comment">// 把 key 的值放到 a[n-1] 中，此时 a = &#123;4, 2, 3, 5, 9, 7&#125;</span>
+  a[n<span class="hljs-number">-1</span>] = key;
+  
+  <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>;
+  <span class="hljs-comment">// while 循环比起代码一，少了 i&lt;n 这个比较操作</span>
+  <span class="hljs-keyword">while</span> (a[i] != key) &#123;
+    ++i;
+  &#125;
+  
+  <span class="hljs-comment">// 恢复 a[n-1] 原来的值, 此时 a= &#123;4, 2, 3, 5, 9, 6&#125;</span>
+  a[n<span class="hljs-number">-1</span>] = tmp;
+  
+  <span class="hljs-keyword">if</span> (i == n<span class="hljs-number">-1</span>) &#123;
+    <span class="hljs-comment">// 如果 i == n-1 说明，在 0...n-2 之间都没有 key，所以返回 -1</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+  &#125; <span class="hljs-keyword">else</span> &#123;
+    <span class="hljs-comment">// 否则，返回 i，就是等于 key 值的元素的下标</span>
+    <span class="hljs-keyword">return</span> i;
+  &#125;
+&#125;</code></pre>
+<p>对比两段代码，在字符串 <code>a</code> 很长的时候，比如几万、几十万，你觉得哪段代码运行得更快点呢？答案是代码二，因为两段代码中执行次数最多就是 <code>while</code> 循环那一部分。第二段代码中，通过一个哨兵 <code>a[n-1] = key</code>，成功省掉了一个比较语句 <code>i&lt;n</code>，不要小看这一条语句，当累积执行万次、几十万次时，累积的时间就很明显了。</p>
+<p>当然，这只是为了举例说明哨兵的作用，写代码的时候千万不要写第二段那样的代码，因为可读性太差了。大部分情况下，并不需要如此追求极致的性能。</p>
+<h2 id="技巧四：重点留意边界条件处理"><a href="#技巧四：重点留意边界条件处理" class="headerlink" title="技巧四：重点留意边界条件处理"></a>技巧四：重点留意边界条件处理</h2><p>软件开发中，代码在一些边界或者异常情况下，最容易产生 <code>Bug</code>。链表代码也不例外。要实现没有 <code>Bug</code> 的链表代码，一定要在编写的过程中以及编写完成之后，检查边界条件是否考虑全面，以及代码在边界条件下是否能正确运行。</p>
+<p>经常用来检查链表代码是否正确的边界条件有这样几个：</p>
+<ul>
+<li><p>如果链表为空时，代码是否能正常工作？</p>
+</li>
+<li><p>如果链表只包含一个结点时，代码是否能正常工作？</p>
+</li>
+<li><p>如果链表只包含两个结点时，代码是否能正常工作？</p>
+</li>
+<li><p>代码逻辑在处理头结点和尾结点的时候，是否能正常工作？</p>
+</li>
+</ul>
+<p>当你写完链表代码之后，除了看下写的代码在正常的情况下能否工作，还要看下在上面列举的几个边界条件下，代码仍然能否正确工作。如果这些边界条件下都没有问题，那基本上可以认为没有问题了。</p>
+<p>当然，边界条件不止列举的那些。针对不同的场景，可能还有特定的边界条件，这个需要自己去思考，不过套路都是一样的。</p>
+<p>实际上，不光光是写链表代码，在写任何代码时，也千万不要只是实现业务正常情况下的功能就好了，一定要多想想，你的代码在运行的时候，可能会遇到哪些边界情况或者异常情况。遇到了应该如何应对，这样写出来的代码才够健壮！</p>
+<h2 id="技巧五：举例画图，辅助思考"><a href="#技巧五：举例画图，辅助思考" class="headerlink" title="技巧五：举例画图，辅助思考"></a>技巧五：举例画图，辅助思考</h2><p>对于稍微复杂的链表操作，比如前面提到的单链表反转，指针一会儿指这，一会儿指那，一会儿就被绕晕了。总感觉脑容量不够，想不清楚。所以这个时候就要使用大招了，<strong>举例法</strong>和<strong>画图法</strong>。</p>
+<p>你可以找一个具体的例子，把它画在纸上，释放一些脑容量，留更多的给逻辑思考，这样就会感觉到思路清晰很多。比如往单链表中插入一个数据这样一个操作，一般都是把各种情况都举一个例子，画出插入前和插入后的链表变化，如图所示：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/26/d685c310-c7d6-11e9-bd0a-57cc00d1a72f.png" srcset="/img/loading.gif" alt="image.png"></p>
+<p>看图写代码，是不是就简单多了？而且，当写完代码之后，也可以举几个例子，画在纸上，照着代码走一遍，很容易就能发现代码中的 <code>Bug</code>。</p>
+<h2 id="技巧六：多写多练，没有捷径"><a href="#技巧六：多写多练，没有捷径" class="headerlink" title="技巧六：多写多练，没有捷径"></a>技巧六：多写多练，没有捷径</h2><p>如果你已经理解并掌握了前面所讲的方法，但是手写链表代码还是会出现各种各样的错误，也不要着急。因为我最开始学的时候，这种状况也持续了一段时间。</p>
+<p>其实也没有什么技巧，就是把常见的链表操作都自己多写几遍，出问题就一点一点调试，熟能生巧！</p>
+<p>所以，精选了 <code>5</code> 个常见的链表操作。你只要把这几个操作都能写熟练，不熟就多写几遍，保证你之后再也不会害怕写链表代码。</p>
+<ul>
+<li><p>单链表反转</p>
+</li>
+<li><p>链表中环的检测</p>
+</li>
+<li><p>两个有序的链表合并</p>
+</li>
+<li><p>删除链表倒数第 n 个结点</p>
+</li>
+<li><p>求链表的中间结点</p>
+</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这节主要讲了写出正确链表代码的六个技巧。分别是理解指针或引用的含义、警惕指针丢失和内存泄漏、利用哨兵简化实现难度、重点留意边界条件处理，以及举例画图、辅助思考，还有多写多练。</p>
+<p><strong>写链表代码是最考验逻辑思维能力的</strong>。因为，链表代码到处都是指针的操作、边界条件的处理，稍有不慎就容易产生 <code>Bug</code>。链表代码写得好坏，可以看出一个人写代码是否够细心，考虑问题是否全面，思维是否缜密。所以，这也是很多面试官喜欢让人手写链表代码的原因。所以，这一节讲到的东西，你一定要自己写代码实现一下，才有效果。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>上面讲到用哨兵来简化编码实现，你是否还能够想到其他场景，利用哨兵可以大大地简化编码难度？欢迎留言和我分享。</p>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E5%88%9D%E7%BA%A7/">数据结构与算法(初级)</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E9%93%BE%E8%A1%A8/">链表</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/passages/6/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">6.栈</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/passages/4/">
+                        <span class="hidden-mobile">4.链表（上）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+    <div id="vcomments"></div>
+    <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+    <script type="text/javascript">
+        var oldLoadVa = window.onload;
+        window.onload = function () {
+            oldLoadVa && oldLoadVa();
+
+            new Valine({
+                el: "#vcomments",
+                app_id: "O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",
+                app_key: "5Rl3Rhl9zc8BJNvrPcncKWFy",
+                placeholder: "说点什么吧~",
+                path: window.location.pathname,
+                avatar: "retro",
+                meta: ["nick","mail","link"],
+                pageSize: "10",
+                lang: "zh-CN",
+                highlight: true,
+                recordIP: true,
+                serverURLs: "https://lean.muchen.fun",
+            });
+        };
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments
+            powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><br><div class="text-center">欢迎关注我的公众号</div>
+    </div>
+  </div>
+
+
+    
+</main>
+
+
+    <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+
+
+
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+                <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mx-3">
+                <div class="md-form mb-5">
+                    <input type="text" id="local-search-input" class="form-control validate">
+                    <label data-error="x"
+                           data-success="v"
+                           for="local-search-input">关键词</label>
+                </div>
+                <div class="list-group" id="local-search-result"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    <div>
+      <span id="timeDate">载入天数...</span>
+      <span id="times">载入时分秒...</span>
+      <script>
+        var now = new Date();
+
+        function createtime() {
+          var grt = new Date("07/12/2019 00:00:00");//此处修改你的建站时间或者网站上线时间
+          now.setTime(now.getTime() + 250);
+          days = (now - grt) / 1000 / 60 / 60 / 24;
+          dnum = Math.floor(days);
+          hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+          hnum = Math.floor(hours);
+          if (String(hnum).length == 1) {
+            hnum = "0" + hnum;
+          }
+          minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+          mnum = Math.floor(minutes);
+          if (String(mnum).length == 1) {
+            mnum = "0" + mnum;
+          }
+          seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+          snum = Math.round(seconds);
+          if (String(snum).length == 1) {
+            snum = "0" + snum;
+          }
+          document.getElementById("timeDate").innerHTML = "本站已运行&nbsp" + dnum + "&nbsp天";
+          document.getElementById("times").innerHTML = hnum + "&nbsp小时&nbsp" + mnum + "&nbsp分&nbsp" + snum + "&nbsp秒";
+        }
+
+        setInterval("createtime()", 250);
+      </script>
+    </div>
+    <p id="hitokoto">:D 获取中...</p>
+    <script>
+      fetch('https://v1.hitokoto.cn')
+              .then(response => response.json())
+              .then(data => {
+                const hitokoto = document.getElementById('hitokoto')
+                hitokoto.innerText = data.hitokoto + '--「' + data.from + '」'
+              })
+              .catch(console.error)
+    </script>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+    <script  src="/js/lazyload.js" ></script>
+
+
+
+    
+
+
+
+
+    <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+    <script  src="/js/clipboard-use.js" ></script>
+
+
+
+    <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+    
+<script src="https://static.muchen.fun/js/custom.js"></script>
+
+
+
+<!-- Plugins -->
+
+
+    
+        <!-- Baidu Analytics -->
+        <script defer>
+            var _hmt = _hmt || [];
+            (function () {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    
+
+    
+        <!-- Google Analytics -->
+        <script defer>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-144841374-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+    <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+    <script>
+        var typed = new Typed('#subtitle', {
+            strings: [
+                '  ',
+                "5.链表（下）&nbsp;",
+            ],
+            cursorChar: "_",
+            typeSpeed: 60,
+            loop: false,
+        });
+        typed.stop();
+        $(document).ready(function () {
+            $(".typed-cursor").addClass("h2");
+            typed.start();
+        });
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+    <script>
+        anchors.options = {
+            placement: "right",
+            visible: "hover",
+            
+        };
+        var el = "h1,h2,h3,h4,h5,h6".split(",");
+        var res = [];
+        for (item of el) {
+            res.push(".markdown-body > " + item)
+        }
+        anchors.add(res.join(", "))
+    </script>
+
+
+
+    <script  src="/js/local-search.js" ></script>
+    <script>
+        var path = "/local-search.xml";
+        var inputArea = document.querySelector("#local-search-input");
+        inputArea.onclick = function () {
+            searchFunc(path, 'local-search-input', 'local-search-result');
+            this.onclick = null
+        }
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+    <script>
+        $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+            function () {
+                var element = document.createElement('a');
+                $(element).attr('data-fancybox', 'images');
+                $(element).attr('href', $(this).attr('src'));
+                $(this).wrap(element);
+            }
+        );
+    </script>
+
+
+
+
+
+    
+
+    
+        <!-- MathJax -->
+        <script>
+            MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']]
+                },
+                options: {
+                    renderActions: {
+                        findScript: [10, doc => {
+                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                                const display = !!node.type.match(/; *mode=display/);
+                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                                const text = document.createTextNode('');
+                                node.parentNode.replaceChild(text, node);
+                                math.start = {node: text, delim: '', n: 0};
+                                math.end = {node: text, delim: '', n: 0};
+                                doc.math.push(math);
+                            });
+                        }, '', false],
+                        insertedScript: [200, () => {
+                            document.querySelectorAll('mjx-container').forEach(node => {
+                                let target = node.parentNode;
+                                if (target.nodeName.toLowerCase() === 'li') {
+                                    target.parentNode.classList.add('has-jax');
+                                }
+                            });
+                        }, '', false]
+                    }
+                }
+            };
+        </script>
+
+        <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+    
+
+
+
+    
+    
+        <script>
+            !function (e, t, a) {
+                function r() {
+                    for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+                    requestAnimationFrame(r)
+                }
+
+                function n() {
+                    var t = "function" == typeof e.onclick && e.onclick;
+                    e.onclick = function (e) {
+                        t && t(), o(e)
+                    }
+                }
+
+                function o(e) {
+                    var a = t.createElement("div");
+                    a.className = "heart", s.push({
+                        el: a,
+                        x: e.clientX - 5,
+                        y: e.clientY - 5,
+                        scale: 1,
+                        alpha: 1,
+                        color: c()
+                    }), t.body.appendChild(a)
+                }
+
+                function i(e) {
+                    var a = t.createElement("style");
+                    a.type = "text/css";
+                    try {
+                        a.appendChild(t.createTextNode(e))
+                    } catch (t) {
+                        a.styleSheet.cssText = e
+                    }
+                    t.getElementsByTagName("head")[0].appendChild(a)
+                }
+
+                function c() {
+                    return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+                }
+
+                var s = [];
+                e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+                    setTimeout(e, 1e3 / 60)
+                }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+            }(window, document);
+        </script>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

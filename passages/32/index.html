@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png">
+    <link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <meta name="theme-color" content="#2f4154">
+    <meta name="description" content="沐晨的个人博客,技术博客">
+    <meta name="author" content="Li Duo">
+    <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
+    <title>32.`Trie`树 - MuChen&#39;s Blog</title>
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+    
+<link rel="stylesheet" href="https://static.muchen.fun/css/custom.css?t=0.1423425.css">
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+<script>
+    var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+    // 依次判断 系统暗黑模式 指定时间 缓存 dark
+    if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+        if (!(isNight && localStorage.getItem('noDark') === '1')) {
+            document.body.classList.add('dark');
+        }
+    }
+    document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
+</script>
+<header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+    <div class="container">
+        <a class="navbar-brand"
+           href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a>
+
+        <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="animated-icon"><span></span><span></span><span></span></div>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto text-center">
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/archives/">
+                            <i class="iconfont icon-archive-fill"></i>
+                            归档</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/categories/">
+                            <i class="iconfont icon-category-fill"></i>
+                            分类</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tags/">
+                            <i class="iconfont icon-tags-fill"></i>
+                            标签</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/messageBoard/">
+                            <i class="iconfont icon-speakernotes"></i>
+                            留言</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about/">
+                            <i class="iconfont icon-user-fill"></i>
+                            关于</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/links/">
+                            <i class="iconfont icon-link-fill"></i>
+                            友链</a>
+                    </li>
+                
+                
+                    <li class="nav-item" id="search-btn">
+                        <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                                    class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+                    </li>
+                
+                <li class="nav-item">
+                    <a id="dark" class="nav-link" onclick="switchDarkMode()">
+                        <i class="iconfont icon-sun"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/images/07.jpg') no-repeat center center;
+                 background-size: cover;">
+        <div class="full-bg-img">
+            <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+                <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+                
+            </span>
+
+                    
+                        
+                            <div class="mt-3 post-meta">
+                                <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                                <time datetime="2019-08-08 11:47">
+                                    2019年8月8日 中午
+                                </time>
+                            </div>
+                        
+
+                        <div class="mt-1">
+                            
+                                
+                                <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    3.9k 字
+                  </span>
+                            
+
+                            
+                                
+                                <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                                    
+                                    
+                                    52
+                                     分钟
+                  </span>
+                            
+
+                            
+                                <!-- 不蒜子统计文章PV -->
+                                
+                                <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
+                    <i class="iconfont icon-eye" aria-hidden="true"></i>
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>
+                            
+                        </div>
+                    
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    
+        
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：9 个月前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <!-- more -->
+<p>搜索引擎的搜索关键词提示功能，应该不陌生吧？为了方便快速输入，当你在搜索引擎的搜索框中，输入要搜索的文字的某一部分的时候，搜索引擎就会自动弹出下拉框，里面是各种关键词提示。可以直接从下拉框中选择要搜索的东西，而不用把所有内容都输入进去，一定程度上节省了搜索时间。</p>
+<p>尽管这个功能几乎天天在用，作为一名工程师，你是否思考过，它是怎么实现的呢？它底层使用的是哪种数据结构和算法呢？</p>
+<p>像 <code>Google</code>、百度这样的搜索引擎，它们的关键词提示功能非常全面和精准，肯定做了很多优化，但万变不离其宗，底层最基本的原理就是这种数据结构：<code>Trie</code> 树。</p>
+<h2 id="什么是“Trie-树”？"><a href="#什么是“Trie-树”？" class="headerlink" title="什么是“Trie 树”？"></a>什么是“Trie 树”？</h2><p><code>Trie</code> 树，也叫“字典树”。顾名思义，它是一个树形结构。它是一种专门处理字符串匹配的数据结构，用来解决在一组字符串集合中快速查找某个字符串的问题。</p>
+<p>举个简单的例子来说明一下。有 <code>6</code> 个字符串，它们分别是：<code>how</code>，<code>hi</code>，<code>her</code>，<code>hello</code>，<code>so</code>，<code>see</code>。希望在里面多次查找某个字符串是否存在。如果每次查找，都是拿要查找的字符串跟这 <code>6</code> 个字符串依次进行字符串匹配，那效率就比较低，有没有更高效的方法呢？</p>
+<p>这个时候，就可以先对这 <code>6</code> 个字符串做一下预处理，组织成 <code>Trie</code> 树的结构，之后每次查找，都是在 <code>Trie</code> 树中进行匹配查找。<strong><code>Trie</code> 树的本质，就是利用字符串之间的公共前缀，将重复的前缀合并在一起</strong>。最后构造出来的就是下面这个图中的样子。<br><img src="./3cc6a307.jpeg" srcset="/img/loading.gif" alt="image"><br>其中，根节点不包含任何信息。每个节点表示一个字符串中的字符，从根节点到红色节点的一条路径表示一个字符串（注意：红色节点并不都是叶子节点）。</p>
+<p>为了更容易理解 <code>Trie</code> 树是怎么构造出来的，下面有一个 <code>Trie</code> 树构造的分解过程。构造过程的每一步，都相当于往 <code>Trie</code> 树中插入一个字符串。当所有字符串都插入完成之后，<code>Trie</code> 树就构造好了。<br><img src="./53dc616c.jpeg" srcset="/img/loading.gif" alt="image"><br><img src="./3aa2fcd8.jpeg" srcset="/img/loading.gif" alt="image"><br>当在 <code>Trie</code> 树中查找一个字符串的时候，比如查找字符串<code>her</code>，把将要查找的字符串分割成单个的字符 <code>h</code>，<code>e</code>，<code>r</code>，然后从 <code>Trie</code> 树的根节点开始匹配。如图所示，绿色的路径就是在 <code>Trie</code> 树中匹配的路径。<br><img src="./10f3603c.jpeg" srcset="/img/loading.gif" alt="image"><br>如果要查找的是字符串<code>he</code>呢？还用上面同样的方法，从根节点开始，沿着某条路径来匹配，如图所示，绿色的路径，是字符串<code>he</code>匹配的路径。但是，路径的最后一个节点<code>e</code>并不是红色的。也就是说，<code>he</code>是某个字符串的前缀子串，但并不能完全匹配任何字符串。<br><img src="./c6f8956a.jpeg" srcset="/img/loading.gif" alt="image"></p>
+<h2 id="如何实现一棵-Trie-树？"><a href="#如何实现一棵-Trie-树？" class="headerlink" title="如何实现一棵 Trie 树？"></a>如何实现一棵 Trie 树？</h2><p>从刚刚 <code>Trie</code> 树的介绍来看，<code>Trie</code> 树主要有两个操作，<strong>一个是将字符串集合构造成 Trie 树</strong>。这个过程分解开来的话，就是一个将字符串插入到 <code>Trie</code> 树的过程。<strong>另一个是在 Trie 树中查询一个字符串</strong>。</p>
+<p>了解了 <code>Trie</code> 树的两个主要操作之后，再来看下，如何存储一个 <code>Trie</code> 树？</p>
+<p>从前面的图中，可以看出，<code>Trie</code> 树是一个多叉树。二叉树中，一个节点的左右子节点是通过两个指针来存储的，如下所示 <code>Java</code> 代码。那对于多叉树来说，怎么存储一个节点的所有子节点的指针呢？</p>
+<pre><code class="hljs java"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BinaryTreeNode</span> </span>&#123;
+  <span class="hljs-keyword">char</span> data;
+  BinaryTreeNode left;
+  BinaryTreeNode right;  
+&#125;</code></pre>
+<p>先介绍其中一种存储方式，也是经典的存储方式，大部分数据结构和算法书籍中都是这么讲的。还记得散列表吗？借助散列表的思想，通过一个下标与字符一一映射的数组，来存储子节点的指针。这句话稍微有点抽象，不怎么好懂，下面有一张图可以看看。<br><img src="./218b1201.jpeg" srcset="/img/loading.gif" alt="image"><br>假设字符串中只有从 <code>a</code> 到 <code>z</code> 这 <code>26</code> 个小写字母，在数组中下标为 <code>0</code> 的位置，存储指向子节点 <code>a</code> 的指针，下标为 <code>1</code> 的位置存储指向子节点 <code>b</code> 的指针，以此类推，下标为 <code>25</code> 的位置，存储的是指向的子节点 <code>z</code> 的指针。如果某个字符的子节点不存在，就在对应的下标的位置存储 <code>null</code>。</p>
+<pre><code class="hljs java"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TrieNode</span> </span>&#123;
+  <span class="hljs-keyword">char</span> data;
+  TrieNode children[<span class="hljs-number">26</span>];
+&#125;</code></pre>
+<p>当在 <code>Trie</code> 树中查找字符串的时候，就可以通过字符的 <code>ASCII</code> 码减去<code>a</code>的 <code>ASCII</code> 码，迅速找到匹配的子节点的指针。比如，<code>d</code> 的 <code>ASCII</code> 码减去 <code>a</code> 的 <code>ASCII</code> 码就是 <code>3</code>，那子节点 <code>d</code> 的指针就存储在数组中下标为 <code>3</code> 的位置中。</p>
+<p>把上面的描述翻译成了代码，可以结合着一块看下，应该有助于理解。</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Trie</span> </span>&#123;
+  <span class="hljs-keyword">private</span> TrieNode root = <span class="hljs-keyword">new</span> TrieNode(<span class="hljs-string">'/'</span>); <span class="hljs-comment">// 存储无意义字符</span>
+
+  <span class="hljs-comment">// 往 Trie 树中插入一个字符串</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">insert</span><span class="hljs-params">(<span class="hljs-keyword">char</span>[] text)</span> </span>&#123;
+    TrieNode p = root;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; text.length; ++i) &#123;
+      <span class="hljs-keyword">int</span> index = text[i] - <span class="hljs-string">'a'</span>;
+      <span class="hljs-keyword">if</span> (p.children[index] == <span class="hljs-keyword">null</span>) &#123;
+        TrieNode newNode = <span class="hljs-keyword">new</span> TrieNode(text[i]);
+        p.children[index] = newNode;
+      &#125;
+      p = p.children[index];
+    &#125;
+    p.isEndingChar = <span class="hljs-keyword">true</span>;
+  &#125;
+
+  <span class="hljs-comment">// 在 Trie 树中查找一个字符串</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">find</span><span class="hljs-params">(<span class="hljs-keyword">char</span>[] pattern)</span> </span>&#123;
+    TrieNode p = root;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; pattern.length; ++i) &#123;
+      <span class="hljs-keyword">int</span> index = pattern[i] - <span class="hljs-string">'a'</span>;
+      <span class="hljs-keyword">if</span> (p.children[index] == <span class="hljs-keyword">null</span>) &#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>; <span class="hljs-comment">// 不存在 pattern</span>
+      &#125;
+      p = p.children[index];
+    &#125;
+    <span class="hljs-keyword">if</span> (p.isEndingChar == <span class="hljs-keyword">false</span>) <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>; <span class="hljs-comment">// 不能完全匹配，只是前缀</span>
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>; <span class="hljs-comment">// 找到 pattern</span>
+  &#125;
+
+  <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TrieNode</span> </span>&#123;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">char</span> data;
+    <span class="hljs-keyword">public</span> TrieNode[] children = <span class="hljs-keyword">new</span> TrieNode[<span class="hljs-number">26</span>];
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> isEndingChar = <span class="hljs-keyword">false</span>;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">TrieNode</span><span class="hljs-params">(<span class="hljs-keyword">char</span> data)</span> </span>&#123;
+      <span class="hljs-keyword">this</span>.data = data;
+    &#125;
+  &#125;
+&#125;</code></pre>
+<p>现在，再来看下，<strong>在 Trie 树中，查找某个字符串的时间复杂度是多少？</strong></p>
+<p>如果要在一组字符串中，频繁地查询某些字符串，用 <code>Trie</code> 树会非常高效。构建 <code>Trie</code> 树的过程，需要扫描所有的字符串，时间复杂度是 $O(n)$（<code>n</code> 表示所有字符串的长度和）。但是一旦构建成功之后，后续的查询操作会非常高效。</p>
+<p>每次查询时，如果要查询的字符串长度是 <code>k</code>，那只需要比对大约 <code>k</code> 个节点，就能完成查询操作。跟原本那组字符串的长度和个数没有任何关系。所以说，构建好 <code>Trie</code> 树后，在其中查找字符串的时间复杂度是 $O(k)$，<code>k</code> 表示要查找的字符串的长度。</p>
+<h2 id="Trie-树真的很耗内存吗？"><a href="#Trie-树真的很耗内存吗？" class="headerlink" title="Trie 树真的很耗内存吗？"></a>Trie 树真的很耗内存吗？</h2><p><code>Trie</code> 树是一种非常独特的、高效的字符串匹配方法。但是，关于 <code>Trie</code> 树，有没有听过这样一种说法：“Trie 树是非常耗内存的，用的是一种空间换时间的思路”。这是什么原因呢？</p>
+<p>刚刚在讲 <code>Trie</code> 树的实现的时候，讲到用数组来存储一个节点的子节点的指针。如果字符串中包含从 <code>a</code> 到 <code>z</code> 这 <code>26</code> 个字符，那每个节点都要存储一个长度为 <code>26</code> 的数组，并且每个数组存储一个 <code>8</code> 字节指针（或者是 <code>4</code> 字节，这个大小跟 <code>CPU</code>、操作系统、编译器等有关）。而且，即便一个节点只有很少的子节点，远小于 <code>26</code> 个，比如 <code>3</code>、<code>4</code> 个，也要维护一个长度为 <code>26</code> 的数组。</p>
+<p><code>Trie</code> 树的本质是避免重复存储一组字符串的相同前缀子串，但是现在每个字符（对应一个节点）的存储远远大于 <code>1</code> 个字节。按照上面举的例子，数组长度为 <code>26</code>，每个元素是 <code>8</code> 字节，那每个节点就会额外需要 <code>26*8 = 208</code> 个字节。而且这还是只包含 <code>26</code> 个字符的情况。</p>
+<p>如果字符串中不仅包含小写字母，还包含大写字母、数字、甚至是中文，那需要的存储空间就更多了。所以，也就是说，在某些情况下，<code>Trie</code> 树不一定会节省存储空间。在重复的前缀并不多的情况下，<code>Trie</code> 树不但不能节省内存，还有可能会浪费更多的内存。</p>
+<p>当然，不可否认，<code>Trie</code> 树尽管有可能很浪费内存，但是确实非常高效。那为了解决这个内存问题，是否有其他办法呢？</p>
+<p>可以稍微牺牲一点查询的效率，将每个节点中的数组换成其他数据结构，来存储一个节点的子节点指针。用哪种数据结构呢？选择其实有很多，比如有序数组、跳表、散列表、红黑树等。</p>
+<p>假设用有序数组，数组中的指针按照所指向的子节点中的字符的大小顺序排列。查询的时候，可以通过二分查找的方法，快速查找到某个字符应该匹配的子节点的指针。但是，在往 <code>Trie</code> 树中插入一个字符串的时候，为了维护数组中数据的有序性，就会稍微慢了点。</p>
+<p>实际上，<code>Trie</code> 树的变体有很多，都可以在一定程度上解决内存消耗的问题。比如，<strong>缩点优化</strong>，就是对只有一个子节点的节点，而且此节点不是一个串的结束节点，可以将此节点与子节点合并。这样可以节省空间，但却增加了编码难度。这里就不展开详细讲解了，如果感兴趣，可以自行研究下。<br><img src="./78d2d025.jpeg" srcset="/img/loading.gif" alt="image"></p>
+<h2 id="Trie-树与散列表、红黑树的比较"><a href="#Trie-树与散列表、红黑树的比较" class="headerlink" title="Trie 树与散列表、红黑树的比较"></a>Trie 树与散列表、红黑树的比较</h2><p>实际上，字符串的匹配问题，笼统上讲，其实就是数据的查找问题。对于支持动态数据高效操作的数据结构，前面已经讲过好多了，比如散列表、红黑树、跳表等等。实际上，这些数据结构也可以实现在一组字符串中查找字符串的功能。这里选了两种数据结构，散列表和红黑树，跟 <code>Trie</code> 树比较一下，看看它们各自的优缺点和应用场景。</p>
+<p>在刚刚讲的这个场景，在一组字符串中查找字符串，<code>Trie</code> 树实际上表现得并不好。它对要处理的字符串有及其严苛的要求。</p>
+<p>第一，字符串中包含的字符集不能太大。前面讲到，如果字符集太大，那存储空间可能就会浪费很多。即便可以优化，但也要付出牺牲查询、插入效率的代价。</p>
+<p>第二，要求字符串的前缀重合比较多，不然空间消耗会变大很多。</p>
+<p>第三，如果要用 <code>Trie</code> 树解决问题，那就要自己从零开始实现一个 <code>Trie</code> 树，还要保证没有 <code>bug</code>，这个在工程上是将简单问题复杂化，除非必须，一般不建议这样做。</p>
+<p>第四，通过指针串起来的数据块是不连续的，而 <code>Trie</code> 树中用到了指针，所以，对缓存并不友好，性能上会打个折扣。</p>
+<p>综合这几点，针对在一组字符串中查找字符串的问题，在工程中，更倾向于用散列表或者红黑树。因为这两种数据结构，都不需要自己去实现，直接利用编程语言中提供的现成类库就行了。</p>
+<p>讲到这里，可能要疑惑了，讲了半天，这里对 <code>Trie</code> 树一通否定，还让用红黑树或者散列表，那 <code>Trie</code> 树是不是就没用了呢？是不是这里的内容就白看了呢？</p>
+<p>实际上，<code>Trie</code> 树只是不适合精确匹配查找，这种问题更适合用散列表或者红黑树来解决。<code>Trie</code> 树比较适合的是查找前缀匹配的字符串，也就是类似开篇问题的那种场景。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>Trie</code> 树是一种解决字符串快速匹配问题的数据结构。如果用来构建 <code>Trie</code> 树的这一组字符串中，前缀重复的情况不是很多，那 <code>Trie</code> 树这种数据结构总体上来讲是比较费内存的，是一种空间换时间的解决问题思路。</p>
+<p>尽管比较耗费内存，但是对内存不敏感或者内存消耗在接受范围内的情况下，在 <code>Trie</code> 树中做字符串匹配还是非常高效的，时间复杂度是 $O(k)$，<code>k</code> 表示要匹配的字符串的长度。</p>
+<p>但是，<code>Trie</code> 树的优势并不在于，用它来做动态集合数据的查找，因为，这个工作完全可以用更加合适的散列表或者红黑树来替代。<code>Trie</code> 树最有优势的是查找前缀匹配的字符串，比如搜索引擎中的关键词提示功能这个场景，就比较适合用它来解决，也是 <code>Trie</code> 树比较经典的应用场景。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ol>
+<li><p>如何利用 <code>Trie</code> 树，实现搜索关键词的提示功能？</p>
+<blockquote>
+<p>假设关键词库由用户的热门搜索关键词组成。将这个词库构建成一个 <code>Trie</code> 树。当用户输入其中某个单词的时候，把这个词作为一个前缀子串在 <code>Trie</code> 树中匹配。假设词库里只有 <code>hello</code>、<code>her</code>、<code>hi</code>、<code>how</code>、<code>so</code>、<code>see</code> 这 <code>6</code> 个关键词。当用户输入了字母 <code>h</code> 的时候，就把以 <code>h</code> 为前缀的 <code>hello</code>、<code>her</code>、<code>hi</code>、<code>how</code> 展示在搜索提示框内。当用户继续键入字母 <code>e</code> 的时候，就把以 <code>he</code> 为前缀的 <code>hello</code>、<code>her</code> 展示在搜索提示框内。这就是搜索关键词提示的最基本的算法原理。<br><img src="./702817b4.jpeg" srcset="/img/loading.gif" alt="image"><br>不过，这里讲的只是最基本的实现原理，实际上，搜索引擎的搜索关键词提示功能远非我讲的这么简单。如果再稍微深入一点，就会想到，上面的解决办法遇到下面几个问题：</p>
+<ul>
+<li><p>刚讲的思路是针对英文的搜索关键词提示，对于更加复杂的中文来说，词库中的数据又该如何构建成 <code>Trie</code> 树呢？</p>
+</li>
+<li><p>如果词库中有很多关键词，在搜索提示的时候，用户输入关键词，作为前缀在 <code>Trie</code> 树中可以匹配的关键词也有很多，如何选择展示哪些内容呢？</p>
+</li>
+<li><p>像 <code>Google</code> 这样的搜索引擎，用户单词拼写错误的情况下，<code>Google</code> 还是可以使用正确的拼写来做关键词提示，这个又是怎么做到的呢？</p>
+</li>
+</ul>
+<p>实际上，<code>Trie</code> 树的这个应用可以扩展到更加广泛的一个应用上，就是自动输入补全，比如输入法自动补全功能、<code>IDE</code> 代码编辑器自动补全功能、浏览器网址输入的自动补全功能等等。</p>
+</blockquote>
+</li>
+<li><p>如果现在有一个很大的字符串集合，比如包含 <code>1</code> 万条记录，如何通过编程量化分析这组字符串集合是否比较适合用 <code>Trie</code> 树解决呢？也就是如何统计字符串的字符集大小，以及前缀重合的程度呢？欢迎留言和我分享。</p>
+</li>
+</ol>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/">数据结构与算法(中级)</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/passages/33/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">33.`AC`自动机</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/passages/31/">
+                        <span class="hidden-mobile">31.字符串匹配基础（下）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+    <div id="vcomments"></div>
+    <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+    <script type="text/javascript">
+        var oldLoadVa = window.onload;
+        window.onload = function () {
+            oldLoadVa && oldLoadVa();
+
+            new Valine({
+                el: "#vcomments",
+                app_id: "O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",
+                app_key: "5Rl3Rhl9zc8BJNvrPcncKWFy",
+                placeholder: "说点什么吧~",
+                path: window.location.pathname,
+                avatar: "retro",
+                meta: ["nick","mail","link"],
+                pageSize: "10",
+                lang: "zh-CN",
+                highlight: true,
+                recordIP: true,
+                serverURLs: "https://lean.muchen.fun",
+            });
+        };
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments
+            powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><br><div class="text-center">欢迎关注我的公众号</div>
+    </div>
+  </div>
+
+
+    
+</main>
+
+
+    <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+
+
+
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+                <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mx-3">
+                <div class="md-form mb-5">
+                    <input type="text" id="local-search-input" class="form-control validate">
+                    <label data-error="x"
+                           data-success="v"
+                           for="local-search-input">关键词</label>
+                </div>
+                <div class="list-group" id="local-search-result"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    <div>
+      <span id="timeDate">载入天数...</span>
+      <span id="times">载入时分秒...</span>
+      <script>
+        var now = new Date();
+
+        function createtime() {
+          var grt = new Date("07/12/2019 00:00:00");//此处修改你的建站时间或者网站上线时间
+          now.setTime(now.getTime() + 250);
+          days = (now - grt) / 1000 / 60 / 60 / 24;
+          dnum = Math.floor(days);
+          hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+          hnum = Math.floor(hours);
+          if (String(hnum).length == 1) {
+            hnum = "0" + hnum;
+          }
+          minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+          mnum = Math.floor(minutes);
+          if (String(mnum).length == 1) {
+            mnum = "0" + mnum;
+          }
+          seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+          snum = Math.round(seconds);
+          if (String(snum).length == 1) {
+            snum = "0" + snum;
+          }
+          document.getElementById("timeDate").innerHTML = "本站已运行&nbsp" + dnum + "&nbsp天";
+          document.getElementById("times").innerHTML = hnum + "&nbsp小时&nbsp" + mnum + "&nbsp分&nbsp" + snum + "&nbsp秒";
+        }
+
+        setInterval("createtime()", 250);
+      </script>
+    </div>
+    <p id="hitokoto">:D 获取中...</p>
+    <script>
+      fetch('https://v1.hitokoto.cn')
+              .then(response => response.json())
+              .then(data => {
+                const hitokoto = document.getElementById('hitokoto')
+                hitokoto.innerText = data.hitokoto + '--「' + data.from + '」'
+              })
+              .catch(console.error)
+    </script>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+    <script  src="/js/lazyload.js" ></script>
+
+
+
+    
+
+
+
+
+    <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+    <script  src="/js/clipboard-use.js" ></script>
+
+
+
+    <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+    
+<script src="https://static.muchen.fun/js/custom.js"></script>
+
+
+
+<!-- Plugins -->
+
+
+    
+        <!-- Baidu Analytics -->
+        <script defer>
+            var _hmt = _hmt || [];
+            (function () {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    
+
+    
+        <!-- Google Analytics -->
+        <script defer>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-144841374-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+    <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+    <script>
+        var typed = new Typed('#subtitle', {
+            strings: [
+                '  ',
+                "32.`Trie`树&nbsp;",
+            ],
+            cursorChar: "_",
+            typeSpeed: 60,
+            loop: false,
+        });
+        typed.stop();
+        $(document).ready(function () {
+            $(".typed-cursor").addClass("h2");
+            typed.start();
+        });
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+    <script>
+        anchors.options = {
+            placement: "right",
+            visible: "hover",
+            
+        };
+        var el = "h1,h2,h3,h4,h5,h6".split(",");
+        var res = [];
+        for (item of el) {
+            res.push(".markdown-body > " + item)
+        }
+        anchors.add(res.join(", "))
+    </script>
+
+
+
+    <script  src="/js/local-search.js" ></script>
+    <script>
+        var path = "/local-search.xml";
+        var inputArea = document.querySelector("#local-search-input");
+        inputArea.onclick = function () {
+            searchFunc(path, 'local-search-input', 'local-search-result');
+            this.onclick = null
+        }
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+    <script>
+        $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+            function () {
+                var element = document.createElement('a');
+                $(element).attr('data-fancybox', 'images');
+                $(element).attr('href', $(this).attr('src'));
+                $(this).wrap(element);
+            }
+        );
+    </script>
+
+
+
+
+
+    
+
+    
+        <!-- MathJax -->
+        <script>
+            MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']]
+                },
+                options: {
+                    renderActions: {
+                        findScript: [10, doc => {
+                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                                const display = !!node.type.match(/; *mode=display/);
+                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                                const text = document.createTextNode('');
+                                node.parentNode.replaceChild(text, node);
+                                math.start = {node: text, delim: '', n: 0};
+                                math.end = {node: text, delim: '', n: 0};
+                                doc.math.push(math);
+                            });
+                        }, '', false],
+                        insertedScript: [200, () => {
+                            document.querySelectorAll('mjx-container').forEach(node => {
+                                let target = node.parentNode;
+                                if (target.nodeName.toLowerCase() === 'li') {
+                                    target.parentNode.classList.add('has-jax');
+                                }
+                            });
+                        }, '', false]
+                    }
+                }
+            };
+        </script>
+
+        <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+    
+
+
+
+    
+    
+        <script>
+            !function (e, t, a) {
+                function r() {
+                    for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+                    requestAnimationFrame(r)
+                }
+
+                function n() {
+                    var t = "function" == typeof e.onclick && e.onclick;
+                    e.onclick = function (e) {
+                        t && t(), o(e)
+                    }
+                }
+
+                function o(e) {
+                    var a = t.createElement("div");
+                    a.className = "heart", s.push({
+                        el: a,
+                        x: e.clientX - 5,
+                        y: e.clientY - 5,
+                        scale: 1,
+                        alpha: 1,
+                        color: c()
+                    }), t.body.appendChild(a)
+                }
+
+                function i(e) {
+                    var a = t.createElement("style");
+                    a.type = "text/css";
+                    try {
+                        a.appendChild(t.createTextNode(e))
+                    } catch (t) {
+                        a.styleSheet.cssText = e
+                    }
+                    t.getElementsByTagName("head")[0].appendChild(a)
+                }
+
+                function c() {
+                    return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+                }
+
+                var s = [];
+                e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+                    setTimeout(e, 1e3 / 60)
+                }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+            }(window, document);
+        </script>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

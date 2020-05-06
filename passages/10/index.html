@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png">
+    <link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <meta name="theme-color" content="#2f4154">
+    <meta name="description" content="沐晨的个人博客,技术博客">
+    <meta name="author" content="Li Duo">
+    <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
+    <title>10.线性排序 - MuChen&#39;s Blog</title>
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+    
+<link rel="stylesheet" href="https://static.muchen.fun/css/custom.css?t=0.1423425.css">
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+<script>
+    var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+    // 依次判断 系统暗黑模式 指定时间 缓存 dark
+    if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+        if (!(isNight && localStorage.getItem('noDark') === '1')) {
+            document.body.classList.add('dark');
+        }
+    }
+    document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
+</script>
+<header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+    <div class="container">
+        <a class="navbar-brand"
+           href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a>
+
+        <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="animated-icon"><span></span><span></span><span></span></div>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto text-center">
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/archives/">
+                            <i class="iconfont icon-archive-fill"></i>
+                            归档</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/categories/">
+                            <i class="iconfont icon-category-fill"></i>
+                            分类</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tags/">
+                            <i class="iconfont icon-tags-fill"></i>
+                            标签</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/messageBoard/">
+                            <i class="iconfont icon-speakernotes"></i>
+                            留言</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about/">
+                            <i class="iconfont icon-user-fill"></i>
+                            关于</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/links/">
+                            <i class="iconfont icon-link-fill"></i>
+                            友链</a>
+                    </li>
+                
+                
+                    <li class="nav-item" id="search-btn">
+                        <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                                    class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+                    </li>
+                
+                <li class="nav-item">
+                    <a id="dark" class="nav-link" onclick="switchDarkMode()">
+                        <i class="iconfont icon-sun"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/images/07.jpg') no-repeat center center;
+                 background-size: cover;">
+        <div class="full-bg-img">
+            <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+                <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+                
+            </span>
+
+                    
+                        
+                            <div class="mt-3 post-meta">
+                                <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                                <time datetime="2019-07-18 18:00">
+                                    2019年7月18日 晚上
+                                </time>
+                            </div>
+                        
+
+                        <div class="mt-1">
+                            
+                                
+                                <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    4.4k 字
+                  </span>
+                            
+
+                            
+                                
+                                <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                                    
+                                    
+                                    59
+                                     分钟
+                  </span>
+                            
+
+                            
+                                <!-- 不蒜子统计文章PV -->
+                                
+                                <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
+                    <i class="iconfont icon-eye" aria-hidden="true"></i>
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>
+                            
+                        </div>
+                    
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    
+        
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：10 个月前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <!-- more -->
+<p>桶排序、计数排序、基数排序，这些排序算法的时间复杂度是线性的，所以把这类排序算法叫作<strong>线性排序</strong>（<code>Linear sort</code>）。之所以能做到线性的时间复杂度，主要原因是，这三个算法是非基于比较的排序算法，都不涉及元素之间的比较操作。</p>
+<p>这几种排序算法理解起来都不难，时间、空间复杂度分析起来也很简单，但是对要排序的数据要求很苛刻，所以今天重点的是掌握这些排序算法的适用场景。</p>
+<p>按照惯例，先给出一道思考题：如何根据年龄给 <code>100</code> 万用户排序？你可能会说，用归并、快排就可以搞定啊！是的，它们也可以完成功能，但是时间复杂度最低也是 $O(nlogn)$。有没有更快的排序方法呢？</p>
+<h2 id="桶排序（Bucket-sort）"><a href="#桶排序（Bucket-sort）" class="headerlink" title="桶排序（Bucket sort）"></a>桶排序（Bucket sort）</h2><p>桶排序，顾名思义，会用到“桶”，核心思想是将要排序的数据分到几个有序的桶里，每个桶里的数据再单独进行排序。桶内排完序之后，再把每个桶里的数据按照顺序依次取出，组成的序列就是有序的了。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/12/d8e6c130-d542-11e9-98af-f301859595e1.png" srcset="/img/loading.gif" alt="image.png"><br>桶排序的时间复杂度为什么是 $O(n)$ 呢？一块儿来分析一下。</p>
+<p>如果要排序的数据有 <code>n</code> 个，把它们均匀地划分到 <code>m</code> 个桶内，每个桶里就有 <code>k=n/m</code> 个元素。每个桶内部使用快速排序，时间复杂度为 $O(k * logk)$。<code>m</code> 个桶排序的时间复杂度就是 $O(m * k * logk)$，因为 <code>k=n/m</code>，所以整个桶排序的时间复杂度就是 $O(n * log(\frac n m))$。当桶的个数 <code>m</code> 接近数据个数 <code>n</code> 时，$log(\frac n m)$ 就是一个非常小的常量，这个时候桶排序的时间复杂度接近 $O(n)$。</p>
+<p><strong>桶排序看起来很优秀，那它是不是可以替代之前讲的排序算法呢？</strong></p>
+<p>答案当然是否定的。为了轻松理解桶排序的核心思想，刚才做了很多假设。实际上，桶排序对要排序数据的要求是非常苛刻的。</p>
+<p>首先，要排序的数据需要很容易就能划分成 <code>m</code> 个桶，并且，桶与桶之间有着天然的大小顺序。这样每个桶内的数据都排序完之后，桶与桶之间的数据不需要再进行排序。</p>
+<p>其次，数据在各个桶之间的分布是比较均匀的。如果数据经过桶的划分之后，有些桶里的数据非常多，有些非常少，很不平均，那桶内数据排序的时间复杂度就不是常量级了。在极端情况下，如果数据都被划分到一个桶里，那就退化为 $O(nlogn)$ 的排序算法了。</p>
+<p><strong>桶排序比较适合用在外部排序中</strong>。所谓的外部排序就是数据存储在外部磁盘中，数据量比较大，内存有限，无法将数据全部加载到内存中。</p>
+<p>比如说有 <code>10GB</code> 的订单数据，希望按订单金额（假设金额都是正整数）进行排序，但是内存有限，只有几百 <code>MB</code>，没办法一次性把 <code>10GB</code> 的数据都加载到内存中。这个时候该怎么办呢？</p>
+<p>下面来讲一下，如何借助桶排序的处理思想来解决这个问题。</p>
+<p>可以先扫描一遍文件，看订单金额所处的数据范围。假设经过扫描之后得到，订单金额最小是 <code>1</code> 元，最大是 <code>10</code> 万元。将所有订单根据金额划分到 <code>100</code> 个桶里，第一个桶存储金额在 <code>1</code> 元到 <code>1000</code> 元之内的订单，第二个桶存储金额在 <code>1001</code> 元到 <code>2000</code> 元之内的订单，以此类推。每一个桶对应一个文件，并且按照金额范围的大小顺序编号命名（<code>00</code>，<code>01</code>，<code>02</code>…<code>99</code>）。</p>
+<p>理想的情况下，如果订单金额在 <code>1</code> 到 <code>10</code> 万之间均匀分布，那订单会被均匀划分到 <code>100</code> 个文件中，每个小文件中存储大约 <code>100MB</code> 的订单数据，就可以将这 <code>100</code> 个小文件依次放到内存中，用快排来排序。等所有文件都排好序之后，只需要按照文件编号，从小到大依次读取每个小文件中的订单数据，并将其写入到一个文件中，那这个文件中存储的就是按照金额从小到大排序的订单数据了。</p>
+<p>不过，你可能也发现了，订单按照金额在 <code>1</code> 元到 <code>10</code> 万元之间并不一定是均匀分布的 ，所以 <code>10GB</code> 订单数据是无法均匀地被划分到 <code>100</code> 个文件中的。有可能某个金额区间的数据特别多，划分之后对应的文件就会很大，没法一次性读入内存。这又该怎么办呢？</p>
+<p>针对这些划分之后还是比较大的文件，可以继续划分，比如，订单金额在 <code>1</code> 元到 <code>1000</code> 元之间的比较多，就将这个区间继续划分为 <code>10</code> 个小区间，<code>1</code> 元到 <code>100</code> 元，<code>101</code> 元到 <code>200</code> 元，<code>201</code> 元到 <code>300</code> 元…<code>901</code> 元到 <code>1000</code> 元。如果划分之后，<code>101</code> 元到 <code>200</code> 元之间的订单还是太多，无法一次性读入内存，那就继续再划分，直到所有的文件都能读入内存为止。</p>
+<h2 id="计数排序（Counting-sort）"><a href="#计数排序（Counting-sort）" class="headerlink" title="计数排序（Counting sort）"></a>计数排序（Counting sort）</h2><p>个人觉得，计数排序其实是桶排序的一种特殊情况。当要排序的 <code>n</code> 个数据，所处的范围并不大的时候，比如最大值是 <code>k</code>，就可以把数据划分成 <code>k</code> 个桶。每个桶内的数据值都是相同的，省掉了桶内排序的时间。</p>
+<p>都经历过高考，高考查分数系统你还记得吗？查分数的时候，系统会显示成绩以及所在省的排名。如果你所在的省有 <code>50</code> 万考生，如何通过成绩快速排序得出名次呢？</p>
+<p>考生的满分是 <code>900</code> 分，最小是 <code>0</code> 分，这个数据的范围很小，所以可以分成 <code>901</code> 个桶，对应分数从 <code>0</code> 分到 <code>900</code> 分。根据考生的成绩，将这 <code>50</code> 万考生划分到这 <code>901</code> 个桶里。桶内的数据都是分数相同的考生，所以并不需要再进行排序。只需要依次扫描每个桶，将桶内的考生依次输出到一个数组中，就实现了 <code>50</code> 万考生的排序。因为只涉及扫描遍历操作，所以时间复杂度是 $O(n)$。</p>
+<p>计数排序的算法思想就是这么简单，跟桶排序非常类似，只是桶的大小粒度不一样。不过，<strong>为什么这个排序算法叫“计数”排序呢？“计数”的含义来自哪里呢？</strong></p>
+<p>想弄明白这个问题，就要来看计数排序算法的实现方法。还拿考生那个例子来解释。为了方便说明，对数据规模做了简化。假设只有 <code>8</code> 个考生，分数在 <code>0</code> 到 <code>5</code> 分之间。这 <code>8</code> 个考生的成绩放在一个数组 <code>A[8]</code> 中，它们分别是：<code>2</code>，<code>5</code>，<code>3</code>，<code>0</code>，<code>2</code>，<code>3</code>，<code>0</code>，<code>3</code>。</p>
+<p>考生的成绩从 <code>0</code> 到 <code>5</code> 分，使用大小为 <code>6</code> 的数组 <code>C[6]</code> 表示桶，其中下标对应分数。不过，<code>C[6]</code> 内存储的并不是考生，而是对应的考生个数。像刚刚举的那个例子，只需要遍历一遍考生分数，就可以得到 <code>C[6]</code> 的值。</p>
+<p>从图中可以看出，分数为 <code>3</code> 分的考生有 <code>3</code> 个，小于 <code>3</code> 分的考生有 <code>4</code> 个，所以，成绩为 <code>3</code> 分的考生在排序之后的有序数组 <code>R[8]</code> 中，会保存下标 <code>4</code>，<code>5</code>，<code>6</code> 的位置。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/12/af12ad40-d544-11e9-98af-f301859595e1.png" srcset="/img/loading.gif" alt="image.png"><br>那如何快速计算出，每个分数的考生在有序数组中对应的存储位置呢？这个处理方法非常巧妙，很不容易想到。</p>
+<p>思路是这样的：对 <code>C[6]</code> 数组顺序求和，<code>C[6]</code> 存储的数据就变成了下面这样子。<code>C[k]</code> 里存储小于等于分数 <code>k</code> 的考生个数。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/12/c8457b80-d544-11e9-98af-f301859595e1.png" srcset="/img/loading.gif" alt="image.png"><br>有了前面的数据准备之后，现在就要讲计数排序中最复杂、最难理解的一部分了！</p>
+<p>从后到前依次扫描数组 <code>A</code>。比如，当扫描到 <code>3</code> 时，可以从数组 <code>C</code> 中取出下标为 <code>3</code> 的值 <code>7</code>，也就是说，到目前为止，包括自己在内，分数小于等于 <code>3</code> 的考生有 <code>7</code> 个，也就是说 <code>3</code> 是数组 <code>R</code> 中的第 <code>7</code> 个元素（也就是数组 <code>R</code> 中下标为 <code>6</code> 的位置）。当 <code>3</code> 放入到数组 <code>R</code> 中后，小于等于 <code>3</code> 的元素就只剩下了 <code>6</code> 个了，所以相应的 <code>C[3]</code> 要减 <code>1</code>，变成 <code>6</code>。</p>
+<p>以此类推，当扫描到第 <code>2</code> 个分数为 <code>3</code> 的考生的时候，就会把它放入数组 <code>R</code> 中的第 <code>6</code> 个元素的位置（也就是下标为 <code>5</code> 的位置）。当扫描完整个数组 <code>A</code> 后，数组 <code>R</code> 内的数据就是按照分数从小到大有序排列的了。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/12/1a03d7f0-d545-11e9-98af-f301859595e1.png" srcset="/img/loading.gif" alt="image.png"><br>上面的过程有点复杂，写成了代码，你可以对照着看下。</p>
+<pre><code class="hljs java"><span class="hljs-comment">// 计数排序，a 是数组，n 是数组大小。假设数组中存储的都是非负整数。</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">countingSort</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] a, <span class="hljs-keyword">int</span> n)</span> </span>&#123;
+  <span class="hljs-keyword">if</span> (n &lt;= <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span>;
+
+  <span class="hljs-comment">// 查找数组中数据的范围</span>
+  <span class="hljs-keyword">int</span> max = a[<span class="hljs-number">0</span>];
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; n; ++i) &#123;
+    <span class="hljs-keyword">if</span> (max &lt; a[i]) &#123;
+      max = a[i];
+    &#125;
+  &#125;
+
+  <span class="hljs-keyword">int</span>[] c = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span>[max + <span class="hljs-number">1</span>]; <span class="hljs-comment">// 申请一个计数数组 c，下标大小 [0,max]</span>
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt;= max; ++i) &#123;
+    c[i] = <span class="hljs-number">0</span>;
+  &#125;
+
+  <span class="hljs-comment">// 计算每个元素的个数，放入 c 中</span>
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) &#123;
+    c[a[i]]++;
+  &#125;
+
+  <span class="hljs-comment">// 依次累加</span>
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= max; ++i) &#123;
+    c[i] = c[i-<span class="hljs-number">1</span>] + c[i];
+  &#125;
+
+  <span class="hljs-comment">// 临时数组 r，存储排序之后的结果</span>
+  <span class="hljs-keyword">int</span>[] r = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span>[n];
+  <span class="hljs-comment">// 计算排序的关键步骤，有点难理解</span>
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = n - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; --i) &#123;
+    <span class="hljs-keyword">int</span> index = c[a[i]]-<span class="hljs-number">1</span>;
+    r[index] = a[i];
+    c[a[i]]--;
+  &#125;
+
+  <span class="hljs-comment">// 将结果拷贝给 a 数组</span>
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) &#123;
+    a[i] = r[i];
+  &#125;
+&#125;</code></pre>
+<p>这种利用另外一个数组来计数的实现方式是不是很巧妙呢？这也是为什么这种排序算法叫计数排序的原因。不过，你千万不要死记硬背上面的排序过程，重要的是理解和会用。</p>
+<p>总结一下，<strong>计数排序只能用在数据范围不大的场景中，如果数据范围 <code>k</code> 比要排序的数据 <code>n</code> 大很多，就不适合用计数排序了。而且，计数排序只能给非负整数排序，如果要排序的数据是其他类型的，要将其在不改变相对大小的情况下，转化为非负整数。</strong></p>
+<p>比如，还是拿考生这个例子。如果考生成绩精确到小数后一位，就需要将所有的分数都先乘以 <code>10</code>，转化成整数，然后再放到 <code>9010</code> 个桶内。再比如，如果要排序的数据中有负数，数据的范围是 <code>[-1000, 1000]</code>，那就需要先对每个数据都加 <code>1000</code>，转化成非负整数。</p>
+<h2 id="基数排序（Radix-sort）"><a href="#基数排序（Radix-sort）" class="headerlink" title="基数排序（Radix sort）"></a>基数排序（Radix sort）</h2><p>再来看这样一个排序问题。假设有 <code>10</code> 万个手机号码，希望将这 <code>10</code> 万个手机号码从小到大排序，你有什么比较快速的排序方法呢？</p>
+<p>之前讲的快排，时间复杂度可以做到 $O(nlogn)$，还有更高效的排序算法吗？桶排序、计数排序能派上用场吗？手机号码有 <code>11</code> 位，范围太大，显然不适合用这两种排序算法。针对这个排序问题，有没有时间复杂度是 $O(n)$ 的算法呢？现在就来介绍一种新的排序算法，基数排序。</p>
+<p>刚刚这个问题里有这样的规律：假设要比较两个手机号码 <code>a</code>，<code>b</code> 的大小，如果在前面几位中，<code>a</code> 手机号码已经比 <code>b</code> 手机号码大了，那后面的几位就不用看了。</p>
+<p>借助稳定排序算法，这里有一个巧妙的实现思路。还记得在阐述排序算法的稳定性的时候举的订单的例子吗？这里也可以借助相同的处理思路，先按照最后一位来排序手机号码，然后，再按照倒数第二位重新排序，以此类推，最后按照第一位重新排序。经过 <code>11</code> 次排序之后，手机号码就都有序了。</p>
+<p>手机号码稍微有点长，画图比较不容易看清楚，用字符串排序的例子，下面有一张基数排序的过程分解图，你可以看下。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/12/875fc110-d545-11e9-98af-f301859595e1.png" srcset="/img/loading.gif" alt="image.png"><br>注意，这里按照每位来排序的排序算法要是稳定的，否则这个实现思路就是不正确的。因为如果是非稳定排序算法，那最后一次排序只会考虑最高位的大小顺序，完全不管其他位的大小关系，那么低位的排序就完全没有意义了。</p>
+<p>根据每一位来排序，可以用刚讲过的桶排序或者计数排序，它们的时间复杂度可以做到 $O(n)$。如果要排序的数据有 <code>k</code> 位，那就需要 <code>k</code> 次桶排序或者计数排序，总的时间复杂度是 $O(k*n)$。当 <code>k</code> 不大的时候，比如手机号码排序的例子，<code>k</code> 最大就是 <code>11</code>，所以基数排序的时间复杂度就近似于 $O(n)$。</p>
+<p>实际上，有时候要排序的数据并不都是等长的，比如排序牛津字典中的 <code>20</code> 万个英文单词，最短的只有 <code>1</code> 个字母，最长的有 <code>45</code> 个字母，中文翻译是尘肺病。对于这种不等长的数据，基数排序还适用吗？</p>
+<p>实际上，可以把所有的单词补齐到相同长度，位数不够的可以在后面补“0”，因为根据 <code>ASCII</code> 值，所有字母都大于“0”，所以补“0”不会影响到原有的大小顺序。这样就可以继续用基数排序了。</p>
+<p>总结一下，<strong>基数排序对要排序的数据是有要求的，需要可以分割出独立的“位”来比较，而且位之间有递进的关系，如果 <code>a</code> 数据的高位比 <code>b</code> 数据大，那剩下的低位就不用比较了。除此之外，每一位的数据范围不能太大，要可以用线性排序算法来排序，否则，基数排序的时间复杂度就无法做到 $O(n)$ 了。</strong></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>今天学习了 <code>3</code> 种线性时间复杂度的排序算法，有桶排序、计数排序、基数排序。它们对要排序的数据都有比较苛刻的要求，应用不是非常广泛。但是如果数据特征比较符合这些排序算法的要求，应用这些算法，会非常高效，线性时间复杂度可以达到 $O(n)$。</p>
+<p>桶排序和计数排序的排序思想是非常相似的，都是针对范围不大的数据，将数据划分成不同的桶来实现排序。基数排序要求数据可以划分成高低位，位之间有递进关系。比较两个数，只需要比较高位，高位相同的再比较低位。而且每一位的数据范围不能太大，因为基数排序算法需要借助桶排序或者计数排序来完成每一个位的排序工作。</p>
+<h2 id="五、思考"><a href="#五、思考" class="headerlink" title="五、思考"></a>五、思考</h2><ul>
+<li><p><strong>如何根据年龄给<code>100</code>万用户数据排序？</strong></p>
+<blockquote>
+<p> 实际上，根据年龄给 <code>100</code> 万用户排序，就类似按照成绩给 <code>50</code> 万考生排序。假设年龄的范围最小 <code>1</code> 岁，最大不超过 <code>120</code> 岁。<br>  可以遍历这 <code>100</code> 万用户，根据年龄将其划分到这 <code>120</code> 个桶里，然后依次顺序遍历这 <code>120</code> 个桶中的元素。<br>  这样就得到了按照年龄排序的 <code>100</code> 万用户数据。</p>
+</blockquote>
+</li>
+<li><p>对<code>D，a，F，B，c，A，z</code>这几个字符串进行排序，要求将其中所有小写字母都排在大写字母前面，但是小写字母内部和大写字母内部不要求有序。比如经过排序后为<code>a，c，z，D，F，B，A</code>，这个如何实现呢？如果字符串中处理大小写，还有数字，将数字放在最前面，又该如何解决呢？</p>
+<blockquote>
+<p> 用两个指针<code>a、b</code>：<br>   <code>a</code>指针从头开始往后遍历，遇到大写字母就停下，<code>b</code>从后往前遍历，遇到小写字母就停下，交换<code>a、b</code>指针对应的元素；<br>   重复如上过程，直到<code>a、b</code>指针相交。<br>   对于小写字母放前面，数字放中间，大写字母放后面，可以先将数据分为小写字母和非小写字母两大类，进行如上交换后再在非小写字母区间内分为数字和大写字母做同样处理</p>
+</blockquote>
+</li>
+</ul>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/">数据结构与算法(中级)</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%8E%92%E5%BA%8F/">排序</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/passages/11/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">11.排序优化</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/passages/9/">
+                        <span class="hidden-mobile">9.排序（下）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+    <div id="vcomments"></div>
+    <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+    <script type="text/javascript">
+        var oldLoadVa = window.onload;
+        window.onload = function () {
+            oldLoadVa && oldLoadVa();
+
+            new Valine({
+                el: "#vcomments",
+                app_id: "O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",
+                app_key: "5Rl3Rhl9zc8BJNvrPcncKWFy",
+                placeholder: "说点什么吧~",
+                path: window.location.pathname,
+                avatar: "retro",
+                meta: ["nick","mail","link"],
+                pageSize: "10",
+                lang: "zh-CN",
+                highlight: true,
+                recordIP: true,
+                serverURLs: "https://lean.muchen.fun",
+            });
+        };
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments
+            powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><br><div class="text-center">欢迎关注我的公众号</div>
+    </div>
+  </div>
+
+
+    
+</main>
+
+
+    <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+
+
+
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+                <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mx-3">
+                <div class="md-form mb-5">
+                    <input type="text" id="local-search-input" class="form-control validate">
+                    <label data-error="x"
+                           data-success="v"
+                           for="local-search-input">关键词</label>
+                </div>
+                <div class="list-group" id="local-search-result"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    <div>
+      <span id="timeDate">载入天数...</span>
+      <span id="times">载入时分秒...</span>
+      <script>
+        var now = new Date();
+
+        function createtime() {
+          var grt = new Date("07/12/2019 00:00:00");//此处修改你的建站时间或者网站上线时间
+          now.setTime(now.getTime() + 250);
+          days = (now - grt) / 1000 / 60 / 60 / 24;
+          dnum = Math.floor(days);
+          hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+          hnum = Math.floor(hours);
+          if (String(hnum).length == 1) {
+            hnum = "0" + hnum;
+          }
+          minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+          mnum = Math.floor(minutes);
+          if (String(mnum).length == 1) {
+            mnum = "0" + mnum;
+          }
+          seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+          snum = Math.round(seconds);
+          if (String(snum).length == 1) {
+            snum = "0" + snum;
+          }
+          document.getElementById("timeDate").innerHTML = "本站已运行&nbsp" + dnum + "&nbsp天";
+          document.getElementById("times").innerHTML = hnum + "&nbsp小时&nbsp" + mnum + "&nbsp分&nbsp" + snum + "&nbsp秒";
+        }
+
+        setInterval("createtime()", 250);
+      </script>
+    </div>
+    <p id="hitokoto">:D 获取中...</p>
+    <script>
+      fetch('https://v1.hitokoto.cn')
+              .then(response => response.json())
+              .then(data => {
+                const hitokoto = document.getElementById('hitokoto')
+                hitokoto.innerText = data.hitokoto + '--「' + data.from + '」'
+              })
+              .catch(console.error)
+    </script>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+    <script  src="/js/lazyload.js" ></script>
+
+
+
+    
+
+
+
+
+    <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+    <script  src="/js/clipboard-use.js" ></script>
+
+
+
+    <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+    
+<script src="https://static.muchen.fun/js/custom.js"></script>
+
+
+
+<!-- Plugins -->
+
+
+    
+        <!-- Baidu Analytics -->
+        <script defer>
+            var _hmt = _hmt || [];
+            (function () {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    
+
+    
+        <!-- Google Analytics -->
+        <script defer>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-144841374-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+    <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+    <script>
+        var typed = new Typed('#subtitle', {
+            strings: [
+                '  ',
+                "10.线性排序&nbsp;",
+            ],
+            cursorChar: "_",
+            typeSpeed: 60,
+            loop: false,
+        });
+        typed.stop();
+        $(document).ready(function () {
+            $(".typed-cursor").addClass("h2");
+            typed.start();
+        });
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+    <script>
+        anchors.options = {
+            placement: "right",
+            visible: "hover",
+            
+        };
+        var el = "h1,h2,h3,h4,h5,h6".split(",");
+        var res = [];
+        for (item of el) {
+            res.push(".markdown-body > " + item)
+        }
+        anchors.add(res.join(", "))
+    </script>
+
+
+
+    <script  src="/js/local-search.js" ></script>
+    <script>
+        var path = "/local-search.xml";
+        var inputArea = document.querySelector("#local-search-input");
+        inputArea.onclick = function () {
+            searchFunc(path, 'local-search-input', 'local-search-result');
+            this.onclick = null
+        }
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+    <script>
+        $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+            function () {
+                var element = document.createElement('a');
+                $(element).attr('data-fancybox', 'images');
+                $(element).attr('href', $(this).attr('src'));
+                $(this).wrap(element);
+            }
+        );
+    </script>
+
+
+
+
+
+    
+
+    
+        <!-- MathJax -->
+        <script>
+            MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']]
+                },
+                options: {
+                    renderActions: {
+                        findScript: [10, doc => {
+                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                                const display = !!node.type.match(/; *mode=display/);
+                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                                const text = document.createTextNode('');
+                                node.parentNode.replaceChild(text, node);
+                                math.start = {node: text, delim: '', n: 0};
+                                math.end = {node: text, delim: '', n: 0};
+                                doc.math.push(math);
+                            });
+                        }, '', false],
+                        insertedScript: [200, () => {
+                            document.querySelectorAll('mjx-container').forEach(node => {
+                                let target = node.parentNode;
+                                if (target.nodeName.toLowerCase() === 'li') {
+                                    target.parentNode.classList.add('has-jax');
+                                }
+                            });
+                        }, '', false]
+                    }
+                }
+            };
+        </script>
+
+        <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+    
+
+
+
+    
+    
+        <script>
+            !function (e, t, a) {
+                function r() {
+                    for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+                    requestAnimationFrame(r)
+                }
+
+                function n() {
+                    var t = "function" == typeof e.onclick && e.onclick;
+                    e.onclick = function (e) {
+                        t && t(), o(e)
+                    }
+                }
+
+                function o(e) {
+                    var a = t.createElement("div");
+                    a.className = "heart", s.push({
+                        el: a,
+                        x: e.clientX - 5,
+                        y: e.clientY - 5,
+                        scale: 1,
+                        alpha: 1,
+                        color: c()
+                    }), t.body.appendChild(a)
+                }
+
+                function i(e) {
+                    var a = t.createElement("style");
+                    a.type = "text/css";
+                    try {
+                        a.appendChild(t.createTextNode(e))
+                    } catch (t) {
+                        a.styleSheet.cssText = e
+                    }
+                    t.getElementsByTagName("head")[0].appendChild(a)
+                }
+
+                function c() {
+                    return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+                }
+
+                var s = [];
+                e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+                    setTimeout(e, 1e3 / 60)
+                }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+            }(window, document);
+        </script>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

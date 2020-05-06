@@ -1,0 +1,150 @@
+/* 切换按钮 */
+#dark {
+  cursor: pointer;
+  /*position: fixed;*/
+  /*right: 40px;*/
+  /*bottom: 98px;*/
+  /*width: 16px;*/
+  /*height: 14px;*/
+  z-index: 100;
+  font-size: 15px;
+}
+
+/*暗黑模式*/
+.dark {
+  background-color: #282c34;
+  /* 背景遮罩 */
+  /* 主体 */
+  /* 顶栏 */
+  /* page-number */
+  /* 打字机 */
+  /* back to top */
+  /* Toc */
+  /* footer */
+  /* 归档页 */
+  /* 友链页 */
+  /* note标签 配色有点丑 */
+}
+
+.dark .mask {
+  background-color: rgba(0, 0, 0, 0.7) !important;
+}
+
+.dark #board {
+  background-color: #282c34;
+  color: #a09c9c;
+}
+
+.dark img {
+  filter: brightness(50%);
+}
+
+.dark p,
+.dark .index-info a {
+  color: #a09c9c !important;
+}
+
+.dark .markdown-body h1,
+.dark .markdown-body h2,
+.dark .markdown-body h3,
+.dark .markdown-body h4,
+.dark .markdown-body h5,
+.dark .markdown-body h6,
+.dark .markdown-body s,
+.dark .markdown-body li {
+  color: #a09c9c !important;
+}
+
+.dark .navbar-col-show,
+.dark .top-nav-collapse {
+  background-color: #282c34;
+}
+
+.dark .navbar a {
+  color: #a09c9c !important;
+}
+
+.dark .animated-icon span {
+  background-color: #a09c9c;
+}
+
+.dark .pagination a:hover,
+.dark .pagination .current {
+  background-color: rgba(107, 107, 107, 0.451);
+}
+
+.dark #subtitle,
+.dark .dark.typed-cursor--blink,
+.dark .scroll-down-arrow {
+  color: #dfdfdf;
+}
+
+.dark #scroll-top-button {
+  background-color: #282c34;
+}
+
+.dark #scroll-top-button i {
+  color: #a09c9c;
+}
+
+.dark .tocbot-list a {
+  color: #a09c9c;
+}
+
+.dark .tocbot-active-link,
+.dark footer a:hover {
+  color: #1abc9c !important;
+}
+
+.dark footer,
+.dark footer a {
+  color: #a09c9c;
+}
+
+.dark .list-group-item {
+  color: #a09c9c;
+  background-color: #282c34;
+}
+
+.dark .list-group-item:hover,
+.dark .tagcloud a:hover {
+  background-color: #46484d;
+}
+
+.dark .links .card {
+  background-color: #282c34;
+}
+
+.dark .links .card-body:hover {
+  background-color: #46484d;
+}
+
+.dark .links .link-title,
+.dark .links .link-intro {
+  color: #a09c9c;
+}
+
+.dark .note-info {
+  background-color: #3b5359;
+  border-color: #006d80;
+}
+
+.dark .note-danger {
+  background-color: #783f42;
+  border-color: #670009;
+}
+
+.dark .note-success {
+  background-color: #2a3e2e;
+  border-color: #005915;
+}
+
+.dark .note-warning {
+  background-color: #5b543e;
+  border-color: #846500;
+}
+
+.dark .note-primary {
+  background-color: #455a6f;
+  border-color: #004188;
+}

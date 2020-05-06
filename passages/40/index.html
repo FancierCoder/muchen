@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png">
+    <link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <meta name="theme-color" content="#2f4154">
+    <meta name="description" content="沐晨的个人博客,技术博客">
+    <meta name="author" content="Li Duo">
+    <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
+    <title>40.拓扑排序 - MuChen&#39;s Blog</title>
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+    
+<link rel="stylesheet" href="https://static.muchen.fun/css/custom.css?t=0.1423425.css">
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+<script>
+    var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+    // 依次判断 系统暗黑模式 指定时间 缓存 dark
+    if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+        if (!(isNight && localStorage.getItem('noDark') === '1')) {
+            document.body.classList.add('dark');
+        }
+    }
+    document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
+</script>
+<header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+    <div class="container">
+        <a class="navbar-brand"
+           href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a>
+
+        <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="animated-icon"><span></span><span></span><span></span></div>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto text-center">
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/archives/">
+                            <i class="iconfont icon-archive-fill"></i>
+                            归档</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/categories/">
+                            <i class="iconfont icon-category-fill"></i>
+                            分类</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tags/">
+                            <i class="iconfont icon-tags-fill"></i>
+                            标签</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/messageBoard/">
+                            <i class="iconfont icon-speakernotes"></i>
+                            留言</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about/">
+                            <i class="iconfont icon-user-fill"></i>
+                            关于</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/links/">
+                            <i class="iconfont icon-link-fill"></i>
+                            友链</a>
+                    </li>
+                
+                
+                    <li class="nav-item" id="search-btn">
+                        <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                                    class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+                    </li>
+                
+                <li class="nav-item">
+                    <a id="dark" class="nav-link" onclick="switchDarkMode()">
+                        <i class="iconfont icon-sun"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/images/07.jpg') no-repeat center center;
+                 background-size: cover;">
+        <div class="full-bg-img">
+            <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+                <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+                
+            </span>
+
+                    
+                        
+                            <div class="mt-3 post-meta">
+                                <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                                <time datetime="2019-08-16 13:16">
+                                    2019年8月16日 下午
+                                </time>
+                            </div>
+                        
+
+                        <div class="mt-1">
+                            
+                                
+                                <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    2.6k 字
+                  </span>
+                            
+
+                            
+                                
+                                <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                                    
+                                    
+                                    37
+                                     分钟
+                  </span>
+                            
+
+                            
+                                <!-- 不蒜子统计文章PV -->
+                                
+                                <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
+                    <i class="iconfont icon-eye" aria-hidden="true"></i>
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>
+                            
+                        </div>
+                    
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    
+        
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：9 个月前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <p>一个完整的项目往往会包含很多代码源文件。编译器在编译整个项目的时候，需要按照依赖关系，依次编译每个源文件。比如，<code>A.cpp</code> 依赖 <code>B.cpp</code>，那在编译的时候，编译器需要先编译 <code>B.cpp</code>，才能编译 <code>A.cpp</code>。</p>
+<p>编译器通过分析源文件或者程序员事先写好的编译配置文件（比如 <code>Makefile</code> 文件），来获取这种局部的依赖关系。那编译器又该如何通过源文件两两之间的局部依赖关系，确定一个全局的编译顺序呢？<br><img src="./e5d0b8e4.jpeg" srcset="/img/loading.gif" alt="image"></p>
+<h2 id="算法解析"><a href="#算法解析" class="headerlink" title="算法解析"></a>算法解析</h2><p>这个问题的解决思路与“图”这种数据结构的一个经典算法“拓扑排序算法”有关。那什么是拓扑排序呢？这个概念很好理解，先来看一个生活中的拓扑排序的例子。</p>
+<p>我们在穿衣服的时候都有一定的顺序，可以把这种顺序想成，衣服与衣服之间有一定的依赖关系。比如说，必须先穿袜子才能穿鞋，先穿内裤才能穿秋裤。假设现在有八件衣服要穿，它们之间的两两依赖关系已经很清楚了，那如何安排一个穿衣序列，能够满足所有的两两之间的依赖关系？</p>
+<p>这就是个拓扑排序问题。从这个例子中，你应该能想到，在很多时候，拓扑排序的序列并不是唯一的。你可以下面的这幅图，有好几种满足这些局部先后关系的穿衣序列。<br><img src="./9069b4db.jpeg" srcset="/img/loading.gif" alt="image"><br>弄懂了这个生活中的例子，关于编译顺序的问题，你应该也有思路了。</p>
+<p>拓扑排序的原理非常简单，重点应该放到拓扑排序的实现上面。</p>
+<p>算法是构建在具体的数据结构之上的。针对这个问题，先来看下，如何将问题背景抽象成具体的数据结构？</p>
+<p>可以把源文件与源文件之间的依赖关系，抽象成一个有向图。每个源文件对应图中的一个顶点，源文件之间的依赖关系就是顶点之间的边。</p>
+<p>如果 <code>a</code> 先于 <code>b</code> 执行，也就是说 <code>b</code> 依赖于 <code>a</code>，那么就在顶点 <code>a</code> 和顶点 <code>b</code> 之间，构建一条从 <code>a</code> 指向 <code>b</code> 的边。而且，这个图不仅要是有向图，还要是一个有向无环图，也就是不能存在像 <code>a-&gt;b-&gt;c-&gt;a</code> 这样的循环依赖关系。因为图中一旦出现环，拓扑排序就无法工作了。实际上，拓扑排序本身就是基于有向无环图的一个算法。</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Graph</span> </span>&#123;
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> v; <span class="hljs-comment">// 顶点的个数</span>
+  <span class="hljs-keyword">private</span> LinkedList&lt;Integer&gt; adj[]; <span class="hljs-comment">// 邻接表</span>
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Graph</span><span class="hljs-params">(<span class="hljs-keyword">int</span> v)</span> </span>&#123;
+    <span class="hljs-keyword">this</span>.v = v;
+    adj = <span class="hljs-keyword">new</span> LinkedList[v];
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>; i&lt;v; ++i) &#123;
+      adj[i] = <span class="hljs-keyword">new</span> LinkedList&lt;&gt;();
+    &#125;
+  &#125;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">addEdge</span><span class="hljs-params">(<span class="hljs-keyword">int</span> s, <span class="hljs-keyword">int</span> t)</span> </span>&#123; <span class="hljs-comment">// s 先于 t，边 s-&gt;t</span>
+    adj[s].add(t);
+  &#125;
+&#125;</code></pre>
+<p>数据结构定义好了，现在来看，<strong>如何在这个有向无环图上，实现拓扑排序？</strong></p>
+<p>拓扑排序有两种实现方法，都不难理解。它们分别是<strong>Kahn 算法</strong>和<strong>DFS 深度优先搜索算法</strong>。依次来看下它们都是怎么工作的。</p>
+<h3 id="1-Kahn-算法"><a href="#1-Kahn-算法" class="headerlink" title="1. Kahn 算法"></a>1. Kahn 算法</h3><p><code>Kahn</code> 算法实际上用的是贪心算法思想，思路非常简单、好懂。</p>
+<p>定义数据结构的时候，如果 <code>s</code> 需要先于 <code>t</code> 执行，那就添加一条 <code>s</code> 指向 <code>t</code> 的边。所以，如果某个顶点入度为 <code>0</code>，也就表示，没有任何顶点必须先于这个顶点执行，那么这个顶点就可以执行了。</p>
+<p>先从图中，找出一个入度为 <code>0</code> 的顶点，将其输出到拓扑排序的结果序列中（对应代码中就是把它打印出来），并且把这个顶点从图中删除（也就是把这个顶点可达的顶点的入度都减 <code>1</code>）。循环执行上面的过程，直到所有的顶点都被输出。最后输出的序列，就是满足局部依赖关系的拓扑排序。</p>
+<p><code>Kahn</code> 算法的代码实现如下，你可以结合着文字描述一块看下。不过，你应该能发现，这段代码实现更有技巧一些，并没有真正删除顶点的操作。代码中有详细的注释，就不多解释了。</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">topoSortByKahn</span><span class="hljs-params">()</span> </span>&#123;
+  <span class="hljs-keyword">int</span>[] inDegree = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span>[v]; <span class="hljs-comment">// 统计每个顶点的入度</span>
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; v; ++i) &#123;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; adj[i].size(); ++j) &#123;
+      <span class="hljs-keyword">int</span> w = adj[i].get(j); <span class="hljs-comment">// i-&gt;w</span>
+      inDegree[w]++;
+    &#125;
+  &#125;
+  LinkedList&lt;Integer&gt; queue = <span class="hljs-keyword">new</span> LinkedList&lt;&gt;();
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; v; ++i) &#123;
+    <span class="hljs-keyword">if</span> (inDegree[i] == <span class="hljs-number">0</span>) queue.add(i);
+  &#125;
+  <span class="hljs-keyword">while</span> (!queue.isEmpty()) &#123;
+    <span class="hljs-keyword">int</span> i = queue.remove();
+    System.out.print(<span class="hljs-string">"-&gt;"</span> + i);
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; adj[i].size(); ++j) &#123;
+      <span class="hljs-keyword">int</span> k = adj[i].get(j);
+      inDegree[k]--;
+      <span class="hljs-keyword">if</span> (inDegree[k] == <span class="hljs-number">0</span>) queue.add(k);
+    &#125;
+  &#125;
+&#125;</code></pre>
+
+<h3 id="2-DFS-算法"><a href="#2-DFS-算法" class="headerlink" title="2. DFS 算法"></a>2. DFS 算法</h3><p>实际上，拓扑排序也可以用深度优先搜索来实现。不过这里的名字要稍微改下，更加确切的说法应该是深度优先遍历，遍历图中的所有顶点，而非只是搜索一个顶点到另一个顶点的路径。</p>
+<p>关于这个算法的实现原理，先把代码贴在下面，下面具体解释。</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">topoSortByDFS</span><span class="hljs-params">()</span> </span>&#123;
+  <span class="hljs-comment">// 先构建逆邻接表，边 s-&gt;t 表示，s 依赖于 t，t 先于 s</span>
+  LinkedList&lt;Integer&gt; inverseAdj[] = <span class="hljs-keyword">new</span> LinkedList[v];
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; v; ++i) &#123; <span class="hljs-comment">// 申请空间</span>
+    inverseAdj[i] = <span class="hljs-keyword">new</span> LinkedList&lt;&gt;();
+  &#125;
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; v; ++i) &#123; <span class="hljs-comment">// 通过邻接表生成逆邻接表</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; adj[i].size(); ++j) &#123;
+      <span class="hljs-keyword">int</span> w = adj[i].get(j); <span class="hljs-comment">// i-&gt;w</span>
+      inverseAdj[w].add(i); <span class="hljs-comment">// w-&gt;i</span>
+    &#125;
+  &#125;
+  <span class="hljs-keyword">boolean</span>[] visited = <span class="hljs-keyword">new</span> <span class="hljs-keyword">boolean</span>[v];
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; v; ++i) &#123; <span class="hljs-comment">// 深度优先遍历图</span>
+    <span class="hljs-keyword">if</span> (visited[i] == <span class="hljs-keyword">false</span>) &#123;
+      visited[i] = <span class="hljs-keyword">true</span>;
+      dfs(i, inverseAdj, visited);
+    &#125;
+  &#125;
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">dfs</span><span class="hljs-params">(
+    <span class="hljs-keyword">int</span> vertex, LinkedList&lt;Integer&gt; inverseAdj[], <span class="hljs-keyword">boolean</span>[] visited)</span> </span>&#123;
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; inverseAdj[vertex].size(); ++i) &#123;
+    <span class="hljs-keyword">int</span> w = inverseAdj[vertex].get(i);
+    <span class="hljs-keyword">if</span> (visited[w] == <span class="hljs-keyword">true</span>) <span class="hljs-keyword">continue</span>;
+    visited[w] = <span class="hljs-keyword">true</span>;
+    dfs(w, inverseAdj, visited);
+  &#125; <span class="hljs-comment">// 先把 vertex 这个顶点可达的所有顶点都打印出来之后，再打印它自己</span>
+  System.out.print(<span class="hljs-string">"-&gt;"</span> + vertex);
+&#125;</code></pre>
+<p>这个算法包含两个关键部分。</p>
+<p>第一部分是<strong>通过邻接表构造逆邻接表</strong>。邻接表中，边 <code>s-&gt;t</code> 表示 <code>s</code> 先于 <code>t</code> 执行，也就是 <code>t</code> 要依赖 <code>s</code>。在逆邻接表中，边 <code>s-&gt;t</code> 表示 <code>s</code> 依赖于 <code>t</code>，<code>s</code> 后于 <code>t</code> 执行。为什么这么转化呢？这个跟这个算法的实现思想有关。</p>
+<p>第二部分是这个算法的核心，也就是<strong>递归处理每个顶点</strong>。对于顶点 <code>vertex</code> 来说，先输出它可达的所有顶点，也就是说，先把它依赖的所有的顶点输出了，然后再输出自己。</p>
+<p><strong>这两个算法的时间复杂度分别是多少呢？</strong></p>
+<p>从 <code>Kahn</code> 代码中可以看出来，每个顶点被访问了一次，每个边也都被访问了一次，所以，<code>Kahn</code> 算法的时间复杂度就是 $O(V+E)$（<code>V</code> 表示顶点个数，<code>E</code> 表示边的个数）。</p>
+<p><code>DFS</code> 算法的时间复杂度之前分析过。每个顶点被访问两次，每条边都被访问一次，所以时间复杂度也是 $O(V+E)$。</p>
+<p>注意，这里的图可能不是连通的，有可能是有好几个不连通的子图构成，所以，<code>E</code> 并不一定大于 <code>V</code>，两者的大小关系不确定。所以，在表示时间复杂度的时候，<code>V</code>、<code>E</code> 都要考虑在内。</p>
+<h2 id="总结引申"><a href="#总结引申" class="headerlink" title="总结引申"></a>总结引申</h2><p>拓扑排序应用非常广泛，解决的问题的模型也非常一致。凡是需要通过局部顺序来推导全局顺序的，一般都能用拓扑排序来解决。除此之外，拓扑排序还能检测图中环的存在。对于 <code>Kahn</code> 算法来说，如果最后输出的顶点个数，少于图中顶点个数，图中还有入度不是 <code>0</code> 的顶点，那就说明，图中存在环。</p>
+<p>关于图中环的检测，在递归那一篇讲过一个例子，在查找最终推荐人的时候，可能会因为脏数据，造成存在循环推荐，比如，用户 <code>A</code> 推荐了用户 <code>B</code>，用户 <code>B</code> 推荐了用户 <code>C</code>，用户 <code>C</code> 又推荐了用户 <code>A</code>。如何避免这种脏数据导致的无限递归？这个问题当时留给你思考了，现在是时候解答了。</p>
+<p>实际上，这就是环的检测问题。因为每次都只是查找一个用户的最终推荐人，所以，并不需要动用复杂的拓扑排序算法，而只需要记录已经访问过的用户 <code>ID</code>，当用户 <code>ID</code> 第二次被访问的时候，就说明存在环，也就说明存在脏数据。</p>
+<pre><code class="hljs java">HashSet&lt;Integer&gt; hashTable = <span class="hljs-keyword">new</span> HashSet&lt;&gt;(); <span class="hljs-comment">// 保存已经访问过的 actorId</span>
+<span class="hljs-function"><span class="hljs-keyword">long</span> <span class="hljs-title">findRootReferrerId</span><span class="hljs-params">(<span class="hljs-keyword">long</span> actorId)</span> </span>&#123;
+  <span class="hljs-keyword">if</span> (hashTable.contains(actorId)) &#123; <span class="hljs-comment">// 存在环</span>
+    <span class="hljs-keyword">return</span>;
+  &#125;
+  hashTable.add(actorId);
+  Long referrerId = 
+       select referrer_id from [table] where actor_id = actorId;
+  <span class="hljs-keyword">if</span> (referrerId == <span class="hljs-keyword">null</span>) <span class="hljs-keyword">return</span> actorId;
+  <span class="hljs-keyword">return</span> findRootReferrerId(referrerId);
+&#125;</code></pre>
+<p>如果把这个问题改一下，想要知道数据库中的所有用户之间的推荐关系，有没有存在环的情况。这个问题，就需要用到拓扑排序算法了。把用户之间的推荐关系，从数据库中加载到内存中，然后构建成上面的这种有向图数据结构，再利用拓扑排序，就可以快速检测出是否存在环了。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ul>
+<li><p>用图表示依赖关系的时候，如果 <code>a</code> 先于 <code>b</code> 执行，就画一条从 <code>a</code> 到 <code>b</code> 的有向边；反过来，如果 <code>a</code> 先于 <code>b</code>，画一条从 <code>b</code> 到 <code>a</code> 的有向边，表示 <code>b</code> 依赖 <code>a</code>，那上面的 <code>Kahn</code> 算法和 <code>DFS</code> 算法还能否正确工作呢？如果不能，应该如何改造一下呢？</p>
+</li>
+<li><p>上面讲了两种拓扑排序算法的实现思路，<code>Kahn</code> 算法和 <code>DFS</code> 深度优先搜索算法，如果换做 <code>BFS</code> 广度优先搜索算法，还可以实现吗？欢迎留言和我分享。</p>
+</li>
+</ul>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%AB%98%E7%BA%A7/">数据结构与算法(高级)</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/passages/41/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">41.最短路径</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/passages/39/">
+                        <span class="hidden-mobile">39.动态规划实战</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+    <div id="vcomments"></div>
+    <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+    <script type="text/javascript">
+        var oldLoadVa = window.onload;
+        window.onload = function () {
+            oldLoadVa && oldLoadVa();
+
+            new Valine({
+                el: "#vcomments",
+                app_id: "O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",
+                app_key: "5Rl3Rhl9zc8BJNvrPcncKWFy",
+                placeholder: "说点什么吧~",
+                path: window.location.pathname,
+                avatar: "retro",
+                meta: ["nick","mail","link"],
+                pageSize: "10",
+                lang: "zh-CN",
+                highlight: true,
+                recordIP: true,
+                serverURLs: "https://lean.muchen.fun",
+            });
+        };
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments
+            powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><br><div class="text-center">欢迎关注我的公众号</div>
+    </div>
+  </div>
+
+
+    
+</main>
+
+
+    <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+
+
+
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+                <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mx-3">
+                <div class="md-form mb-5">
+                    <input type="text" id="local-search-input" class="form-control validate">
+                    <label data-error="x"
+                           data-success="v"
+                           for="local-search-input">关键词</label>
+                </div>
+                <div class="list-group" id="local-search-result"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    <div>
+      <span id="timeDate">载入天数...</span>
+      <span id="times">载入时分秒...</span>
+      <script>
+        var now = new Date();
+
+        function createtime() {
+          var grt = new Date("07/12/2019 00:00:00");//此处修改你的建站时间或者网站上线时间
+          now.setTime(now.getTime() + 250);
+          days = (now - grt) / 1000 / 60 / 60 / 24;
+          dnum = Math.floor(days);
+          hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+          hnum = Math.floor(hours);
+          if (String(hnum).length == 1) {
+            hnum = "0" + hnum;
+          }
+          minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+          mnum = Math.floor(minutes);
+          if (String(mnum).length == 1) {
+            mnum = "0" + mnum;
+          }
+          seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+          snum = Math.round(seconds);
+          if (String(snum).length == 1) {
+            snum = "0" + snum;
+          }
+          document.getElementById("timeDate").innerHTML = "本站已运行&nbsp" + dnum + "&nbsp天";
+          document.getElementById("times").innerHTML = hnum + "&nbsp小时&nbsp" + mnum + "&nbsp分&nbsp" + snum + "&nbsp秒";
+        }
+
+        setInterval("createtime()", 250);
+      </script>
+    </div>
+    <p id="hitokoto">:D 获取中...</p>
+    <script>
+      fetch('https://v1.hitokoto.cn')
+              .then(response => response.json())
+              .then(data => {
+                const hitokoto = document.getElementById('hitokoto')
+                hitokoto.innerText = data.hitokoto + '--「' + data.from + '」'
+              })
+              .catch(console.error)
+    </script>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+    <script  src="/js/lazyload.js" ></script>
+
+
+
+    
+
+
+
+
+    <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+    <script  src="/js/clipboard-use.js" ></script>
+
+
+
+    <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+    
+<script src="https://static.muchen.fun/js/custom.js"></script>
+
+
+
+<!-- Plugins -->
+
+
+    
+        <!-- Baidu Analytics -->
+        <script defer>
+            var _hmt = _hmt || [];
+            (function () {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    
+
+    
+        <!-- Google Analytics -->
+        <script defer>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-144841374-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+    <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+    <script>
+        var typed = new Typed('#subtitle', {
+            strings: [
+                '  ',
+                "40.拓扑排序&nbsp;",
+            ],
+            cursorChar: "_",
+            typeSpeed: 60,
+            loop: false,
+        });
+        typed.stop();
+        $(document).ready(function () {
+            $(".typed-cursor").addClass("h2");
+            typed.start();
+        });
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+    <script>
+        anchors.options = {
+            placement: "right",
+            visible: "hover",
+            
+        };
+        var el = "h1,h2,h3,h4,h5,h6".split(",");
+        var res = [];
+        for (item of el) {
+            res.push(".markdown-body > " + item)
+        }
+        anchors.add(res.join(", "))
+    </script>
+
+
+
+    <script  src="/js/local-search.js" ></script>
+    <script>
+        var path = "/local-search.xml";
+        var inputArea = document.querySelector("#local-search-input");
+        inputArea.onclick = function () {
+            searchFunc(path, 'local-search-input', 'local-search-result');
+            this.onclick = null
+        }
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+    <script>
+        $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+            function () {
+                var element = document.createElement('a');
+                $(element).attr('data-fancybox', 'images');
+                $(element).attr('href', $(this).attr('src'));
+                $(this).wrap(element);
+            }
+        );
+    </script>
+
+
+
+
+
+    
+
+    
+        <!-- MathJax -->
+        <script>
+            MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']]
+                },
+                options: {
+                    renderActions: {
+                        findScript: [10, doc => {
+                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                                const display = !!node.type.match(/; *mode=display/);
+                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                                const text = document.createTextNode('');
+                                node.parentNode.replaceChild(text, node);
+                                math.start = {node: text, delim: '', n: 0};
+                                math.end = {node: text, delim: '', n: 0};
+                                doc.math.push(math);
+                            });
+                        }, '', false],
+                        insertedScript: [200, () => {
+                            document.querySelectorAll('mjx-container').forEach(node => {
+                                let target = node.parentNode;
+                                if (target.nodeName.toLowerCase() === 'li') {
+                                    target.parentNode.classList.add('has-jax');
+                                }
+                            });
+                        }, '', false]
+                    }
+                }
+            };
+        </script>
+
+        <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+    
+
+
+
+    
+    
+        <script>
+            !function (e, t, a) {
+                function r() {
+                    for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+                    requestAnimationFrame(r)
+                }
+
+                function n() {
+                    var t = "function" == typeof e.onclick && e.onclick;
+                    e.onclick = function (e) {
+                        t && t(), o(e)
+                    }
+                }
+
+                function o(e) {
+                    var a = t.createElement("div");
+                    a.className = "heart", s.push({
+                        el: a,
+                        x: e.clientX - 5,
+                        y: e.clientY - 5,
+                        scale: 1,
+                        alpha: 1,
+                        color: c()
+                    }), t.body.appendChild(a)
+                }
+
+                function i(e) {
+                    var a = t.createElement("style");
+                    a.type = "text/css";
+                    try {
+                        a.appendChild(t.createTextNode(e))
+                    } catch (t) {
+                        a.styleSheet.cssText = e
+                    }
+                    t.getElementsByTagName("head")[0].appendChild(a)
+                }
+
+                function c() {
+                    return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+                }
+
+                var s = [];
+                e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+                    setTimeout(e, 1e3 / 60)
+                }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+            }(window, document);
+        </script>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

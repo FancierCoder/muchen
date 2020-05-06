@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png">
+    <link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <meta name="theme-color" content="#2f4154">
+    <meta name="description" content="沐晨的个人博客,技术博客">
+    <meta name="author" content="Li Duo">
+    <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
+    <title>LeetCode刷题：数组和链表 - MuChen&#39;s Blog</title>
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+    
+<link rel="stylesheet" href="https://static.muchen.fun/css/custom.css?t=0.1423425.css">
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+<script>
+    var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+    // 依次判断 系统暗黑模式 指定时间 缓存 dark
+    if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+        if (!(isNight && localStorage.getItem('noDark') === '1')) {
+            document.body.classList.add('dark');
+        }
+    }
+    document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
+</script>
+<header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+    <div class="container">
+        <a class="navbar-brand"
+           href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a>
+
+        <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="animated-icon"><span></span><span></span><span></span></div>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto text-center">
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/archives/">
+                            <i class="iconfont icon-archive-fill"></i>
+                            归档</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/categories/">
+                            <i class="iconfont icon-category-fill"></i>
+                            分类</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tags/">
+                            <i class="iconfont icon-tags-fill"></i>
+                            标签</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/messageBoard/">
+                            <i class="iconfont icon-speakernotes"></i>
+                            留言</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about/">
+                            <i class="iconfont icon-user-fill"></i>
+                            关于</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/links/">
+                            <i class="iconfont icon-link-fill"></i>
+                            友链</a>
+                    </li>
+                
+                
+                    <li class="nav-item" id="search-btn">
+                        <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                                    class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+                    </li>
+                
+                <li class="nav-item">
+                    <a id="dark" class="nav-link" onclick="switchDarkMode()">
+                        <i class="iconfont icon-sun"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/images/07.jpg') no-repeat center center;
+                 background-size: cover;">
+        <div class="full-bg-img">
+            <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+                <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+                
+            </span>
+
+                    
+                        
+                            <div class="mt-3 post-meta">
+                                <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                                <time datetime="2019-08-30 11:56">
+                                    2019年8月30日 中午
+                                </time>
+                            </div>
+                        
+
+                        <div class="mt-1">
+                            
+                                
+                                <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    2.2k 字
+                  </span>
+                            
+
+                            
+                                
+                                <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                                    
+                                    
+                                    35
+                                     分钟
+                  </span>
+                            
+
+                            
+                                <!-- 不蒜子统计文章PV -->
+                                
+                                <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
+                    <i class="iconfont icon-eye" aria-hidden="true"></i>
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>
+                            
+                        </div>
+                    
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    
+        
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：8 个月前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <!-- more -->
+<p>学习了那么多的数据结构和算法，到了检验学习成果的时刻了！！😎</p>
+<h2 id="关于数组和链表的几个必知必会的代码实现"><a href="#关于数组和链表的几个必知必会的代码实现" class="headerlink" title="关于数组和链表的几个必知必会的代码实现"></a>关于数组和链表的几个必知必会的代码实现</h2><h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><ul>
+<li><p>实现一个支持动态扩容的数组</p>
+</li>
+<li><p>实现一个大小固定的有序数组，支持动态增删改操作</p>
+</li>
+<li><p>实现两个有序数组合并为一个有序数组</p>
+</li>
+</ul>
+<h3 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h3><ul>
+<li><p>实现单链表、循环链表、双向链表，支持增删操作</p>
+</li>
+<li><p>实现单链表反转</p>
+</li>
+<li><p>实现两个有序的链表合并为一个有序链表</p>
+</li>
+<li><p>实现求链表的中间结点</p>
+</li>
+</ul>
+<h2 id="数组题目"><a href="#数组题目" class="headerlink" title="数组题目"></a>数组题目</h2><h3 id="Three-Sum（求三数之和）"><a href="#Three-Sum（求三数之和）" class="headerlink" title="Three Sum（求三数之和）"></a><a href="https://leetcode-cn.com/problems/3sum/" target="_blank" rel="noopener">Three Sum（求三数之和）</a></h3><p>题目：</p>
+<blockquote>
+<p>给定一个包含 <code>n</code> 个整数的数组 <code>nums</code>，判断 <code>nums</code> 中是否存在三个元素 <code>a</code>，<code>b</code>，<code>c</code> ，使得 <code>a + b + c = 0</code> ？找出所有满足条件且不重复的三元组。</p>
+<p>注意：答案中不可以包含重复的三元组。</p>
+<p>例如, 给定数组 <code>nums = [-1, 0, 1, 2, -1, -4]</code>，</p>
+<p>满足要求的三元组集合为：</p>
+</blockquote>
+<pre><code class="hljs plain">[
+  [-1, 0, 1],
+  [-1, -1, 2]
+]</code></pre>
+<p>思路：</p>
+<blockquote>
+<p>最外层控制一个元素的循环，内层用双指针，一个从头到尾扫描，另一个从尾到头扫描，判断三个元素的值之和是否为零。</p>
+<p>注意：相同的元素需要跳过</p>
+</blockquote>
+<p>代码：</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> List&lt;List&lt;Integer&gt;&gt; threeSum(<span class="hljs-keyword">int</span>[] nums) &#123;
+    <span class="hljs-keyword">if</span> (nums.length &lt; <span class="hljs-number">3</span>) &#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+    &#125;
+    <span class="hljs-comment">//排序</span>
+    Arrays.sort(nums);
+    List&lt;List&lt;Integer&gt;&gt; result = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; nums.length; i++) &#123;
+        <span class="hljs-keyword">if</span> (nums[i] &gt; <span class="hljs-number">0</span>) &#123;
+            <span class="hljs-keyword">break</span>; <span class="hljs-comment">// 如果当前数字大于0，则三数之和一定大于0，所以结束循环（没有0或负数怎么加也不会等于0）</span>
+        &#125;
+        <span class="hljs-keyword">if</span> (i &gt; <span class="hljs-number">0</span> &amp;&amp; nums[i] == nums[i - <span class="hljs-number">1</span>]) &#123;
+            <span class="hljs-keyword">continue</span>; <span class="hljs-comment">// 去重</span>
+        &#125;
+        <span class="hljs-keyword">int</span> left = i + <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">int</span> right = nums.length - <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">while</span> (left &lt; right) &#123;
+            <span class="hljs-keyword">int</span> sum = nums[i] + nums[left] + nums[right];
+            <span class="hljs-keyword">if</span>(sum == <span class="hljs-number">0</span>)&#123;
+                result.add(Arrays.asList(nums[i], nums[left], nums[right]));
+                <span class="hljs-keyword">while</span> (left &lt; right &amp;&amp; nums[left] == nums[left+<span class="hljs-number">1</span>]) &#123;
+                    left++; <span class="hljs-comment">// 去重</span>
+                &#125;
+                <span class="hljs-keyword">while</span> (left &lt; right &amp;&amp; nums[right] == nums[right-<span class="hljs-number">1</span>]) &#123;
+                    right--; <span class="hljs-comment">// 去重</span>
+                &#125;
+                left++;
+                right--;
+            &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (sum &lt; <span class="hljs-number">0</span>) &#123;
+                left++;
+            &#125; <span class="hljs-keyword">else</span> &#123;
+                right --;
+            &#125;
+        &#125;
+    &#125;
+    <span class="hljs-keyword">return</span> result;
+&#125;</code></pre>
+
+<h3 id="Majority-Element（求众数）"><a href="#Majority-Element（求众数）" class="headerlink" title="Majority Element（求众数）"></a><a href="https://leetcode-cn.com/problems/majority-element/" target="_blank" rel="noopener">Majority Element（求众数）</a></h3><p>题目：</p>
+<blockquote>
+<p>给定一个大小为 <code>n</code> 的数组，找到其中的众数。众数是指在数组中出现次数大于 ⌊ $\frac n 2$ ⌋ 的元素。</p>
+<p>你可以假设数组是非空的，<strong>并且给定的数组总是存在众数</strong>。<br>示例 1:</p>
+<p>输入: <code>[3,2,3]</code><br>输出: <code>3</code><br>示例 2:</p>
+<p>输入: <code>[2,2,1,1,1,2,2]</code><br>输出: <code>2</code></p>
+</blockquote>
+<p>思路：</p>
+<blockquote>
+<p>根据题意，众数是指在数组中出现次数大于 ⌊ $\frac n 2$ ⌋ 的元素，因此可以先把数组排序，数组$\frac n 2$下标处就是众数。</p>
+</blockquote>
+<p>代码：</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">majorityElement</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] nums)</span> </span>&#123;
+    <span class="hljs-keyword">if</span> (nums.length &lt; <span class="hljs-number">1</span>) &#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    &#125;
+    Arrays.sort(nums);
+    <span class="hljs-keyword">return</span> nums[nums.length/<span class="hljs-number">2</span>];
+&#125;</code></pre>
+
+<p>然而你以为这样就完了吗？通过官方题解，还看到了一种更厉害的解法，那就是 <code>Boyer-Moore</code> 投票算法，思路如下：</p>
+<blockquote>
+<p>如果我们把众数记为 $+1$ ，把其他数记为 $−1$ ，将它们全部加起来，显然和大于 <code>0</code> ，从结果本身我们可以看出众数比其他数多。</p>
+<p>本质上，<code>Boyer-Moore</code> 算法就是找 <code>nums</code> 的一个后缀 $suf$ ，其中 $suf[0]$ 就是后缀中的众数。我们维护一个计数器，如果遇到一个我们目前的候选众数，就将计数器加一，否则减一。只要计数器等于 <code>0</code> &gt; &gt; ，我们就将 <code>nums</code> 中之前访问的数字全部忘记 ，并把下一个数字当做候选的众数。直观上这个算法不是特别明显为何是对的，我们先看下面这个例子（竖线用来划分每次计数器归零的情况）</p>
+<p><code>[7, 7, 5, 7, 5, 1 | 5, 7 | 5, 5, 7, 7 | 7, 7, 7, 7]</code></p>
+<p>首先，下标为 <code>0</code> 的 <code>7</code> 被当做众数的第一个候选。在下标为 <code>5</code> 处，计数器会变回 <code>0</code>。所以下标为 <code>6</code> 的 <code>5</code> 是下一个众数的候选者。由于这个例子中 <code>7</code> 是真正的众数，所以通过忽略掉前面的数字，我们忽略掉了同样多数目的众数和非众数。因此，<code>7</code> 仍然是剩下数字中的众数。</p>
+<p><code>[7, 7, 5, 7, 5, 1 | 5, 7 | 5, 5, 7, 7 | 5, 5, 5, 5]</code></p>
+<p>现在，众数是 <code>5</code> （在计数器归零的时候我们把候选从 <code>7</code> 变成了 <code>5</code>）。此时，我们的候选者并不是真正的众数，但是我们在<em>遗忘</em>前面的数字的时候，要去掉相同数目的众数和非众数（如果遗忘更多的非众数，会导致计数器变成负数）。</p>
+<p>因此，上面的过程说明了我们可以放心地遗忘前面的数字，并继续求解剩下数字中的众数。最后，总有一个后缀满足计数器是大于 0 的，此时这个后缀的众数就是整个数组的众数。</p>
+</blockquote>
+<p>代码如下：</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">majorityElement</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] nums)</span> </span>&#123;
+    <span class="hljs-keyword">int</span> count = <span class="hljs-number">0</span>;
+    Integer candidate = <span class="hljs-keyword">null</span>;
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> num : nums) &#123;
+        <span class="hljs-keyword">if</span> (count == <span class="hljs-number">0</span>) &#123;
+            candidate = num;
+        &#125;
+        count += (num == candidate) ? <span class="hljs-number">1</span> : -<span class="hljs-number">1</span>;
+    &#125;
+
+    <span class="hljs-keyword">return</span> candidate;
+&#125;</code></pre>
+
+<h3 id="Missing-Positive（求缺失的第一个正数）"><a href="#Missing-Positive（求缺失的第一个正数）" class="headerlink" title="Missing Positive（求缺失的第一个正数）"></a><a href="https://leetcode-cn.com/problems/first-missing-positive/" target="_blank" rel="noopener">Missing Positive（求缺失的第一个正数）</a></h3><p>题目：</p>
+<blockquote>
+<p>给定一个未排序的整数数组，找出其中没有出现的最小的正整数。</p>
+<p>示例 1:</p>
+<p>输入: <code>[1,2,0]</code><br>输出: <code>3</code></p>
+<p>示例 2:</p>
+<p>输入: <code>[7,8,9,11,12]</code><br>输出: <code>1</code></p>
+<p>说明:</p>
+<p>你的算法的时间复杂度应为$O(n)$，并且只能使用常数级别的空间。</p>
+</blockquote>
+<p>思路：看到说明后就知道不能用哈希表来解决了，所以要换个思路，想了半天想不明白，咱也不敢说，咱也不敢问，只好去偷瞄一眼官方题解，看了后才觉得还是大佬们🐂🏆。<a href="https://leetcode-cn.com/problems/first-missing-positive/solution/que-shi-de-di-yi-ge-zheng-shu-by-leetcode/" target="_blank" rel="noopener">点击此处链接</a></p>
+<p>代码如下：</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">firstMissingPositive</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] nums)</span> </span>&#123;
+  <span class="hljs-keyword">int</span> n = nums.length;
+
+  <span class="hljs-comment">// 基本情况</span>
+  <span class="hljs-keyword">int</span> contains = <span class="hljs-number">0</span>;
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++)
+    <span class="hljs-keyword">if</span> (nums[i] == <span class="hljs-number">1</span>) &#123;
+      contains++;
+      <span class="hljs-keyword">break</span>;
+    &#125;
+
+  <span class="hljs-keyword">if</span> (contains == <span class="hljs-number">0</span>)
+    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+
+  <span class="hljs-comment">// nums = [1]</span>
+  <span class="hljs-keyword">if</span> (n == <span class="hljs-number">1</span>)
+    <span class="hljs-keyword">return</span> <span class="hljs-number">2</span>;
+
+  <span class="hljs-comment">// 用 1 替换负数，0，</span>
+  <span class="hljs-comment">// 和大于 n 的数</span>
+  <span class="hljs-comment">// 在转换以后，nums 只会包含</span>
+  <span class="hljs-comment">// 正数</span>
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++)
+    <span class="hljs-keyword">if</span> ((nums[i] &lt;= <span class="hljs-number">0</span>) || (nums[i] &gt; n))
+      nums[i] = <span class="hljs-number">1</span>;
+
+  <span class="hljs-comment">// 使用索引和数字符号作为检查器</span>
+  <span class="hljs-comment">// 例如，如果 nums[1] 是负数表示在数组中出现了数字 `1`</span>
+  <span class="hljs-comment">// 如果 nums[2] 是正数 表示数字 2 没有出现</span>
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;
+    <span class="hljs-keyword">int</span> a = Math.abs(nums[i]);
+    <span class="hljs-comment">// 如果发现了一个数字 a - 改变第 a 个元素的符号</span>
+    <span class="hljs-comment">// 注意重复元素只需操作一次</span>
+    <span class="hljs-keyword">if</span> (a == n)
+      nums[<span class="hljs-number">0</span>] = - Math.abs(nums[<span class="hljs-number">0</span>]);
+    <span class="hljs-keyword">else</span>
+      nums[a] = - Math.abs(nums[a]);
+  &#125;
+
+  <span class="hljs-comment">// 现在第一个正数的下标</span>
+  <span class="hljs-comment">// 就是第一个缺失的数</span>
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; n; i++) &#123;
+    <span class="hljs-keyword">if</span> (nums[i] &gt; <span class="hljs-number">0</span>)
+      <span class="hljs-keyword">return</span> i;
+  &#125;
+
+  <span class="hljs-keyword">if</span> (nums[<span class="hljs-number">0</span>] &gt; <span class="hljs-number">0</span>)
+    <span class="hljs-keyword">return</span> n;
+
+  <span class="hljs-keyword">return</span> n + <span class="hljs-number">1</span>;
+&#125;</code></pre>
+
+<h2 id="链表题目"><a href="#链表题目" class="headerlink" title="链表题目"></a>链表题目</h2><h3 id="Linked-List-Cycle-I（环形链表）"><a href="#Linked-List-Cycle-I（环形链表）" class="headerlink" title="Linked List Cycle I（环形链表）"></a><a href="https://leetcode-cn.com/problems/linked-list-cycle/" target="_blank" rel="noopener">Linked List Cycle I（环形链表）</a></h3><p>题目：</p>
+<blockquote>
+<p>给定一个链表，判断链表中是否有环。</p>
+<p>为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。</p>
+<p>示例 1：</p>
+<p>输入：head = <code>[3,2,0,-4]</code>, pos = <code>1</code><br>输出：true<br>解释：链表中有一个环，其尾部连接到第二个节点。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/30/0419e3a0-caf3-11e9-942f-1b7eddebc63d.png" srcset="/img/loading.gif" alt="image.png"></p>
+</blockquote>
+<p>思路：此题即是<a href="../the-common-oper-of-single-list/">单向链表的常见操作</a>中链表环的检测，可以直接点击点链接跳转去看看。</p>
+<p>这里直接给出代码：</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">hasCycle</span><span class="hljs-params">(ListNode head)</span> </span>&#123;
+    <span class="hljs-keyword">if</span> (head == <span class="hljs-keyword">null</span> || head.next == <span class="hljs-keyword">null</span>) &#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+    &#125;
+    ListNode slow = head;
+    ListNode fast = head.next;
+    <span class="hljs-keyword">while</span> (slow != fast) &#123;
+        <span class="hljs-keyword">if</span> (fast == <span class="hljs-keyword">null</span> || fast.next == <span class="hljs-keyword">null</span>) &#123;
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+        &#125;
+        slow = slow.next;
+        fast = fast.next.next;
+    &#125;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+&#125;</code></pre>
+
+<h3 id="Merge-k-Sorted-Lists（合并-k-个排序链表）"><a href="#Merge-k-Sorted-Lists（合并-k-个排序链表）" class="headerlink" title="Merge k Sorted Lists（合并 k 个排序链表）"></a><a href="https://leetcode-cn.com/problems/merge-k-sorted-lists/" target="_blank" rel="noopener">Merge k Sorted Lists（合并 k 个排序链表）</a></h3><p>题目：</p>
+<blockquote>
+<p>合并 <code>k</code> 个排序链表，返回合并后的排序链表。请分析和描述算法的复杂度。</p>
+<p>示例:</p>
+<p>输入:</p>
+</blockquote>
+<pre><code class="hljs plain">[
+  1-&gt;4-&gt;5,
+  1-&gt;3-&gt;4,
+  2-&gt;6
+]</code></pre>
+<blockquote>
+<p>输出: <code>1-&gt;1-&gt;2-&gt;3-&gt;4-&gt;4-&gt;5-&gt;6</code></p>
+</blockquote>
+<p>思路：这里直接给出官方题解的链接，因为有很多种方法可以解决这个问题，详见<a href="https://leetcode-cn.com/problems/merge-k-sorted-lists/solution/he-bing-kge-pai-xu-lian-biao-by-leetcode/" target="_blank" rel="noopener">官方题解</a></p>
+<p>代码如下：这里给出利用优先队列实现的代码</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> ListNode <span class="hljs-title">mergeKLists</span><span class="hljs-params">(ListNode[] lists)</span> </span>&#123;
+    PriorityQueue&lt;ListNode&gt; queue = <span class="hljs-keyword">new</span> PriorityQueue&lt;&gt;(Comparator.comparingInt(node -&gt; node.val));
+    ListNode dummy = <span class="hljs-keyword">new</span> ListNode(<span class="hljs-number">0</span>);
+    ListNode p = dummy;
+    queue.addAll(Stream.of(lists).filter(Objects::nonNull).collect(Collectors.toList()));
+    <span class="hljs-keyword">while</span> (!queue.isEmpty()) &#123;
+        ListNode node = queue.poll();
+        p.next = node;
+        p = p.next;
+        <span class="hljs-keyword">if</span> (node.next != <span class="hljs-keyword">null</span>)
+            queue.add(node.next);
+    &#125;
+    <span class="hljs-keyword">return</span> dummy.next;
+&#125;</code></pre>
+
+<p>做完题目之后，你可以点击左侧的分享，把测试题分享给你的朋友，说不定就帮他解决了一个难题。也可以给我留言，和我一起分享。</p>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/LEETCODE/">LEETCODE</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E9%93%BE%E8%A1%A8/">链表</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%95%B0%E7%BB%84/">数组</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/passages/leetcode-stack-queue-recur/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">LeetCode刷题：栈、队列和递归</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/passages/53/">
+                        <span class="hidden-mobile">53.算法实战（五）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+    <div id="vcomments"></div>
+    <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+    <script type="text/javascript">
+        var oldLoadVa = window.onload;
+        window.onload = function () {
+            oldLoadVa && oldLoadVa();
+
+            new Valine({
+                el: "#vcomments",
+                app_id: "O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",
+                app_key: "5Rl3Rhl9zc8BJNvrPcncKWFy",
+                placeholder: "说点什么吧~",
+                path: window.location.pathname,
+                avatar: "retro",
+                meta: ["nick","mail","link"],
+                pageSize: "10",
+                lang: "zh-CN",
+                highlight: true,
+                recordIP: true,
+                serverURLs: "https://lean.muchen.fun",
+            });
+        };
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments
+            powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><br><div class="text-center">欢迎关注我的公众号</div>
+    </div>
+  </div>
+
+
+    
+</main>
+
+
+    <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+
+
+
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+                <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mx-3">
+                <div class="md-form mb-5">
+                    <input type="text" id="local-search-input" class="form-control validate">
+                    <label data-error="x"
+                           data-success="v"
+                           for="local-search-input">关键词</label>
+                </div>
+                <div class="list-group" id="local-search-result"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    <div>
+      <span id="timeDate">载入天数...</span>
+      <span id="times">载入时分秒...</span>
+      <script>
+        var now = new Date();
+
+        function createtime() {
+          var grt = new Date("07/12/2019 00:00:00");//此处修改你的建站时间或者网站上线时间
+          now.setTime(now.getTime() + 250);
+          days = (now - grt) / 1000 / 60 / 60 / 24;
+          dnum = Math.floor(days);
+          hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+          hnum = Math.floor(hours);
+          if (String(hnum).length == 1) {
+            hnum = "0" + hnum;
+          }
+          minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+          mnum = Math.floor(minutes);
+          if (String(mnum).length == 1) {
+            mnum = "0" + mnum;
+          }
+          seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+          snum = Math.round(seconds);
+          if (String(snum).length == 1) {
+            snum = "0" + snum;
+          }
+          document.getElementById("timeDate").innerHTML = "本站已运行&nbsp" + dnum + "&nbsp天";
+          document.getElementById("times").innerHTML = hnum + "&nbsp小时&nbsp" + mnum + "&nbsp分&nbsp" + snum + "&nbsp秒";
+        }
+
+        setInterval("createtime()", 250);
+      </script>
+    </div>
+    <p id="hitokoto">:D 获取中...</p>
+    <script>
+      fetch('https://v1.hitokoto.cn')
+              .then(response => response.json())
+              .then(data => {
+                const hitokoto = document.getElementById('hitokoto')
+                hitokoto.innerText = data.hitokoto + '--「' + data.from + '」'
+              })
+              .catch(console.error)
+    </script>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+    <script  src="/js/lazyload.js" ></script>
+
+
+
+    
+
+
+
+
+    <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+    <script  src="/js/clipboard-use.js" ></script>
+
+
+
+    <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+    
+<script src="https://static.muchen.fun/js/custom.js"></script>
+
+
+
+<!-- Plugins -->
+
+
+    
+        <!-- Baidu Analytics -->
+        <script defer>
+            var _hmt = _hmt || [];
+            (function () {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    
+
+    
+        <!-- Google Analytics -->
+        <script defer>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-144841374-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+    <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+    <script>
+        var typed = new Typed('#subtitle', {
+            strings: [
+                '  ',
+                "LeetCode刷题：数组和链表&nbsp;",
+            ],
+            cursorChar: "_",
+            typeSpeed: 60,
+            loop: false,
+        });
+        typed.stop();
+        $(document).ready(function () {
+            $(".typed-cursor").addClass("h2");
+            typed.start();
+        });
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+    <script>
+        anchors.options = {
+            placement: "right",
+            visible: "hover",
+            
+        };
+        var el = "h1,h2,h3,h4,h5,h6".split(",");
+        var res = [];
+        for (item of el) {
+            res.push(".markdown-body > " + item)
+        }
+        anchors.add(res.join(", "))
+    </script>
+
+
+
+    <script  src="/js/local-search.js" ></script>
+    <script>
+        var path = "/local-search.xml";
+        var inputArea = document.querySelector("#local-search-input");
+        inputArea.onclick = function () {
+            searchFunc(path, 'local-search-input', 'local-search-result');
+            this.onclick = null
+        }
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+    <script>
+        $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+            function () {
+                var element = document.createElement('a');
+                $(element).attr('data-fancybox', 'images');
+                $(element).attr('href', $(this).attr('src'));
+                $(this).wrap(element);
+            }
+        );
+    </script>
+
+
+
+
+
+    
+
+    
+        <!-- MathJax -->
+        <script>
+            MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']]
+                },
+                options: {
+                    renderActions: {
+                        findScript: [10, doc => {
+                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                                const display = !!node.type.match(/; *mode=display/);
+                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                                const text = document.createTextNode('');
+                                node.parentNode.replaceChild(text, node);
+                                math.start = {node: text, delim: '', n: 0};
+                                math.end = {node: text, delim: '', n: 0};
+                                doc.math.push(math);
+                            });
+                        }, '', false],
+                        insertedScript: [200, () => {
+                            document.querySelectorAll('mjx-container').forEach(node => {
+                                let target = node.parentNode;
+                                if (target.nodeName.toLowerCase() === 'li') {
+                                    target.parentNode.classList.add('has-jax');
+                                }
+                            });
+                        }, '', false]
+                    }
+                }
+            };
+        </script>
+
+        <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+    
+
+
+
+    
+    
+        <script>
+            !function (e, t, a) {
+                function r() {
+                    for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+                    requestAnimationFrame(r)
+                }
+
+                function n() {
+                    var t = "function" == typeof e.onclick && e.onclick;
+                    e.onclick = function (e) {
+                        t && t(), o(e)
+                    }
+                }
+
+                function o(e) {
+                    var a = t.createElement("div");
+                    a.className = "heart", s.push({
+                        el: a,
+                        x: e.clientX - 5,
+                        y: e.clientY - 5,
+                        scale: 1,
+                        alpha: 1,
+                        color: c()
+                    }), t.body.appendChild(a)
+                }
+
+                function i(e) {
+                    var a = t.createElement("style");
+                    a.type = "text/css";
+                    try {
+                        a.appendChild(t.createTextNode(e))
+                    } catch (t) {
+                        a.styleSheet.cssText = e
+                    }
+                    t.getElementsByTagName("head")[0].appendChild(a)
+                }
+
+                function c() {
+                    return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+                }
+
+                var s = [];
+                e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+                    setTimeout(e, 1e3 / 60)
+                }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+            }(window, document);
+        </script>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

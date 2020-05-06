@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png">
+    <link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <meta name="theme-color" content="#2f4154">
+    <meta name="description" content="沐晨的个人博客,技术博客">
+    <meta name="author" content="Li Duo">
+    <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
+    <title>7.队列 - MuChen&#39;s Blog</title>
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+    
+<link rel="stylesheet" href="https://static.muchen.fun/css/custom.css?t=0.1423425.css">
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+<script>
+    var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+    // 依次判断 系统暗黑模式 指定时间 缓存 dark
+    if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+        if (!(isNight && localStorage.getItem('noDark') === '1')) {
+            document.body.classList.add('dark');
+        }
+    }
+    document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
+</script>
+<header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+    <div class="container">
+        <a class="navbar-brand"
+           href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a>
+
+        <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="animated-icon"><span></span><span></span><span></span></div>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto text-center">
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/archives/">
+                            <i class="iconfont icon-archive-fill"></i>
+                            归档</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/categories/">
+                            <i class="iconfont icon-category-fill"></i>
+                            分类</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tags/">
+                            <i class="iconfont icon-tags-fill"></i>
+                            标签</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/messageBoard/">
+                            <i class="iconfont icon-speakernotes"></i>
+                            留言</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about/">
+                            <i class="iconfont icon-user-fill"></i>
+                            关于</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/links/">
+                            <i class="iconfont icon-link-fill"></i>
+                            友链</a>
+                    </li>
+                
+                
+                    <li class="nav-item" id="search-btn">
+                        <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                                    class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+                    </li>
+                
+                <li class="nav-item">
+                    <a id="dark" class="nav-link" onclick="switchDarkMode()">
+                        <i class="iconfont icon-sun"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/images/07.jpg') no-repeat center center;
+                 background-size: cover;">
+        <div class="full-bg-img">
+            <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+                <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+                
+            </span>
+
+                    
+                        
+                            <div class="mt-3 post-meta">
+                                <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                                <time datetime="2019-07-16 13:22">
+                                    2019年7月16日 下午
+                                </time>
+                            </div>
+                        
+
+                        <div class="mt-1">
+                            
+                                
+                                <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    4k 字
+                  </span>
+                            
+
+                            
+                                
+                                <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                                    
+                                    
+                                    56
+                                     分钟
+                  </span>
+                            
+
+                            
+                                <!-- 不蒜子统计文章PV -->
+                                
+                                <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
+                    <i class="iconfont icon-eye" aria-hidden="true"></i>
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>
+                            
+                        </div>
+                    
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    
+        
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：10 个月前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <!-- more -->
+<p><code>CPU</code> 资源是有限的，任务的处理速度与线程个数并不是线性正相关。相反，过多的线程反而会导致 <code>CPU</code> 频繁切换，处理性能下降。所以，线程池的大小一般都是综合考虑要处理任务的特点和硬件环境，来事先设置的。</p>
+<p><font color='green'>当向固定大小的线程池中请求一个线程时，如果线程池中没有空闲资源了，这个时候线程池如何处理这个请求？是拒绝请求还是排队请求？各种处理策略又是怎么实现的呢？</font></p>
+<h2 id="如何理解“队列”？"><a href="#如何理解“队列”？" class="headerlink" title="如何理解“队列”？"></a>如何理解“队列”？</h2><p>队列这个概念非常好理解。你可以把它想象成排队买票，先来的先买，后来的人只能站末尾，不允许插队。<strong>先进者先出，这就是典型的“队列”。</strong></p>
+<p>栈只支持两个基本操作：<strong>入栈 <code>push()</code> 和出栈 <code>pop()</code></strong>。队列跟栈非常相似，支持的操作也很有限，最基本的操作也是两个：<strong>入队 <code>enqueue()</code></strong>，放一个数据到队列尾部；<strong>出队 <code>dequeue()</code></strong>，从队列头部取一个元素。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/ce9ec840-d38e-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>所以，队列跟栈一样，也是一种<strong>操作受限的线性表数据结构。</strong></p>
+<p>队列的概念很好理解，基本操作也很容易掌握。作为一种非常基础的数据结构，队列的应用也非常广泛，特别是一些具有某些额外特性的队列，比如循环队列、阻塞队列、并发队列。它们在很多偏底层系统、框架、中间件的开发中，起着关键性的作用。比如高性能队列 <code>Disruptor</code>、<code>Linux</code> 环形缓存，都用到了循环并发队列；<code>Java concurrent</code> 并发包利用 <code>ArrayBlockingQueue</code> 来实现公平锁等。</p>
+<h2 id="顺序队列和链式队列"><a href="#顺序队列和链式队列" class="headerlink" title="顺序队列和链式队列"></a>顺序队列和链式队列</h2><p>队列跟栈一样，也是一种抽象的数据结构。它具有先进先出的特性，支持在队尾插入元素，在队头删除元素，那究竟该如何实现一个队列呢？</p>
+<p>跟栈一样，队列可以用数组来实现，也可以用链表来实现。用数组实现的栈叫作<strong>顺序栈</strong>，用链表实现的栈叫作<strong>链式栈</strong>。同样，用数组实现的队列叫作<strong>顺序队列</strong>，用链表实现的队列叫作<strong>链式队列</strong>。</p>
+<p>先来看下基于数组的实现方法。下面用 <code>Java</code> 语言实现了一下，不过并不包含 <code>Java</code> 语言的高级语法，而且做了比较详细的注释，你应该可以看懂。</p>
+<pre><code class="hljs java"><span class="hljs-comment">// 用数组实现的队列</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ArrayQueue</span> </span>&#123;
+  <span class="hljs-comment">// 数组：items，数组大小：n</span>
+  <span class="hljs-keyword">private</span> String[] items;
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> n = <span class="hljs-number">0</span>;
+  <span class="hljs-comment">// head 表示队头下标，tail 表示队尾下标</span>
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> head = <span class="hljs-number">0</span>;
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> tail = <span class="hljs-number">0</span>;
+
+  <span class="hljs-comment">// 申请一个大小为 capacity 的数组</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ArrayQueue</span><span class="hljs-params">(<span class="hljs-keyword">int</span> capacity)</span> </span>&#123;
+    items = <span class="hljs-keyword">new</span> String[capacity];
+    n = capacity;
+  &#125;
+
+  <span class="hljs-comment">// 入队</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">enqueue</span><span class="hljs-params">(String item)</span> </span>&#123;
+    <span class="hljs-comment">// 如果 tail == n 表示队列已经满了</span>
+    <span class="hljs-keyword">if</span> (tail == n) <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+    items[tail] = item;
+    ++tail;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+  &#125;
+
+  <span class="hljs-comment">// 出队</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">dequeue</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-comment">// 如果 head == tail 表示队列为空</span>
+    <span class="hljs-keyword">if</span> (head == tail) <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+    <span class="hljs-comment">// 为了让其他语言的同学看的更加明确，把 -- 操作放到单独一行来写了</span>
+    String ret = items[head];
+    ++head;
+    <span class="hljs-keyword">return</span> ret;
+  &#125;
+&#125;</code></pre>
+<p>比起栈的数组实现，队列的数组实现稍微有点儿复杂，但是没关系。稍微解释一下实现思路，很容易就能明白了。</p>
+<p>对于栈来说，只需要一个栈顶指针就可以了。但是队列需要两个指针：一个是 <code>head</code> 指针，指向队头；一个是 <code>tail</code> 指针，指向队尾。</p>
+<p>你可以结合下面这幅图来理解。当 <code>a</code>、<code>b</code>、<code>c</code>、<code>d</code> 依次入队之后，队列中的 <code>head</code> 指针指向下标为 <code>0</code> 的位置，<code>tail</code> 指针指向下标为 <code>4</code> 的位置。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/78401340-d38f-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>当调用两次出队操作之后，队列中 <code>head</code> 指针指向下标为 <code>2</code> 的位置，<code>tail</code> 指针仍然指向下标为 <code>4</code> 的位置。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/88a687f0-d38f-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>你肯定已经发现了，随着不停地进行入队、出队操作，<code>head</code> 和 <code>tail</code> 都会持续往后移动。当 <code>tail</code> 移动到最右边，即使数组中还有空闲空间，也无法继续往队列中添加数据了。这个问题该如何解决呢？</p>
+<p>你是否还记得，在数组那一篇，也遇到过类似的问题，就是数组的删除操作会导致数组中的数据不连续。你还记得当时是怎么解决的吗？对，用<strong>数据搬移</strong>！但是，每次进行出队操作都相当于删除数组下标为 <code>0</code> 的数据，要搬移整个队列中的数据，这样出队操作的时间复杂度就会从原来的 $O(1)$ 变为 $O(n)$。能不能优化一下呢？</p>
+<p>实际上，在出队时可以不用搬移数据。如果没有空闲空间了，只需要在入队时，再集中触发一次数据的搬移操作。借助这个思想，出队函数 <code>dequeue()</code> 保持不变，稍加改造一下入队函数 <code>enqueue()</code> 的实现，就可以轻松解决刚才的问题了。下面是具体的代码：</p>
+<pre><code class="hljs java"> <span class="hljs-comment">// 入队操作，将 item 放入队尾</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">enqueue</span><span class="hljs-params">(String item)</span> </span>&#123;
+  <span class="hljs-comment">// tail == n 表示队列末尾没有空间了</span>
+  <span class="hljs-keyword">if</span> (tail == n) &#123;
+    <span class="hljs-comment">// tail ==n &amp;&amp; head==0，表示整个队列都占满了</span>
+    <span class="hljs-keyword">if</span> (head == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+    <span class="hljs-comment">// 数据搬移</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = head; i &lt; tail; ++i) &#123;
+      items[i-head] = items[i];
+    &#125;
+    <span class="hljs-comment">// 搬移完之后重新更新 head 和 tail</span>
+    tail -= head;
+    head = <span class="hljs-number">0</span>;
+  &#125;
+  
+  items[tail] = item;
+  ++tail;
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+&#125;</code></pre>
+<p>从代码中看到，当队列的 <code>tail</code> 指针移动到数组的最右边后，如果有新的数据入队，可以将 <code>head</code> 到 <code>tail</code> 之间的数据，整体搬移到数组中 <code>0</code> 到 <code>tail-head</code> 的位置。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/f105bd20-d38f-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>这种实现思路中，出队操作的时间复杂度仍然是 $O(1)$，但入队操作的时间复杂度还是 $O(1)$ 吗？你可以用算法复杂度分析方法，自己试着分析一下。</p>
+<p>接下来，再来看下基于链表的队列实现方法。</p>
+<p>基于链表的实现，同样需要两个指针：<code>head</code> 指针和 <code>tail</code> 指针。它们分别指向链表的第一个结点和最后一个结点。如图所示，入队时，<code>tail-&gt;next= new_node</code>, <code>tail = tail-&gt;next</code>；出队时，<code>head = head-&gt;next</code>。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/200af090-d390-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"></p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">QueueBasedOnLinkedList</span> </span>&#123;
+
+  <span class="hljs-comment">// 队列的队首和队尾</span>
+  <span class="hljs-keyword">private</span> Node head = <span class="hljs-keyword">null</span>;
+  <span class="hljs-keyword">private</span> Node tail = <span class="hljs-keyword">null</span>;
+
+  <span class="hljs-comment">// 入队</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">enqueue</span><span class="hljs-params">(String value)</span> </span>&#123;
+    <span class="hljs-keyword">if</span> (tail == <span class="hljs-keyword">null</span>) &#123;
+      Node newNode = <span class="hljs-keyword">new</span> Node(value, <span class="hljs-keyword">null</span>);
+      head = newNode;
+      tail = newNode;
+    &#125; <span class="hljs-keyword">else</span> &#123;
+      tail.next = <span class="hljs-keyword">new</span> Node(value, <span class="hljs-keyword">null</span>);
+      tail = tail.next;
+    &#125;
+  &#125;
+
+  <span class="hljs-comment">// 出队</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">dequeue</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-keyword">if</span> (head == <span class="hljs-keyword">null</span>) <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+
+    String value = head.data;
+    head = head.next;
+    <span class="hljs-keyword">if</span> (head == <span class="hljs-keyword">null</span>) &#123;
+      tail = <span class="hljs-keyword">null</span>;
+    &#125;
+    <span class="hljs-keyword">return</span> value;
+  &#125;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">printAll</span><span class="hljs-params">()</span> </span>&#123;
+    Node p = head;
+    <span class="hljs-keyword">while</span> (p != <span class="hljs-keyword">null</span>) &#123;
+      System.out.print(p.data + <span class="hljs-string">" "</span>);
+      p = p.next;
+    &#125;
+    System.out.println();
+  &#125;
+
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Node</span> </span>&#123;
+    <span class="hljs-keyword">private</span> String data;
+    <span class="hljs-keyword">private</span> Node next;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Node</span><span class="hljs-params">(String data, Node next)</span> </span>&#123;
+      <span class="hljs-keyword">this</span>.data = data;
+      <span class="hljs-keyword">this</span>.next = next;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getData</span><span class="hljs-params">()</span> </span>&#123;
+      <span class="hljs-keyword">return</span> data;
+    &#125;
+  &#125;
+
+&#125;</code></pre>
+
+<h2 id="循环队列"><a href="#循环队列" class="headerlink" title="循环队列"></a>循环队列</h2><p>刚才用数组来实现队列的时候，在 <code>tail==n</code> 时，会有数据搬移操作，这样入队操作性能就会受到影响。那有没有办法能够避免数据搬移呢？来看看循环队列的解决思路。</p>
+<p>循环队列，顾名思义，它长得像一个环。原本数组是有头有尾的，是一条直线。现在把首尾相连，扳成了一个环。下面有一张图，你可以直观地感受一下。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/99377290-d390-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>可以看到，图中这个队列的大小为 <code>8</code>，当前 <code>head=4，tail=7</code>。当有一个新的元素 <code>a</code> 入队时，放入下标为 <code>7</code> 的位置。但这个时候，并不把 <code>tail</code> 更新为 <code>8</code>，而是将其在环中后移一位，到下标为 <code>0</code> 的位置。当再有一个元素 <code>b</code> 入队时，将 <code>b</code> 放入下标为 <code>0</code> 的位置，然后 <code>tail</code> 加 <code>1</code> 更新为 <code>1</code>。所以，在 <code>a</code>，<code>b</code> 依次入队之后，循环队列中的元素就变成了下面的样子：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/be4476a0-d390-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>通过这样的方法，成功避免了数据搬移操作。看起来不难理解，但是循环队列的代码实现难度要比前面讲的非循环队列难多了。要想写出没有 <code>bug</code> 的循环队列的实现代码，个人觉得，最关键的是，<strong>确定好队空和队满的判定条件</strong>。</p>
+<p>在用数组实现的非循环队列中，队满的判断条件是 <code>tail == n</code>，队空的判断条件是 <code>head == tail</code>。那针对循环队列，如何判断队空和队满呢？</p>
+<p>队列为空的判断条件仍然是 <code>head == tail</code>。但队列满的判断条件就稍微有点复杂了。下面有一张队列满的图，你可以看一下，试着总结一下规律。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/e7058200-d390-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>就像图中画的队满的情况，<code>tail=3，head=4，n=8</code>，所以总结一下规律就是：<code>(3+1)%8=4</code>。多画几张队满的图，你就会发现，当队满时，<code>(tail+1)%n=head</code>。</p>
+<p>你有没有发现，当队列满时，图中的 <code>tail</code> 指向的位置实际上是没有存储数据的。所以，循环队列会浪费一个数组的存储空间。</p>
+<p><code>Talk is cheap</code>，如果还是没怎么理解，那就 <code>show you code</code> 吧。</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CircularQueue</span> </span>&#123;
+  <span class="hljs-comment">// 数组：items，数组大小：n</span>
+  <span class="hljs-keyword">private</span> String[] items;
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> n = <span class="hljs-number">0</span>;
+  <span class="hljs-comment">// head 表示队头下标，tail 表示队尾下标</span>
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> head = <span class="hljs-number">0</span>;
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> tail = <span class="hljs-number">0</span>;
+
+  <span class="hljs-comment">// 申请一个大小为 capacity 的数组</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">CircularQueue</span><span class="hljs-params">(<span class="hljs-keyword">int</span> capacity)</span> </span>&#123;
+    items = <span class="hljs-keyword">new</span> String[capacity];
+    n = capacity;
+  &#125;
+
+  <span class="hljs-comment">// 入队</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">enqueue</span><span class="hljs-params">(String item)</span> </span>&#123;
+    <span class="hljs-comment">// 队列满了</span>
+    <span class="hljs-keyword">if</span> ((tail + <span class="hljs-number">1</span>) % n == head) <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+    items[tail] = item;
+    tail = (tail + <span class="hljs-number">1</span>) % n;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+  &#125;
+
+  <span class="hljs-comment">// 出队</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">dequeue</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-comment">// 如果 head == tail 表示队列为空</span>
+    <span class="hljs-keyword">if</span> (head == tail) <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+    String ret = items[head];
+    head = (head + <span class="hljs-number">1</span>) % n;
+    <span class="hljs-keyword">return</span> ret;
+  &#125;
+&#125;</code></pre>
+
+<h2 id="阻塞队列和并发队列"><a href="#阻塞队列和并发队列" class="headerlink" title="阻塞队列和并发队列"></a>阻塞队列和并发队列</h2><p>前面讲的内容理论比较多，看起来很难跟实际的项目开发扯上关系。确实，队列这种数据结构很基础，平时的业务开发不大可能从零实现一个队列，甚至都不会直接用到。而一些具有特殊特性的队列应用却比较广泛，比如阻塞队列和并发队列。</p>
+<p><strong>阻塞队列</strong>其实就是在队列基础上增加了阻塞操作。简单来说，就是在队列为空的时候，从队头取数据会被阻塞。因为此时还没有数据可取，直到队列中有了数据才能返回；如果队列已经满了，那么插入数据的操作就会被阻塞，直到队列中有空闲位置后再插入数据，然后再返回。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/3efc46b0-d391-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>你应该已经发现了，上述的定义就是一个“生产者 - 消费者模型”！是的，可以使用阻塞队列，轻松实现一个“生产者 - 消费者模型”！</p>
+<p>这种基于阻塞队列实现的“生产者 - 消费者模型”，可以有效地协调生产和消费的速度。当“生产者”生产数据的速度过快，“消费者”来不及消费时，存储数据的队列很快就会满了。这个时候，生产者就阻塞等待，直到“消费者”消费了数据，“生产者”才会被唤醒继续“生产”。</p>
+<p>而且不仅如此，基于阻塞队列，还可以通过协调“生产者”和“消费者”的个数，来提高数据的处理效率。比如前面的例子，可以多配置几个“消费者”，来应对一个“生产者”。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/662af240-d391-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>前面讲了阻塞队列，在多线程情况下，会有多个线程同时操作队列，这个时候就会存在线程安全问题，那如何实现一个线程安全的队列呢？</p>
+<p>线程安全的队列叫作<strong>并发队列</strong>。最简单直接的实现方式是直接在 <code>enqueue()</code>、<code>dequeue()</code> 方法上加锁，但是锁粒度大并发度会比较低，同一时刻仅允许一个存或者取操作。实际上，基于数组的循环队列，利用 <code>CAS</code> 原子操作，可以实现非常高效的并发队列。这也是循环队列比链式队列应用更加广泛的原因。在实战篇讲 <code>Disruptor</code> 的时候，会再详细讲并发队列的应用。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>上面讲了一种跟栈很相似的数据结构，队列。关于队列，能掌握下面的内容，就没问题了。</p>
+<p>队列最大的特点就是先进先出，主要的两个操作是<strong>入队和出队</strong>。跟栈一样，它既可以用数组来实现，也可以用链表来实现。用数组实现的叫顺序队列，用链表实现的叫链式队列。特别的是长得像一个环的循环队列。在数组实现队列的时候，会有数据搬移操作，要想解决数据搬移的问题，就需要像环一样的循环队列。</p>
+<p>循环队列是这篇的重点。要想写出没有 <code>bug</code> 的循环队列实现代码，关键要确定好队空和队满的判定条件，具体的代码要能写出来。</p>
+<p>除此之外，还讲了几种高级的队列结构，阻塞队列、并发队列，底层都还是队列这种数据结构，只不过在之上附加了很多其他功能。阻塞队列就是入队、出队操作可以阻塞，并发队列就是队列的操作多线程安全。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ul>
+<li><p>线程池没有空闲线程时，新的任务请求线程资源时，线程池该如何处理？各种处理策略又是如何实现的呢？</p>
+<blockquote>
+<p>一般有两种处理策略。第一种是非阻塞的处理方式，直接拒绝任务请求；另一种是阻塞的处理方式，将请求排队，等到有空闲线程时，取出排队的请求继续处理。那如何存储排队的请求呢？</p>
+<p>希望公平地处理每个排队的请求，先进者先服务，所以队列这种数据结构很适合来存储排队请求。前面说过，队列有基于链表和基于数组这两种实现方式。这两种实现方式对于排队请求又有什么区别呢？</p>
+<p>基于链表的实现方式，可以实现一个支持无限排队的无界队列（<code>unbounded queue</code>），但是可能会导致过多的请求排队等待，请求处理的响应时间过长。所以，针对响应时间比较敏感的系统，基于链表实现的无限排队的线程池是不合适的。</p>
+<p>而基于数组实现的有界队列（<code>bounded queue</code>），队列的大小有限，所以线程池中排队的请求超过队列大小时，接下来的请求就会被拒绝，这种方式对响应时间敏感的系统来说，就相对更加合理。不过，设置一个合理的队列大小，也是非常有讲究的。队列太大导致等待的请求太多，队列太小会导致无法充分利用系统资源、发挥最大性能。</p>
+<p>除了前面讲到队列应用在线程池请求排队的场景之外，队列可以应用在任何有限资源池中，用于排队请求，比如数据库连接池等。<strong>实际上，对于大部分资源有限的场景，当没有空闲资源时，基本上都可以通过“队列”这种数据结构来实现请求排队。</strong></p>
+</blockquote>
+</li>
+<li><p>除了线程池这种池结构会用到队列排队请求，还有哪些类似线程池结构或者场景中会用到队列的排队请求呢？</p>
+<blockquote>
+<p>分布式应用中的消息队列，也是一种队列结构</p>
+</blockquote>
+</li>
+<li><p>关于如何实现无锁的并发队列，网上有很多讨论。对这个问题，你怎么看？</p>
+<blockquote>
+<p>考虑使用<code>CAS</code>实现无锁队列，则在入队前，获取<code>tail</code>位置，入队时比较<code>tail</code>是否发生变化，如果否，则允许入队，反之，本次入队失败。<br>  出队则是获取<code>head</code>位置，进行<code>CAS</code>。</p>
+</blockquote>
+</li>
+</ul>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/">数据结构与算法(中级)</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E9%98%9F%E5%88%97/">队列</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/passages/recursion/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">递归算法</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/passages/Kafka/">
+                        <span class="hidden-mobile">SpringBoot Kafka的配置</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+    <div id="vcomments"></div>
+    <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+    <script type="text/javascript">
+        var oldLoadVa = window.onload;
+        window.onload = function () {
+            oldLoadVa && oldLoadVa();
+
+            new Valine({
+                el: "#vcomments",
+                app_id: "O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",
+                app_key: "5Rl3Rhl9zc8BJNvrPcncKWFy",
+                placeholder: "说点什么吧~",
+                path: window.location.pathname,
+                avatar: "retro",
+                meta: ["nick","mail","link"],
+                pageSize: "10",
+                lang: "zh-CN",
+                highlight: true,
+                recordIP: true,
+                serverURLs: "https://lean.muchen.fun",
+            });
+        };
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments
+            powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><br><div class="text-center">欢迎关注我的公众号</div>
+    </div>
+  </div>
+
+
+    
+</main>
+
+
+    <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+
+
+
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+                <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mx-3">
+                <div class="md-form mb-5">
+                    <input type="text" id="local-search-input" class="form-control validate">
+                    <label data-error="x"
+                           data-success="v"
+                           for="local-search-input">关键词</label>
+                </div>
+                <div class="list-group" id="local-search-result"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    <div>
+      <span id="timeDate">载入天数...</span>
+      <span id="times">载入时分秒...</span>
+      <script>
+        var now = new Date();
+
+        function createtime() {
+          var grt = new Date("07/12/2019 00:00:00");//此处修改你的建站时间或者网站上线时间
+          now.setTime(now.getTime() + 250);
+          days = (now - grt) / 1000 / 60 / 60 / 24;
+          dnum = Math.floor(days);
+          hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+          hnum = Math.floor(hours);
+          if (String(hnum).length == 1) {
+            hnum = "0" + hnum;
+          }
+          minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+          mnum = Math.floor(minutes);
+          if (String(mnum).length == 1) {
+            mnum = "0" + mnum;
+          }
+          seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+          snum = Math.round(seconds);
+          if (String(snum).length == 1) {
+            snum = "0" + snum;
+          }
+          document.getElementById("timeDate").innerHTML = "本站已运行&nbsp" + dnum + "&nbsp天";
+          document.getElementById("times").innerHTML = hnum + "&nbsp小时&nbsp" + mnum + "&nbsp分&nbsp" + snum + "&nbsp秒";
+        }
+
+        setInterval("createtime()", 250);
+      </script>
+    </div>
+    <p id="hitokoto">:D 获取中...</p>
+    <script>
+      fetch('https://v1.hitokoto.cn')
+              .then(response => response.json())
+              .then(data => {
+                const hitokoto = document.getElementById('hitokoto')
+                hitokoto.innerText = data.hitokoto + '--「' + data.from + '」'
+              })
+              .catch(console.error)
+    </script>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+    <script  src="/js/lazyload.js" ></script>
+
+
+
+    
+
+
+
+
+    <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+    <script  src="/js/clipboard-use.js" ></script>
+
+
+
+    <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+    
+<script src="https://static.muchen.fun/js/custom.js"></script>
+
+
+
+<!-- Plugins -->
+
+
+    
+        <!-- Baidu Analytics -->
+        <script defer>
+            var _hmt = _hmt || [];
+            (function () {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    
+
+    
+        <!-- Google Analytics -->
+        <script defer>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-144841374-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+    <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+    <script>
+        var typed = new Typed('#subtitle', {
+            strings: [
+                '  ',
+                "7.队列&nbsp;",
+            ],
+            cursorChar: "_",
+            typeSpeed: 60,
+            loop: false,
+        });
+        typed.stop();
+        $(document).ready(function () {
+            $(".typed-cursor").addClass("h2");
+            typed.start();
+        });
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+    <script>
+        anchors.options = {
+            placement: "right",
+            visible: "hover",
+            
+        };
+        var el = "h1,h2,h3,h4,h5,h6".split(",");
+        var res = [];
+        for (item of el) {
+            res.push(".markdown-body > " + item)
+        }
+        anchors.add(res.join(", "))
+    </script>
+
+
+
+    <script  src="/js/local-search.js" ></script>
+    <script>
+        var path = "/local-search.xml";
+        var inputArea = document.querySelector("#local-search-input");
+        inputArea.onclick = function () {
+            searchFunc(path, 'local-search-input', 'local-search-result');
+            this.onclick = null
+        }
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+    <script>
+        $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+            function () {
+                var element = document.createElement('a');
+                $(element).attr('data-fancybox', 'images');
+                $(element).attr('href', $(this).attr('src'));
+                $(this).wrap(element);
+            }
+        );
+    </script>
+
+
+
+
+
+    
+
+    
+        <!-- MathJax -->
+        <script>
+            MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']]
+                },
+                options: {
+                    renderActions: {
+                        findScript: [10, doc => {
+                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                                const display = !!node.type.match(/; *mode=display/);
+                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                                const text = document.createTextNode('');
+                                node.parentNode.replaceChild(text, node);
+                                math.start = {node: text, delim: '', n: 0};
+                                math.end = {node: text, delim: '', n: 0};
+                                doc.math.push(math);
+                            });
+                        }, '', false],
+                        insertedScript: [200, () => {
+                            document.querySelectorAll('mjx-container').forEach(node => {
+                                let target = node.parentNode;
+                                if (target.nodeName.toLowerCase() === 'li') {
+                                    target.parentNode.classList.add('has-jax');
+                                }
+                            });
+                        }, '', false]
+                    }
+                }
+            };
+        </script>
+
+        <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+    
+
+
+
+    
+    
+        <script>
+            !function (e, t, a) {
+                function r() {
+                    for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+                    requestAnimationFrame(r)
+                }
+
+                function n() {
+                    var t = "function" == typeof e.onclick && e.onclick;
+                    e.onclick = function (e) {
+                        t && t(), o(e)
+                    }
+                }
+
+                function o(e) {
+                    var a = t.createElement("div");
+                    a.className = "heart", s.push({
+                        el: a,
+                        x: e.clientX - 5,
+                        y: e.clientY - 5,
+                        scale: 1,
+                        alpha: 1,
+                        color: c()
+                    }), t.body.appendChild(a)
+                }
+
+                function i(e) {
+                    var a = t.createElement("style");
+                    a.type = "text/css";
+                    try {
+                        a.appendChild(t.createTextNode(e))
+                    } catch (t) {
+                        a.styleSheet.cssText = e
+                    }
+                    t.getElementsByTagName("head")[0].appendChild(a)
+                }
+
+                function c() {
+                    return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+                }
+
+                var s = [];
+                e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+                    setTimeout(e, 1e3 / 60)
+                }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+            }(window, document);
+        </script>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

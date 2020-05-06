@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png">
+    <link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <meta name="theme-color" content="#2f4154">
+    <meta name="description" content="沐晨的个人博客,技术博客">
+    <meta name="author" content="Li Duo">
+    <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
+    <title>12.二分查找（上） - MuChen&#39;s Blog</title>
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+    
+<link rel="stylesheet" href="https://static.muchen.fun/css/custom.css?t=0.1423425.css">
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+<script>
+    var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+    // 依次判断 系统暗黑模式 指定时间 缓存 dark
+    if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+        if (!(isNight && localStorage.getItem('noDark') === '1')) {
+            document.body.classList.add('dark');
+        }
+    }
+    document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
+</script>
+<header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+    <div class="container">
+        <a class="navbar-brand"
+           href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a>
+
+        <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="animated-icon"><span></span><span></span><span></span></div>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto text-center">
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/archives/">
+                            <i class="iconfont icon-archive-fill"></i>
+                            归档</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/categories/">
+                            <i class="iconfont icon-category-fill"></i>
+                            分类</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tags/">
+                            <i class="iconfont icon-tags-fill"></i>
+                            标签</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/messageBoard/">
+                            <i class="iconfont icon-speakernotes"></i>
+                            留言</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about/">
+                            <i class="iconfont icon-user-fill"></i>
+                            关于</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/links/">
+                            <i class="iconfont icon-link-fill"></i>
+                            友链</a>
+                    </li>
+                
+                
+                    <li class="nav-item" id="search-btn">
+                        <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                                    class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+                    </li>
+                
+                <li class="nav-item">
+                    <a id="dark" class="nav-link" onclick="switchDarkMode()">
+                        <i class="iconfont icon-sun"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/images/07.jpg') no-repeat center center;
+                 background-size: cover;">
+        <div class="full-bg-img">
+            <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+                <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+                
+            </span>
+
+                    
+                        
+                            <div class="mt-3 post-meta">
+                                <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                                <time datetime="2019-07-20 21:21">
+                                    2019年7月20日 晚上
+                                </time>
+                            </div>
+                        
+
+                        <div class="mt-1">
+                            
+                                
+                                <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    4k 字
+                  </span>
+                            
+
+                            
+                                
+                                <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                                    
+                                    
+                                    54
+                                     分钟
+                  </span>
+                            
+
+                            
+                                <!-- 不蒜子统计文章PV -->
+                                
+                                <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
+                    <i class="iconfont icon-eye" aria-hidden="true"></i>
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>
+                            
+                        </div>
+                    
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    
+        
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：10 个月前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <!-- more -->
+<p>二分查找（<code>Binary Search</code>）算法，也叫折半查找算法。二分查找的思想非常简单，很多非计算机专业的同学很容易就能理解，但是看似越简单的东西往往越难掌握好，想要灵活应用就更加困难。</p>
+<p>假设有 <code>1000</code> 万个整数数据，每个数据占 <code>8</code> 个字节，<strong>如何设计数据结构和算法，快速判断某个整数是否出现在这 <code>1000</code> 万数据中？</strong> 希望这个功能不要占用太多的内存空间，最多不要超过 <code>100MB</code>，你会怎么做呢？</p>
+<h2 id="无处不在的二分思想"><a href="#无处不在的二分思想" class="headerlink" title="无处不在的二分思想"></a>无处不在的二分思想</h2><p>二分查找是一种非常简单易懂的快速查找算法，生活中到处可见。比如说，现在来做一个猜字游戏。随机写一个 <code>0</code> 到 <code>99</code> 之间的数字，然后你来猜写的是什么。猜的过程中，你每猜一次，就会告诉你猜的大了还是小了，直到猜中为止。你来想想，如何快速猜中写的数字呢？</p>
+<p>假设写的数字是 <code>23</code>，你可以按照下面的步骤来试一试。（如果猜测范围的数字有偶数个，中间数有两个，就选择较小的那个。）<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/16/711b4d00-d862-11e9-a455-5d284282074e.png" srcset="/img/loading.gif" alt="image.png"><br><code>7</code> 次就猜出来了，是不是很快？这个例子用的就是二分思想，按照这个思想，即便让你猜的是 <code>0</code> 到 <code>999</code> 的数字，最多也只要 <code>10</code> 次就能猜中。不信的话，你可以试一试。</p>
+<p>这是一个生活中的例子，现在回到实际的开发场景中。假设有 <code>1000</code> 条订单数据，已经按照订单金额从小到大排序，每个订单金额都不同，并且最小单位是元。现在想知道是否存在金额等于 <code>19</code> 元的订单。如果存在，则返回订单数据，如果不存在则返回 <code>null</code>。</p>
+<p>最简单的办法当然是从第一个订单开始，一个一个遍历这 <code>1000</code> 个订单，直到找到金额等于 <code>19</code> 元的订单为止。但这样查找会比较慢，最坏情况下，可能要遍历完这 <code>1000</code> 条记录才能找到。那用二分查找能不能更快速地解决呢？</p>
+<p>为了方便讲解，假设只有 <code>10</code> 个订单，订单金额分别是：<code>8，11，19，23，27，33，45，55，67，98</code>。</p>
+<p>还是利用二分思想，每次都与区间的中间数据比对大小，缩小查找区间的范围。为了更加直观，下面有一张查找过程的图。其中，<code>low</code> 和 <code>high</code> 表示待查找区间的下标，<code>mid</code> 表示待查找区间的中间元素下标。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/16/ae3b0950-d862-11e9-a455-5d284282074e.png" srcset="/img/loading.gif" alt="image.png"><br>看懂这两个例子，你现在对二分的思想应该掌握得妥妥的了。这里稍微总结升华一下，<strong>二分查找针对的是一个有序的数据集合，查找思想有点类似分治思想。每次都通过跟区间的中间元素对比，将待查找的区间缩小为之前的一半，直到找到要查找的元素，或者区间被缩小为 <code>0</code>。</strong></p>
+<h2 id="O-logn-惊人的查找速度"><a href="#O-logn-惊人的查找速度" class="headerlink" title="O(logn) 惊人的查找速度"></a>O(logn) 惊人的查找速度</h2><p>二分查找是一种非常高效的查找算法，高效到什么程度呢？来分析一下它的时间复杂度。</p>
+<p>假设数据大小是 <code>n</code>，每次查找后数据都会缩小为原来的一半，也就是会除以 <code>2</code>。最坏情况下，直到查找区间被缩小为空，才停止。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/16/d95546f0-d862-11e9-a455-5d284282074e.png" srcset="/img/loading.gif" alt="image.png"></p>
+<p>可以看出来，这是一个等比数列。其中 <code>n/2k=1</code> 时，<code>k</code> 的值就是总共缩小的次数。而每一次缩小操作只涉及两个数据的大小比较，所以，经过了 <code>k</code> 次区间缩小操作，时间复杂度就是 $O(k)$。通过 <code>n/2k=1</code>，可以求得 <code>k=log2n</code>，所以时间复杂度就是 $O(logn)$。</p>
+<p>二分查找是目前为止遇到的第一个时间复杂度为 $O(logn)$ 的算法。后面章节还会讲堆、二叉树的操作等等，它们的时间复杂度也是 $O(logn)$。这里就再深入地讲讲 $O(logn)$ 这种<strong>对数时间复杂度</strong>。这是一种极其高效的时间复杂度，有的时候甚至比时间复杂度是常量级 $O(1)$ 的算法还要高效。为什么这么说呢？</p>
+<p>因为 <code>logn</code> 是一个非常“恐怖”的数量级，即便 <code>n</code> 非常非常大，对应的 <code>logn</code> 也很小。比如 <code>n</code> 等于 <code>2</code> 的 <code>32</code> 次方，这个数很大了吧？大约是 <code>42</code> 亿。也就是说，如果在 <code>42</code> 亿个数据中用二分查找一个数据，最多需要比较 <code>32</code> 次。</p>
+<p>前面讲过，用大 $O$ 标记法表示时间复杂度的时候，会省略掉常数、系数和低阶。对于常量级时间复杂度的算法来说，$O(1)$ 有可能表示的是一个非常大的常量值，比如 $O(1000)$、$O(10000)$。所以，常量级时间复杂度的算法有时候可能还没有 $O(logn)$ 的算法执行效率高。</p>
+<p>反过来，对数对应的就是指数。有一个非常著名的“阿基米德与国王下棋的故事”，你可以自行搜索一下，感受一下指数的“恐怖”。这也是为什么说，指数时间复杂度的算法在大规模数据面前是无效的。</p>
+<h2 id="二分查找的递归与非递归实现"><a href="#二分查找的递归与非递归实现" class="headerlink" title="二分查找的递归与非递归实现"></a>二分查找的递归与非递归实现</h2><p>实际上，简单的二分查找并不难写，注意这里的“简单”二字。下一篇，会讲到二分查找的变体问题，那才是真正烧脑的。今天，来看如何来写最简单的二分查找。</p>
+<p><strong>最简单的情况就是有序数组中不存在重复元素</strong>，在其中用二分查找值等于给定值的数据。用 <code>Java</code> 代码实现了一个最简单的二分查找算法。</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">bsearch</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] a, <span class="hljs-keyword">int</span> n, <span class="hljs-keyword">int</span> value)</span> </span>&#123;
+  <span class="hljs-keyword">int</span> low = <span class="hljs-number">0</span>;
+  <span class="hljs-keyword">int</span> high = n - <span class="hljs-number">1</span>;
+
+  <span class="hljs-keyword">while</span> (low &lt;= high) &#123;
+    <span class="hljs-keyword">int</span> mid = (low + high) / <span class="hljs-number">2</span>;
+    <span class="hljs-keyword">if</span> (a[mid] == value) &#123;
+      <span class="hljs-keyword">return</span> mid;
+    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (a[mid] &lt; value) &#123;
+      low = mid + <span class="hljs-number">1</span>;
+    &#125; <span class="hljs-keyword">else</span> &#123;
+      high = mid - <span class="hljs-number">1</span>;
+    &#125;
+  &#125;
+
+  <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;
+&#125;</code></pre>
+<p>这个代码稍微解释一下，<code>low</code>、<code>high</code>、<code>mid</code> 都是指数组下标，其中 <code>low</code> 和 <code>high</code> 表示当前查找的区间范围，初始 <code>low=0</code>，<code>high=n-1</code>。<code>mid</code> 表示 <code>[low, high]</code> 的中间位置。通过对比 <code>a[mid]</code> 与 <code>value</code> 的大小，来更新接下来要查找的区间范围，直到找到或者区间缩小为 <code>0</code>，就退出。如果你有一些编程基础，看懂这些应该不成问题。现在，就着重强调一下<strong>容易出错的 <code>3</code> 个地方</strong>。</p>
+<p><strong>1. 循环退出条件</strong></p>
+<p>注意是 low&lt;=high，而不是 low&lt;high。</p>
+<p><strong>2. <code>mid</code> 的取值</strong></p>
+<p>实际上，<code>mid=(low+high)/2</code> 这种写法是有问题的。因为如果 <code>low</code> 和 <code>high</code> 比较大的话，两者之和就有可能会溢出。改进的方法是将 <code>mid</code> 的计算方式写成 <code>low+(high-low)/2</code>。更进一步，如果要将性能优化到极致的话，可以将这里的除以 <code>2</code> 操作转化成位运算 <code>low+((high-low)&gt;&gt;1)</code>。因为相比除法运算来说，计算机处理位运算要快得多。</p>
+<p><strong>3. <code>low</code> 和 <code>high</code> 的更新</strong></p>
+<p><code>low=mid+1</code>，<code>high=mid-1</code>。注意这里的 <code>+1</code> 和 <code>-1</code>，如果直接写成 <code>low=mid</code> 或者 <code>high=mid</code>，就可能会发生死循环。比如，当 <code>high=3</code>，<code>low=3</code> 时，如果 <code>a[3]</code> 不等于 <code>value</code>，就会导致一直循环不退出。</p>
+<p>如果你留意刚讲的这三点，一个简单的二分查找你已经可以实现了。<strong>实际上，二分查找除了用循环来实现，还可以用递归来实现，过程也非常简单</strong>。</p>
+<p>用 <code>Java</code> 语言实现了一下这个过程，正好你可以借此机会回顾一下写递归代码的技巧。</p>
+<pre><code class="hljs java"><span class="hljs-comment">// 二分查找的递归实现</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">bsearch</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] a, <span class="hljs-keyword">int</span> n, <span class="hljs-keyword">int</span> val)</span> </span>&#123;
+  <span class="hljs-keyword">return</span> bsearchInternally(a, <span class="hljs-number">0</span>, n - <span class="hljs-number">1</span>, val);
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> <span class="hljs-title">bsearchInternally</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] a, <span class="hljs-keyword">int</span> low, <span class="hljs-keyword">int</span> high, <span class="hljs-keyword">int</span> value)</span> </span>&#123;
+  <span class="hljs-keyword">if</span> (low &gt; high) <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;
+
+  <span class="hljs-keyword">int</span> mid =  low + ((high - low) &gt;&gt; <span class="hljs-number">1</span>);
+  <span class="hljs-keyword">if</span> (a[mid] == value) &#123;
+    <span class="hljs-keyword">return</span> mid;
+  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (a[mid] &lt; value) &#123;
+    <span class="hljs-keyword">return</span> bsearchInternally(a, mid+<span class="hljs-number">1</span>, high, value);
+  &#125; <span class="hljs-keyword">else</span> &#123;
+    <span class="hljs-keyword">return</span> bsearchInternally(a, low, mid-<span class="hljs-number">1</span>, value);
+  &#125;
+&#125;</code></pre>
+
+<h2 id="二分查找应用场景的局限性"><a href="#二分查找应用场景的局限性" class="headerlink" title="二分查找应用场景的局限性"></a>二分查找应用场景的局限性</h2><p>前面分析过，二分查找的时间复杂度是 $O(logn)$，查找数据的效率非常高。不过，并不是什么情况下都可以用二分查找，它的应用场景是有很大局限性的。那什么情况下适合用二分查找，什么情况下不适合呢？</p>
+<p><strong>首先，二分查找依赖的是顺序表结构，简单点说就是数组。</strong></p>
+<p>那二分查找能否依赖其他数据结构呢？比如链表。答案是不可以的，主要原因是二分查找算法需要按照下标随机访问元素。在数组和链表那两节讲过，数组按照下标随机访问数据的时间复杂度是 $O(1)$，而链表随机访问的时间复杂度是 $O(n)$。所以，如果数据使用链表存储，二分查找的时间复杂就会变得很高。</p>
+<p>二分查找只能用在数据是通过顺序表来存储的数据结构上。如果你的数据是通过其他数据结构存储的，则无法应用二分查找。</p>
+<p><strong>其次，二分查找针对的是有序数据。</strong></p>
+<p>二分查找对这一点的要求比较苛刻，数据必须是有序的。如果数据没有序，需要先排序。前面章节里讲到，排序的时间复杂度最低是 $O(nlogn)$。所以，如果针对的是一组静态的数据，没有频繁地插入、删除，可以进行一次排序，多次二分查找。这样排序的成本可被均摊，二分查找的边际成本就会比较低。</p>
+<p>但是，如果的数据集合有频繁的插入和删除操作，要想用二分查找，要么每次插入、删除操作之后保证数据仍然有序，要么在每次二分查找之前都先进行排序。针对这种动态数据集合，无论哪种方法，维护有序的成本都是很高的。</p>
+<p>所以，二分查找只能用在插入、删除操作不频繁，一次排序多次查找的场景中。针对动态变化的数据集合，二分查找将不再适用。那针对动态数据集合，如何在其中快速查找某个数据呢？等到二叉树那一篇会详细讲。</p>
+<p><strong>再次，数据量太小不适合二分查找。</strong></p>
+<p>如果要处理的数据量很小，完全没有必要用二分查找，顺序遍历就足够了。比如在一个大小为 <code>10</code> 的数组中查找一个元素，不管用二分查找还是顺序遍历，查找速度都差不多。只有数据量比较大的时候，二分查找的优势才会比较明显。</p>
+<p>不过，这里有一个例外。如果数据之间的比较操作非常耗时，不管数据量大小，都推荐使用二分查找。比如，数组中存储的都是长度超过 <code>300</code> 的字符串，如此长的两个字符串之间比对大小，就会非常耗时。需要尽可能地减少比较次数，而比较次数的减少会大大提高性能，这个时候二分查找就比顺序遍历更有优势。</p>
+<p><strong>最后，数据量太大也不适合二分查找。</strong></p>
+<p>二分查找的底层需要依赖数组这种数据结构，而数组为了支持随机访问的特性，要求内存空间连续，对内存的要求比较苛刻。比如，有 <code>1GB</code> 大小的数据，如果希望用数组来存储，那就需要 <code>1GB</code> 的连续内存空间。</p>
+<p>注意这里的“连续”二字，也就是说，即便有 <code>2GB</code> 的内存空间剩余，但是如果这剩余的 <code>2GB</code> 内存空间都是零散的，没有连续的 <code>1GB</code> 大小的内存空间，那照样无法申请一个 <code>1GB</code> 大小的数组。而二分查找是作用在数组这种数据结构之上的，所以太大的数据用数组存储就比较吃力了，也就不能用二分查找了。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>上面学习了一种针对有序数据的高效查找算法，二分查找，它的时间复杂度是 $O(logn)$。</p>
+<p>二分查找的核心思想理解起来非常简单，有点类似分治思想。即每次都通过跟区间中的中间元素对比，将待查找的区间缩小为一半，直到找到要查找的元素，或者区间被缩小为 <code>0</code>。但是二分查找的代码实现比较容易写错。你需要着重掌握它的三个容易出错的地方：循环退出条件、<code>mid</code> 的取值，<code>low</code> 和 <code>high</code> 的更新。</p>
+<p>二分查找虽然性能比较优秀，但应用场景也比较有限。底层必须依赖数组，并且还要求数据是有序的。对于较小规模的数据查找，直接使用顺序遍历就可以了，二分查找的优势并不明显。二分查找更适合处理静态数据，也就是没有频繁的数据插入、删除操作。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ul>
+<li><p>如何在 <code>1000</code> 万个整数中快速查找某个整数？</p>
+<blockquote>
+<p>这个问题并不难。内存限制是 <code>100MB</code>，每个数据大小是 <code>8</code> 字节，最简单的办法就是将数据存储在数组中，内存占用差不多是 <code>80MB</code>，符合内存的限制。借助上面的内容，可以先对这 <code>1000</code> 万数据从小到大排序，然后再利用二分查找算法，就可以快速地查找想要的数据了。</p>
+<p>看起来这个问题并不难，很轻松就能解决。实际上，它暗藏了“玄机”。如果你对数据结构和算法有一定了解，知道散列表、二叉树这些支持快速查找的动态数据结构。你可能会觉得，用散列表和二叉树也可以解决这个问题。实际上是不行的。</p>
+<p>虽然大部分情况下，用二分查找可以解决的问题，用散列表、二叉树都可以解决。但是，后面会讲，不管是散列表还是二叉树，都会需要比较多的额外的内存空间。如果用散列表或者二叉树来存储这 <code>1000</code> 万的数据，用 <code>100MB</code> 的内存肯定是存不下的。而二分查找底层依赖的是数组，除了数据本身之外，不需要额外存储其他信息，是最省内存空间的存储方式，所以刚好能在限定的内存大小下解决这个问题。</p>
+</blockquote>
+</li>
+<li><p>如果数据使用链表存储，二分查找的时间复杂就会变得很高，那查找的时间复杂度究竟是多少呢？</p>
+<blockquote>
+<p>假设链表长度为<code>n</code>，二分查找每次都要找到中间点(计算中忽略奇偶数差异):<br> 第一次查找中间点，需要移动指针<code>n/2</code>次；<br> 第二次，需要移动指针<code>n/4</code>次；<br> 第三次需要移动指针<code>n/8</code>次；<br> ……<br> 以此类推，一直到<code>1</code>次为值<br> 总共指针移动次数(查找次数) = <code>n/2 + n/4 + n/8 + ...+ 1</code>，这显然是个等比数列，根据等比数列求和公式：<code>Sum = n - 1</code>.<br> 最后算法时间复杂度是：$O(n-1)$，忽略常数，记为$O(n)$，时间复杂度和顺序查找时间复杂度相同<br> 但是稍微思考下，在二分查找的时候，由于要进行多余的运算，严格来说，会比顺序查找时间慢</p>
+</blockquote>
+</li>
+</ul>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/">数据结构与算法(中级)</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/">二分查找</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/passages/13/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">13.二分查找（下）</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/passages/11/">
+                        <span class="hidden-mobile">11.排序优化</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+    <div id="vcomments"></div>
+    <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+    <script type="text/javascript">
+        var oldLoadVa = window.onload;
+        window.onload = function () {
+            oldLoadVa && oldLoadVa();
+
+            new Valine({
+                el: "#vcomments",
+                app_id: "O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",
+                app_key: "5Rl3Rhl9zc8BJNvrPcncKWFy",
+                placeholder: "说点什么吧~",
+                path: window.location.pathname,
+                avatar: "retro",
+                meta: ["nick","mail","link"],
+                pageSize: "10",
+                lang: "zh-CN",
+                highlight: true,
+                recordIP: true,
+                serverURLs: "https://lean.muchen.fun",
+            });
+        };
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments
+            powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><br><div class="text-center">欢迎关注我的公众号</div>
+    </div>
+  </div>
+
+
+    
+</main>
+
+
+    <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+
+
+
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+                <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mx-3">
+                <div class="md-form mb-5">
+                    <input type="text" id="local-search-input" class="form-control validate">
+                    <label data-error="x"
+                           data-success="v"
+                           for="local-search-input">关键词</label>
+                </div>
+                <div class="list-group" id="local-search-result"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    <div>
+      <span id="timeDate">载入天数...</span>
+      <span id="times">载入时分秒...</span>
+      <script>
+        var now = new Date();
+
+        function createtime() {
+          var grt = new Date("07/12/2019 00:00:00");//此处修改你的建站时间或者网站上线时间
+          now.setTime(now.getTime() + 250);
+          days = (now - grt) / 1000 / 60 / 60 / 24;
+          dnum = Math.floor(days);
+          hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+          hnum = Math.floor(hours);
+          if (String(hnum).length == 1) {
+            hnum = "0" + hnum;
+          }
+          minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+          mnum = Math.floor(minutes);
+          if (String(mnum).length == 1) {
+            mnum = "0" + mnum;
+          }
+          seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+          snum = Math.round(seconds);
+          if (String(snum).length == 1) {
+            snum = "0" + snum;
+          }
+          document.getElementById("timeDate").innerHTML = "本站已运行&nbsp" + dnum + "&nbsp天";
+          document.getElementById("times").innerHTML = hnum + "&nbsp小时&nbsp" + mnum + "&nbsp分&nbsp" + snum + "&nbsp秒";
+        }
+
+        setInterval("createtime()", 250);
+      </script>
+    </div>
+    <p id="hitokoto">:D 获取中...</p>
+    <script>
+      fetch('https://v1.hitokoto.cn')
+              .then(response => response.json())
+              .then(data => {
+                const hitokoto = document.getElementById('hitokoto')
+                hitokoto.innerText = data.hitokoto + '--「' + data.from + '」'
+              })
+              .catch(console.error)
+    </script>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+    <script  src="/js/lazyload.js" ></script>
+
+
+
+    
+
+
+
+
+    <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+    <script  src="/js/clipboard-use.js" ></script>
+
+
+
+    <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+    
+<script src="https://static.muchen.fun/js/custom.js"></script>
+
+
+
+<!-- Plugins -->
+
+
+    
+        <!-- Baidu Analytics -->
+        <script defer>
+            var _hmt = _hmt || [];
+            (function () {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    
+
+    
+        <!-- Google Analytics -->
+        <script defer>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-144841374-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+    <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+    <script>
+        var typed = new Typed('#subtitle', {
+            strings: [
+                '  ',
+                "12.二分查找（上）&nbsp;",
+            ],
+            cursorChar: "_",
+            typeSpeed: 60,
+            loop: false,
+        });
+        typed.stop();
+        $(document).ready(function () {
+            $(".typed-cursor").addClass("h2");
+            typed.start();
+        });
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+    <script>
+        anchors.options = {
+            placement: "right",
+            visible: "hover",
+            
+        };
+        var el = "h1,h2,h3,h4,h5,h6".split(",");
+        var res = [];
+        for (item of el) {
+            res.push(".markdown-body > " + item)
+        }
+        anchors.add(res.join(", "))
+    </script>
+
+
+
+    <script  src="/js/local-search.js" ></script>
+    <script>
+        var path = "/local-search.xml";
+        var inputArea = document.querySelector("#local-search-input");
+        inputArea.onclick = function () {
+            searchFunc(path, 'local-search-input', 'local-search-result');
+            this.onclick = null
+        }
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+    <script>
+        $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+            function () {
+                var element = document.createElement('a');
+                $(element).attr('data-fancybox', 'images');
+                $(element).attr('href', $(this).attr('src'));
+                $(this).wrap(element);
+            }
+        );
+    </script>
+
+
+
+
+
+    
+
+    
+        <!-- MathJax -->
+        <script>
+            MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']]
+                },
+                options: {
+                    renderActions: {
+                        findScript: [10, doc => {
+                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                                const display = !!node.type.match(/; *mode=display/);
+                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                                const text = document.createTextNode('');
+                                node.parentNode.replaceChild(text, node);
+                                math.start = {node: text, delim: '', n: 0};
+                                math.end = {node: text, delim: '', n: 0};
+                                doc.math.push(math);
+                            });
+                        }, '', false],
+                        insertedScript: [200, () => {
+                            document.querySelectorAll('mjx-container').forEach(node => {
+                                let target = node.parentNode;
+                                if (target.nodeName.toLowerCase() === 'li') {
+                                    target.parentNode.classList.add('has-jax');
+                                }
+                            });
+                        }, '', false]
+                    }
+                }
+            };
+        </script>
+
+        <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+    
+
+
+
+    
+    
+        <script>
+            !function (e, t, a) {
+                function r() {
+                    for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+                    requestAnimationFrame(r)
+                }
+
+                function n() {
+                    var t = "function" == typeof e.onclick && e.onclick;
+                    e.onclick = function (e) {
+                        t && t(), o(e)
+                    }
+                }
+
+                function o(e) {
+                    var a = t.createElement("div");
+                    a.className = "heart", s.push({
+                        el: a,
+                        x: e.clientX - 5,
+                        y: e.clientY - 5,
+                        scale: 1,
+                        alpha: 1,
+                        color: c()
+                    }), t.body.appendChild(a)
+                }
+
+                function i(e) {
+                    var a = t.createElement("style");
+                    a.type = "text/css";
+                    try {
+                        a.appendChild(t.createTextNode(e))
+                    } catch (t) {
+                        a.styleSheet.cssText = e
+                    }
+                    t.getElementsByTagName("head")[0].appendChild(a)
+                }
+
+                function c() {
+                    return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+                }
+
+                var s = [];
+                e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+                    setTimeout(e, 1e3 / 60)
+                }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+            }(window, document);
+        </script>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

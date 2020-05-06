@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png">
+    <link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <meta name="theme-color" content="#2f4154">
+    <meta name="description" content="沐晨的个人博客,技术博客">
+    <meta name="author" content="Li Duo">
+    <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
+    <title>9月面试总结 - MuChen&#39;s Blog</title>
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+    
+<link rel="stylesheet" href="https://static.muchen.fun/css/custom.css?t=0.1423425.css">
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+<script>
+    var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+    // 依次判断 系统暗黑模式 指定时间 缓存 dark
+    if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+        if (!(isNight && localStorage.getItem('noDark') === '1')) {
+            document.body.classList.add('dark');
+        }
+    }
+    document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
+</script>
+<header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+    <div class="container">
+        <a class="navbar-brand"
+           href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a>
+
+        <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="animated-icon"><span></span><span></span><span></span></div>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto text-center">
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/archives/">
+                            <i class="iconfont icon-archive-fill"></i>
+                            归档</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/categories/">
+                            <i class="iconfont icon-category-fill"></i>
+                            分类</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tags/">
+                            <i class="iconfont icon-tags-fill"></i>
+                            标签</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/messageBoard/">
+                            <i class="iconfont icon-speakernotes"></i>
+                            留言</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about/">
+                            <i class="iconfont icon-user-fill"></i>
+                            关于</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/links/">
+                            <i class="iconfont icon-link-fill"></i>
+                            友链</a>
+                    </li>
+                
+                
+                    <li class="nav-item" id="search-btn">
+                        <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                                    class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+                    </li>
+                
+                <li class="nav-item">
+                    <a id="dark" class="nav-link" onclick="switchDarkMode()">
+                        <i class="iconfont icon-sun"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/images/07.jpg') no-repeat center center;
+                 background-size: cover;">
+        <div class="full-bg-img">
+            <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+                <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+                
+            </span>
+
+                    
+                        
+                            <div class="mt-3 post-meta">
+                                <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                                <time datetime="2019-09-23 15:36">
+                                    2019年9月23日 下午
+                                </time>
+                            </div>
+                        
+
+                        <div class="mt-1">
+                            
+                                
+                                <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    5k 字
+                  </span>
+                            
+
+                            
+                                
+                                <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                                    
+                                    
+                                    66
+                                     分钟
+                  </span>
+                            
+
+                            
+                                <!-- 不蒜子统计文章PV -->
+                                
+                                <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
+                    <i class="iconfont icon-eye" aria-hidden="true"></i>
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>
+                            
+                        </div>
+                    
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    
+        
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：7 个月前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <!-- more -->
+<p>面试的问题都记录在下面，以及问题的一些解答。</p>
+<h2 id="Java-基础"><a href="#Java-基础" class="headerlink" title="Java 基础"></a>Java 基础</h2><p><strong>谈谈你对 <code>HashMap</code> 的理解</strong></p>
+<ul>
+<li><p><code>HashMap</code> 是以数组+链表的方式存储的;</p>
+</li>
+<li><p><code>HashMap</code> 存储的是键值对映射，即 <code>key-value</code>;</p>
+</li>
+<li><p><code>HashMap</code> 可以接受 <code>null</code> 键和 <code>null</code> 值;</p>
+</li>
+<li><p><code>HashMap</code> 的键如果出现冲突，会以链表的方式链接到后面;</p>
+</li>
+<li><p><code>HashMap</code> 的链表会一直增长，在 <code>JDK 1.8</code> 中，当链表的长度大于 <code>8</code> 时，将使用红黑树代替。</p>
+</li>
+</ul>
+<p><strong><code>JVM</code> 有哪些数据区</strong></p>
+<ul>
+<li>主要有五个区域: 堆、方法区、虚拟机栈、本地方法栈、程序计数器</li>
+</ul>
+<p><strong>说说<code>JVM</code> 运行过程</strong></p>
+<ul>
+<li><p>向操作系统申请空闲内存。系统查找内存分配表，然后把内存段的起始地址和终止地址给<code>JVM</code>，<code>JVM</code>准备加载类文件。</p>
+</li>
+<li><p>给堆、栈分配内存。</p>
+</li>
+<li><p>文件检查和分析 <code>class</code> 文件。</p>
+</li>
+<li><p>加载类。（类加载机制，如双亲委派机制）</p>
+</li>
+<li><p>执行方法。</p>
+</li>
+<li><p>释放内存。</p>
+</li>
+</ul>
+<p><strong><code>Java</code> 中的锁机制有哪些</strong></p>
+<p>常见的锁有 <code>synchronized</code>、<code>volatile</code> 等</p>
+<blockquote>
+<p><code>synchronized</code></p>
+</blockquote>
+<ul>
+<li><p>当使用 <code>synchronized</code> 修饰类普通方法时，那么当前加锁的级别就是实例对象，当多个线程并发访问该对象的同步方法、同步代码块时，会进行同步。</p>
+</li>
+<li><p>当使用 <code>synchronized</code> 修饰类静态方法时，那么当前加锁的级别就是类，当多个线程并发访问该类（所有实例对象）的同步方法以及同步代码块时，会进行同步。</p>
+</li>
+<li><p>当使用 <code>synchronized</code> 修饰代码块时，那么当前加锁的级别就是 <code>synchronized(X)</code> 中配置的 <code>x</code> 对象实例，当多个线程并发访问该对象的同步方法、同步代码块以及当前的代码块时，会进行同步。</p>
+</li>
+<li><p>使用同步代码块时要注意的是不要使用 <code>String</code> 类型对象，因为 <code>String</code> 常量池的存在，所以很容易导致出问题。</p>
+</li>
+</ul>
+<blockquote>
+<p><code>volatile</code></p>
+</blockquote>
+<ul>
+<li><code>volatile</code> 可以看做是一种 <code>synchronized</code> 的轻量级锁，它能够保证并发时，被它修饰的共享变量的可见性，从 <code>jmm</code> 的角度来看一下，每个线程拥有自己的工作内存，实际上线程所修改的共享变量是从主内存中拷贝的副本，当一个共享变量被 <code>volatile</code> 修饰时，它会保证修改的值会立即被更新到主存，当有其他线程需要读取时，它会去内存中读取新值。</li>
+</ul>
+<p><strong>说说你知道的设计模式</strong></p>
+<p>常用的设计模式有单例模式、工厂模式、代理模式、观察者模式、装饰模式、享元模式等</p>
+<blockquote>
+<p>单例模式</p>
+</blockquote>
+<ul>
+<li><p>确保某一个类只有一个实例，而且自行实例化并向整个系统提供这个实例。</p>
+</li>
+<li><p>实现方式通常有两种，分别是 <strong>饿汉式单例模式</strong> 和 <strong>懒汉式单例模式</strong></p>
+</li>
+</ul>
+<blockquote>
+<p>工厂模式</p>
+</blockquote>
+<ul>
+<li><p>为创建一组相关或相互依赖的对象提供一个接口，而且无须指定它们的具体类。</p>
+</li>
+<li><p>一个调用者想创建一个对象，只要知道其名称就可以了。 </p>
+</li>
+<li><p>扩展性高，如果想增加一个产品，只要扩展一个工厂类就可以。 </p>
+</li>
+<li><p>屏蔽产品的具体实现，调用者只关心产品的接口。</p>
+</li>
+</ul>
+<blockquote>
+<p>代理模式</p>
+</blockquote>
+<ul>
+<li><p>代理模式给某一个对象提供一个代理对象，并由代理对象控制对原对象的引用。通俗的来讲代理模式就是生活中常见的中介。</p>
+</li>
+<li><p>代理模式主要有两个作用：中介隔离，开闭原则</p>
+</li>
+<li><p>主要有两种代理模式，分别是静态代理和动态代理</p>
+</li>
+</ul>
+<blockquote>
+<p>观察者模式</p>
+</blockquote>
+<ul>
+<li><p>定义对象间一种一对多的依赖关系，使得每当一个对象改变状态，则所有依赖于它的对象都会得到通知并被自动更新。</p>
+</li>
+<li><p>观察者模式是一个比较特殊的设计模式，它定义了触发机制，观察者只要订阅了被观察者，就可以第一时间得到被观察者传递的信息。</p>
+</li>
+<li><p>在工作中，使用观察者模式的场景也比较多，比如消息队列消费等等。</p>
+</li>
+</ul>
+<blockquote>
+<p>装饰模式</p>
+</blockquote>
+<ul>
+<li>装饰模式在一些类与类之间有叠加效应（也就是给一个类增加附加功能）的场景中非常好用，它可以说是继承的替代品，有更好的扩展性，也比较灵活。在 <code>Java JDK</code> 源码中也大面积用到了装饰模式，比如：<code>java.io.BufferedInputStream(InputStream)</code>。</li>
+</ul>
+<blockquote>
+<p>享元模式</p>
+</blockquote>
+<ul>
+<li>享元模式合理提高了对象的复用性，减少了程序的内存占用，还有一个提高性能的地方就是减少了对象创建的过程。</li>
+</ul>
+<h2 id="Spring-框架"><a href="#Spring-框架" class="headerlink" title="Spring 框架"></a>Spring 框架</h2><p><strong><code>Spring</code> 的 <code>IOC</code> 理解</strong></p>
+<ul>
+<li><p><code>IOC</code> 就是控制反转，是指创建对象的控制权的转移，以前创建对象的主动权和时机是由自己把控的，而现在这种权力转移到 <code>Spring</code> 容器中，并由容器根据配置文件去创建实例和管理各个实例之间的依赖关系，对象与对象之间松散耦合，也利于功能的复用。<code>DI</code> 依赖注入，和控制反转是同一个概念的不同角度的描述，即应用程序在运行时依赖 <code>IoC</code> 容器来动态注入对象需要的外部资源。</p>
+</li>
+<li><p>最直观的表达就是，<code>IOC</code> 让对象的创建不用去 <code>new</code> 了，可以由 <code>spring</code> 自动生产，使用 <code>java</code> 的反射机制，根据配置文件在运行时动态的去创建对象以及管理对象，并调用对象的方法的。</p>
+</li>
+</ul>
+<p><strong><code>Spring</code> 的 <code>AOP</code> 理解</strong></p>
+<ul>
+<li><p>一般称为面向切面，作为面向对象的一种补充，<strong>用于将那些与业务无关，但却对多个对象产生影响的公共行为和逻辑，抽取并封装为一个可重用的模块</strong>，这个模块被命名为“切面”（ <code>Aspect</code> ），减少系统中的重复代码，降低了模块间的耦合度，同时提高了系统的可维护性。</p>
+</li>
+<li><p><code>AOP</code> 实现的关键在于代理模式，<code>AOP</code>代理主要分为静态代理和动态代理。静态代理与动态代理区别在于生成 <code>AOP</code> 代理对象的时机不同。</p>
+</li>
+<li><p><code>AOP</code> 中的动态代理主要有两种方式，<code>JDK</code>动态代理和<code>CGLIB</code>动态代理</p>
+</li>
+</ul>
+<p><strong><code>Spring</code> 框架中都用到了哪些设计模式？</strong></p>
+<ul>
+<li><p>工厂模式：<code>BeanFactory</code> 就是简单工厂模式的体现，用来创建对象的实例；</p>
+</li>
+<li><p>单例模式：<code>Bean</code> 默认为单例模式；</p>
+</li>
+<li><p>代理模式：<code>Spring</code> 的 <code>AOP</code> 功能用到了 <code>JDK</code> 的动态代理和 <code>CGLIB</code> 字节码生成技术；</p>
+</li>
+<li><p>模板方法：用来解决代码重复的问题。比如 <code>RestTemplate</code>, <code>JmsTemplate</code>, <code>JpaTemplate</code>。</p>
+</li>
+<li><p>观察者模式：定义对象键一种一对多的依赖关系，当一个对象的状态发生改变时，所有依赖于它的对象都会得到通知被制动更新，如Spring中listener的实现–ApplicationListener。</p>
+</li>
+</ul>
+<p><strong><code>Spring</code> 事务的实现方式和实现原理</strong></p>
+<ul>
+<li><p><code>Spring</code> 事务的本质其实就是数据库对事务的支持，没有数据库的事务支持，<code>spring</code> 是无法提供事务功能的。真正的数据库层的事务提交和回滚是通过 <code>bin log</code> 或者 <code>redo log</code> 实现的。</p>
+</li>
+<li><p><code>Spring</code> 支持编程式事务管理和声明式事务管理两种方式：编程式事务管理使用 <code>TransactionTemplate</code> ；声明式事务管理建立在 <code>AOP</code> 之上的。其本质是通过 <code>AOP</code> 功能，对方法前后进行拦截，将事务处理的功能编织到拦截的方法中，也就是在目标方法开始之前加入一个事务，在执行完目标方法之后根据执行情况提交或者回滚事务。</p>
+</li>
+</ul>
+<h2 id="Spring-Boot-框架"><a href="#Spring-Boot-框架" class="headerlink" title="Spring Boot 框架"></a>Spring Boot 框架</h2><p><strong>为什么要用 <code>Spring Boot</code>？</strong></p>
+<ul>
+<li>Spring Boot 可以做到独立运行、简化配置、自动配置、无代码生成和 <code>XML</code> 配置、应用监控、上手容易等优点。</li>
+</ul>
+<h2 id="Mybatis-框架"><a href="#Mybatis-框架" class="headerlink" title="Mybatis 框架"></a>Mybatis 框架</h2><p><strong><code>#{}</code> 和 <code>${}</code> 的区别是什么？</strong></p>
+<ul>
+<li><p><code>#{}</code> 是预编译处理，<code>${}</code> 是字符串替换。</p>
+</li>
+<li><p><code>Mybatis</code> 在处理 <code>#{}</code> 时，会将 <code>sql</code> 中的 <code>#{}</code> 替换为 <code>?</code> 号，调用 <code>PreparedStatement</code> 的 <code>set</code> 方法来赋值；</p>
+</li>
+<li><p><code>Mybatis</code> 在处理 <code>${}</code> 时，就是把 <code>${}</code> 替换成变量的值。</p>
+</li>
+<li><p>使用 <code>#{}</code> 可以有效的防止 <code>SQL</code> 注入，提高系统安全性。</p>
+</li>
+</ul>
+<p><strong><code>Mybatis</code> 的常用标签有哪些？</strong></p>
+<ul>
+<li>常用的有 <code>&lt;select&gt;</code>、<code>&lt;insert&gt;</code>、<code>&lt;update&gt;</code>、<code>&lt;delete&gt;</code>、<code>&lt;resultMap&gt;</code></li>
+</ul>
+<p><strong>通常一个 <code>Xml</code> 映射文件，都会写一个 <code>Dao</code> 接口与之对应，请问，这个 <code>Dao</code> 接口的工作原理是什么？<code>Dao</code> 接口里的方法，参数不同时，方法能重载吗？</strong></p>
+<ul>
+<li><p>接口的全名，就是映射文件中的 <code>namespace</code> 的值；</p>
+</li>
+<li><p>接口的方法名，就是映射文件中 <code>Mapper</code> 的 <code>Statement</code> 的 <code>id</code> 值；</p>
+</li>
+<li><p>接口方法内的参数，就是传递给 <code>sql</code> 的参数。</p>
+</li>
+<li><p><code>Mapper</code>接口是没有实现类的，当调用接口方法时，接口全限名+方法名拼接字符串作为 <code>key</code> 值，可唯一定位一个 <code>MapperStatement</code>。在 <code>Mybatis</code> 中，每一个 <code>&lt;select&gt;</code>、<code>&lt;insert&gt;</code>、<code>&lt;update&gt;</code>、<code>&lt;delete&gt;</code> 标签，都会被解析为一个 <code>MapperStatement</code> 对象。</p>
+</li>
+<li><p><code>Mapper</code> 接口里的方法，是不能重载的，因为是使用<strong>全限名+方法名</strong>的保存和寻找策略；</p>
+</li>
+<li><p><code>Mapper</code> 接口的工作原理是 <code>JDK</code> 动态代理，<code>Mybatis</code>运行时会使用 <code>JDK</code> 动态代理为 <code>Mapper</code> 接口生成代理对象 <code>proxy</code>，代理对象会拦截接口方法，转而执行<code>MapperStatement</code>所代表的<code>sql</code>，然后将<code>sql</code>执行结果返回。</p>
+</li>
+</ul>
+<p><strong><code>Mybatis</code> 是如何将 <code>sql</code> 执行结果封装为目标对象并返回的？都有哪些映射形式？</strong></p>
+<ul>
+<li><p>第一种是使用 <code>&lt;resultMap&gt;</code> 标签，逐一定义数据库列名和对象属性名之间的映射关系。</p>
+</li>
+<li><p>第二种是使用 <code>sql</code> 列的别名功能，将列的别名书写为对象属性名。</p>
+</li>
+<li><p>有了列名与属性名的映射关系后，<code>Mybatis</code> 通过反射创建对象，同时使用反射给对象的属性逐一赋值并返回，那些找不到映射关系的属性，是无法完成赋值的。</p>
+</li>
+</ul>
+<p><strong>如何获取自动生成的(主)键值?</strong></p>
+<ul>
+<li>可以在 <code>&lt;insert&gt;</code> 内加上 <code>usegeneratedkeys=”true” keyproperty=”id”(假设主键名称为id)</code></li>
+</ul>
+<p><strong><code>Mybatis</code>一对一、一对多的关联查询是用什么标签实现的？</strong></p>
+<ul>
+<li>主要是通过 <code>&lt;association&gt;</code>, <code>&lt;collection&gt;</code> 来实现的</li>
+</ul>
+<h2 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h2><p><strong><code>Redis</code> 支持哪些数据类型？</strong></p>
+<ul>
+<li>支持的有 <code>String</code>, <code>Hash</code>, <code>List</code>, <code>Set</code>, <code>zset</code>, 压缩列表等</li>
+</ul>
+<p><strong>什么是 <code>Redis</code> 持久化？<code>Redis</code>有哪几种持久化方式？优缺点是什么？</strong></p>
+<ul>
+<li><p>持久化就是把内存的数据写到磁盘中去，防止服务宕机了内存数据丢失。</p>
+</li>
+<li><p><code>Redis</code> 提供了两种持久化方式: <code>RDB</code>（默认）和 <code>AOF</code></p>
+</li>
+<li><p><code>RDB</code> 持久化是指在指定的时间间隔内将内存中的数据集快照写入磁盘，实际操作过程是 <code>fork</code> 一个子进程，先将数据集写入临时文件，写入成功后，再替换之前的文件，用二进制压缩存储。</p>
+</li>
+<li><p><code>RDB</code> 持久化会清除原有的存储结构，只将数据存储到磁盘中。当需要从磁盘还原数据到内存的时候，再重新将数据组织成原来的数据结构。</p>
+</li>
+<li><p><code>AOF</code> 持久化以日志的形式记录服务器所处理的每一个写、删除操作，查询操作不会记录，以文本的方式记录，可以打开文件看到详细的操作记录。</p>
+</li>
+<li><p><code>AOF</code> 持久化会保留原来的存储格式，将数据按照原有的格式存储在磁盘中。拿散列表这样的数据结构来举例。可以将散列表的大小、每个数据被散列到的槽的编号等信息，都保存在磁盘中。有了这些信息，从磁盘中将数据还原到内存中的时候，就可以避免重新计算哈希值。</p>
+</li>
+<li><p><code>AOF</code>文件比<code>RDB</code>更新频率高，优先使用<code>AOF</code>还原数据。</p>
+</li>
+<li><p><code>AOF</code>比<code>RDB</code>更安全也更大</p>
+</li>
+<li><p><code>RDB</code>性能比<code>AOF</code>好</p>
+</li>
+<li><p>如果两个都配了优先加载<code>AOF</code></p>
+</li>
+</ul>
+<p><strong>什么是缓存穿透？如何避免？什么是缓存雪崩？何如避免？</strong></p>
+<ul>
+<li><p>一般的缓存系统，都是按照 <code>key</code> 去缓存查询，如果不存在对应的 <code>value</code>，就应该去后端系统查找（比如<code>DB</code>）。一些恶意的请求会故意查询不存在的 <code>key</code>,请求量很大，就会对后端系统造成很大的压力。这就叫做<strong>缓存穿透</strong>。</p>
+</li>
+<li><p>避免的方法：对查询结果为空的情况也进行缓存，缓存时间设置短一点，或者该 <code>key</code> 对应的数据 <code>insert</code> 了之后清理缓存。对一定不存在的 <code>key</code> 进行过滤；可以把所有的可能存在的 <code>key</code>放到一个大的<code>Bitmap</code>中，查询时通过该<code>Bitmap</code>过滤。</p>
+</li>
+<li><p>当缓存服务器重启或者大量缓存集中在某一个时间段失效，这样在失效的时候，会给后端系统带来很大压力。导致系统崩溃。这就叫做<strong>缓存雪崩</strong>。</p>
+</li>
+<li><p>避免的方法：在缓存失效后，通过加锁或者队列来控制读数据库写缓存的线程数量。比如对某个 <code>key</code> 只允许一个线程查询数据和写缓存，其他线程等待；做二级缓存，<code>A1</code>为原始缓存，<code>A2</code>为拷贝缓存，<code>A1</code>失效时，可以访问<code>A2</code>，<code>A1</code>缓存失效时间设置为短期，<code>A2</code>设置为长期；不同的 <code>key</code>，设置不同的过期时间，让缓存失效的时间点尽量均匀。</p>
+</li>
+</ul>
+<h2 id="MySQL"><a href="#MySQL" class="headerlink" title="MySQL"></a>MySQL</h2><p><strong>数据库事务的四个特性</strong></p>
+<ul>
+<li><p><code>ACID</code></p>
+</li>
+<li><p>原子性(<code>Atomicity</code>)：指的是事务中所有操作，要么全做，要么全不做。事务在执行过程中如果出现差错会全部回滚到最初的状态</p>
+</li>
+<li><p>一致性(<code>Correspondence</code>)：在事务开始之前以及结束之后，数据库的完整性约束不会被破坏</p>
+</li>
+<li><p>隔离性(<code>Isolation</code>)：隔离状态下执行事务，使他们好像是系统在给定时间内执行的唯一操作</p>
+</li>
+<li><p>持久性(<code>Durability</code>)：在事务完成后，该事务对数据库所做的操作都会全部持久的保存在数据库中，不会被回滚</p>
+</li>
+</ul>
+<p><strong><code>MySQL</code>中 <code>MyISAM</code> 与 <code>InnoDB</code> 的区别</strong></p>
+<ul>
+<li><p><code>InnoDB</code>支持事务，而<code>MyISAM</code>不支持事务</p>
+</li>
+<li><p><code>InnoDB</code>支持行级锁，而<code>MyISAM</code>支持表级锁</p>
+</li>
+<li><p><code>InnoDB</code>支持<code>MVCC</code>, 而<code>MyISAM</code>不支持</p>
+</li>
+<li><p><code>InnoDB</code>支持外键，而<code>MyISAM</code>不支持</p>
+</li>
+<li><p><code>InnoDB</code>不支持全文索引，而<code>MyISAM</code>支持。</p>
+</li>
+<li><p><code>InnoDB</code>不能通过直接拷贝表文件的方法拷贝表到另外一台机器，<code>MyISAM</code> 支持</p>
+</li>
+<li><p><code>InnoDB</code>表支持多种行格式，<code>MyISAM</code>不支持</p>
+</li>
+<li><p><code>InnoDB</code>是索引组织表，<code>MyISAM</code> 是堆表</p>
+</li>
+</ul>
+<p><strong><code>InnoDB</code>引擎的4大特性</strong></p>
+<ul>
+<li><p>插入缓冲（<code>insert buffer</code>)</p>
+</li>
+<li><p>二次写(<code>double write</code>)</p>
+</li>
+<li><p>自适应哈希索引(<code>ahi</code>)</p>
+</li>
+<li><p>预读(<code>read ahead</code>)</p>
+</li>
+</ul>
+<p><strong><code>MyISAM</code> 与 <code>InnoDB</code>两者<code>select count(*)</code>哪个更快，为什么</strong></p>
+<ul>
+<li><code>MyISAM</code>更快，因为<code>MyISAM</code>内部维护了一个计数器，可以直接调取</li>
+</ul>
+<p><strong><code>InnoDB</code>的事务与日志的存放形式</strong></p>
+<ul>
+<li><p><code>redo</code>：在页修改的时候，先写到 <code>redo log buffer</code> 里面，然后写到 <code>redo log</code> 的文件系统缓存里面(<code>fwrite</code>)，然后再同步到磁盘文件（<code>fsync</code>）</p>
+</li>
+<li><p><code>undo</code>：在 <code>MySQL5.5</code> 之前，<code>undo</code> 只能存放在 <code>ibdata*</code> 文件里面，<code>5.6</code> 之后，可以通过设置 <code>innodb_undo_tablespaces</code> 参数把 <code>undo log</code> 存放在 <code>ibdata*</code> 之外</p>
+</li>
+</ul>
+<p><strong><code>InnoDB</code>的事务是如何通过日志来实现的</strong></p>
+<ul>
+<li><p>事务在修改页时，要先记 <code>undo</code>，在记 <code>undo</code> 之前要记 <code>undo</code> 的 <code>redo</code>，然后修改数据页，再记数据页修改的 <code>redo</code>。</p>
+</li>
+<li><p><code>redo</code>（里面包括 <code>undo</code> 的修改） 一定要比数据页先持久化到磁盘。</p>
+</li>
+<li><p>当事务需要回滚时，因为有 <code>undo</code>，可以把数据页回滚到前镜像的状态，崩溃恢复时，如果 <code>redo log</code> 中事务没有对应的 <code>commit</code> 记录，那么需要用 <code>undo</code> 把该事务的修改回滚到事务开始之前。</p>
+</li>
+<li><p>如果有 <code>commit</code> 记录，就用 <code>redo</code> 前滚到该事务完成时并提交掉。</p>
+</li>
+</ul>
+<p><strong><code>explain</code> 中的索引问题</strong></p>
+<ul>
+<li><p><code>explain</code> 结果中，一般来说，要看到尽量用 <code>index</code>(<code>type</code> 为 <code>const</code>、<code>ref</code> 等，<code>key</code> 列有值)，避免使用全表扫描(<code>type</code> 显式为 <code>ALL</code>)。</p>
+</li>
+<li><p>比如说有 <code>where</code> 条件且选择性不错的列，需要建立索引。</p>
+</li>
+<li><p>被驱动表的连接列，也需要建立索引。被驱动表的连接列也可能会跟 <code>where</code> 条件列一起建立联合索引。</p>
+</li>
+<li><p>当有排序或者 <code>group by</code> 的需求时，也可以考虑建立索引来达到直接排序和汇总的需求。</p>
+</li>
+</ul>
+<p><strong><code>MySQL</code>中<code>InnoDB</code>引擎的行锁是通过加在什么上完成(或称实现)的？</strong></p>
+<ul>
+<li><p><code>InnoDB</code>是基于索引来完成行锁</p>
+</li>
+<li><p>例如，<code>select * from tab_with_index where id = 1 for update;</code><br><code>for update</code> 可以根据条件来完成行锁锁定,并且 <code>id</code> 是有索引键的列, 如果 <code>id</code> 不是索引键那么<code>InnoDB</code>将加上表锁</p>
+</li>
+</ul>
+<p><strong>描述下 <code>MySQL</code> 中 <code>InnoDB</code> 支持的四种事务隔离级别名称，以及逐级之间的区别？</strong></p>
+<ul>
+<li><p>读未提交(<code>read uncommitted</code>)<br>读已提交(<code>read committed</code>)<br>可重复读(<code>repeatable read</code>)<br>串行(<code>serializable</code>)</p>
+</li>
+<li><p><code>Read Uncommitted</code>:可以读取其他 <code>session</code> 未提交的脏数据。<br><code>Read Committed</code>:允许不可重复读取，但不允许脏读取。提交后，其他会话可以看到提交的数据。<br><code>Repeatable Read</code>: 禁止不可重复读取和脏读取、以及幻读(<code>innodb</code> 独有)。<br><code>Serializable</code>: 事务只能一个接着一个地执行，但不能并发执行。事务隔离级别最高。<br>不同的隔离级别有不同的现象，并有不同的锁定/并发机制，隔离级别越高，数据库的并发性就越差。</p>
+</li>
+</ul>
+<h2 id="Kafka"><a href="#Kafka" class="headerlink" title="Kafka"></a>Kafka</h2><p><strong>为什么要使用 <code>kafka</code>，为什么要使用消息队列</strong></p>
+<ul>
+<li><p>缓冲和削峰：上游数据时有突发流量，下游可能扛不住，或者下游没有足够多的机器来保证冗余，<code>kafka</code> 在中间可以起到一个缓冲的作用，把消息暂存在 <code>kafka</code> 中，下游服务就可以按照自己的节奏进行慢慢处理。</p>
+</li>
+<li><p>解耦和扩展性：项目开始的时候，并不能确定具体需求。消息队列可以作为一个接口层，解耦重要的业务流程。只需要遵守约定，针对数据编程即可获取扩展能力。</p>
+</li>
+<li><p>冗余：可以采用一对多的方式，一个生产者发布消息，可以被多个订阅<code>topic</code>的服务消费到，供多个毫无关联的业务使用。</p>
+</li>
+<li><p>健壮性：消息队列可以堆积请求，所以消费端业务即使短时间死掉，也不会影响主要业务的正常进行。</p>
+</li>
+<li><p>异步通信：很多时候，用户不想也不需要立即处理消息。消息队列提供了异步处理机制，允许用户把一个消息放入队列，但并不立即处理它。想向队列中放入多少消息就放多少，然后在需要的时候再去处理它们。</p>
+</li>
+</ul>
+<p><strong><code>Kafka</code>中的 <code>broker</code> 是干什么的</strong></p>
+<ul>
+<li><code>broker</code> 是消息的代理，<code>Producers</code> 往 <code>Brokers</code> 里面的指定 <code>Topic</code> 中写消息，<code>Consumers</code> 从 <code>Brokers</code> 里面拉取指定 <code>Topic</code> 的消息，然后进行业务处理，<code>broker</code> 在中间起到一个代理保存消息的中转站。</li>
+</ul>
+<p><strong>Kafka中是怎么体现消息顺序性的？</strong></p>
+<ul>
+<li><code>kafka</code>每个 <code>partition</code> 中的消息在写入时都是有序的，消费时，每个<code>partition</code>只能被每一个<code>group</code>中的一个消费者消费，保证了消费时也是有序的。整个<code>topic</code>不保证有序。如果为了保证<code>topic</code>整个有序，那么将<code>partition</code>调整为<code>1</code>.</li>
+</ul>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E9%9D%A2%E8%AF%95/">面试</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93/">面试总结</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/passages/java-lock/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Java锁机制</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/passages/leetcode-day190911/">
+                        <span class="hidden-mobile">LEETCODE：数组（一）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+    <div id="vcomments"></div>
+    <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+    <script type="text/javascript">
+        var oldLoadVa = window.onload;
+        window.onload = function () {
+            oldLoadVa && oldLoadVa();
+
+            new Valine({
+                el: "#vcomments",
+                app_id: "O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",
+                app_key: "5Rl3Rhl9zc8BJNvrPcncKWFy",
+                placeholder: "说点什么吧~",
+                path: window.location.pathname,
+                avatar: "retro",
+                meta: ["nick","mail","link"],
+                pageSize: "10",
+                lang: "zh-CN",
+                highlight: true,
+                recordIP: true,
+                serverURLs: "https://lean.muchen.fun",
+            });
+        };
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments
+            powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><br><div class="text-center">欢迎关注我的公众号</div>
+    </div>
+  </div>
+
+
+    
+</main>
+
+
+    <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+
+
+
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+                <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mx-3">
+                <div class="md-form mb-5">
+                    <input type="text" id="local-search-input" class="form-control validate">
+                    <label data-error="x"
+                           data-success="v"
+                           for="local-search-input">关键词</label>
+                </div>
+                <div class="list-group" id="local-search-result"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    <div>
+      <span id="timeDate">载入天数...</span>
+      <span id="times">载入时分秒...</span>
+      <script>
+        var now = new Date();
+
+        function createtime() {
+          var grt = new Date("07/12/2019 00:00:00");//此处修改你的建站时间或者网站上线时间
+          now.setTime(now.getTime() + 250);
+          days = (now - grt) / 1000 / 60 / 60 / 24;
+          dnum = Math.floor(days);
+          hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+          hnum = Math.floor(hours);
+          if (String(hnum).length == 1) {
+            hnum = "0" + hnum;
+          }
+          minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+          mnum = Math.floor(minutes);
+          if (String(mnum).length == 1) {
+            mnum = "0" + mnum;
+          }
+          seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+          snum = Math.round(seconds);
+          if (String(snum).length == 1) {
+            snum = "0" + snum;
+          }
+          document.getElementById("timeDate").innerHTML = "本站已运行&nbsp" + dnum + "&nbsp天";
+          document.getElementById("times").innerHTML = hnum + "&nbsp小时&nbsp" + mnum + "&nbsp分&nbsp" + snum + "&nbsp秒";
+        }
+
+        setInterval("createtime()", 250);
+      </script>
+    </div>
+    <p id="hitokoto">:D 获取中...</p>
+    <script>
+      fetch('https://v1.hitokoto.cn')
+              .then(response => response.json())
+              .then(data => {
+                const hitokoto = document.getElementById('hitokoto')
+                hitokoto.innerText = data.hitokoto + '--「' + data.from + '」'
+              })
+              .catch(console.error)
+    </script>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+    <script  src="/js/lazyload.js" ></script>
+
+
+
+    
+
+
+
+
+    <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+    <script  src="/js/clipboard-use.js" ></script>
+
+
+
+    <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+    
+<script src="https://static.muchen.fun/js/custom.js"></script>
+
+
+
+<!-- Plugins -->
+
+
+    
+        <!-- Baidu Analytics -->
+        <script defer>
+            var _hmt = _hmt || [];
+            (function () {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    
+
+    
+        <!-- Google Analytics -->
+        <script defer>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-144841374-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+    <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+    <script>
+        var typed = new Typed('#subtitle', {
+            strings: [
+                '  ',
+                "9月面试总结&nbsp;",
+            ],
+            cursorChar: "_",
+            typeSpeed: 60,
+            loop: false,
+        });
+        typed.stop();
+        $(document).ready(function () {
+            $(".typed-cursor").addClass("h2");
+            typed.start();
+        });
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+    <script>
+        anchors.options = {
+            placement: "right",
+            visible: "hover",
+            
+        };
+        var el = "h1,h2,h3,h4,h5,h6".split(",");
+        var res = [];
+        for (item of el) {
+            res.push(".markdown-body > " + item)
+        }
+        anchors.add(res.join(", "))
+    </script>
+
+
+
+    <script  src="/js/local-search.js" ></script>
+    <script>
+        var path = "/local-search.xml";
+        var inputArea = document.querySelector("#local-search-input");
+        inputArea.onclick = function () {
+            searchFunc(path, 'local-search-input', 'local-search-result');
+            this.onclick = null
+        }
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+    <script>
+        $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+            function () {
+                var element = document.createElement('a');
+                $(element).attr('data-fancybox', 'images');
+                $(element).attr('href', $(this).attr('src'));
+                $(this).wrap(element);
+            }
+        );
+    </script>
+
+
+
+
+
+    
+
+    
+        <!-- MathJax -->
+        <script>
+            MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']]
+                },
+                options: {
+                    renderActions: {
+                        findScript: [10, doc => {
+                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                                const display = !!node.type.match(/; *mode=display/);
+                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                                const text = document.createTextNode('');
+                                node.parentNode.replaceChild(text, node);
+                                math.start = {node: text, delim: '', n: 0};
+                                math.end = {node: text, delim: '', n: 0};
+                                doc.math.push(math);
+                            });
+                        }, '', false],
+                        insertedScript: [200, () => {
+                            document.querySelectorAll('mjx-container').forEach(node => {
+                                let target = node.parentNode;
+                                if (target.nodeName.toLowerCase() === 'li') {
+                                    target.parentNode.classList.add('has-jax');
+                                }
+                            });
+                        }, '', false]
+                    }
+                }
+            };
+        </script>
+
+        <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+    
+
+
+
+    
+    
+        <script>
+            !function (e, t, a) {
+                function r() {
+                    for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+                    requestAnimationFrame(r)
+                }
+
+                function n() {
+                    var t = "function" == typeof e.onclick && e.onclick;
+                    e.onclick = function (e) {
+                        t && t(), o(e)
+                    }
+                }
+
+                function o(e) {
+                    var a = t.createElement("div");
+                    a.className = "heart", s.push({
+                        el: a,
+                        x: e.clientX - 5,
+                        y: e.clientY - 5,
+                        scale: 1,
+                        alpha: 1,
+                        color: c()
+                    }), t.body.appendChild(a)
+                }
+
+                function i(e) {
+                    var a = t.createElement("style");
+                    a.type = "text/css";
+                    try {
+                        a.appendChild(t.createTextNode(e))
+                    } catch (t) {
+                        a.styleSheet.cssText = e
+                    }
+                    t.getElementsByTagName("head")[0].appendChild(a)
+                }
+
+                function c() {
+                    return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+                }
+
+                var s = [];
+                e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+                    setTimeout(e, 1e3 / 60)
+                }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+            }(window, document);
+        </script>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

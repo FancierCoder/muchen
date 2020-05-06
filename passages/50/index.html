@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png">
+    <link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <meta name="theme-color" content="#2f4154">
+    <meta name="description" content="沐晨的个人博客,技术博客">
+    <meta name="author" content="Li Duo">
+    <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
+    <title>50.算法实战（二） - MuChen&#39;s Blog</title>
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+    
+<link rel="stylesheet" href="https://static.muchen.fun/css/custom.css?t=0.1423425.css">
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+<script>
+    var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+    // 依次判断 系统暗黑模式 指定时间 缓存 dark
+    if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+        if (!(isNight && localStorage.getItem('noDark') === '1')) {
+            document.body.classList.add('dark');
+        }
+    }
+    document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
+</script>
+<header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+    <div class="container">
+        <a class="navbar-brand"
+           href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a>
+
+        <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="animated-icon"><span></span><span></span><span></span></div>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto text-center">
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/archives/">
+                            <i class="iconfont icon-archive-fill"></i>
+                            归档</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/categories/">
+                            <i class="iconfont icon-category-fill"></i>
+                            分类</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tags/">
+                            <i class="iconfont icon-tags-fill"></i>
+                            标签</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/messageBoard/">
+                            <i class="iconfont icon-speakernotes"></i>
+                            留言</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about/">
+                            <i class="iconfont icon-user-fill"></i>
+                            关于</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/links/">
+                            <i class="iconfont icon-link-fill"></i>
+                            友链</a>
+                    </li>
+                
+                
+                    <li class="nav-item" id="search-btn">
+                        <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                                    class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+                    </li>
+                
+                <li class="nav-item">
+                    <a id="dark" class="nav-link" onclick="switchDarkMode()">
+                        <i class="iconfont icon-sun"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/images/07.jpg') no-repeat center center;
+                 background-size: cover;">
+        <div class="full-bg-img">
+            <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+                <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+                
+            </span>
+
+                    
+                        
+                            <div class="mt-3 post-meta">
+                                <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                                <time datetime="2019-08-26 11:52">
+                                    2019年8月26日 中午
+                                </time>
+                            </div>
+                        
+
+                        <div class="mt-1">
+                            
+                                
+                                <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    4.6k 字
+                  </span>
+                            
+
+                            
+                                
+                                <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                                    
+                                    
+                                    59
+                                     分钟
+                  </span>
+                            
+
+                            
+                                <!-- 不蒜子统计文章PV -->
+                                
+                                <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
+                    <i class="iconfont icon-eye" aria-hidden="true"></i>
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>
+                            
+                        </div>
+                    
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    
+        
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：8 个月前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <!-- more -->
+<p>像百度、<code>Google</code> 这样的搜索引擎，在平时的工作、生活中，几乎天天都会用到。如果把搜索引擎也当作一个互联网产品的话，那它跟社交、电商这些类型的产品相比，有一个非常大的区别，那就是，它是一个技术驱动的产品。所谓技术驱动是指，搜索引擎实现起来，技术难度非常大，技术的好坏直接决定了这个产品的核心竞争力。</p>
+<h2 id="整体系统介绍"><a href="#整体系统介绍" class="headerlink" title="整体系统介绍"></a>整体系统介绍</h2><p>搜索引擎大致可以分为四个部分：<strong>搜集</strong>、<strong>分析</strong>、<strong>索引</strong>、<strong>查询</strong>。其中，搜集，就是常说的利用爬虫爬取网页。分析，主要负责网页内容抽取、分词，构建临时索引，计算 <code>PageRank</code> 值这几部分工作。索引，主要负责通过分析阶段得到的临时索引，构建倒排索引。查询，主要负责响应用户的请求，根据倒排索引获取相关网页，计算网页排名，返回查询结果给用户。</p>
+<h2 id="搜集"><a href="#搜集" class="headerlink" title="搜集"></a>搜集</h2><p>现在，互联网越来越发达，网站越来越多，对应的网页也就越来越多。对于搜索引擎来说，它事先并不知道网页都在哪里。打个比方来说就是，只知道海里面有很多鱼，但却并不知道鱼在哪里。那搜索引擎是如何爬取网页的呢？</p>
+<p>搜索引擎把整个互联网看作数据结构中的有向图，把每个页面看作一个顶点。如果某个页面中包含另外一个页面的链接，那就在两个顶点之间连一条有向边。可以利用图的遍历搜索算法，来遍历整个互联网中的网页。</p>
+<p>前面介绍过两种图的遍历方法，深度优先和广度优先。搜索引擎采用的是广度优先搜索策略。具体点的话，那就是，先找一些比较知名的网页（专业的叫法是权重比较高）的链接（比如新浪主页网址、腾讯主页网址等），作为种子网页链接，放入到队列中。爬虫按照广度优先的策略，不停地从队列中取出链接，然后取爬取对应的网页，解析出网页里包含的其他网页链接，再将解析出来的链接添加到队列中。</p>
+<p>基本的原理就是这么简单。但落实到实现层面，还有很多技术细节。下面借助搜集阶段涉及的几个重要文件，来解释一下搜集工程都有哪些关键技术细节。</p>
+<h3 id="1-待爬取网页链接文件：links-bin"><a href="#1-待爬取网页链接文件：links-bin" class="headerlink" title="1. 待爬取网页链接文件：links.bin"></a>1. 待爬取网页链接文件：links.bin</h3><p>在广度优先搜索爬取页面的过程中，爬虫会不停地解析页面链接，将其放到队列中。于是，队列中的链接就会越来越多，可能会多到内存放不下。所以，用一个存储在磁盘中的文件（<code>links.bin</code>）来作为广度优先搜索中的队列。爬虫从 <code>links.bin</code> 文件中，取出链接去爬取对应的页面。等爬取到网页之后，将解析出来的链接，直接存储到 <code>links.bin</code> 文件中。</p>
+<p>这样用文件来存储网页链接的方式，还有其他好处。比如，支持断点续爬。也就是说，当机器断电之后，网页链接不会丢失；当机器重启之后，还可以从之前爬取到的位置继续爬取。</p>
+<p>关于如何解析页面获取链接，额外多说几句。可以把整个页面看作一个大的字符串，可以利用字符串匹配算法，在这个大字符串中，搜索这样一个网页标签，然后顺序读取之间的字符串。这其实就是网页链接。</p>
+<h3 id="2-网页判重文件：bloom-filter-bin"><a href="#2-网页判重文件：bloom-filter-bin" class="headerlink" title="2. 网页判重文件：bloom_filter.bin"></a>2. 网页判重文件：bloom_filter.bin</h3><p>如何避免重复爬取相同的网页呢？这个问题在位图那一篇已经讲过了。使用<strong>布隆过滤器</strong>，就可以快速并且非常节省内存地实现网页的判重。</p>
+<p>不过，还是刚刚那个问题，如果把布隆过滤器存储在内存中，那机器宕机重启之后，布隆过滤器就被清空了。这样就可能导致大量已经爬取的网页会被重复爬取。</p>
+<p>这个问题该怎么解决呢？可以定期地（比如每隔半小时）将布隆过滤器持久化到磁盘中，存储在 <code>bloom_filter.bin</code> 文件中。这样，即便出现机器宕机，也只会丢失布隆过滤器中的部分数据。当机器重启之后，就可以重新读取磁盘中的 <code>bloom_filter.bin</code> 文件，将其恢复到内存中。</p>
+<h3 id="3-原始网页存储文件：doc-raw-bin"><a href="#3-原始网页存储文件：doc-raw-bin" class="headerlink" title="3. 原始网页存储文件：doc_raw.bin"></a>3. 原始网页存储文件：doc_raw.bin</h3><p>爬取到网页之后，需要将其存储下来，以备后面离线分析、索引之用。那如何存储海量的原始网页数据呢？</p>
+<p>如果把每个网页都存储为一个独立的文件，那磁盘中的文件就会非常多，数量可能会有几千万，甚至上亿。常用的文件系统显然不适合存储如此多的文件。所以，可以把多个网页存储在一个文件中。每个网页之间，通过一定的标识进行分隔，方便后续读取。具体的存储格式，如下图所示。其中，<code>doc_id</code> 这个字段是网页的编号，待会儿再解释。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/26/d7ee21f0-c7b0-11e9-bd0a-57cc00d1a72f.png" srcset="/img/loading.gif" alt="image.png"><br>当然，这样的一个文件也不能太大，因为文件系统对文件的大小也有一定的限制。所以，可以设置每个文件的大小不能超过一定的值（比如 <code>1GB</code>）。随着越来越多的网页被添加到文件中，文件的大小就会越来越大，当超过 <code>1GB</code> 的时候，就创建一个新的文件，用来存储新爬取的网页。</p>
+<p>假设一台机器的硬盘大小是 <code>100GB</code> 左右，一个网页的平均大小是 <code>64KB</code>。那在一台机器上，可以存储 <code>100</code> 万到 <code>200</code> 万左右的网页。假设机器的带宽是 <code>10MB</code>，那下载 <code>100GB</code> 的网页，大约需要 <code>10000</code> 秒。也就是说，爬取 <code>100</code> 多万的网页，也就是只需要花费几小时的时间。</p>
+<h3 id="4-网页链接及其编号的对应文件：doc-id-bin"><a href="#4-网页链接及其编号的对应文件：doc-id-bin" class="headerlink" title="4. 网页链接及其编号的对应文件：doc_id.bin"></a>4. 网页链接及其编号的对应文件：doc_id.bin</h3><p>刚刚提到了网页编号这个概念，现在解释一下。网页编号实际上就是给每个网页分配一个唯一的 <code>ID</code>，方便后续对网页进行分析、索引。那如何给网页编号呢？</p>
+<p>可以按照网页被爬取的先后顺序，从小到大依次编号。具体是这样做的：维护一个中心的计数器，每爬取到一个网页之后，就从计数器中拿一个号码，分配给这个网页，然后计数器加一。在存储网页的同时，将网页链接跟编号之间的对应关系，存储在另一个 <code>doc_id.bin</code> 文件中。</p>
+<p><strong>爬虫在爬取网页的过程中，涉及的四个重要的文件，就介绍完了。其中，<code>links.bin</code> 和 <code>bloom_filter.bin</code> 这两个文件是爬虫自身所用的。另外的两个（<code>doc_raw.bin</code>、<code>doc_id.bin</code>）是作为搜集阶段的成果，供后面的分析、索引、查询用的。</strong></p>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>网页爬取下来之后，需要对网页进行离线分析。分析阶段主要包括两个步骤，第一个是抽取网页文本信息，第二个是分词并创建临时索引。</p>
+<h3 id="1-抽取网页文本信息"><a href="#1-抽取网页文本信息" class="headerlink" title="1. 抽取网页文本信息"></a>1. 抽取网页文本信息</h3><p>网页是半结构化数据，里面夹杂着各种标签、<code>JavaScript</code> 代码、<code>CSS</code> 样式。对于搜索引擎来说，它只关心网页中的文本信息，也就是，网页显示在浏览器中时，能被用户肉眼看到的那部分信息。如何从半结构化的网页中，抽取出搜索引擎关系的文本信息呢？</p>
+<p>之所以把网页叫作半结构化数据，是因为它本身是按照一定的规则来书写的。这个规则就是<strong><code>HTML</code> 语法规范</strong>。依靠 <code>HTML</code> 标签来抽取网页中的文本信息。这个抽取的过程，大体可以分为两步。</p>
+<p>第一步是去掉 <code>JavaScript</code> 代码、<code>CSS</code> 格式以及下拉框中的内容（因为下拉框在用户不操作的情况下，也是看不到的）。也就是<code>&lt;style&gt;&lt;/style&gt;，&lt;script&gt;&lt;/script&gt;，&lt;option&gt;&lt;/option&gt;</code>这三组标签之间的内容。可以利用 <code>AC</code> 自动机这种多模式串匹配算法，在网页这个大字符串中，一次性查找<code>&lt;style&gt;, &lt;script&gt;, &lt;option&gt;</code>这三个关键词。当找到某个关键词出现的位置之后，只需要依次往后遍历，直到对应结束标签<code>&lt;/style&gt;, &lt;/script&gt;, &lt;/option&gt;</code> 为止。而这期间遍历到的字符串连带着标签就应该从网页中删除。</p>
+<p>第二步是去掉所有 <code>HTML</code> 标签。这一步也是通过字符串匹配算法来实现的。过程跟第一步类似。</p>
+<h3 id="2-分词并创建临时索引"><a href="#2-分词并创建临时索引" class="headerlink" title="2. 分词并创建临时索引"></a>2. 分词并创建临时索引</h3><p>经过上面的处理之后，就从网页中抽取出了我们关心的文本信息。接下来，要对文本信息进行分词，并且创建临时索引。</p>
+<p>对于英文网页来说，分词非常简单。只需要通过空格、标点符号等分隔符，将每个单词分割开来就可以了。但是，对于中文来说，分词就复杂太多了。这里介绍一种比较简单的思路，基于字典和规则的分词方法。</p>
+<p>其中，字典也叫词库，里面包含大量常用的词语（可以直接从网上下载别人整理好的）。借助词库并采用<strong>最长匹配规则</strong>，来对文本进行分词。所谓最长匹配，也就是匹配尽可能长的词语。举个例子解释一下。</p>
+<p>比如要分词的文本是“中国人民解放了”，词库中有“中国”“中国人”“中国人民”“中国人民解放军”这几个词，那就取最长匹配，也就是“中国人民”划为一个词，而不是把“中国”、“中国人“划为一个词。具体到实现层面，可以将词库中的单词，构建成 <code>Trie</code> 树结构，然后拿网页文本在 <code>Trie</code> 树中匹配。</p>
+<p>每个网页的文本信息在分词完成之后，都得到一组单词列表。把单词与网页之间的对应关系，写入到一个临时索引文件中（<code>tmp_Index.bin</code>），这个临时索引文件用来构建倒排索引文件。临时索引文件的格式如下：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/26/23295c10-c7b2-11e9-bd0a-57cc00d1a72f.png" srcset="/img/loading.gif" alt="image.png"><br>在临时索引文件中，存储的是单词编号，也就是图中的 <code>term_id</code>，而非单词本身。这样做的目的主要是为了节省存储的空间。那这些单词的编号是怎么来的呢？</p>
+<p>给单词编号的方式，跟给网页编号类似。维护一个计数器，每当从网页文本信息中分割出一个新的单词的时候，就从计数器中取一个编号，分配给它，然后计数器加一。</p>
+<p>在这个过程中，还需要使用散列表，记录已经编过号的单词。在对网页文本信息分词的过程中，拿分割出来的单词，先到散列表中查找，如果找到，那就直接使用已有的编号；如果没有找到，再去计数器中拿号码，并且将这个新单词以及编号添加到散列表中。</p>
+<p>当所有的网页处理（分词及写入临时索引）完成之后，再将这个单词跟编号之间的对应关系，写入到磁盘文件中，并命名为 <code>term_id.bin</code>。</p>
+<p><strong>经过分析阶段，得到了两个重要的文件。它们分别是临时索引文件（<code>tmp_index.bin</code>）和单词编号文件（<code>term_id.bin</code>）。</strong></p>
+<h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><p>索引阶段主要负责将分析阶段产生的临时索引，构建成倒排索引。倒排索引（<code>Inverted index</code>）中记录了每个单词以及包含它的网页列表。文字描述比较难理解，下面有一张倒排索引的结构图。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/26/adda9e90-c7b3-11e9-bd0a-57cc00d1a72f.png" srcset="/img/loading.gif" alt="image.png"><br>刚刚讲到，在临时索引文件中，记录的是单词跟每个包含它的文档之间的对应关系。那如何通过临时索引文件，构建出倒排索引文件呢？这是一个非常典型的算法问题，你可以先自己思考一下，再看下面的讲解。</p>
+<p>解决这个问题的方法有很多。考虑到临时索引文件很大，无法一次性加载到内存中，搜索引擎一般会选择使用<strong>多路归并排序</strong>的方法来实现。</p>
+<p>先对临时索引文件，按照单词编号的大小进行排序。因为临时索引很大，所以一般基于内存的排序算法就没法处理这个问题了。可以用之前讲到的归并排序的处理思想，将其分割成多个小文件，先对每个小文件独立排序，最后再合并在一起。当然，实际的软件开发中，其实可以直接利用 <code>MapReduce</code> 来处理。</p>
+<p>临时索引文件排序完成之后，相同的单词就被排列到了一起。只需要顺序地遍历排好序的临时索引文件，就能将每个单词对应的网页编号列表找出来，然后把它们存储在倒排索引文件中。具体的处理过程，下面有一张图。通过图，你应该更容易理解。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/26/f5be3eb0-c7b3-11e9-bd0a-57cc00d1a72f.png" srcset="/img/loading.gif" alt="image.png"><br>除了倒排文件之外，还需要一个文件，来记录每个单词编号在倒排索引文件中的偏移位置。把这个文件命名为 <code>term_offset.bin</code>。这个文件的作用是，帮助快速地查找某个单词编号在倒排索引中存储的位置，进而快速地从倒排索引中读取单词编号对应的网页编号列表。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/26/1a4b1640-c7b4-11e9-bd0a-57cc00d1a72f.png" srcset="/img/loading.gif" alt="image.png"><br><strong>经过索引阶段的处理，得到了两个有价值的文件，它们分别是倒排索引文件（<code>index.bin</code>）和记录单词编号在索引文件中的偏移位置的文件（<code>term_offset.bin</code>）。</strong></p>
+<h2 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h2><p>前面三个阶段的处理，只是为了最后的查询做铺垫。因此，现在就要利用之前产生的几个文件，来实现最终的用户搜索功能。</p>
+<ul>
+<li><p><code>doc_id.bin</code>：记录网页链接和编号之间的对应关系。</p>
+</li>
+<li><p><code>term_id.bin</code>：记录单词和编号之间的对应关系。</p>
+</li>
+<li><p><code>index.bin</code>：倒排索引文件，记录每个单词编号以及对应包含它的网页编号列表。</p>
+</li>
+<li><p><code>term_offsert.bin</code>：记录每个单词编号在倒排索引文件中的偏移位置。</p>
+</li>
+</ul>
+<p>这四个文件中，除了倒排索引文件（<code>index.bin</code>）比较大之外，其他的都比较小。为了方便快速查找数据，将其他三个文件都加载到内存中，并且组织成散列表这种数据结构。</p>
+<p>当用户在搜索框中，输入某个查询文本的时候，先对用户输入的文本进行分词处理。假设分分词之后，得到 <code>k</code> 个单词。</p>
+<p>拿这 <code>k</code> 个单词，去 <code>term_id.bin</code> 对应的散列表中，查找对应的单词编号。经过这个查询之后，得到了这 <code>k</code> 个单词对应的单词编号。</p>
+<p>拿这 <code>k</code> 个单词编号，去 <code>term_offset.bin</code> 对应的散列表中，查找每个单词编号在倒排索引文件中的偏移位置。经过这个查询之后，得到了 <code>k</code> 个偏移位置。</p>
+<p>拿这 <code>k</code> 个偏移位置，去倒排索引（<code>index.bin</code>）中，查找 <code>k</code> 个单词对应的包含它的网页编号列表。经过这一步查询之后，得到了 <code>k</code> 个网页编号列表。</p>
+<p>针对这 <code>k</code> 个网页编号列表，统计每个网页编号出现的次数。具体到实现层面，可以借助散列表来进行统计。统计得到的结果，按照出现次数的多少，从小到大排序。出现次数越多，说明包含越多的用户查询单词（用户输入的搜索文本，经过分词之后的单词）。</p>
+<p>经过这一系列查询，就得到了一组排好序的网页编号。拿着网页编号，去 <code>doc_id.bin</code> 文件中查找对应的网页链接，分页显示给用户就可以了。</p>
+<h2 id="总结引申"><a href="#总结引申" class="headerlink" title="总结引申"></a>总结引申</h2><p>上面展示了一个小型搜索引擎的设计思路。这只是一个搜索引擎设计的基本原理，有很多优化、细节并未涉及，比如计算网页权重的 <code>PageRank</code> 算法、计算查询结果排名的 <code>tf-idf</code> 模型等等。</p>
+<p>在讲解的过程中，涉及的数据结构和算法有：图、散列表、<code>Trie</code> 树、布隆过滤器、单模式字符串匹配算法、<code>AC</code> 自动机、广度优先遍历、归并排序等。如果对其中哪些内容不清楚，你可以回到对应的章节进行复习。</p>
+<p>最后，如果有时间的话，强烈建议你，按照上面的思路，自己写代码实现一个简单的搜索引擎。这样写出来的，即便只是一个 <code>demo</code>，但对于你深入理解数据结构和算法，也是很有帮助的。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ul>
+<li><p>图的遍历方法有两种，深度优先和广度优先。搜索引擎中的爬虫是通过广度优先策略来爬取网页的。搜索引擎为什么选择广度优先策略，而不是深度优先策略呢？</p>
+</li>
+<li><p>大部分搜索引擎在结果显示的时候，都支持摘要信息和网页快照。实际上，只需要对上面的设计思路，稍加改造，就可以支持这两项功能。你知道如何改造吗？欢迎留言和我分享。</p>
+</li>
+</ul>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E7%AE%97%E6%B3%95%E5%AE%9E%E6%88%98/">算法实战</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/passages/reverse-single-list/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">单向链表的反转</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/passages/49/">
+                        <span class="hidden-mobile">49.算法实战（一）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+    <div id="vcomments"></div>
+    <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+    <script type="text/javascript">
+        var oldLoadVa = window.onload;
+        window.onload = function () {
+            oldLoadVa && oldLoadVa();
+
+            new Valine({
+                el: "#vcomments",
+                app_id: "O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",
+                app_key: "5Rl3Rhl9zc8BJNvrPcncKWFy",
+                placeholder: "说点什么吧~",
+                path: window.location.pathname,
+                avatar: "retro",
+                meta: ["nick","mail","link"],
+                pageSize: "10",
+                lang: "zh-CN",
+                highlight: true,
+                recordIP: true,
+                serverURLs: "https://lean.muchen.fun",
+            });
+        };
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments
+            powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><br><div class="text-center">欢迎关注我的公众号</div>
+    </div>
+  </div>
+
+
+    
+</main>
+
+
+    <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+
+
+
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+                <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mx-3">
+                <div class="md-form mb-5">
+                    <input type="text" id="local-search-input" class="form-control validate">
+                    <label data-error="x"
+                           data-success="v"
+                           for="local-search-input">关键词</label>
+                </div>
+                <div class="list-group" id="local-search-result"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    <div>
+      <span id="timeDate">载入天数...</span>
+      <span id="times">载入时分秒...</span>
+      <script>
+        var now = new Date();
+
+        function createtime() {
+          var grt = new Date("07/12/2019 00:00:00");//此处修改你的建站时间或者网站上线时间
+          now.setTime(now.getTime() + 250);
+          days = (now - grt) / 1000 / 60 / 60 / 24;
+          dnum = Math.floor(days);
+          hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+          hnum = Math.floor(hours);
+          if (String(hnum).length == 1) {
+            hnum = "0" + hnum;
+          }
+          minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+          mnum = Math.floor(minutes);
+          if (String(mnum).length == 1) {
+            mnum = "0" + mnum;
+          }
+          seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+          snum = Math.round(seconds);
+          if (String(snum).length == 1) {
+            snum = "0" + snum;
+          }
+          document.getElementById("timeDate").innerHTML = "本站已运行&nbsp" + dnum + "&nbsp天";
+          document.getElementById("times").innerHTML = hnum + "&nbsp小时&nbsp" + mnum + "&nbsp分&nbsp" + snum + "&nbsp秒";
+        }
+
+        setInterval("createtime()", 250);
+      </script>
+    </div>
+    <p id="hitokoto">:D 获取中...</p>
+    <script>
+      fetch('https://v1.hitokoto.cn')
+              .then(response => response.json())
+              .then(data => {
+                const hitokoto = document.getElementById('hitokoto')
+                hitokoto.innerText = data.hitokoto + '--「' + data.from + '」'
+              })
+              .catch(console.error)
+    </script>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+    <script  src="/js/lazyload.js" ></script>
+
+
+
+    
+
+
+
+
+    <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+    <script  src="/js/clipboard-use.js" ></script>
+
+
+
+    <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+    
+<script src="https://static.muchen.fun/js/custom.js"></script>
+
+
+
+<!-- Plugins -->
+
+
+    
+        <!-- Baidu Analytics -->
+        <script defer>
+            var _hmt = _hmt || [];
+            (function () {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    
+
+    
+        <!-- Google Analytics -->
+        <script defer>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-144841374-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+    <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+    <script>
+        var typed = new Typed('#subtitle', {
+            strings: [
+                '  ',
+                "50.算法实战（二）&nbsp;",
+            ],
+            cursorChar: "_",
+            typeSpeed: 60,
+            loop: false,
+        });
+        typed.stop();
+        $(document).ready(function () {
+            $(".typed-cursor").addClass("h2");
+            typed.start();
+        });
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+    <script>
+        anchors.options = {
+            placement: "right",
+            visible: "hover",
+            
+        };
+        var el = "h1,h2,h3,h4,h5,h6".split(",");
+        var res = [];
+        for (item of el) {
+            res.push(".markdown-body > " + item)
+        }
+        anchors.add(res.join(", "))
+    </script>
+
+
+
+    <script  src="/js/local-search.js" ></script>
+    <script>
+        var path = "/local-search.xml";
+        var inputArea = document.querySelector("#local-search-input");
+        inputArea.onclick = function () {
+            searchFunc(path, 'local-search-input', 'local-search-result');
+            this.onclick = null
+        }
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+    <script>
+        $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+            function () {
+                var element = document.createElement('a');
+                $(element).attr('data-fancybox', 'images');
+                $(element).attr('href', $(this).attr('src'));
+                $(this).wrap(element);
+            }
+        );
+    </script>
+
+
+
+
+
+    
+
+    
+        <!-- MathJax -->
+        <script>
+            MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']]
+                },
+                options: {
+                    renderActions: {
+                        findScript: [10, doc => {
+                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                                const display = !!node.type.match(/; *mode=display/);
+                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                                const text = document.createTextNode('');
+                                node.parentNode.replaceChild(text, node);
+                                math.start = {node: text, delim: '', n: 0};
+                                math.end = {node: text, delim: '', n: 0};
+                                doc.math.push(math);
+                            });
+                        }, '', false],
+                        insertedScript: [200, () => {
+                            document.querySelectorAll('mjx-container').forEach(node => {
+                                let target = node.parentNode;
+                                if (target.nodeName.toLowerCase() === 'li') {
+                                    target.parentNode.classList.add('has-jax');
+                                }
+                            });
+                        }, '', false]
+                    }
+                }
+            };
+        </script>
+
+        <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+    
+
+
+
+    
+    
+        <script>
+            !function (e, t, a) {
+                function r() {
+                    for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+                    requestAnimationFrame(r)
+                }
+
+                function n() {
+                    var t = "function" == typeof e.onclick && e.onclick;
+                    e.onclick = function (e) {
+                        t && t(), o(e)
+                    }
+                }
+
+                function o(e) {
+                    var a = t.createElement("div");
+                    a.className = "heart", s.push({
+                        el: a,
+                        x: e.clientX - 5,
+                        y: e.clientY - 5,
+                        scale: 1,
+                        alpha: 1,
+                        color: c()
+                    }), t.body.appendChild(a)
+                }
+
+                function i(e) {
+                    var a = t.createElement("style");
+                    a.type = "text/css";
+                    try {
+                        a.appendChild(t.createTextNode(e))
+                    } catch (t) {
+                        a.styleSheet.cssText = e
+                    }
+                    t.getElementsByTagName("head")[0].appendChild(a)
+                }
+
+                function c() {
+                    return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+                }
+
+                var s = [];
+                e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+                    setTimeout(e, 1e3 / 60)
+                }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+            }(window, document);
+        </script>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

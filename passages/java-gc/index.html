@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png">
+    <link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <meta name="theme-color" content="#2f4154">
+    <meta name="description" content="沐晨的个人博客,技术博客">
+    <meta name="author" content="Li Duo">
+    <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
+    <title>由浅入深了解GC原理 - MuChen&#39;s Blog</title>
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+    
+<link rel="stylesheet" href="https://static.muchen.fun/css/custom.css?t=0.1423425.css">
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+<script>
+    var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+    // 依次判断 系统暗黑模式 指定时间 缓存 dark
+    if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+        if (!(isNight && localStorage.getItem('noDark') === '1')) {
+            document.body.classList.add('dark');
+        }
+    }
+    document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
+</script>
+<header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+    <div class="container">
+        <a class="navbar-brand"
+           href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a>
+
+        <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="animated-icon"><span></span><span></span><span></span></div>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto text-center">
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/archives/">
+                            <i class="iconfont icon-archive-fill"></i>
+                            归档</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/categories/">
+                            <i class="iconfont icon-category-fill"></i>
+                            分类</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tags/">
+                            <i class="iconfont icon-tags-fill"></i>
+                            标签</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/messageBoard/">
+                            <i class="iconfont icon-speakernotes"></i>
+                            留言</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about/">
+                            <i class="iconfont icon-user-fill"></i>
+                            关于</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/links/">
+                            <i class="iconfont icon-link-fill"></i>
+                            友链</a>
+                    </li>
+                
+                
+                    <li class="nav-item" id="search-btn">
+                        <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                                    class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+                    </li>
+                
+                <li class="nav-item">
+                    <a id="dark" class="nav-link" onclick="switchDarkMode()">
+                        <i class="iconfont icon-sun"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/images/07.jpg') no-repeat center center;
+                 background-size: cover;">
+        <div class="full-bg-img">
+            <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+                <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+                
+            </span>
+
+                    
+                        
+                            <div class="mt-3 post-meta">
+                                <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                                <time datetime="2019-12-31 18:10">
+                                    2019年12月31日 晚上
+                                </time>
+                            </div>
+                        
+
+                        <div class="mt-1">
+                            
+                                
+                                <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    5.7k 字
+                  </span>
+                            
+
+                            
+                                
+                                <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                                    
+                                    
+                                    76
+                                     分钟
+                  </span>
+                            
+
+                            
+                                <!-- 不蒜子统计文章PV -->
+                                
+                                <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
+                    <i class="iconfont icon-eye" aria-hidden="true"></i>
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>
+                            
+                        </div>
+                    
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    
+        
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：4 个月前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <!-- more -->
+<p><code>GC</code>（<code>Garbage Collection</code>)很大程度上帮助<code>Java</code>程序员解决了内存释放的问题，有了<code>GC</code>，就不需要再手动的去控制内存的释放。</p>
+<p>在阅读之前需要了解的相关概念：</p>
+<blockquote>
+<p><code>Java</code> 堆内存分为新生代和老年代，新生代中又分为<code>1</code>个 <code>Eden</code> 区域 和 <code>2</code> 个 <code>Survivor</code> 区域。</p>
+</blockquote>
+<h2 id="一、什么是GC（Garbage-Collection"><a href="#一、什么是GC（Garbage-Collection" class="headerlink" title="一、什么是GC（Garbage Collection)"></a>一、什么是GC（Garbage Collection)</h2><p><code>GC</code>垃圾收集，<code>Java</code>提供的<code>GC</code>可以自动监测对象是否超过作用域从而达到自动回收内存的目的。</p>
+<p>每个程序员都遇到过内存溢出的情况，程序运行时，内存空间是有限的，那么如何及时的把不再使用的对象清除将内存释放出来，这就是GC要做的事。</p>
+<p><strong>需要<code>GC</code>的内存区域</strong></p>
+<p><code>JVM</code> 中，程序计数器、虚拟机栈、本地方法栈都是随线程而生随线程而灭，栈帧随着方法的进入和退出做入栈和出栈操作，实现了自动的内存清理，因此，我们的内存垃圾回收主要集中于 <code>JAVA</code> 堆和方法区中，在程序运行期间，这部分内存的分配和使用都是动态的。</p>
+<blockquote>
+<p>注意：<br>对于 <code>Java8</code>，<code>HotSpots</code> 取消了永久代，那么是不是也就没有方法区了呢？当然不是，方法区是一个规范，规范没变，它就一直在。那么取代永久代的就是元空间。它可永久代有什么不同的？存储位置不同，永久代物理是是堆的一部分，和新生代，老年代地址是连续的，而元空间属于本地内存；存储内容不同，元空间存储类的元信息，静态变量和常量池等并入堆中。相当于永久代的数据被分到了堆和元空间中。</p>
+</blockquote>
+<p><strong><code>GC</code>的对象</strong></p>
+<p>当一个对象到<code>GC Roots</code>不可达时，在下一个垃圾回收周期中尝试回收该对象，如果对象重写了<code>finalize()</code>，并在这个方法中成功自救(将自身赋予某个引用)，那么这个对象不会被回收。但如果这个对象没有重写<code>finalize()</code>方法或已执行过这个方法，该对象将会被回收。</p>
+<p>需要进行回收的对象就是已经没有存活的对象，判断一个对象是否存活常用的有两种办法：引用计数算法和可达性分析算法。</p>
+<ul>
+<li><p>引用计数算法：<br>每个对象有一个引用计数属性，新增一个引用时计数加<code>1</code>，引用释放时计数减<code>1</code>，计数为<code>0</code>时可以回收。此方法简单，无法解决对象相互循环引用的问题。</p>
+</li>
+<li><p>可达性分析算法（Reachability Analysis）：<br>从<code>GC Roots</code>开始向下搜索，搜索所走过的路径称为引用链。当一个对象到<code>GC Roots</code>没有任何引用链相连时，则证明此对象是不可用的，不可达对象。</p>
+</li>
+</ul>
+<blockquote>
+<p>在Java语言中，<code>GC Roots</code>包括：</p>
+<ul>
+<li>虚拟机栈中引用的对象；</li>
+<li>方法区中类静态属性实体引用的对象；</li>
+<li>方法区中常量引用的对象；</li>
+<li>本地方法栈中<code>JNI</code>引用的对象。</li>
+</ul>
+</blockquote>
+<p><strong>什么时候触发<code>GC</code></strong></p>
+<ul>
+<li><p>程序调用<code>System.gc</code>时，但不是必然执行</p>
+</li>
+<li><p>系统自身来决定<code>GC</code>触发的时机（根据<code>Eden</code>区和<code>From Space</code>区的内存大小来决定。当内存大小不足时，则会启动<code>GC</code>线程并停止应用线程）</p>
+</li>
+</ul>
+<blockquote>
+<p><code>GC</code>又分为 <code>Minor GC</code> 和 <code>Full GC</code> (也称为 <code>Major GC</code>)<br><code>Minor GC</code>触发条件：当<code>Eden</code>区满时，触发<code>Minor GC</code>。<br><code>Full GC</code>触发条件：</p>
+<ul>
+<li>调用<code>System.gc</code>时，系统建议执行<code>Full GC</code>，但是不必然执行</li>
+<li>老年代空间不足</li>
+<li>方法去空间不足</li>
+<li>通过<code>Minor GC</code>后进入老年代的平均大小大于老年代的可用内存</li>
+<li>由<code>Eden</code>区、<code>From Space</code>区向<code>To Space</code>区复制时，对象大小大于<code>To Space</code>可用内存，则把该对象转存到老年代，且老年代的可用内存小于该对象大小</li>
+</ul>
+</blockquote>
+<p><strong><code>GC</code>做了什么事</strong></p>
+<p>主要做了清理对象，整理内存的工作。<code>Java</code>堆分为新生代和老年代，采用了不同的回收方式。</p>
+<h2 id="GC常用算法"><a href="#GC常用算法" class="headerlink" title="GC常用算法"></a>GC常用算法</h2><p><code>GC</code>常用算法有：<strong>标记-清除算法，标记-压缩算法，复制算法，分代收集算法</strong>。</p>
+<p>目前主流的<code>JVM</code>（<code>HotSpot</code>）采用的是分代收集算法。</p>
+<p><strong>标记-清除算法(<code>Mark-Sweep</code>)</strong></p>
+<p>首先标记出所有需要回收的对象，标记完成后回收所有被标记的对象。不足主要体现在效率和空间，从效率的角度讲，标记和清除效率都不高；从空间的角度讲，标记清除后会产生大量不连续的内存碎片， 内存碎片太多可能会导致需要分配较大对象时，无法找到足够的连续内存而提前触发一次垃圾收集动作。</p>
+<p>从堆栈和静态存储区出发，遍历所有的引用，进而找出所有存活的对象，如果活着，就标记。只有全部标记完毕的时候，清理动作才开始。在清理的时候，没有标记的对象将会被释放，不会发生任何动作。但是剩下的堆空间是不连续的，垃圾回收器要是希望得到连续空间的话，就得重新整理剩下的对象。</p>
+<p>优点：标记—清除算法中每个活着的对象的引用只需要找到一个即可，找到一个就可以判断它为活的。此外，更重要的是，这个算法并不移动对象的位置。</p>
+<p>缺点：它的缺点就是效率比较低（递归与全堆对象遍历）。每个活着的对象都要在标记阶段遍历一遍；所有对象都要在清除阶段扫描一遍，因此算法复杂度较高。没有移动对象，导致可能出现很多碎片空间无法利用的情况。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/12/31/feaeacf0-2bca-11ea-8d25-11ed44f6b9f6.png" srcset="/img/loading.gif" alt="image.png"></p>
+<p><strong>标记-压缩算法（标记-整理）(<code>Mark-Compact</code>)</strong></p>
+<p>过程与标记-清除算法一样，不过不是直接对可回收对象进行清理，而是让所有存活对象都向一端移动，然后直接清理掉边界以外的内存。在标记阶段，该算法也将所有对象标记为存活和死亡两种状态；不同的是，在第二个阶段，该算法并没有直接对死亡的对象进行清理，而是将所有存活的对象整理一下，放到另一处空间，然后把剩下的所有对象全部清除。这样就达到了标记-整理的目的。</p>
+<p>优点：该算法不会像标记-清除算法那样产生大量的碎片空间。</p>
+<p>缺点：如果存活的对象过多，整理阶段将会执行较多复制操作，导致算法效率降低。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/12/31/615a8860-2bcb-11ea-8d25-11ed44f6b9f6.png" srcset="/img/loading.gif" alt="image.png"></p>
+<p><strong>复制(<code>Copying</code>)算法</strong></p>
+<p>将可用内存分为两块，每次只用其中一块，当一块内存用完了，就将还存活的对象复制到另外一块上，然后再把已经使用过的内存空间一次性清理掉，循环下去。这样每次只需对整个半区进行内存回收，内存分配时也不需要考虑内存碎片等复杂情况，只需要移动指针，按照顺序分配即可。</p>
+<p>优点：实现简单；不产生内存碎片</p>
+<p>缺点：内存缩小为原来的一半，代价太高</p>
+<blockquote>
+<p>现在商用虚拟机都采用这种算法来回收新生代，不过<code>1:1</code>的比例非常不科学，因此新生代的内存被划分为一块较大的<code>Eden</code>空间和两块较小的<code>Survivor</code>空间，每次使用<code>Eden</code>和其中一块<code>Survivor</code>。每次回收时，将<code>Eden</code>和<code>Survivor</code>中还存活着的对象一次性复制到另外一块<code>Survivor</code>空间上，最后清理掉<code>Eden</code>和刚才用过的<code>Survivor</code>空间。<code>HotSpot</code>虚拟机默认<code>Eden</code>区和<code>Survivor</code>区的比例为<code>8:1</code>，意思是每次新生代中可用内存空间为整个新生代容量的<code>90%</code>。当然，我们无法保证每次回收都少于<code>10%</code>的对象存活，当<code>Survivor</code>空间不够用时，需要依赖老年代进行分配担保(<code>Handle Promotion</code>)。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/12/31/1be1b140-2bcc-11ea-8d25-11ed44f6b9f6.png" srcset="/img/loading.gif" alt="image.png"></p>
+</blockquote>
+<p><strong>分代收集(<code>Generational Collection</code>)算法</strong></p>
+<p>分代收集算法根据对象的生存周期，将堆分为新生代(<code>Young</code>)和老年代(<code>Tenur</code>)。在新生代中，由于对象生存期短，每次回收都会有大量对象死去，那么这时就采用<strong>复制算法</strong>。老年代里的对象存活率较高，没有额外的空间进行分配担保，所以可以使用<strong>标记-整理</strong>或者<strong>标记-清除</strong>。</p>
+<p>新生代(<code>Young</code>)分为<code>Eden</code>区，<code>From</code>区与<code>To</code>区：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/12/31/a0da5f50-2bcc-11ea-8d25-11ed44f6b9f6.png" srcset="/img/loading.gif" alt="image.png"></p>
+<p>当系统创建一个对象的时候，总是在<code>Eden</code>区操作，当这个区满了，那么就会触发一次<code>YoungGC</code>，也就是年轻代的垃圾回收。一般来说这时候并不是所有的对象都没用了，所以就会把还能用的对象复制到<code>From</code>区：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/12/31/bd4ec400-2bcc-11ea-8d25-11ed44f6b9f6.png" srcset="/img/loading.gif" alt="image.png"></p>
+<p>这样整个<code>Eden</code>区就被清理干净了，可以继续创建新的对象，当<code>Eden</code>区再次被用完，就再触发一次<code>YoungGC</code>，然后注意，这个时候跟刚才稍稍有点区别。这次触发<code>YoungGC</code>后，会将<code>Eden</code>区与<code>From</code>区还在被使用的对象复制到<code>To</code>区：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/12/31/df0d3950-2bcc-11ea-8d25-11ed44f6b9f6.png" srcset="/img/loading.gif" alt="image.png"></p>
+<p>再下一次<code>YoungGC</code>的时候，则是将<code>Eden</code>区与<code>To</code>区中的还在被使用的对象复制到<code>From</code>区：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/12/31/f36c1150-2bcc-11ea-8d25-11ed44f6b9f6.png" srcset="/img/loading.gif" alt="image.png"></p>
+<p>经过若干次<code>YoungGC</code>后，有些对象在<code>From</code>与<code>To</code>之间来回游荡，这时候<code>From</code>区与<code>To</code>区亮出了底线（阈值），这些家伙要是还没有被回收，就会被复制到老年代：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/12/31/235fea80-2bcd-11ea-8d25-11ed44f6b9f6.png" srcset="/img/loading.gif" alt="image.png"> </p>
+<p>老年代经过这么几次折腾，也就扛不住了（空间被用完），那就来次集体大扫除(<code>Full GC</code>)，也就是全量回收。如果<code>Full GC</code>使用太频繁的话，无疑会对系统性能产生很大的影响。所以要合理设置年轻代与老年代的大小，尽量减少<code>Full GC</code>的操作。</p>
+<h2 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h2><p><strong>收集算法是内存回收的方法论，垃圾收集器就是内存回收的具体实现</strong></p>
+<p><strong><code>Serial</code>收集器</strong></p>
+<p>串行收集器是最古老，最稳定以及效率高的收集器，但是可能会产生较长的停顿，只使用一个线程去回收。<br>启用命令：<code>-XX:+UseSerialGC</code></p>
+<p><strong><code>Parallel</code>收集器</strong></p>
+<p>并行GC的好处是提升垃圾回收的性能，减少串行回收带来的问题，也有停顿，但可以并行回收，一边标记对象一边执行线程，整体上提升了回收的性能。<br>启用命令：<br><code>-XX:+UseParallelGC</code> </p>
+<ul>
+<li>使用<code>Parallel</code>收集器 + 老年代串行</li>
+</ul>
+<p><code>-XX:+UseParallelOldGC</code></p>
+<ul>
+<li>使用<code>Parallel</code>收集器 + 老年代并行</li>
+</ul>
+<p><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/12/31/0ea3c130-2bd6-11ea-8d25-11ed44f6b9f6.png" srcset="/img/loading.gif" alt="image.png"></p>
+<p><strong><code>CMS</code>收集器</strong></p>
+<p><code>CMS</code>收集器是以获取最短回收停顿时间为目标的收集器，基于”标记-清除”(<code>Mark-Sweep</code>)算法实现，整个过程分为四个步骤：</p>
+<ul>
+<li><p>初始标记 (<code>Stop the World</code>事件<code>CPU</code>停顿很短) ，仅标记<code>GC Roots</code>能直接关联到的对象，速度快；</p>
+</li>
+<li><p>并发标记 (收集垃圾跟用户线程一起执行) ，初始标记和重新标记仍需要 <code>Stop the World</code>，并发标记过程就是进行 <code>GC Roots Tracing</code>的过程；</p>
+</li>
+<li><p>重新标记 (<code>Stop the World</code>事件<code>CPU</code>停顿，比初始标记稍长，远比并发标记短)，修正并发标记期因用户程序继续运作而导致标记产生变动的那部分对象的标记记录，这个阶段停顿时间比初始标记阶段稍长些，比并发标记时间短；</p>
+</li>
+<li><p>并发清理-清除算法。</p>
+</li>
+</ul>
+<p>整个过程中最耗时的并发标记和并发清除过程，收集器线程都可与用户线程一起工作，总体上来说，<code>CMS</code>收集器的内存回收过程是与用户线程一起并发执行的。</p>
+<p><code>CMS</code>收集器优点：并发收集，低停顿</p>
+<p><code>CMS</code>收集器缺点：</p>
+<ul>
+<li><p><code>CMS</code>收集器对<code>CPU</code>资源非常敏感</p>
+</li>
+<li><p><code>CMS</code>处理器无法处理浮动垃圾</p>
+</li>
+<li><p><code>CMS</code>基于“标记–清除”算法实现，会产生大量空间碎片，会在大对象分配时提前触发<code>Full GC</code>。为解决这个问题，<code>CMS</code>提供了一个开关参数，用于在<code>CMS</code>要进行<code>Full GC</code>时开启内存碎片的合并整理过程，内存整理的过程无法并发，停顿时间变长；</p>
+</li>
+</ul>
+<p><code>CMS</code>也提供了整理碎片的参数：</p>
+<p><code>-XX:+ UseCMSCompactAtFullCollection</code> <code>Full GC</code>后，进行一次整理</p>
+<ul>
+<li>整理过程是独占的，会引起停顿时间变长</li>
+</ul>
+<p><code>-XX:+CMSFullGCsBeforeCompaction</code></p>
+<ul>
+<li>设置进行几次<code>Full GC</code>后，进行一次碎片整理</li>
+</ul>
+<p><code>-XX:ParallelCMSThreads</code></p>
+<ul>
+<li>设定<code>CMS</code>的线程数量（一般情况约等于可用CPU数量）</li>
+</ul>
+<p><code>CMS</code>的提出是想改善<code>GC</code>的停顿时间，在<code>GC</code>过程中的确做到了减少<code>GC</code>时间，但是同样导致产生大量内存碎片，又需要消耗大量时间去整理碎片，从本质上并没有改善时间。  </p>
+<p><strong><code>G1</code>(<code>Garbage First</code>)收集器</strong></p>
+<p><code>G1</code>是一款面向服务端应用的垃圾收集器。与<code>CMS</code>收集器相比<code>G1</code>收集器有以下特点：</p>
+<ul>
+<li><p>空间整合：<code>G1</code>收集器采用标记整理算法，不会产生内存空间碎片。分配大对象时不会因为无法找到连续空间而提前触发下一次<code>GC</code>。</p>
+</li>
+<li><p>可预测停顿：这是<code>G1</code>的另一大优势，降低停顿时间是<code>G1</code>和<code>CMS</code>的共同关注点，但<code>G1</code>除了追求低停顿外，还能建立可预测的停顿时间模型，能让使用者明确指定在一个长度为<code>N</code>毫秒的时间片段内，消耗在垃圾收集上的时间不得超过<code>N</code>毫秒，这几乎已经是实时<code>Java</code>（<code>RTSJ</code>）的垃圾收集器的特征了。</p>
+</li>
+<li><p>并行于并发：充分使用多个<code>CPU</code>来缩短<code>Stop the World</code>停顿时间。</p>
+</li>
+<li><p>分代收集：采用不同方式处理新创建的对象和已存活一段时间，熬过多次<code>GC</code>的旧对象，以获取更好的收集效果。</p>
+</li>
+</ul>
+<p>使用<code>G1</code>收集器时，<code>Java</code>堆的内存布局与其他收集器有很大差别，它将整个<code>Java</code>堆划分为多个大小相等的独立区域（<code>Region</code>），虽然还保留有新生代和老年代的概念，但新生代和老年代不再是物理隔阂了，它们都是一部分（可以不连续）<code>Region</code>的集合。</p>
+<p><code>G1</code>运作步骤：</p>
+<ul>
+<li>初始标记(<code>Initial-Mark</code>)(<code>Stop the World</code>事件<code>CPU</code>停顿只处理垃圾)；</li>
+</ul>
+<p>这个阶段是停顿的(<code>Stop the World Event</code>)，并且会触发一次普通<code>Mintor GC</code>。<br>对应<code>GC log</code>:<code>GC pause</code> (<code>young</code>) (<code>inital-mark</code>)</p>
+<ul>
+<li><code>Root Region Scanning</code>；</li>
+</ul>
+<p>程序运行过程中会回收<code>survivor</code>区(存活到老年代)，这一过程必须在<code>young GC</code>之前完成。</p>
+<ul>
+<li>并发标记(<code>Concurrent Marking</code>)(与用户线程并发执行)；</li>
+</ul>
+<p>在整个堆中进行并发标记(和应用程序并发执行)，此过程可能被<code>young GC</code>中断。在并发标记阶段，若发现区域对象中的所有对象都是垃圾，那个这个区域会被立即回收。同时，并发标记过程中，会计算每个区域的对象活性(区域中存活对象的比例)。</p>
+<ul>
+<li>最终标记(<code>Stop the World</code>事件<code>CPU</code>停顿处理垃圾)；</li>
+</ul>
+<p>此阶段是用来收集 <strong>并发标记阶段</strong> 产生新的垃圾(并发阶段和应用程序一同运行)；<code>G1</code>中采用了比<code>CMS</code>更快的初始快照算法:<code>snapshot-at-the-beginning</code> (<code>SATB</code>)。</p>
+<ul>
+<li>筛选回收(<code>Stop the World</code>事件根据用户期望的<code>GC</code>停顿时间回收)；</li>
+</ul>
+<p>多线程清除失活对象，会有<code>Stop the World</code>事件。<code>G1</code>将回收区域的存活对象拷贝到新区域，清除<code>Remember Sets</code>，并发清空回收区域并把它返回到空闲区域链表中。</p>
+<h2 id="finalize-方法"><a href="#finalize-方法" class="headerlink" title="finalize()方法"></a>finalize()方法</h2><p><strong><code>finalize</code>的作用</strong></p>
+<ul>
+<li><p><code>finalize()</code>是<code>Object</code>的<code>protected</code>方法，子类可以覆盖该方法以实现资源清理工作，<code>GC</code>在回收对象之前调用该方法；</p>
+</li>
+<li><p><code>finalize()</code>与<code>C++</code>中的析构函数不是对应的。<code>C++</code>中的析构函数调用的时机是确定的（对象离开作用域或<code>delete</code>掉），但<code>Java</code>中的<code>finalize</code>的调用具有不确定性；</p>
+</li>
+<li><p>不建议用<code>finalize</code>方法完成“非内存资源”的清理工作，但建议用于：<br>① 清理本地对象(通过<code>JNI</code>创建的对象)；<br>② 作为确保某些非内存资源(如<code>Socket</code>、文件等)释放的一个补充：在<code>finalize</code>方法中显式调用其他资源释放方法。</p>
+</li>
+</ul>
+<p><strong><code>finalize</code>的问题</strong></p>
+<ul>
+<li><p>一些与<code>finalize</code>相关的方法，由于一些致命的缺陷，已经被废弃了，如<code>System.runFinalizersOnExit()</code>方法、<code>Runtime.runFinalizersOnExit()</code>方法；</p>
+</li>
+<li><p><code>System.gc()</code>与<code>System.runFinalization()</code>方法增加了<code>finalize</code>方法执行的机会，但不可盲目依赖它们；</p>
+</li>
+<li><p><code>Java</code>语言规范并不保证<code>finalize</code>方法会被及时地执行、而且根本不会保证它们会被执行；</p>
+</li>
+<li><p><code>finalize</code>方法可能会带来性能问题。因为<code>JVM</code>通常在单独的低优先级线程中完成<code>finalize</code>的执行；</p>
+</li>
+<li><p>对象再生问题：<code>finalize</code>方法中，可将待回收对象赋值给<code>GC Roots</code>可达的对象引用，从而达到对象再生的目的；</p>
+</li>
+<li><p><code>finalize</code>方法至多由<code>GC</code>执行一次(用户当然可以手动调用对象的<code>finalize</code>方法，但并不影响<code>GC</code>对<code>finalize</code>的行为)。</p>
+</li>
+</ul>
+<p><strong><code>finalize</code>的执行过程(生命周期)</strong></p>
+<p>当对象变成(<code>GC Roots</code>)不可达时，<code>GC</code>会判断该对象是否覆盖了<code>finalize</code>方法，若未覆盖，则直接将其回收。否则，若对象未执行过<code>finalize</code>方法，将其放入<code>F-Queue</code>队列，由一低优先级线程执行该队列中对象的<code>finalize</code>方法。执行<code>finalize</code>方法完毕后，<code>GC</code>会再次判断该对象是否可达，若不可达，则进行回收，否则，对象“复活”。</p>
+<p>具体的<code>finalize</code>流程：</p>
+<p>对象可由两种状态，涉及到两类状态空间，一是终结状态空间 <code>F = {unfinalized, finalizable, finalized}</code>；二是可达状态空间 <code>R = {reachable, finalizer-reachable, unreachable}</code>。各状态含义如下：</p>
+<ul>
+<li><code>unfinalized</code>: 新建对象会先进入此状态，<code>GC</code>并未准备执行其<code>finalize</code>方法，因为该对象是可达的。</li>
+<li><code>finalizable</code>: 表示<code>GC</code>可对该对象执行<code>finalize</code>方法，<code>GC</code>已检测到该对象不可达。正如前面所述，<code>GC</code>通过<code>F-Queue</code>队列和一专用线程完成<code>finalize</code>的执行。</li>
+<li><code>finalized</code>: 表示<code>GC</code>已经对该对象执行过<code>finalize</code>方法。</li>
+<li><code>reachable</code>: 表示<code>GC Roots</code>引用可达。</li>
+<li><code>finalizer-reachable</code>(<code>f-reachable</code>)：表示不是<code>reachable</code>，但可通过某个<code>finalizable</code>对象可达。</li>
+<li><code>unreachable</code>：对象不可通过上面两种途径可达。</li>
+</ul>
+<p>状态变迁图：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/12/31/a172d520-2bd4-11ea-8d25-11ed44f6b9f6.png" srcset="/img/loading.gif" alt="image.png"></p>
+<p>状态变迁说明：</p>
+<ul>
+<li>新建对象首先处于<code>[reachable, unfinalized]</code>状态(<code>A</code>)；</li>
+<li>随着程序的运行，一些引用关系会消失，导致状态变迁，从<code>reachable</code>状态变迁到<code>f-reachable</code>(<code>B, C, D</code>)或<code>unreachable</code>(<code>E, F</code>)状态；</li>
+<li>若<code>JVM</code>检测到处于<code>unfinalized</code>状态的对象变成<code>f-reachable</code>或<code>unreachable</code>，<code>JVM</code>会将其标记为<code>finalizable</code>状态(<code>G,H</code>)。若对象原处于<code>[unreachable, unfinalized]</code>状态，则同时将其标记为<code>f-reachable</code>(<code>H</code>)；</li>
+<li>在某个时刻，<code>JVM</code>取出某个<code>finalizable</code>对象，将其标记为<code>finalized</code>并在某个线程中执行其<code>finalize</code>方法。由于是在活动线程中引用了该对象，该对象将变迁到(<code>reachable, finalized</code>)状态(<code>K</code>或<code>J</code>)。该动作将影响某些其他对象从<code>f-reachable</code>状态重新回到<code>reachable</code>状态(<code>L, M, N</code>)；</li>
+<li>处于<code>finalizable</code>状态的对象不能同时是<code>unreahable</code>的，由上一点可知，将对象<code>finalizable</code>对象标记为<code>finalized</code>时会由某个线程执行该对象的<code>finalize</code>方法，致使其变成<code>reachable</code>。这也是图中只有八个状态点的原因；</li>
+<li>程序员手动调用<code>finalize</code>方法并不会影响到上述内部标记的变化，因此<code>JVM</code>只会至多调用<code>finalize</code>一次，即使该对象“复活”也是如此。程序员手动调用多少次不影响<code>JVM</code>的行为；</li>
+<li>若<code>JVM</code>检测到<code>finalized</code>状态的对象变成<code>unreachable</code>，回收其内存(<code>I</code>)；</li>
+<li>若对象并未覆盖<code>finalize</code>方法，<code>JVM</code>会进行优化，直接回收对象（<code>O</code>）。</li>
+</ul>
+<p>注：<code>System.runFinalizersOnExit()</code>等方法可以使对象即使处于<code>reachable</code>状态，<code>JVM</code>仍对其执行<code>finalize</code>方法。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>GC</code>垃圾收集，<code>Java</code>提供的<code>GC</code>可以自动监测对象是否超过作用域从而达到自动回收内存的目的。</p>
+<p>判断一个对象是否存活常用的有两种办法：引用计数算法和可达性分析算法。</p>
+<p><code>GC</code>常用算法有：<strong>标记-清除算法，标记-压缩算法，复制算法，分代收集算法</strong>。</p>
+<p>不管选择哪种<code>GC</code>算法，<code>Stop the World</code>都是不可避免的。<code>Stop the World</code>意味着从应用中停下来并进入到<code>GC</code>执行过程中去。一旦<code>Stop the World</code>发生，除了<code>GC</code>所需的线程外，其他线程都将停止工作，中断了的线程直到<code>GC</code>任务结束才继续它们的任务。<code>GC</code>调优通常就是为了改善<code>Stop the World</code>的时间。</p>
+<p>关于程序设计的几点建议：</p>
+<ul>
+<li><p>尽早释放无用对象的引用。大多数程序员在使用临时变量的时候，都是让引用变量在退出活动域（<code>scope</code>）后，自动设置为 <code>null</code>.我们在使用这种方式时候，必须特别注意一些复杂的对象图，例如数组，队列，树，图等，这些对象之间有相互引用关系较为复杂。对于这类对象，<code>GC</code> 回收它们一般效率较低。如果程序允许，尽早将不用的引用对象赋为 <code>null</code>，这样可以加速<code>GC</code>的工作。 </p>
+</li>
+<li><p>尽量少用<code>finalize</code>函数。<code>finalize</code>函数是<code>Java</code>提供给程序员一个释放对象或资源的机会。但是，它会加大<code>GC</code>的工作量，因此尽量少采用<code>finalize</code>方式回收资源。 </p>
+</li>
+<li><p>如果需要使用经常使用的图片，可以使用<code>soft</code>应用类型。它可以尽可能将图片保存在内存中，供程序调用，而不引起<code>OutOfMemoryException</code>。</p>
+</li>
+<li><p>注意集合数据类型，包括数组，树，图，链表等数据结构，这些数据结构对<code>GC</code>来说，回收更为复杂。另外，注意一些全局的变量，以及一些静态变量。这些变量往往容易引起悬挂对象(<code>dangling reference</code>)，造成内存浪费。 </p>
+</li>
+<li><p>当程序有一定的等待时间，程序员可以手动执行<code>System.gc()</code>，通知<code>GC</code>运行，但是<code>Java</code>语言规范并不保证<code>GC</code>一定会执行。使用增量式<code>GC</code>可以缩短<code>Java</code>程序的暂停时间。</p>
+</li>
+</ul>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%90%8E%E7%AB%AF/">后端</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Java-GC/">Java GC</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/passages/design-pattern-learn-sum-1/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">针对非业务的通用框架开发，如何做需求分析和设计？</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/passages/design-pattern-learn-22/">
+                        <span class="hidden-mobile">设计模式之美学习（二十二）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+    <div id="vcomments"></div>
+    <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+    <script type="text/javascript">
+        var oldLoadVa = window.onload;
+        window.onload = function () {
+            oldLoadVa && oldLoadVa();
+
+            new Valine({
+                el: "#vcomments",
+                app_id: "O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",
+                app_key: "5Rl3Rhl9zc8BJNvrPcncKWFy",
+                placeholder: "说点什么吧~",
+                path: window.location.pathname,
+                avatar: "retro",
+                meta: ["nick","mail","link"],
+                pageSize: "10",
+                lang: "zh-CN",
+                highlight: true,
+                recordIP: true,
+                serverURLs: "https://lean.muchen.fun",
+            });
+        };
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments
+            powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><br><div class="text-center">欢迎关注我的公众号</div>
+    </div>
+  </div>
+
+
+    
+</main>
+
+
+    <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+
+
+
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+                <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mx-3">
+                <div class="md-form mb-5">
+                    <input type="text" id="local-search-input" class="form-control validate">
+                    <label data-error="x"
+                           data-success="v"
+                           for="local-search-input">关键词</label>
+                </div>
+                <div class="list-group" id="local-search-result"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    <div>
+      <span id="timeDate">载入天数...</span>
+      <span id="times">载入时分秒...</span>
+      <script>
+        var now = new Date();
+
+        function createtime() {
+          var grt = new Date("07/12/2019 00:00:00");//此处修改你的建站时间或者网站上线时间
+          now.setTime(now.getTime() + 250);
+          days = (now - grt) / 1000 / 60 / 60 / 24;
+          dnum = Math.floor(days);
+          hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+          hnum = Math.floor(hours);
+          if (String(hnum).length == 1) {
+            hnum = "0" + hnum;
+          }
+          minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+          mnum = Math.floor(minutes);
+          if (String(mnum).length == 1) {
+            mnum = "0" + mnum;
+          }
+          seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+          snum = Math.round(seconds);
+          if (String(snum).length == 1) {
+            snum = "0" + snum;
+          }
+          document.getElementById("timeDate").innerHTML = "本站已运行&nbsp" + dnum + "&nbsp天";
+          document.getElementById("times").innerHTML = hnum + "&nbsp小时&nbsp" + mnum + "&nbsp分&nbsp" + snum + "&nbsp秒";
+        }
+
+        setInterval("createtime()", 250);
+      </script>
+    </div>
+    <p id="hitokoto">:D 获取中...</p>
+    <script>
+      fetch('https://v1.hitokoto.cn')
+              .then(response => response.json())
+              .then(data => {
+                const hitokoto = document.getElementById('hitokoto')
+                hitokoto.innerText = data.hitokoto + '--「' + data.from + '」'
+              })
+              .catch(console.error)
+    </script>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+    <script  src="/js/lazyload.js" ></script>
+
+
+
+    
+
+
+
+
+    <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+    <script  src="/js/clipboard-use.js" ></script>
+
+
+
+    <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+    
+<script src="https://static.muchen.fun/js/custom.js"></script>
+
+
+
+<!-- Plugins -->
+
+
+    
+        <!-- Baidu Analytics -->
+        <script defer>
+            var _hmt = _hmt || [];
+            (function () {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    
+
+    
+        <!-- Google Analytics -->
+        <script defer>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-144841374-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+    <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+    <script>
+        var typed = new Typed('#subtitle', {
+            strings: [
+                '  ',
+                "由浅入深了解GC原理&nbsp;",
+            ],
+            cursorChar: "_",
+            typeSpeed: 60,
+            loop: false,
+        });
+        typed.stop();
+        $(document).ready(function () {
+            $(".typed-cursor").addClass("h2");
+            typed.start();
+        });
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+    <script>
+        anchors.options = {
+            placement: "right",
+            visible: "hover",
+            
+        };
+        var el = "h1,h2,h3,h4,h5,h6".split(",");
+        var res = [];
+        for (item of el) {
+            res.push(".markdown-body > " + item)
+        }
+        anchors.add(res.join(", "))
+    </script>
+
+
+
+    <script  src="/js/local-search.js" ></script>
+    <script>
+        var path = "/local-search.xml";
+        var inputArea = document.querySelector("#local-search-input");
+        inputArea.onclick = function () {
+            searchFunc(path, 'local-search-input', 'local-search-result');
+            this.onclick = null
+        }
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+    <script>
+        $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+            function () {
+                var element = document.createElement('a');
+                $(element).attr('data-fancybox', 'images');
+                $(element).attr('href', $(this).attr('src'));
+                $(this).wrap(element);
+            }
+        );
+    </script>
+
+
+
+
+
+    
+
+    
+        <!-- MathJax -->
+        <script>
+            MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']]
+                },
+                options: {
+                    renderActions: {
+                        findScript: [10, doc => {
+                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                                const display = !!node.type.match(/; *mode=display/);
+                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                                const text = document.createTextNode('');
+                                node.parentNode.replaceChild(text, node);
+                                math.start = {node: text, delim: '', n: 0};
+                                math.end = {node: text, delim: '', n: 0};
+                                doc.math.push(math);
+                            });
+                        }, '', false],
+                        insertedScript: [200, () => {
+                            document.querySelectorAll('mjx-container').forEach(node => {
+                                let target = node.parentNode;
+                                if (target.nodeName.toLowerCase() === 'li') {
+                                    target.parentNode.classList.add('has-jax');
+                                }
+                            });
+                        }, '', false]
+                    }
+                }
+            };
+        </script>
+
+        <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+    
+
+
+
+    
+    
+        <script>
+            !function (e, t, a) {
+                function r() {
+                    for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+                    requestAnimationFrame(r)
+                }
+
+                function n() {
+                    var t = "function" == typeof e.onclick && e.onclick;
+                    e.onclick = function (e) {
+                        t && t(), o(e)
+                    }
+                }
+
+                function o(e) {
+                    var a = t.createElement("div");
+                    a.className = "heart", s.push({
+                        el: a,
+                        x: e.clientX - 5,
+                        y: e.clientY - 5,
+                        scale: 1,
+                        alpha: 1,
+                        color: c()
+                    }), t.body.appendChild(a)
+                }
+
+                function i(e) {
+                    var a = t.createElement("style");
+                    a.type = "text/css";
+                    try {
+                        a.appendChild(t.createTextNode(e))
+                    } catch (t) {
+                        a.styleSheet.cssText = e
+                    }
+                    t.getElementsByTagName("head")[0].appendChild(a)
+                }
+
+                function c() {
+                    return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+                }
+
+                var s = [];
+                e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+                    setTimeout(e, 1e3 / 60)
+                }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+            }(window, document);
+        </script>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png">
+    <link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <meta name="theme-color" content="#2f4154">
+    <meta name="description" content="沐晨的个人博客,技术博客">
+    <meta name="author" content="Li Duo">
+    <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
+    <title>42.位图 - MuChen&#39;s Blog</title>
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+    
+<link rel="stylesheet" href="https://static.muchen.fun/css/custom.css?t=0.1423425.css">
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+<script>
+    var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+    // 依次判断 系统暗黑模式 指定时间 缓存 dark
+    if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+        if (!(isNight && localStorage.getItem('noDark') === '1')) {
+            document.body.classList.add('dark');
+        }
+    }
+    document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
+</script>
+<header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+    <div class="container">
+        <a class="navbar-brand"
+           href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a>
+
+        <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="animated-icon"><span></span><span></span><span></span></div>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto text-center">
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/archives/">
+                            <i class="iconfont icon-archive-fill"></i>
+                            归档</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/categories/">
+                            <i class="iconfont icon-category-fill"></i>
+                            分类</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tags/">
+                            <i class="iconfont icon-tags-fill"></i>
+                            标签</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/messageBoard/">
+                            <i class="iconfont icon-speakernotes"></i>
+                            留言</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about/">
+                            <i class="iconfont icon-user-fill"></i>
+                            关于</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/links/">
+                            <i class="iconfont icon-link-fill"></i>
+                            友链</a>
+                    </li>
+                
+                
+                    <li class="nav-item" id="search-btn">
+                        <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                                    class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+                    </li>
+                
+                <li class="nav-item">
+                    <a id="dark" class="nav-link" onclick="switchDarkMode()">
+                        <i class="iconfont icon-sun"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/images/07.jpg') no-repeat center center;
+                 background-size: cover;">
+        <div class="full-bg-img">
+            <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+                <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+                
+            </span>
+
+                    
+                        
+                            <div class="mt-3 post-meta">
+                                <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                                <time datetime="2019-08-18 16:26">
+                                    2019年8月18日 下午
+                                </time>
+                            </div>
+                        
+
+                        <div class="mt-1">
+                            
+                                
+                                <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    4.1k 字
+                  </span>
+                            
+
+                            
+                                
+                                <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                                    
+                                    
+                                    54
+                                     分钟
+                  </span>
+                            
+
+                            
+                                <!-- 不蒜子统计文章PV -->
+                                
+                                <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
+                    <i class="iconfont icon-eye" aria-hidden="true"></i>
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>
+                            
+                        </div>
+                    
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    
+        
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：9 个月前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <p>网页爬虫是搜索引擎中的非常重要的系统，负责爬取几十亿、上百亿的网页。爬虫的工作原理是，通过解析已经爬取页面中的网页链接，然后再爬取这些链接对应的网页。<strong>而同一个网页链接有可能被包含在多个页面中，这就会导致爬虫在爬取的过程中，重复爬取相同的网页。如果你是一名负责爬虫的工程师，你会如何避免这些重复的爬取呢？</strong></p>
+<p>最容易想到的方法就是，记录已经爬取的网页链接（也就是 <code>URL</code>），在爬取一个新的网页之前，拿它的链接，在已经爬取的网页链接列表中搜索。如果存在，那就说明这个网页已经被爬取过了；如果不存在，那就说明这个网页还没有被爬取过，可以继续去爬取。等爬取到这个网页之后，将这个网页的链接添加到已经爬取的网页链接列表了。</p>
+<p>思路非常简单，应该很容易就能想到。不过，该如何记录已经爬取的网页链接呢？需要用什么样的数据结构呢？</p>
+<h2 id="算法解析"><a href="#算法解析" class="headerlink" title="算法解析"></a>算法解析</h2><p>这个问题要处理的对象是网页链接，也就是 <code>URL</code>，需要支持的操作有两个，添加一个 <code>URL</code> 和查询一个 <code>URL</code>。除了这两个功能性的要求之外，在非功能性方面，还要求这两个操作的执行效率要尽可能高。除此之外，因为要处理的是上亿的网页链接，内存消耗会非常大，所以在存储效率上，要尽可能地高效。</p>
+<p>回想一下，满足这些条件的数据结构有哪些呢？显然，散列表、红黑树、跳表这些动态数据结构，都能支持快速地插入、查找数据，但是对内存消耗方面，是否可以接受呢？</p>
+<p>拿散列表来举例。假设要爬取 <code>10</code> 亿个网页（像 <code>Google</code>、百度这样的通用搜索引擎，爬取的网页可能会更多），为了判重，把这 <code>10</code> 亿网页链接存储在散列表中。估算下，大约需要多少内存？</p>
+<p>假设一个 <code>URL</code> 的平均长度是 <code>64</code> 字节，那单纯存储这 <code>10</code> 亿个 <code>URL</code>，需要大约 <code>60GB</code> 的内存空间。因为散列表必须维持较小的装载因子，才能保证不会出现过多的散列冲突，导致操作的性能下降。而且，用链表法解决冲突的散列表，还会存储链表指针。所以，如果将这 <code>10</code> 亿个 <code>URL</code> 构建成散列表，那需要的内存空间会远大于 <code>60GB</code>，有可能会超过 <code>100GB</code>。</p>
+<p>当然，对于一个大型的搜索引擎来说，即便是 <code>100GB</code> 的内存要求，其实也不算太高，可以采用分治的思想，用多台机器（比如 <code>20</code> 台内存是 <code>8GB</code> 的机器）来存储这 <code>10</code> 亿网页链接。</p>
+<p>对于爬虫的 <code>URL</code> 去重这个问题，刚刚讲到的分治加散列表的思路，已经是可以实实在在工作的了。不过，<strong>作为一个有追求的工程师，应该考虑，在添加、查询数据的效率以及内存消耗方面，是否还有进一步的优化空间呢？</strong></p>
+<p>你可能会说，散列表中添加、查找数据的时间复杂度已经是 $O(1)$，还能有进一步优化的空间吗？实际上，前面也讲过，时间复杂度并不能完全代表代码的执行时间。大 $O$ 时间复杂度表示法，会忽略掉常数、系数和低阶，并且统计的对象是语句的频度。不同的语句，执行时间也是不同的。时间复杂度只是表示执行时间随数据规模的变化趋势，并不能度量在特定的数据规模下，代码执行时间的多少。</p>
+<p>如果时间复杂度中原来的系数是 <code>10</code>，现在能够通过优化，将系数降为 <code>1</code>，那在时间复杂度没有变化的情况下，执行效率就提高了 <code>10</code> 倍。对于实际的软件开发来说，<code>10</code> 倍效率的提升，显然是一个非常值得的优化。</p>
+<p>如果用基于链表的方法解决冲突问题，散列表中存储的是 <code>URL</code>，那当查询的时候，通过哈希函数定位到某个链表之后，还需要依次比对每个链表中的 <code>URL</code>。这个操作是比较耗时的，主要有两点原因。</p>
+<p>一方面，链表中的结点在内存中不是连续存储的，所以不能一下子加载到 <code>CPU</code> 缓存中，没法很好地利用到 <code>CPU</code> 高速缓存，所以数据访问性能方面会打折扣。</p>
+<p>另一方面，链表中的每个数据都是 <code>URL</code>，而 <code>URL</code> 不是简单的数字，是平均长度为 <code>64</code> 字节的字符串。也就是说，要让待判重的 <code>URL</code>，跟链表中的每个 <code>URL</code>，做字符串匹配。显然，这样一个字符串匹配操作，比起单纯的数字比对，要慢很多。所以，基于这两点，执行效率方面肯定是有优化空间的。</p>
+<p>对于内存消耗方面的优化，除了刚刚这种基于散列表的解决方案，貌似没有更好的法子了。实际上，如果要想内存方面有明显的节省，那就得换一种解决方案，也就是要着重讲的这种存储结构，<strong>布隆过滤器</strong>（<code>Bloom Filter</code>）。</p>
+<p>在讲布隆过滤器前，要先讲一下另一种存储结构，<strong>位图</strong>（<code>BitMap</code>）。因为，布隆过滤器本身就是基于位图的，是对位图的一种改进。</p>
+<p>先来看一个稍微简单的问题。<strong>有 <code>1</code> 千万个整数，整数的范围在 <code>1</code> 到 <code>1</code> 亿之间。如何快速查找某个整数是否在这 <code>1</code> 千万个整数中呢？</strong></p>
+<p>当然，这个问题可以用散列表来解决。不过，还可以使用一种比较“特殊”的散列表，那就是位图。申请一个大小为 <code>1</code> 亿、数据类型为布尔类型（<code>true</code> 或者 <code>false</code>）的数组。将这 <code>1</code> 千万个整数作为数组下标，将对应的数组值设置成 <code>true</code>。比如，整数 <code>5</code> 对应下标为 <code>5</code> 的数组值设置为 <code>true</code>，也就是 <code>array[5]=true</code>。</p>
+<p>当查询某个整数 <code>K</code> 是否在这 <code>1</code> 千万个整数中的时候，只需要将对应的数组值 <code>array[K]</code> 取出来，看是否等于 <code>true</code>。如果等于 <code>true</code>，那说明 <code>1</code> 千万整数中包含这个整数 <code>K</code>；相反，就表示不包含这个整数 <code>K</code>。</p>
+<p>不过，很多语言中提供的布尔类型，大小是 <code>1</code> 个字节的，并不能节省太多内存空间。实际上，表示 <code>true</code> 和 <code>false</code> 两个值，只需要用一个二进制位（<code>bit</code>）就可以了。那如何通过编程语言，来表示一个二进制位呢？</p>
+<p>这里就要用到位运算了。可以借助编程语言中提供的数据类型，比如 <code>int</code>、<code>long</code>、<code>char</code> 等类型，通过位运算，用其中的某个位表示某个数字。文字描述起来有点儿不好理解，这里把位图的代码实现写了出来，你可以对照着代码看下，应该就能看懂了。</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BitMap</span> </span>&#123; <span class="hljs-comment">// Java 中 char 类型占 16bit，也即是 2 个字节</span>
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">char</span>[] bytes;
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> nbits;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">BitMap</span><span class="hljs-params">(<span class="hljs-keyword">int</span> nbits)</span> </span>&#123;
+    <span class="hljs-keyword">this</span>.nbits = nbits;
+    <span class="hljs-keyword">this</span>.bytes = <span class="hljs-keyword">new</span> <span class="hljs-keyword">char</span>[nbits/<span class="hljs-number">16</span>+<span class="hljs-number">1</span>];
+  &#125;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">set</span><span class="hljs-params">(<span class="hljs-keyword">int</span> k)</span> </span>&#123;
+    <span class="hljs-keyword">if</span> (k &gt; nbits) <span class="hljs-keyword">return</span>;
+    <span class="hljs-keyword">int</span> byteIndex = k / <span class="hljs-number">16</span>;
+    <span class="hljs-keyword">int</span> bitIndex = k % <span class="hljs-number">16</span>;
+    bytes[byteIndex] |= (<span class="hljs-number">1</span> &lt;&lt; bitIndex);
+  &#125;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">get</span><span class="hljs-params">(<span class="hljs-keyword">int</span> k)</span> </span>&#123;
+    <span class="hljs-keyword">if</span> (k &gt; nbits) <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+    <span class="hljs-keyword">int</span> byteIndex = k / <span class="hljs-number">16</span>;
+    <span class="hljs-keyword">int</span> bitIndex = k % <span class="hljs-number">16</span>;
+    <span class="hljs-keyword">return</span> (bytes[byteIndex] &amp; (<span class="hljs-number">1</span> &lt;&lt; bitIndex)) != <span class="hljs-number">0</span>;
+  &#125;
+&#125;</code></pre>
+<p>你应该可以发现，位图通过数组下标来定位数据，所以，访问效率非常高。而且，每个数字用一个二进制位来表示，在数字范围不大的情况下，所需要的内存空间非常节省。</p>
+<p>比如刚刚那个例子，如果用散列表存储这 <code>1</code> 千万的数据，数据是 <code>32</code> 位的整型数，也就是需要 <code>4</code> 个字节的存储空间，那总共至少需要 <code>40MB</code> 的存储空间。如果通过位图的话，数字范围在 <code>1</code> 到 <code>1</code> 亿之间，只需要 <code>1</code> 亿个二进制位，也就是 <code>12MB</code> 左右的存储空间就够了。</p>
+<p>关于位图，是不是挺简单的？不过这里有个假设，就是数字所在的范围不是很大。如果数字的范围很大，比如刚刚那个问题，数字范围不是 <code>1</code> 到 <code>1</code> 亿，而是 <code>1</code> 到 <code>10</code> 亿，那位图的大小就是 <code>10</code> 亿个二进制位，也就是 <code>120MB</code> 的大小，消耗的内存空间，不降反增。</p>
+<p>这个时候，布隆过滤器就要出场了。布隆过滤器就是为了解决刚刚这个问题，对位图这种数据结构的一种改进。</p>
+<p>还是刚刚那个例子，数据个数是 <code>1</code> 千万，数据的范围是 <code>1</code> 到 <code>10</code> 亿。布隆过滤器的做法是，仍然使用一个 <code>1</code> 亿个二进制大小的位图，然后通过哈希函数，对数字进行处理，让它落在这 <code>1</code> 到 <code>1</code> 亿范围内。比如把哈希函数设计成 <code>f(x)=x%n</code>。其中，<code>x</code> 表示数字，<code>n</code> 表示位图的大小（<code>1</code> 亿），也就是，对数字跟位图的大小进行取模求余。</p>
+<p>不过，你肯定会说，哈希函数会存在冲突的问题啊，一亿零一和 <code>1</code> 两个数字，经过刚刚那个取模求余的哈希函数处理之后，最后的结果都是 <code>1</code>。这样就无法区分，位图存储的是 <code>1</code> 还是一亿零一了。</p>
+<p>为了降低这种冲突概率，当然可以设计一个复杂点、随机点的哈希函数。除此之外，还有其他方法吗？来看布隆过滤器的处理方法。既然一个哈希函数可能会存在冲突，那用多个哈希函数一块儿定位一个数据，是否能降低冲突的概率呢？下面具体解释一下，布隆过滤器是怎么做的。</p>
+<p>使用 <code>K</code> 个哈希函数，对同一个数字进行求哈希值，那会得到 <code>K</code> 个不同的哈希值，分别记作 $X_1$，$X_2$，$X_3$，…，$X_K$。把这 <code>K</code> 个数字作为位图中的下标，将对应的 BitMap[$X_1$]，BitMap[$X_2$]，BitMap[$X_3$]，…，BitMap[$X_K$] 都设置成 <code>true</code>，也就是说，用 <code>K</code> 个二进制位，来表示一个数字的存在。</p>
+<p>当要查询某个数字是否存在的时候，用同样的 <code>K</code> 个哈希函数，对这个数字求哈希值，分别得到 $Y_1$，$Y_2$，$Y_3$，…，$Y_K$。然后看这 <code>K</code> 个哈希值，对应位图中的数值是否都为 <code>true</code>，如果都是 <code>true</code>，则说明，这个数字存在，如果有其中任意一个不为 <code>true</code>，那就说明这个数字不存在。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/18/851db9c0-c190-11e9-be13-e5fb1c0c4586.png" srcset="/img/loading.gif" alt="image.png"><br>对于两个不同的数字来说，经过一个哈希函数处理之后，可能会产生相同的哈希值。但是经过 <code>K</code> 个哈希函数处理之后，<code>K</code> 个哈希值都相同的概率就非常低了。尽管采用 <code>K</code> 个哈希函数之后，两个数字哈希冲突的概率降低了，但是，这种处理方式又带来了新的问题，那就是容易误判。看下面这个例子。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/08/18/a2cdf9d0-c190-11e9-be13-e5fb1c0c4586.png" srcset="/img/loading.gif" alt="image.png"><br>布隆过滤器的误判有一个特点，那就是，它只会对存在的情况有误判。如果某个数字经过布隆过滤器判断不存在，那说明这个数字真的不存在，不会发生误判；如果某个数字经过布隆过滤器判断存在，这个时候才会有可能误判，有可能并不存在。不过，只要调整哈希函数的个数、位图大小跟要存储数字的个数之间的比例，那就可以将这种误判的概率降到非常低。</p>
+<p>尽管布隆过滤器会存在误判，但是，这并不影响它发挥大作用。很多场景对误判有一定的容忍度。比如上面要解决的爬虫判重这个问题，即便一个没有被爬取过的网页，被误判为已经被爬取，对于搜索引擎来说，也并不是什么大事情，是可以容忍的，毕竟网页太多了，搜索引擎也不可能 <code>100%</code> 都爬取到。</p>
+<p>弄懂了布隆过滤器，爬虫网页去重的问题，就很简单了。</p>
+<p>用布隆过滤器来记录已经爬取过的网页链接，假设需要判重的网页有 <code>10</code> 亿，那可以用一个 <code>10</code> 倍大小的位图来存储，也就是 <code>100</code> 亿个二进制位，换算成字节，那就是大约 <code>1.2GB</code>。之前用散列表判重，需要至少 <code>100GB</code> 的空间。相比来讲，布隆过滤器在存储空间的消耗上，降低了非常多。</p>
+<p>那再来看下，利用布隆过滤器，在执行效率方面，是否比散列表更加高效呢？</p>
+<p>布隆过滤器用多个哈希函数对同一个网页链接进行处理，<code>CPU</code> 只需要将网页链接从内存中读取一次，进行多次哈希计算，理论上讲这组操作是 <code>CPU</code> 密集型的。而在散列表的处理方式中，需要读取散列冲突拉链的多个网页链接，分别跟待判重的网页链接，进行字符串匹配。这个操作涉及很多内存数据的读取，所以是内存密集型的。但是 <code>CPU</code> 计算可是要比内存访问更快速的，所以，理论上讲，布隆过滤器的判重方式，更加快速。</p>
+<h2 id="总结引申"><a href="#总结引申" class="headerlink" title="总结引申"></a>总结引申</h2><p>关于搜索引擎爬虫网页去重问题的解决，从散列表讲到位图，再讲到布隆过滤器。布隆过滤器非常适合这种不需要 <code>100%</code> 准确的、允许存在小概率误判的大规模判重场景。除了爬虫网页去重这个例子，还有比如统计一个大型网站的每天的 <code>UV</code> 数，也就是每天有多少用户访问了网站，就可以使用布隆过滤器，对重复访问的用户，进行去重。</p>
+<p>前面讲到，布隆过滤器的误判率，主要跟哈希函数的个数、位图的大小有关。当往布隆过滤器中不停地加入数据之后，位图中 <code>true</code> 的位置就越来越少了，误判率就越来越高了。所以，对于无法事先知道要判重的数据个数的情况，需要支持自动扩容的功能。</p>
+<p>当布隆过滤器中，数据个数与位图大小的比例超过某个阈值的时候，就重新申请一个新的位图。后面来的新数据，会被放置到新的位图中。但是，如果要判断某个数据是否在布隆过滤器中已经存在，就需要查看多个位图，相应的执行效率就降低了一些。</p>
+<p>位图、布隆过滤器应用如此广泛，很多编程语言都已经实现了。比如 <code>Java</code> 中的 <code>BitSet</code> 类就是一个位图，<code>Redis</code> 也提供了 <code>BitMap</code> 位图类，<code>Google</code> 的 <code>Guava</code> 工具包提供了 <code>BloomFilter</code> 布隆过滤器的实现。如果你感兴趣，可以去研究下这些实现的源码。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ul>
+<li><p>假设有 <code>1</code> 亿个整数，数据范围是从 <code>1</code> 到 <code>10</code> 亿，如何快速并且省内存地给这 <code>1</code> 亿个数据从小到大排序？</p>
+</li>
+<li><p>还记得在哈希函数（下）讲过的利用分治思想，用散列表以及哈希函数，实现海量图库中的判重功能吗？如果允许小概率的误判，那是否可以用布隆过滤器来解决呢？你可以参照当时的估算方法，重新估算下，用布隆过滤器需要多少台机器？欢迎留言和我分享。</p>
+</li>
+</ul>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%AB%98%E7%BA%A7/">数据结构与算法(高级)</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/passages/43/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">43.概率统计</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/passages/41/">
+                        <span class="hidden-mobile">41.最短路径</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+    <div id="vcomments"></div>
+    <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+    <script type="text/javascript">
+        var oldLoadVa = window.onload;
+        window.onload = function () {
+            oldLoadVa && oldLoadVa();
+
+            new Valine({
+                el: "#vcomments",
+                app_id: "O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",
+                app_key: "5Rl3Rhl9zc8BJNvrPcncKWFy",
+                placeholder: "说点什么吧~",
+                path: window.location.pathname,
+                avatar: "retro",
+                meta: ["nick","mail","link"],
+                pageSize: "10",
+                lang: "zh-CN",
+                highlight: true,
+                recordIP: true,
+                serverURLs: "https://lean.muchen.fun",
+            });
+        };
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments
+            powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><br><div class="text-center">欢迎关注我的公众号</div>
+    </div>
+  </div>
+
+
+    
+</main>
+
+
+    <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+
+
+
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+                <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mx-3">
+                <div class="md-form mb-5">
+                    <input type="text" id="local-search-input" class="form-control validate">
+                    <label data-error="x"
+                           data-success="v"
+                           for="local-search-input">关键词</label>
+                </div>
+                <div class="list-group" id="local-search-result"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    <div>
+      <span id="timeDate">载入天数...</span>
+      <span id="times">载入时分秒...</span>
+      <script>
+        var now = new Date();
+
+        function createtime() {
+          var grt = new Date("07/12/2019 00:00:00");//此处修改你的建站时间或者网站上线时间
+          now.setTime(now.getTime() + 250);
+          days = (now - grt) / 1000 / 60 / 60 / 24;
+          dnum = Math.floor(days);
+          hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+          hnum = Math.floor(hours);
+          if (String(hnum).length == 1) {
+            hnum = "0" + hnum;
+          }
+          minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+          mnum = Math.floor(minutes);
+          if (String(mnum).length == 1) {
+            mnum = "0" + mnum;
+          }
+          seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+          snum = Math.round(seconds);
+          if (String(snum).length == 1) {
+            snum = "0" + snum;
+          }
+          document.getElementById("timeDate").innerHTML = "本站已运行&nbsp" + dnum + "&nbsp天";
+          document.getElementById("times").innerHTML = hnum + "&nbsp小时&nbsp" + mnum + "&nbsp分&nbsp" + snum + "&nbsp秒";
+        }
+
+        setInterval("createtime()", 250);
+      </script>
+    </div>
+    <p id="hitokoto">:D 获取中...</p>
+    <script>
+      fetch('https://v1.hitokoto.cn')
+              .then(response => response.json())
+              .then(data => {
+                const hitokoto = document.getElementById('hitokoto')
+                hitokoto.innerText = data.hitokoto + '--「' + data.from + '」'
+              })
+              .catch(console.error)
+    </script>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+    <script  src="/js/lazyload.js" ></script>
+
+
+
+    
+
+
+
+
+    <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+    <script  src="/js/clipboard-use.js" ></script>
+
+
+
+    <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+    
+<script src="https://static.muchen.fun/js/custom.js"></script>
+
+
+
+<!-- Plugins -->
+
+
+    
+        <!-- Baidu Analytics -->
+        <script defer>
+            var _hmt = _hmt || [];
+            (function () {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    
+
+    
+        <!-- Google Analytics -->
+        <script defer>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-144841374-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+    <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+    <script>
+        var typed = new Typed('#subtitle', {
+            strings: [
+                '  ',
+                "42.位图&nbsp;",
+            ],
+            cursorChar: "_",
+            typeSpeed: 60,
+            loop: false,
+        });
+        typed.stop();
+        $(document).ready(function () {
+            $(".typed-cursor").addClass("h2");
+            typed.start();
+        });
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+    <script>
+        anchors.options = {
+            placement: "right",
+            visible: "hover",
+            
+        };
+        var el = "h1,h2,h3,h4,h5,h6".split(",");
+        var res = [];
+        for (item of el) {
+            res.push(".markdown-body > " + item)
+        }
+        anchors.add(res.join(", "))
+    </script>
+
+
+
+    <script  src="/js/local-search.js" ></script>
+    <script>
+        var path = "/local-search.xml";
+        var inputArea = document.querySelector("#local-search-input");
+        inputArea.onclick = function () {
+            searchFunc(path, 'local-search-input', 'local-search-result');
+            this.onclick = null
+        }
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+    <script>
+        $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+            function () {
+                var element = document.createElement('a');
+                $(element).attr('data-fancybox', 'images');
+                $(element).attr('href', $(this).attr('src'));
+                $(this).wrap(element);
+            }
+        );
+    </script>
+
+
+
+
+
+    
+
+    
+        <!-- MathJax -->
+        <script>
+            MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']]
+                },
+                options: {
+                    renderActions: {
+                        findScript: [10, doc => {
+                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                                const display = !!node.type.match(/; *mode=display/);
+                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                                const text = document.createTextNode('');
+                                node.parentNode.replaceChild(text, node);
+                                math.start = {node: text, delim: '', n: 0};
+                                math.end = {node: text, delim: '', n: 0};
+                                doc.math.push(math);
+                            });
+                        }, '', false],
+                        insertedScript: [200, () => {
+                            document.querySelectorAll('mjx-container').forEach(node => {
+                                let target = node.parentNode;
+                                if (target.nodeName.toLowerCase() === 'li') {
+                                    target.parentNode.classList.add('has-jax');
+                                }
+                            });
+                        }, '', false]
+                    }
+                }
+            };
+        </script>
+
+        <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+    
+
+
+
+    
+    
+        <script>
+            !function (e, t, a) {
+                function r() {
+                    for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+                    requestAnimationFrame(r)
+                }
+
+                function n() {
+                    var t = "function" == typeof e.onclick && e.onclick;
+                    e.onclick = function (e) {
+                        t && t(), o(e)
+                    }
+                }
+
+                function o(e) {
+                    var a = t.createElement("div");
+                    a.className = "heart", s.push({
+                        el: a,
+                        x: e.clientX - 5,
+                        y: e.clientY - 5,
+                        scale: 1,
+                        alpha: 1,
+                        color: c()
+                    }), t.body.appendChild(a)
+                }
+
+                function i(e) {
+                    var a = t.createElement("style");
+                    a.type = "text/css";
+                    try {
+                        a.appendChild(t.createTextNode(e))
+                    } catch (t) {
+                        a.styleSheet.cssText = e
+                    }
+                    t.getElementsByTagName("head")[0].appendChild(a)
+                }
+
+                function c() {
+                    return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+                }
+
+                var s = [];
+                e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+                    setTimeout(e, 1e3 / 60)
+                }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+            }(window, document);
+        </script>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

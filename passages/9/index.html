@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png">
+    <link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <meta name="theme-color" content="#2f4154">
+    <meta name="description" content="沐晨的个人博客,技术博客">
+    <meta name="author" content="Li Duo">
+    <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
+    <title>9.排序（下） - MuChen&#39;s Blog</title>
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+    
+<link rel="stylesheet" href="https://static.muchen.fun/css/custom.css?t=0.1423425.css">
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+<script>
+    var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+    // 依次判断 系统暗黑模式 指定时间 缓存 dark
+    if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+        if (!(isNight && localStorage.getItem('noDark') === '1')) {
+            document.body.classList.add('dark');
+        }
+    }
+    document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
+</script>
+<header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+    <div class="container">
+        <a class="navbar-brand"
+           href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a>
+
+        <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="animated-icon"><span></span><span></span><span></span></div>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto text-center">
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/archives/">
+                            <i class="iconfont icon-archive-fill"></i>
+                            归档</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/categories/">
+                            <i class="iconfont icon-category-fill"></i>
+                            分类</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tags/">
+                            <i class="iconfont icon-tags-fill"></i>
+                            标签</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/messageBoard/">
+                            <i class="iconfont icon-speakernotes"></i>
+                            留言</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about/">
+                            <i class="iconfont icon-user-fill"></i>
+                            关于</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/links/">
+                            <i class="iconfont icon-link-fill"></i>
+                            友链</a>
+                    </li>
+                
+                
+                    <li class="nav-item" id="search-btn">
+                        <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                                    class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+                    </li>
+                
+                <li class="nav-item">
+                    <a id="dark" class="nav-link" onclick="switchDarkMode()">
+                        <i class="iconfont icon-sun"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/images/07.jpg') no-repeat center center;
+                 background-size: cover;">
+        <div class="full-bg-img">
+            <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+                <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+                
+            </span>
+
+                    
+                        
+                            <div class="mt-3 post-meta">
+                                <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                                <time datetime="2019-07-17 11:35">
+                                    2019年7月17日 中午
+                                </time>
+                            </div>
+                        
+
+                        <div class="mt-1">
+                            
+                                
+                                <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    6.4k 字
+                  </span>
+                            
+
+                            
+                                
+                                <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                                    
+                                    
+                                    96
+                                     分钟
+                  </span>
+                            
+
+                            
+                                <!-- 不蒜子统计文章PV -->
+                                
+                                <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
+                    <i class="iconfont icon-eye" aria-hidden="true"></i>
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>
+                            
+                        </div>
+                    
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    
+        
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：10 个月前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <!-- more -->
+<p>归并排序和快速排序都用到了分治思想，非常巧妙。我们可以借鉴这个思想，来解决非排序的问题，比如：如何在 $O(n)$ 的时间复杂度内查找一个无序数组中的第 <code>K</code> 大元素？</p>
+<h2 id="归并排序-Merge-Sort-的原理"><a href="#归并排序-Merge-Sort-的原理" class="headerlink" title="归并排序(Merge Sort)的原理"></a>归并排序(Merge Sort)的原理</h2><p>归并排序的核心思想还是蛮简单的。如果要排序一个数组，先把数组从中间分成前后两部分，然后对前后两部分分别排序，再将排好序的两部分合并在一起，这样整个数组就都有序了。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/11/9c85bfb0-d43f-11e9-8ff2-7340a5031e46.png" srcset="/img/loading.gif" alt="image.png"><br>归并排序使用的就是<strong>分治思想</strong>。分治，顾名思义，就是分而治之，将一个大问题分解成小的子问题来解决。小的子问题解决了，大问题也就解决了。</p>
+<p>从刚才的描述，你有没有感觉到，分治思想跟前面讲的递归思想很像。是的，分治算法一般都是用递归来实现的。<strong>分治是一种解决问题的处理思想，递归是一种编程技巧</strong>，这两者并不冲突。</p>
+<p>前面通过举例对归并有了一个感性的认识，归并排序用的是分治思想，可以用递归来实现。现在就来看看如何用递归代码来实现归并排序。</p>
+<p>递归代码的编写技巧你还记得吗？写递归代码的技巧就是，分析得出递推公式，然后找到终止条件，最后将递推公式翻译成递归代码。所以，要想写出归并排序的代码，先写出归并排序的递推公式。</p>
+<pre><code class="hljs plain">递推公式：
+merge_sort(p…r) &#x3D; merge(merge_sort(p…q), merge_sort(q+1…r))
+
+终止条件：
+p &gt;&#x3D; r 不用再继续分解</code></pre>
+<p>解释一下这个递推公式。</p>
+<p><code>merge_sort(p…r)</code> 表示，给下标从 <code>p</code> 到 <code>r</code> 之间的数组排序。将这个排序问题转化为了两个子问题，<code>merge_sort(p…q)</code> 和 <code>merge_sort(q+1…r)</code>，其中下标 <code>q</code> 等于 <code>p</code> 和 <code>r</code> 的中间位置，也就是 <code>(p+r)/2</code>。当下标从 <code>p</code> 到 <code>q</code> 和从 <code>q+1</code> 到 <code>r</code> 这两个子数组都排好序之后，再将两个有序的子数组合并在一起，这样下标从 <code>p</code> 到 <code>r</code> 之间的数据就也排好序了。</p>
+<p>有了递推公式，转化成代码就简单多了。为了阅读方便，这里只给出伪代码，你可以翻译成你熟悉的编程语言。</p>
+<pre><code class="hljs c"><span class="hljs-comment">// 归并排序算法, A 是数组，n 表示数组大小</span>
+merge_sort(A, n) &#123;
+  merge_sort_c(A, <span class="hljs-number">0</span>, n<span class="hljs-number">-1</span>)
+&#125;
+
+<span class="hljs-comment">// 递归调用函数</span>
+merge_sort_c(A, p, r) &#123;
+  <span class="hljs-comment">// 递归终止条件</span>
+  <span class="hljs-keyword">if</span> p &gt;= r  then <span class="hljs-keyword">return</span>
+
+  <span class="hljs-comment">// 取 p 到 r 之间的中间位置 q</span>
+  q = (p+r) / <span class="hljs-number">2</span>
+  <span class="hljs-comment">// 分治递归</span>
+  merge_sort_c(A, p, q)
+  merge_sort_c(A, q+<span class="hljs-number">1</span>, r)
+  <span class="hljs-comment">// 将 A[p...q] 和 A[q+1...r] 合并为 A[p...r]</span>
+  merge(A[p...r], A[p...q], A[q+<span class="hljs-number">1.</span>..r])
+&#125;</code></pre>
+
+<p>你可能已经发现了，<code>merge(A[p…r], A[p…q], A[q+1…r])</code> 这个函数的作用就是，将已经有序的 <code>A[p…q]</code> 和 <code>A[q+1…r]</code> 合并成一个有序的数组，并且放入 <code>A[p…r]</code>。那这个过程具体该如何做呢？</p>
+<p>如图所示，申请一个临时数组 <code>tmp</code>，大小与 <code>A[p…r]</code> 相同。用两个游标 <code>i</code> 和 <code>j</code>，分别指向 <code>A[p…q]</code> 和 <code>A[q+1…r]</code> 的第一个元素。比较这两个元素 <code>A[i]</code> 和 <code>A[j]</code>，如果 <code>A[i]&lt;=A[j]</code>，就把 <code>A[i]</code> 放入到临时数组 <code>tmp</code>，并且 <code>i</code> 后移一位，否则将 <code>A[j]</code> 放入到数组 <code>tmp</code>，<code>j</code> 后移一位。</p>
+<p>继续上述比较过程，直到其中一个子数组中的所有数据都放入临时数组中，再把另一个数组中的数据依次加入到临时数组的末尾，这个时候，临时数组中存储的就是两个子数组合并之后的结果了。最后再把临时数组 <code>tmp</code> 中的数据拷贝到原数组 <code>A[p…r]</code> 中。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/11/deb72ca0-d441-11e9-8ff2-7340a5031e46.png" srcset="/img/loading.gif" alt="image.png"><br>把 <code>merge()</code> 函数写成伪代码，就是下面这样：</p>
+<pre><code class="hljs c">merge(A[p...r], A[p...q], A[q+<span class="hljs-number">1.</span>..r]) &#123;
+  var i := p，j := q+<span class="hljs-number">1</span>，k := <span class="hljs-number">0</span> <span class="hljs-comment">// 初始化变量 i, j, k</span>
+  var tmp := <span class="hljs-keyword">new</span> <span class="hljs-built_in">array</span>[<span class="hljs-number">0.</span>..r-p] <span class="hljs-comment">// 申请一个大小跟 A[p...r] 一样的临时数组</span>
+  <span class="hljs-keyword">while</span> i&lt;=q AND j&lt;=r <span class="hljs-keyword">do</span> &#123;
+    <span class="hljs-keyword">if</span> A[i] &lt;= A[j] &#123;
+      tmp[k++] = A[i++] <span class="hljs-comment">// i++ 等于 i:=i+1</span>
+    &#125; <span class="hljs-keyword">else</span> &#123;
+      tmp[k++] = A[j++]
+    &#125;
+  &#125;
+  
+  <span class="hljs-comment">// 判断哪个子数组中有剩余的数据</span>
+  var start := i，end := q
+  <span class="hljs-keyword">if</span> j&lt;=r then start := j, end:=r
+  
+  <span class="hljs-comment">// 将剩余的数据拷贝到临时数组 tmp</span>
+  <span class="hljs-keyword">while</span> start &lt;= end <span class="hljs-keyword">do</span> &#123;
+    tmp[k++] = A[start++]
+  &#125;
+  
+  <span class="hljs-comment">// 将 tmp 中的数组拷贝回 A[p...r]</span>
+  <span class="hljs-keyword">for</span> i:=<span class="hljs-number">0</span> to r-p <span class="hljs-keyword">do</span> &#123;
+    A[p+i] = tmp[i]
+  &#125;
+&#125;</code></pre>
+<p>还记得利用哨兵简化编程的处理技巧吗？<code>merge()</code> 合并函数如果借助哨兵，代码就会简洁很多，这个问题留你可以思考一下。</p>
+<h2 id="归并排序的性能分析"><a href="#归并排序的性能分析" class="headerlink" title="归并排序的性能分析"></a>归并排序的性能分析</h2><p>接下来，来看归并排序的三个问题。</p>
+<p><strong>第一，归并排序是稳定的排序算法吗？</strong></p>
+<p>结合前面那张图和归并排序的伪代码，你应该能发现，归并排序稳不稳定关键要看 <code>merge()</code> 函数，也就是两个有序子数组合并成一个有序数组的那部分代码。</p>
+<p>在合并的过程中，如果 <code>A[p…q]</code> 和 <code>A[q+1…r]</code> 之间有值相同的元素，那可以像伪代码中那样，先把 <code>A[p…q]</code> 中的元素放入 <code>tmp</code> 数组。这样就保证了值相同的元素，在合并前后的先后顺序不变。所以，归并排序是一个稳定的排序算法。</p>
+<p><strong>第二，归并排序的时间复杂度是多少？</strong></p>
+<p>归并排序涉及递归，时间复杂度的分析稍微有点复杂。正好借此机会来学习一下，如何分析递归代码的时间复杂度。</p>
+<p>在递归那一节讲过，递归的适用场景是，一个问题 <code>a</code> 可以分解为多个子问题 <code>b</code>、<code>c</code>，那求解问题 <code>a</code> 就可以分解为求解问题 <code>b</code>、<code>c</code>。问题 <code>b</code>、<code>c</code> 解决之后，再把 <code>b</code>、<code>c</code> 的结果合并成 <code>a</code> 的结果。</p>
+<p>如果定义求解问题 <code>a</code> 的时间是 $T(a)$，求解问题 <code>b</code>、<code>c</code> 的时间分别是 $T(b)$ 和 $T(c)$，那就可以得到这样的递推关系式：</p>
+<pre><code class="hljs plain">T(a) &#x3D; T(b) + T(c) + K</code></pre>
+<p>其中 <code>K</code> 等于将两个子问题 <code>b</code>、<code>c</code> 的结果合并成问题 <code>a</code> 的结果所消耗的时间。</p>
+<p>从刚刚的分析，可以得到一个重要的结论：<strong>不仅递归求解的问题可以写成递推公式，递归代码的时间复杂度也可以写成递推公式。</strong></p>
+<p>套用这个公式，来分析一下归并排序的时间复杂度。</p>
+<p>假设对 <code>n</code> 个元素进行归并排序需要的时间是 $T(n)$，那分解成两个子数组排序的时间都是 $T(\frac n 2)$。<code>merge()</code> 函数合并两个有序子数组的时间复杂度是 $O(n)$。所以，套用前面的公式，归并排序的时间复杂度的计算公式就是：</p>
+<pre><code class="hljs plain">T(1) &#x3D; C；   n&#x3D;1 时，只需要常量级的执行时间，所以表示为 C。
+T(n) &#x3D; 2*T(n&#x2F;2) + n； n&gt;1</code></pre>
+<p>通过这个公式，如何来求解 $T(n)$ 呢？还不够直观？那再进一步分解一下计算过程。</p>
+<pre><code class="hljs plain">T(n) &#x3D; 2*T(n&#x2F;2) + n
+     &#x3D; 2*(2*T(n&#x2F;4) + n&#x2F;2) + n &#x3D; 4*T(n&#x2F;4) + 2*n
+     &#x3D; 4*(2*T(n&#x2F;8) + n&#x2F;4) + 2*n &#x3D; 8*T(n&#x2F;8) + 3*n
+     &#x3D; 8*(2*T(n&#x2F;16) + n&#x2F;8) + 3*n &#x3D; 16*T(n&#x2F;16) + 4*n
+     ......
+     &#x3D; 2^k * T(n&#x2F;2^k) + k * n
+     ......</code></pre>
+<p>通过这样一步一步分解推导，可以得到 $T(n) = 2^kT(\frac n {2^k}) + kn$。当 $T(\frac n {2^k})=T(1)$ 时，也就是 $\frac n {2^k}=1$，可以得到 $k=log_2n$ 。将 <code>k</code> 值代入上面的公式，得到 $T(n)=Cn+nlog_2n$ 。如果用大 $O$ 标记法来表示的话，$T(n)$ 就等于 $O(nlogn)$。所以归并排序的时间复杂度是 $O(nlogn)$。</p>
+<p>从上面的原理分析和伪代码可以看出，归并排序的执行效率与要排序的原始数组的有序程度无关，所以其时间复杂度是非常稳定的，不管是最好情况、最坏情况，还是平均情况，时间复杂度都是 $O(nlogn)$。</p>
+<p><strong>第三，归并排序的空间复杂度是多少？</strong></p>
+<p>归并排序的时间复杂度任何情况下都是 $O(nlogn)$，看起来非常优秀。（待会儿你会发现，即便是快速排序，最坏情况下，时间复杂度也是 $O(n^2)$。）但是，归并排序并没有像快排那样，应用广泛，这是为什么呢？因为它有一个致命的“弱点”，那就是归并排序不是原地排序算法。</p>
+<p>这是因为归并排序的合并函数，在合并两个有序数组为一个有序数组时，需要借助额外的存储空间。这一点你应该很容易理解。那现在问你，归并排序的空间复杂度到底是多少呢？是 $O(n)$，还是 $O(nlogn)$，应该如何分析呢？</p>
+<p>如果继续按照分析递归时间复杂度的方法，通过递推公式来求解，那整个归并过程需要的空间复杂度就是 $O(nlogn)$。不过，类似分析时间复杂度那样来分析空间复杂度，这个思路对吗？</p>
+<p>实际上，递归代码的空间复杂度并不能像时间复杂度那样累加。刚刚忘记了最重要的一点，那就是，尽管每次合并操作都需要申请额外的内存空间，但在合并完成之后，临时开辟的内存空间就被释放掉了。在任意时刻，<code>CPU</code> 只会有一个函数在执行，也就只会有一个临时的内存空间在使用。临时内存空间最大也不会超过 <code>n</code> 个数据的大小，所以空间复杂度是 $O(n)$。</p>
+<h2 id="快速排序（Quicksort）的原理"><a href="#快速排序（Quicksort）的原理" class="headerlink" title="快速排序（Quicksort）的原理"></a>快速排序（Quicksort）的原理</h2><p>再来看快速排序算法，习惯性把它简称为“快排”。快排利用的也是分治思想。乍看起来，它有点像归并排序，但是思路其实完全不一样。待会儿会讲两者的区别。现在，先来看下快排的核心思想。</p>
+<p>快排的思想是这样的：如果要排序数组中下标从 <code>p</code> 到 <code>r</code> 之间的一组数据，选择 <code>p</code> 到 <code>r</code> 之间的任意一个数据作为 <code>pivot</code>（分区点）。</p>
+<p>遍历 <code>p</code> 到 <code>r</code> 之间的数据，将小于 <code>pivot</code> 的放到左边，将大于 <code>pivot</code> 的放到右边，将 <code>pivot</code> 放到中间。经过这一步骤之后，数组 <code>p</code> 到 <code>r</code> 之间的数据就被分成了三个部分，前面 <code>p</code> 到 <code>q-1</code> 之间都是小于 <code>pivot</code> 的，中间是 <code>pivot</code>，后面的 <code>q+1</code> 到 <code>r</code> 之间是大于 <code>pivot</code> 的。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/11/cc2317a0-d443-11e9-8ff2-7340a5031e46.png" srcset="/img/loading.gif" alt="image.png"><br>根据分治、递归的处理思想，可以用递归排序下标从 <code>p</code> 到 <code>q-1</code> 之间的数据和下标从 <code>q+1</code> 到 <code>r</code> 之间的数据，直到区间缩小为 <code>1</code>，就说明所有的数据都有序了。</p>
+<p>如果用递推公式来将上面的过程写出来的话，就是这样：</p>
+<pre><code class="hljs plain">递推公式：
+quick_sort(p…r) &#x3D; quick_sort(p…q-1) + quick_sort(q+1, r)
+
+终止条件：
+p &gt;&#x3D; r</code></pre>
+<p>将递推公式转化成递归代码。跟归并排序一样，还是用伪代码来实现，你可以翻译成你熟悉的任何语言。</p>
+<pre><code class="hljs c"><span class="hljs-comment">// 快速排序，A 是数组，n 表示数组的大小</span>
+quick_sort(A, n) &#123;
+  quick_sort_c(A, <span class="hljs-number">0</span>, n<span class="hljs-number">-1</span>)
+&#125;
+<span class="hljs-comment">// 快速排序递归函数，p,r 为下标</span>
+quick_sort_c(A, p, r) &#123;
+  <span class="hljs-keyword">if</span> p &gt;= r then <span class="hljs-keyword">return</span>
+  
+  q = partition(A, p, r) <span class="hljs-comment">// 获取分区点</span>
+  quick_sort_c(A, p, q<span class="hljs-number">-1</span>)
+  quick_sort_c(A, q+<span class="hljs-number">1</span>, r)
+&#125;</code></pre>
+<p>归并排序中有一个 <code>merge()</code> 合并函数，这里有一个 <code>partition()</code> 分区函数。<code>partition()</code> 分区函数实际上前面已经讲过了，就是随机选择一个元素作为 <code>pivot</code>（一般情况下，可以选择 <code>p</code> 到 <code>r</code> 区间的最后一个元素），然后对 <code>A[p…r]</code> 分区，函数返回 <code>pivot</code> 的下标。</p>
+<p>如果不考虑空间消耗的话，<code>partition()</code> 分区函数可以写得非常简单。申请两个临时数组 <code>X</code> 和 <code>Y</code>，遍历 <code>A[p…r]</code>，将小于 <code>pivot</code> 的元素都拷贝到临时数组 <code>X</code>，将大于 <code>pivot</code> 的元素都拷贝到临时数组 <code>Y</code>，最后再将数组 <code>X</code> 和数组 <code>Y</code> 中数据顺序拷贝到 <code>A[p…r]</code>。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/11/392791f0-d444-11e9-8ff2-7340a5031e46.png" srcset="/img/loading.gif" alt="image.png"><br>但是，如果按照这种思路实现的话，<code>partition()</code> 函数就需要很多额外的内存空间，所以快排就不是原地排序算法了。如果希望快排是原地排序算法，那它的空间复杂度得是 $O(1)$，那 <code>partition()</code> 分区函数就不能占用太多额外的内存空间，就需要在 <code>A[p…r]</code> 的原地完成分区操作。</p>
+<p>原地分区函数的实现思路非常巧妙，写成了伪代码，一起来看一下。</p>
+<pre><code class="hljs c">partition(A, p, r) &#123;
+  pivot := A[r]
+  i := p
+  <span class="hljs-keyword">for</span> j := p to r<span class="hljs-number">-1</span> <span class="hljs-keyword">do</span> &#123;
+    <span class="hljs-keyword">if</span> A[j] &lt; pivot &#123;
+      swap A[i] with A[j]
+      i := i+<span class="hljs-number">1</span>
+    &#125;
+  &#125;
+  swap A[i] with A[r]
+  <span class="hljs-keyword">return</span> i</code></pre>
+<p>这里的处理有点类似选择排序。通过游标 <code>i</code> 把 <code>A[p…r-1]</code> 分成两部分。<code>A[p…i-1]</code> 的元素都是小于 <code>pivot</code> 的，暂且叫它“已处理区间”，<code>A[i…r-1]</code> 是“未处理区间”。每次都从未处理的区间 <code>A[i…r-1]</code> 中取一个元素 <code>A[j]</code>，与 <code>pivot</code> 对比，如果小于 <code>pivot</code>，则将其加入到已处理区间的尾部，也就是 <code>A[i]</code> 的位置。</p>
+<p>数组的插入操作还记得吗？在数组某个位置插入元素，需要搬移数据，非常耗时。当时也讲了一种处理技巧，就是交换，在 $O(1)$ 的时间复杂度内完成插入操作。这里也借助这个思想，只需要将 <code>A[i]</code> 与 <code>A[j]</code> 交换，就可以在 $O(1)$ 时间复杂度内将 <code>A[j]</code> 放到下标为 <code>i</code> 的位置。</p>
+<p>文字不如图直观，所以下面有一张图来展示分区的整个过程。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/11/c4a8c410-d444-11e9-8ff2-7340a5031e46.png" srcset="/img/loading.gif" alt="image.png"><br>因为分区的过程涉及交换操作，如果数组中有两个相同的元素，比如序列 <code>6，8，7，6，3，5，9，4</code>，在经过第一次分区操作之后，两个 <code>6</code> 的相对先后顺序就会改变。所以，快速排序并不是一个稳定的排序算法。</p>
+<p>到此，快速排序的原理应该也掌握了。现在，再来看另外一个问题：快排和归并用的都是分治思想，递推公式和递归代码也非常相似，那它们的区别在哪里呢？<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/11/e0bf5150-d444-11e9-8ff2-7340a5031e46.png" srcset="/img/loading.gif" alt="image.png"><br>可以发现，归并排序的处理过程是<strong>由下到上</strong>的，先处理子问题，然后再合并。而快排正好相反，它的处理过程是<strong>由上到下</strong>的，先分区，然后再处理子问题。归并排序虽然是稳定的、时间复杂度为 $O(nlogn)$ 的排序算法，但是它是非原地排序算法。前面讲过，归并之所以是非原地排序算法，主要原因是合并函数无法在原地执行。快速排序通过设计巧妙的原地分区函数，可以实现原地排序，解决了归并排序占用太多内存的问题。</p>
+<h2 id="快速排序的性能分析"><a href="#快速排序的性能分析" class="headerlink" title="快速排序的性能分析"></a>快速排序的性能分析</h2><p>现在来分析一下快速排序的性能。在讲解快排的实现原理的时候，已经分析了稳定性和空间复杂度。快排是一种原地、不稳定的排序算法。现在，集中精力来看快排的时间复杂度。</p>
+<p>快排也是用递归来实现的。对于递归代码的时间复杂度，前面总结的公式，这里也还是适用的。如果每次分区操作，都能正好把数组分成大小接近相等的两个小区间，那快排的时间复杂度递推求解公式跟归并是相同的。所以，快排的时间复杂度也是 $O(nlogn)$。</p>
+<pre><code class="hljs plain">T(1) &#x3D; C；   n&#x3D;1 时，只需要常量级的执行时间，所以表示为 C。
+T(n) &#x3D; 2*T(n&#x2F;2) + n； n&gt;1</code></pre>
+<p>但是，公式成立的前提是每次分区操作，选择的 <code>pivot</code> 都很合适，正好能将大区间对等地一分为二。但实际上这种情况是很难实现的。</p>
+<p>举一个比较极端的例子。如果数组中的数据原来已经是有序的了，比如 <code>1，3，5，6，8</code>。如果每次选择最后一个元素作为 <code>pivot</code>，那每次分区得到的两个区间都是不均等的。需要进行大约 <code>n</code> 次分区操作，才能完成快排的整个过程。每次分区平均要扫描大约 <code>n/2</code> 个元素，这种情况下，快排的时间复杂度就从 $O(nlogn)$ 退化成了 $O(n^2)$。</p>
+<p>刚刚讲了两个极端情况下的时间复杂度，一个是分区极其均衡，一个是分区极其不均衡。它们分别对应快排的最好情况时间复杂度和最坏情况时间复杂度。那快排的平均情况时间复杂度是多少呢？</p>
+<p>假设每次分区操作都将区间分成大小为 <code>9:1</code> 的两个小区间。继续套用递归时间复杂度的递推公式，就会变成这样：</p>
+<pre><code class="hljs plain">T(1) &#x3D; C；   n&#x3D;1 时，只需要常量级的执行时间，所以表示为 C。
+
+T(n) &#x3D; T(n&#x2F;10) + T(9*n&#x2F;10) + n； n&gt;1</code></pre>
+<p>这个公式的递推求解的过程非常复杂，虽然可以求解，但不推荐用这种方法。实际上，递归的时间复杂度的求解方法除了递推公式之外，还有递归树，这里暂时不说。这里直接给你结论：$T(n)$ 在大部分情况下的时间复杂度都可以做到 $O(nlogn)$，只有在极端情况下，才会退化到 $O(n^2)$。而且，也有很多方法将这个概率降到很低，如何来做？后面再讲。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>归并排序和快速排序是两种稍微复杂的排序算法，它们用的都是分治的思想，代码都通过递归来实现，过程非常相似。理解归并排序的重点是理解递推公式和 <code>merge()</code> 合并函数。同理，理解快排的重点也是理解递推公式，还有 <code>partition()</code> 分区函数。</p>
+<p>归并排序算法是一种在任何情况下时间复杂度都比较稳定的排序算法，这也使它存在致命的缺点，即归并排序不是原地排序算法，空间复杂度比较高，是 $O(n)$。正因为此，它也没有快排应用广泛。</p>
+<p>快速排序算法虽然最坏情况下的时间复杂度是 $O(n^2)$，但是平均情况下时间复杂度都是 $O(nlogn)$。不仅如此，快速排序算法时间复杂度退化到 $O(n^2)$ 的概率非常小，可以通过合理地选择 <code>pivot</code> 来避免这种情况。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ul>
+<li><p><strong>$O(n)$时间复杂度内求无序数组中第<code>K</code>大元素?</strong>比如<code>4，2，5，12，3</code>这样一组数据，第<code>3</code>大元素是<code>4</code>。</p>
+<blockquote>
+<p>选择数组区间 <code>A[0…n-1]</code> 的最后一个元素 <code>A[n-1]</code> 作为 <code>pivot</code>，对数组 <code>A[0…n-1]</code> 原地分区，这样数组就分成了三部分，<code>A[0…p-1]</code>、<code>A[p]</code>、<code>A[p+1…n-1]</code>。</p>
+<p>如果 <code>p+1=K</code>，那 <code>A[p]</code> 就是要求解的元素；如果 <code>K&gt;p+1</code>, 说明第 <code>K</code> 大元素出现在 <code>A[p+1…n-1]</code> 区间，再按照上面的思路递归地在 <code>A[p+1…n-1]</code> 这个区间内查找。同理，如果 <code>K&lt;p+1</code>，那就在 <code>A[0…p-1]</code> 区间查找。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/11/e404a660-d446-11e9-8ff2-7340a5031e46.png" srcset="/img/loading.gif" alt="image.png"><br>再来看，为什么上述解决思路的时间复杂度是 $O(n)$？</p>
+<p>第一次分区查找，需要对大小为 <code>n</code> 的数组执行分区操作，需要遍历 <code>n</code> 个元素。第二次分区查找，只需要对大小为 <code>n/2</code> 的数组执行分区操作，需要遍历 <code>n/2</code> 个元素。依次类推，分区遍历元素的个数分别为、<code>n/2</code>、<code>n/4</code>、<code>n/8</code>、<code>n/16</code>.……直到区间缩小为 <code>1</code>。</p>
+<p>如果把每次分区遍历的元素个数加起来，就是：<code>n+n/2+n/4+n/8+…+1</code>。这是一个等比数列求和，最后的和等于 <code>2n-1</code>。所以，上述解决思路的时间复杂度就为 $O(n)$。</p>
+<p>你可能会说，有个很笨的办法，每次取数组中的最小值，将其移动到数组的最前面，然后在剩下的数组中继续找最小值，以此类推，执行 <code>K</code> 次，找到的数据不就是第 <code>K</code> 大元素了吗？</p>
+<p>不过，时间复杂度就并不是 $O(n)$ 了，而是 $O(K * n)$。你可能会说，时间复杂度前面的系数不是可以忽略吗？$O(K * n)$ 不就等于 $O(n)$ 吗？</p>
+<p>这个可不能这么简单地划等号。当 <code>K</code> 是比较小的常量时，比如 <code>1</code>、<code>2</code>，那最好时间复杂度确实是 $O(n)$；但当 <code>K</code> 等于 <code>n/2</code> 或者 <code>n</code> 时，这种最坏情况下的时间复杂度就是 $O(n^2)$ 了。</p>
+</blockquote>
+</li>
+<li><p>有<code>10</code>个访问日志文件，每个日志文件大小约为<code>300MB</code>，每个文件里的日志都是按照时间戳从小到大排序的。现在需要将这<code>10</code>个较小的日志文件合并为<code>1</code>个日志文件，合并之后的日志仍然按照时间戳从小到大排列。如果处理上述任务的机器内存只有<code>1GB</code>，你有什么好的解决思路能快速地将这<code>10</code>个日志文件合并？</p>
+<blockquote>
+<p>  每次从各个文件中取一条数据，在内存中根据数据时间戳构建一个最小堆，然后每次把最小值给写入新文件，同时将最小值来自的那个文件再出来一个数据，加入到最小堆中。<br>  这个空间复杂度为常数，但没能很好利用<code>1G</code>内存，而且磁盘单个读取比较慢，所以考虑每次读取一批数据，没了再从磁盘中取，时间复杂度还是一样$O(n)$。</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="归并排序-Java-实现代码："><a href="#归并排序-Java-实现代码：" class="headerlink" title="归并排序 Java 实现代码："></a>归并排序 Java 实现代码：</h2><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MergeSort</span> </span>&#123;
+
+  <span class="hljs-comment">// 归并排序算法, a是数组，n表示数组大小</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">mergeSort</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] a, <span class="hljs-keyword">int</span> n)</span> </span>&#123;
+    mergeSortInternally(a, <span class="hljs-number">0</span>, n-<span class="hljs-number">1</span>);
+  &#125;
+
+  <span class="hljs-comment">// 递归调用函数</span>
+  <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">mergeSortInternally</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] a, <span class="hljs-keyword">int</span> p, <span class="hljs-keyword">int</span> r)</span> </span>&#123;
+    <span class="hljs-comment">// 递归终止条件</span>
+    <span class="hljs-keyword">if</span> (p &gt;= r) <span class="hljs-keyword">return</span>;
+
+    <span class="hljs-comment">// 取p到r之间的中间位置q,防止（p+r）的和超过int类型最大值</span>
+    <span class="hljs-keyword">int</span> q = p + (r - p)/<span class="hljs-number">2</span>;
+    <span class="hljs-comment">// 分治递归</span>
+    mergeSortInternally(a, p, q);
+    mergeSortInternally(a, q+<span class="hljs-number">1</span>, r);
+
+    <span class="hljs-comment">// 将A[p...q]和A[q+1...r]合并为A[p...r]</span>
+    merge(a, p, q, r);
+  &#125;
+
+  <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">merge</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] a, <span class="hljs-keyword">int</span> p, <span class="hljs-keyword">int</span> q, <span class="hljs-keyword">int</span> r)</span> </span>&#123;
+    <span class="hljs-keyword">int</span> i = p;
+    <span class="hljs-keyword">int</span> j = q+<span class="hljs-number">1</span>;
+    <span class="hljs-keyword">int</span> k = <span class="hljs-number">0</span>; <span class="hljs-comment">// 初始化变量i, j, k</span>
+    <span class="hljs-keyword">int</span>[] tmp = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span>[r-p+<span class="hljs-number">1</span>]; <span class="hljs-comment">// 申请一个大小跟a[p...r]一样的临时数组</span>
+    <span class="hljs-keyword">while</span> (i&lt;=q &amp;&amp; j&lt;=r) &#123;
+      <span class="hljs-keyword">if</span> (a[i] &lt;= a[j]) &#123;
+        tmp[k++] = a[i++]; <span class="hljs-comment">// i++等于i:=i+1</span>
+      &#125; <span class="hljs-keyword">else</span> &#123;
+        tmp[k++] = a[j++];
+      &#125;
+    &#125;
+
+    <span class="hljs-comment">// 判断哪个子数组中有剩余的数据</span>
+    <span class="hljs-keyword">int</span> start = i;
+    <span class="hljs-keyword">int</span> end = q;
+    <span class="hljs-keyword">if</span> (j &lt;= r) &#123;
+      start = j;
+      end = r;
+    &#125;
+
+    <span class="hljs-comment">// 将剩余的数据拷贝到临时数组tmp</span>
+    <span class="hljs-keyword">while</span> (start &lt;= end) &#123;
+      tmp[k++] = a[start++];
+    &#125;
+
+    <span class="hljs-comment">// 将tmp中的数组拷贝回a[p...r]</span>
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt;= r-p; ++i) &#123;
+      a[p+i] = tmp[i];
+    &#125;
+  &#125;
+
+  <span class="hljs-comment">/**
+   * 合并(哨兵)
+   *
+   * <span class="hljs-doctag">@param</span> arr
+   * <span class="hljs-doctag">@param</span> p
+   * <span class="hljs-doctag">@param</span> q
+   * <span class="hljs-doctag">@param</span> r
+   */</span>
+  <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">mergeBySentry</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] arr, <span class="hljs-keyword">int</span> p, <span class="hljs-keyword">int</span> q, <span class="hljs-keyword">int</span> r)</span> </span>&#123;
+    <span class="hljs-keyword">int</span>[] leftArr = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span>[q - p + <span class="hljs-number">2</span>];
+    <span class="hljs-keyword">int</span>[] rightArr = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span>[r - q + <span class="hljs-number">1</span>];
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt;= q - p; i++) &#123;
+      leftArr[i] = arr[p + i];
+    &#125;
+    <span class="hljs-comment">// 第一个数组添加哨兵（最大值）</span>
+    leftArr[q - p + <span class="hljs-number">1</span>] = Integer.MAX_VALUE;
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; r - q; i++) &#123;
+      rightArr[i] = arr[q + <span class="hljs-number">1</span> + i];
+    &#125;
+    <span class="hljs-comment">// 第二个数组添加哨兵（最大值）</span>
+    rightArr[r-q] = Integer.MAX_VALUE;
+
+    <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">int</span> k = p;
+    <span class="hljs-keyword">while</span> (k &lt;= r) &#123;
+      <span class="hljs-comment">// 当左边数组到达哨兵值时，i不再增加，直到右边数组读取完剩余值，同理右边数组也一样</span>
+      <span class="hljs-keyword">if</span> (leftArr[i] &lt;= rightArr[j]) &#123;
+        arr[k++] = leftArr[i++];
+      &#125; <span class="hljs-keyword">else</span> &#123;
+        arr[k++] = rightArr[j++];
+      &#125;
+    &#125;
+  &#125;
+&#125;</code></pre>
+<h2 id="快速排序-Java-实现代码："><a href="#快速排序-Java-实现代码：" class="headerlink" title="快速排序 Java 实现代码："></a>快速排序 Java 实现代码：</h2><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">QuickSort</span> </span>&#123;
+
+  <span class="hljs-comment">// 快速排序，a是数组，n表示数组的大小</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">quickSort</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] a, <span class="hljs-keyword">int</span> n)</span> </span>&#123;
+    quickSortInternally(a, <span class="hljs-number">0</span>, n-<span class="hljs-number">1</span>);
+  &#125;
+
+  <span class="hljs-comment">// 快速排序递归函数，p,r为下标</span>
+  <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">quickSortInternally</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] a, <span class="hljs-keyword">int</span> p, <span class="hljs-keyword">int</span> r)</span> </span>&#123;
+    <span class="hljs-keyword">if</span> (p &gt;= r) <span class="hljs-keyword">return</span>;
+
+    <span class="hljs-keyword">int</span> q = partition(a, p, r); <span class="hljs-comment">// 获取分区点</span>
+    quickSortInternally(a, p, q-<span class="hljs-number">1</span>);
+    quickSortInternally(a, q+<span class="hljs-number">1</span>, r);
+  &#125;
+
+  <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> <span class="hljs-title">partition</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] a, <span class="hljs-keyword">int</span> p, <span class="hljs-keyword">int</span> r)</span> </span>&#123;
+    <span class="hljs-keyword">int</span> pivot = a[r];
+    <span class="hljs-keyword">int</span> i = p;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j = p; j &lt; r; ++j) &#123;
+      <span class="hljs-keyword">if</span> (a[j] &lt; pivot) &#123;
+        <span class="hljs-keyword">if</span> (i == j) &#123;
+          ++i;
+        &#125; <span class="hljs-keyword">else</span> &#123;
+          <span class="hljs-keyword">int</span> tmp = a[i];
+          a[i++] = a[j];
+          a[j] = tmp;
+        &#125;
+      &#125;
+    &#125;
+
+    <span class="hljs-keyword">int</span> tmp = a[i];
+    a[i] = a[r];
+    a[r] = tmp;
+
+    System.out.println(<span class="hljs-string">"i="</span> + i);
+    <span class="hljs-keyword">return</span> i;
+  &#125;
+&#125;</code></pre>
+
+<p>欢迎留言和我分享。</p>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/">数据结构与算法(中级)</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%8E%92%E5%BA%8F/">排序</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/passages/10/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">10.线性排序</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/passages/8/">
+                        <span class="hidden-mobile">8.排序（上）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+    <div id="vcomments"></div>
+    <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+    <script type="text/javascript">
+        var oldLoadVa = window.onload;
+        window.onload = function () {
+            oldLoadVa && oldLoadVa();
+
+            new Valine({
+                el: "#vcomments",
+                app_id: "O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",
+                app_key: "5Rl3Rhl9zc8BJNvrPcncKWFy",
+                placeholder: "说点什么吧~",
+                path: window.location.pathname,
+                avatar: "retro",
+                meta: ["nick","mail","link"],
+                pageSize: "10",
+                lang: "zh-CN",
+                highlight: true,
+                recordIP: true,
+                serverURLs: "https://lean.muchen.fun",
+            });
+        };
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments
+            powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><br><div class="text-center">欢迎关注我的公众号</div>
+    </div>
+  </div>
+
+
+    
+</main>
+
+
+    <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+
+
+
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+                <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mx-3">
+                <div class="md-form mb-5">
+                    <input type="text" id="local-search-input" class="form-control validate">
+                    <label data-error="x"
+                           data-success="v"
+                           for="local-search-input">关键词</label>
+                </div>
+                <div class="list-group" id="local-search-result"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    <div>
+      <span id="timeDate">载入天数...</span>
+      <span id="times">载入时分秒...</span>
+      <script>
+        var now = new Date();
+
+        function createtime() {
+          var grt = new Date("07/12/2019 00:00:00");//此处修改你的建站时间或者网站上线时间
+          now.setTime(now.getTime() + 250);
+          days = (now - grt) / 1000 / 60 / 60 / 24;
+          dnum = Math.floor(days);
+          hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+          hnum = Math.floor(hours);
+          if (String(hnum).length == 1) {
+            hnum = "0" + hnum;
+          }
+          minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+          mnum = Math.floor(minutes);
+          if (String(mnum).length == 1) {
+            mnum = "0" + mnum;
+          }
+          seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+          snum = Math.round(seconds);
+          if (String(snum).length == 1) {
+            snum = "0" + snum;
+          }
+          document.getElementById("timeDate").innerHTML = "本站已运行&nbsp" + dnum + "&nbsp天";
+          document.getElementById("times").innerHTML = hnum + "&nbsp小时&nbsp" + mnum + "&nbsp分&nbsp" + snum + "&nbsp秒";
+        }
+
+        setInterval("createtime()", 250);
+      </script>
+    </div>
+    <p id="hitokoto">:D 获取中...</p>
+    <script>
+      fetch('https://v1.hitokoto.cn')
+              .then(response => response.json())
+              .then(data => {
+                const hitokoto = document.getElementById('hitokoto')
+                hitokoto.innerText = data.hitokoto + '--「' + data.from + '」'
+              })
+              .catch(console.error)
+    </script>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+    <script  src="/js/lazyload.js" ></script>
+
+
+
+    
+
+
+
+
+    <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+    <script  src="/js/clipboard-use.js" ></script>
+
+
+
+    <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+    
+<script src="https://static.muchen.fun/js/custom.js"></script>
+
+
+
+<!-- Plugins -->
+
+
+    
+        <!-- Baidu Analytics -->
+        <script defer>
+            var _hmt = _hmt || [];
+            (function () {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    
+
+    
+        <!-- Google Analytics -->
+        <script defer>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-144841374-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+    <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+    <script>
+        var typed = new Typed('#subtitle', {
+            strings: [
+                '  ',
+                "9.排序（下）&nbsp;",
+            ],
+            cursorChar: "_",
+            typeSpeed: 60,
+            loop: false,
+        });
+        typed.stop();
+        $(document).ready(function () {
+            $(".typed-cursor").addClass("h2");
+            typed.start();
+        });
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+    <script>
+        anchors.options = {
+            placement: "right",
+            visible: "hover",
+            
+        };
+        var el = "h1,h2,h3,h4,h5,h6".split(",");
+        var res = [];
+        for (item of el) {
+            res.push(".markdown-body > " + item)
+        }
+        anchors.add(res.join(", "))
+    </script>
+
+
+
+    <script  src="/js/local-search.js" ></script>
+    <script>
+        var path = "/local-search.xml";
+        var inputArea = document.querySelector("#local-search-input");
+        inputArea.onclick = function () {
+            searchFunc(path, 'local-search-input', 'local-search-result');
+            this.onclick = null
+        }
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+    <script>
+        $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+            function () {
+                var element = document.createElement('a');
+                $(element).attr('data-fancybox', 'images');
+                $(element).attr('href', $(this).attr('src'));
+                $(this).wrap(element);
+            }
+        );
+    </script>
+
+
+
+
+
+    
+
+    
+        <!-- MathJax -->
+        <script>
+            MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']]
+                },
+                options: {
+                    renderActions: {
+                        findScript: [10, doc => {
+                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                                const display = !!node.type.match(/; *mode=display/);
+                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                                const text = document.createTextNode('');
+                                node.parentNode.replaceChild(text, node);
+                                math.start = {node: text, delim: '', n: 0};
+                                math.end = {node: text, delim: '', n: 0};
+                                doc.math.push(math);
+                            });
+                        }, '', false],
+                        insertedScript: [200, () => {
+                            document.querySelectorAll('mjx-container').forEach(node => {
+                                let target = node.parentNode;
+                                if (target.nodeName.toLowerCase() === 'li') {
+                                    target.parentNode.classList.add('has-jax');
+                                }
+                            });
+                        }, '', false]
+                    }
+                }
+            };
+        </script>
+
+        <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+    
+
+
+
+    
+    
+        <script>
+            !function (e, t, a) {
+                function r() {
+                    for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+                    requestAnimationFrame(r)
+                }
+
+                function n() {
+                    var t = "function" == typeof e.onclick && e.onclick;
+                    e.onclick = function (e) {
+                        t && t(), o(e)
+                    }
+                }
+
+                function o(e) {
+                    var a = t.createElement("div");
+                    a.className = "heart", s.push({
+                        el: a,
+                        x: e.clientX - 5,
+                        y: e.clientY - 5,
+                        scale: 1,
+                        alpha: 1,
+                        color: c()
+                    }), t.body.appendChild(a)
+                }
+
+                function i(e) {
+                    var a = t.createElement("style");
+                    a.type = "text/css";
+                    try {
+                        a.appendChild(t.createTextNode(e))
+                    } catch (t) {
+                        a.styleSheet.cssText = e
+                    }
+                    t.getElementsByTagName("head")[0].appendChild(a)
+                }
+
+                function c() {
+                    return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+                }
+
+                var s = [];
+                e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+                    setTimeout(e, 1e3 / 60)
+                }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+            }(window, document);
+        </script>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

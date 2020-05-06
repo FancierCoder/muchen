@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png">
+    <link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <meta name="theme-color" content="#2f4154">
+    <meta name="description" content="沐晨的个人博客,技术博客">
+    <meta name="author" content="Li Duo">
+    <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
+    <title>8.排序（上） - MuChen&#39;s Blog</title>
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+    
+<link rel="stylesheet" href="https://static.muchen.fun/css/custom.css?t=0.1423425.css">
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+<script>
+    var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+    // 依次判断 系统暗黑模式 指定时间 缓存 dark
+    if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+        if (!(isNight && localStorage.getItem('noDark') === '1')) {
+            document.body.classList.add('dark');
+        }
+    }
+    document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
+</script>
+<header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+    <div class="container">
+        <a class="navbar-brand"
+           href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a>
+
+        <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="animated-icon"><span></span><span></span><span></span></div>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto text-center">
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/archives/">
+                            <i class="iconfont icon-archive-fill"></i>
+                            归档</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/categories/">
+                            <i class="iconfont icon-category-fill"></i>
+                            分类</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tags/">
+                            <i class="iconfont icon-tags-fill"></i>
+                            标签</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/messageBoard/">
+                            <i class="iconfont icon-speakernotes"></i>
+                            留言</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about/">
+                            <i class="iconfont icon-user-fill"></i>
+                            关于</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/links/">
+                            <i class="iconfont icon-link-fill"></i>
+                            友链</a>
+                    </li>
+                
+                
+                    <li class="nav-item" id="search-btn">
+                        <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                                    class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+                    </li>
+                
+                <li class="nav-item">
+                    <a id="dark" class="nav-link" onclick="switchDarkMode()">
+                        <i class="iconfont icon-sun"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/images/07.jpg') no-repeat center center;
+                 background-size: cover;">
+        <div class="full-bg-img">
+            <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+                <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+                
+            </span>
+
+                    
+                        
+                            <div class="mt-3 post-meta">
+                                <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                                <time datetime="2019-07-16 18:13">
+                                    2019年7月16日 晚上
+                                </time>
+                            </div>
+                        
+
+                        <div class="mt-1">
+                            
+                                
+                                <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    5.7k 字
+                  </span>
+                            
+
+                            
+                                
+                                <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                                    
+                                    
+                                    76
+                                     分钟
+                  </span>
+                            
+
+                            
+                                <!-- 不蒜子统计文章PV -->
+                                
+                                <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
+                    <i class="iconfont icon-eye" aria-hidden="true"></i>
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>
+                            
+                        </div>
+                    
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    
+        
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：10 个月前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <!-- more -->
+<p>排序对于任何一个程序员来说，可能都不会陌生。你学的第一个算法，可能就是排序。大部分编程语言中，也都提供了排序函数。在平常的项目中，也经常会用到排序。排序非常重要，所以会花多一点时间来详细讲一讲经典的排序算法。</p>
+<p>排序算法太多了，有很多可能连名字都没听说过，比如猴子排序、睡眠排序、面条排序等。只讲众多排序算法中的一小撮，也是最经典的、最常用的：冒泡排序、插入排序、选择排序、归并排序、快速排序、计数排序、基数排序、桶排序。</p>
+<p>带着问题去学习，是最有效的学习方法。先给出一个思考题：<font color='green'>插入排序和冒泡排序的时间复杂度相同，都是 $O(n^2)$，在实际的软件开发里，为什么更倾向于使用插入排序算法而不是冒泡排序算法呢？</font></p>
+<h2 id="如何分析一个“排序算法”？"><a href="#如何分析一个“排序算法”？" class="headerlink" title="如何分析一个“排序算法”？"></a>如何分析一个“排序算法”？</h2><p>学习排序算法，除了学习它的算法原理、代码实现之外，更重要的是要学会如何评价、分析一个排序算法。那分析一个排序算法，要从哪几个方面入手呢？</p>
+<h3 id="排序算法的执行效率"><a href="#排序算法的执行效率" class="headerlink" title="排序算法的执行效率"></a>排序算法的执行效率</h3><p>对于排序算法执行效率的分析，一般会从这几个方面来衡量：</p>
+<p><strong>1. 最好情况、最坏情况、平均情况时间复杂度</strong></p>
+<p>在分析排序算法的时间复杂度时，要分别给出最好情况、最坏情况、平均情况下的时间复杂度。除此之外，还要说出最好、最坏时间复杂度对应的要排序的原始数据是什么样的。</p>
+<p>为什么要区分这三种时间复杂度呢？第一，有些排序算法会区分，为了好对比，所以最好都做一下区分。第二，对于要排序的数据，有的接近有序，有的完全无序。有序度不同的数据，对于排序的执行时间肯定是有影响的，要知道排序算法在不同数据下的性能表现。</p>
+<p><strong>2. 时间复杂度的系数、常数 、低阶</strong></p>
+<p>时间复杂度反应的是数据规模 <code>n</code> 很大的时候的一个增长趋势，所以它表示的时候会忽略系数、常数、低阶。但是实际的软件开发中，排序的可能是 <code>10</code> 个、<code>100</code> 个、<code>1000</code> 个这样规模很小的数据，所以，在对同一阶时间复杂度的排序算法性能对比的时候，就要把系数、常数、低阶也考虑进来。</p>
+<p><strong>3. 比较次数和交换（或移动）次数</strong></p>
+<p>基于比较的排序算法的执行过程，会涉及两种操作，一种是元素比较大小，另一种是元素交换或移动。所以，如果在分析排序算法的执行效率的时候，应该把比较次数和交换（或移动）次数也考虑进去。</p>
+<h3 id="排序算法的内存消耗"><a href="#排序算法的内存消耗" class="headerlink" title="排序算法的内存消耗"></a>排序算法的内存消耗</h3><p>前面讲过，算法的内存消耗可以通过空间复杂度来衡量，排序算法也不例外。不过，针对排序算法的空间复杂度，还引入了一个新的概念，<strong>原地排序</strong>（<code>Sorted in place</code>）。原地排序算法，就是特指空间复杂度是 $O(1)$ 的排序算法。下面讲的三种排序算法，都是原地排序算法。</p>
+<h3 id="排序算法的稳定性"><a href="#排序算法的稳定性" class="headerlink" title="排序算法的稳定性"></a>排序算法的稳定性</h3><p>仅仅用执行效率和内存消耗来衡量排序算法的好坏是不够的。针对排序算法，还有一个重要的度量指标，<strong>稳定性</strong>。这个概念是说，如果待排序的序列中存在值相等的元素，经过排序之后，相等元素之间原有的先后顺序不变。</p>
+<p>通过一个例子来解释一下。比如有一组数据 <code>2，9，3，4，8，3</code>，按照大小排序之后就是 <code>2，3，3，4，8，9</code>。</p>
+<p>这组数据里有两个 <code>3</code>。经过某种排序算法排序之后，如果两个 <code>3</code> 的前后顺序没有改变，那就把这种排序算法叫作<strong>稳定的排序算法</strong>；如果前后顺序发生变化，那对应的排序算法就叫作<strong>不稳定的排序算法</strong>。</p>
+<p>你可能要问了，两个 <code>3</code> 哪个在前，哪个在后有什么关系啊，稳不稳定又有什么关系呢？为什么要考察排序算法的稳定性呢？</p>
+<p>很多数据结构和算法课程，在讲排序的时候，都是用整数来举例，但在真正软件开发中，要排序的往往不是单纯的整数，而是一组对象，需要按照对象的某个 <code>key</code> 来排序。</p>
+<p>比如说，现在要给电商交易系统中的“订单”排序。订单有两个属性，一个是下单时间，另一个是订单金额。如果现在有 <code>10</code> 万条订单数据，希望按照金额从小到大对订单数据排序。对于金额相同的订单，希望按照下单时间从早到晚有序。对于这样一个排序需求，怎么来做呢？</p>
+<p>最先想到的方法是：先按照金额对订单数据进行排序，然后，再遍历排序之后的订单数据，对于每个金额相同的小区间再按照下单时间排序。这种排序思路理解起来不难，但是实现起来会很复杂。</p>
+<p>借助稳定排序算法，这个问题可以非常简洁地解决。解决思路是这样的：先按照下单时间给订单排序，注意是按照下单时间，不是金额。排序完成之后，用稳定排序算法，按照订单金额重新排序。两遍排序之后，得到的订单数据就是按照金额从小到大排序，金额相同的订单按照下单时间从早到晚排序的。为什么呢？</p>
+<p><strong>稳定排序算法可以保持金额相同的两个对象，在排序之后的前后顺序不变</strong>。第一次排序之后，所有的订单按照下单时间从早到晚有序了。在第二次排序中，用的是稳定的排序算法，所以经过第二次排序之后，相同金额的订单仍然保持下单时间从早到晚有序。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/a7152310-d39c-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"></p>
+<h2 id="冒泡排序（Bubble-Sort）"><a href="#冒泡排序（Bubble-Sort）" class="headerlink" title="冒泡排序（Bubble Sort）"></a>冒泡排序（Bubble Sort）</h2><p>冒泡排序只会操作相邻的两个数据。每次冒泡操作都会对相邻的两个元素进行比较，看是否满足大小关系要求。如果不满足就让它俩互换。一次冒泡会让至少一个元素移动到它应该在的位置，重复 <code>n</code> 次，就完成了 <code>n</code> 个数据的排序工作。</p>
+<p>用一个例子，看下冒泡排序的整个过程。要对一组数据 <code>4，5，6，3，2，1</code>，从小到到大进行排序。第一次冒泡操作的详细过程就是这样：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/f4e52e50-d39c-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>可以看出，经过一次冒泡操作之后，<code>6</code> 这个元素已经存储在正确的位置上。要想完成所有数据的排序，只要进行 <code>6</code> 次这样的冒泡操作就行了。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/040d2f90-d39d-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>实际上，刚讲的冒泡过程还可以优化。当某次冒泡操作已经没有数据交换时，说明已经达到完全有序，不用再继续执行后续的冒泡操作。这里还有另外一个例子，这里面给 <code>6</code> 个元素排序，只需要 <code>4</code> 次冒泡操作就可以了。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/155e0440-d39d-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>冒泡排序算法的原理比较容易理解，具体的代码贴到下面，你可以结合着代码来看前面讲的原理。</p>
+<pre><code class="hljs java"><span class="hljs-comment">// 冒泡排序，a 表示数组，n 表示数组大小</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">bubbleSort</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] a, <span class="hljs-keyword">int</span> n)</span> </span>&#123;
+  <span class="hljs-keyword">if</span> (n &lt;= <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span>;
+ 
+ <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) &#123;
+    <span class="hljs-comment">// 提前退出冒泡循环的标志位</span>
+    <span class="hljs-keyword">boolean</span> flag = <span class="hljs-keyword">false</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; n - i - <span class="hljs-number">1</span>; ++j) &#123;
+      <span class="hljs-keyword">if</span> (a[j] &gt; a[j+<span class="hljs-number">1</span>]) &#123; <span class="hljs-comment">// 交换</span>
+        <span class="hljs-keyword">int</span> tmp = a[j];
+        a[j] = a[j+<span class="hljs-number">1</span>];
+        a[j+<span class="hljs-number">1</span>] = tmp;
+        flag = <span class="hljs-keyword">true</span>;  <span class="hljs-comment">// 表示有数据交换      </span>
+      &#125;
+    &#125;
+    <span class="hljs-keyword">if</span> (!flag) <span class="hljs-keyword">break</span>;  <span class="hljs-comment">// 没有数据交换，提前退出</span>
+  &#125;
+&#125;</code></pre>
+<p>现在，结合刚才分析排序算法的三个方面，有三个问题。</p>
+<p><strong>第一，冒泡排序是原地排序算法吗？</strong></p>
+<p>冒泡的过程只涉及相邻数据的交换操作，只需要常量级的临时空间，所以它的空间复杂度为 $O(1)$，是一个原地排序算法。</p>
+<p><strong>第二，冒泡排序是稳定的排序算法吗？</strong></p>
+<p>在冒泡排序中，只有交换才可以改变两个元素的前后顺序。为了保证冒泡排序算法的稳定性，当有相邻的两个元素大小相等的时候，不做交换，相同大小的数据在排序前后不会改变顺序，所以冒泡排序是稳定的排序算法。</p>
+<p><strong>第三，冒泡排序的时间复杂度是多少？</strong></p>
+<p>最好情况下，要排序的数据已经是有序的了，只需要进行一次冒泡操作，就可以结束了，所以最好情况时间复杂度是 $O(n)$。而最坏的情况是，要排序的数据刚好是倒序排列的，需要进行 <code>n</code> 次冒泡操作，所以最坏情况时间复杂度为 $O(n^2)$。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/6e8fe100-d39d-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>最好、最坏情况下的时间复杂度很容易分析，那平均情况下的时间复杂是多少呢？前面讲过，平均时间复杂度就是加权平均期望时间复杂度，分析的时候要结合概率论的知识。</p>
+<p>对于包含 <code>n</code> 个数据的数组，这 <code>n</code> 个数据就有 <code>n!</code> 种排列方式。不同的排列方式，冒泡排序执行的时间肯定是不同的。比如前面举的那两个例子，其中一个要进行 <code>6</code> 次冒泡，而另一个只需要 <code>4</code> 次。如果用概率论方法定量分析平均时间复杂度，涉及的数学推理和计算就会很复杂。这里还有一种思路，通过“<strong>有序度</strong>”和“<strong>逆序度</strong>”这两个概念来进行分析。</p>
+<p><strong>有序度</strong>是数组中具有有序关系的元素对的个数。有序元素对用数学表达式表示就是这样：</p>
+<pre><code class="hljs plain">有序元素对：a[i] &lt;&#x3D; a[j], 如果 i &lt; j。</code></pre>
+<p><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/99cd8520-d39d-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>同理，对于一个倒序排列的数组，比如 <code>6，5，4，3，2，1</code>，有序度是 <code>0</code>；对于一个完全有序的数组，比如 <code>1，2，3，4，5，6</code>，有序度就是 <code>n*(n-1)/2</code>，也就是 <code>15</code>。把这种完全有序的数组的有序度叫作满有序度。</p>
+<p>逆序度的定义正好跟有序度相反（默认从小到大为有序），你应该已经想到了。关于逆序度，就不举例子了。可以对照上面讲的有序度的例子自己看下。</p>
+<pre><code class="hljs plain">逆序元素对：a[i] &gt; a[j], 如果 i &lt; j。</code></pre>
+<p>关于这三个概念，还可以得到一个公式：<strong>逆序度 = 满有序度 - 有序度</strong>。排序的过程就是一种增加有序度，减少逆序度的过程，最后达到满有序度，就说明排序完成了。</p>
+<p>还是拿前面举的那个冒泡排序的例子来说明。要排序的数组的初始状态是 <code>4，5，6，3，2，1</code> ，其中，有序元素对有 <code>(4，5)</code> <code>(4，6)</code> <code>(5，6)</code>，所以有序度是 <code>3</code>。<code>n=6</code>，所以排序完成之后终态的满有序度为 <code>n*(n-1)/2=15</code>。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/e92b3540-d39d-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>冒泡排序包含两个操作原子，<strong>比较</strong>和<strong>交换</strong>。每交换一次，有序度就加 <code>1</code>。不管算法怎么改进，交换次数总是确定的，即为逆序度，<strong>也就是 <code>n*(n-1)/2–初始有序度</code></strong>。此例中就是 <code>15–3=12</code>，要进行 <code>12</code> 次交换操作。</p>
+<p>对于包含 <code>n</code> 个数据的数组进行冒泡排序，平均交换次数是多少呢？最坏情况下，初始状态的有序度是 <code>0</code>，所以要进行 <code>n*(n-1)/2</code> 次交换。最好情况下，初始状态的有序度是 <code>n*(n-1)/2</code>，就不需要进行交换。可以取个中间值 <code>n*(n-1)/4</code>，来表示初始有序度既不是很高也不是很低的平均情况。</p>
+<p>换句话说，平均情况下，需要 <code>n*(n-1)/4</code> 次交换操作，比较操作肯定要比交换操作多，而复杂度的上限是 $O(n^2)$，所以平均情况下的时间复杂度就是 $O(n^2)$。</p>
+<p>这个平均时间复杂度推导过程其实并不严格，但是很多时候很实用，毕竟概率论的定量分析太复杂，不太好用。</p>
+<h2 id="插入排序（Insertion-Sort）"><a href="#插入排序（Insertion-Sort）" class="headerlink" title="插入排序（Insertion Sort）"></a>插入排序（Insertion Sort）</h2><p>先来看一个问题。一个有序的数组，往里面添加一个新的数据后，如何继续保持数据有序呢？很简单，只要遍历数组，找到数据应该插入的位置将其插入即可。</p>
+<p><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/54a9d2e0-d39e-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>这是一个动态排序的过程，即动态地往有序集合中添加数据，可以通过这种方法保持集合中的数据一直有序。而对于一组静态数据，也可以借鉴上面讲的插入方法，来进行排序，于是就有了插入排序算法。</p>
+<p><strong>插入排序具体是如何借助上面的思想来实现排序的呢？</strong></p>
+<p>首先，将数组中的数据分为两个区间，<strong>已排序区间</strong>和<strong>未排序区间</strong>。初始已排序区间只有一个元素，就是数组的第一个元素。插入算法的核心思想是取未排序区间中的元素，在已排序区间中找到合适的插入位置将其插入，并保证已排序区间数据一直有序。重复这个过程，直到未排序区间中元素为空，算法结束。</p>
+<p>如图所示，要排序的数据是 <code>4，5，6，1，3，2</code>，其中左侧为已排序区间，右侧是未排序区间。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/a816f0c0-d39e-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>插入排序也包含两种操作，一种是<strong>元素的比较</strong>，一种是<strong>元素的移动</strong>。当需要将一个数据 <code>a</code> 插入到已排序区间时，需要拿 <code>a</code> 与已排序区间的元素依次比较大小，找到合适的插入位置。找到插入点之后，还需要将插入点之后的元素顺序往后移动一位，这样才能腾出位置给元素 <code>a</code> 插入。</p>
+<p>对于不同的查找插入点方法（从头到尾、从尾到头），元素的比较次数是有区别的。但对于一个给定的初始序列，移动操作的次数总是固定的，就等于逆序度。</p>
+<p>为什么说移动次数就等于逆序度呢？拿刚才的例子画了一个图表，你一看就明白了。满有序度是 <code>n*(n-1)/2=15</code>，初始序列的有序度是 <code>5</code>，所以逆序度是 <code>10</code>。插入排序中，数据移动的个数总和也等于 <code>10=3+3+4</code>。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/d3aaa420-d39e-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>插入排序的原理也很简单吧？也将代码实现贴在这里，你可以结合着代码再看下。</p>
+<pre><code class="hljs java"><span class="hljs-comment">// 插入排序，a 表示数组，n 表示数组大小</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">insertionSort</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] a, <span class="hljs-keyword">int</span> n)</span> </span>&#123;
+  <span class="hljs-keyword">if</span> (n &lt;= <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span>;
+
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; n; ++i) &#123;
+    <span class="hljs-keyword">int</span> value = a[i];
+    <span class="hljs-keyword">int</span> j = i - <span class="hljs-number">1</span>;
+    <span class="hljs-comment">// 查找插入的位置</span>
+    <span class="hljs-keyword">for</span> (; j &gt;= <span class="hljs-number">0</span>; --j) &#123;
+      <span class="hljs-keyword">if</span> (a[j] &gt; value) &#123;
+        a[j+<span class="hljs-number">1</span>] = a[j];  <span class="hljs-comment">// 数据移动</span>
+      &#125; <span class="hljs-keyword">else</span> &#123;
+        <span class="hljs-keyword">break</span>;
+      &#125;
+    &#125;
+    a[j+<span class="hljs-number">1</span>] = value; <span class="hljs-comment">// 插入数据</span>
+  &#125;
+&#125;</code></pre>
+
+<p>现在，来看点稍微复杂的东西。这里还是有三个问题。</p>
+<p><strong>第一，插入排序是原地排序算法吗？</strong></p>
+<p>从实现过程可以很明显地看出，插入排序算法的运行并不需要额外的存储空间，所以空间复杂度是 $O(1)$，也就是说，这是一个原地排序算法。</p>
+<p><strong>第二，插入排序是稳定的排序算法吗？</strong></p>
+<p>在插入排序中，对于值相同的元素，可以选择将后面出现的元素，插入到前面出现元素的后面，这样就可以保持原有的前后顺序不变，所以插入排序是稳定的排序算法。</p>
+<p><strong>第三，插入排序的时间复杂度是多少？</strong></p>
+<p>如果要排序的数据已经是有序的，并不需要搬移任何数据。如果从尾到头在有序数据组里面查找插入位置，每次只需要比较一个数据就能确定插入的位置。所以这种情况下，最好是时间复杂度为 $O(n)$。注意，这里是<strong>从尾到头遍历已经有序的数据</strong>。</p>
+<p>如果数组是倒序的，每次插入都相当于在数组的第一个位置插入新的数据，所以需要移动大量的数据，所以最坏情况时间复杂度为 $O(n^2)$。</p>
+<p>还记得在数组中插入一个数据的平均时间复杂度是多少吗？没错，是 $O(n)$。所以，对于插入排序来说，每次插入操作都相当于在数组中插入一个数据，循环执行 <code>n</code> 次插入操作，所以平均时间复杂度为 $O(n^2)$。</p>
+<h2 id="选择排序（Selection-Sort）"><a href="#选择排序（Selection-Sort）" class="headerlink" title="选择排序（Selection Sort）"></a>选择排序（Selection Sort）</h2><p>选择排序算法的实现思路有点类似插入排序，也分已排序区间和未排序区间。但是选择排序每次会从未排序区间中找到最小的元素，将其放到已排序区间的末尾。</p>
+<p><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/084812c0-d3a0-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>也有三个问题需要思考，不过前面两种排序算法已经分析得很详细了，这里就直接公布答案了。</p>
+<p>首先，选择排序空间复杂度为 $O(1)$，是一种原地排序算法。选择排序的最好情况时间复杂度、最坏情况和平均情况时间复杂度都为 $O(n^2)$。你可以自己来分析看看。</p>
+<p>那选择排序是稳定的排序算法吗？这个问题着重来说一下。</p>
+<p>答案是否定的，选择排序是一种不稳定的排序算法。从前面的那张图中，可以看出来，选择排序每次都要找剩余未排序元素中的最小值，并和前面的元素交换位置，这样破坏了稳定性。</p>
+<p>比如 <code>5，8，5，2，9</code> 这样一组数据，使用选择排序算法来排序的话，第一次找到最小元素 <code>2</code>，与第一个 <code>5</code> 交换位置，那第一个 <code>5</code> 和中间的 <code>5</code> 顺序就变了，所以就不稳定了。正是因此，相对于冒泡排序和插入排序，选择排序就稍微逊色了。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>要想分析、评价一个排序算法，需要从执行效率、内存消耗和稳定性三个方面来看。因此，上面分析了三种时间复杂度是 $O(n^2)$ 的排序算法，冒泡排序、插入排序、选择排序。需要重点掌握的是它们的分析方法。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/cef3c0e0-d3a0-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>这三种时间复杂度为 $O(n^2)$ 的排序算法中，冒泡排序、选择排序，可能就纯粹停留在理论的层面了，学习的目的也只是为了开拓思维，实际开发中应用并不多，但是插入排序还是挺有用的。有些编程语言中的排序函数的实现原理会用到插入排序算法。</p>
+<p>上面的这三种排序算法，实现代码都非常简单，对于小规模数据的排序，用起来非常高效。但是在大规模数据排序的时候，这个时间复杂度还是稍微有点高，所以更倾向于用下一篇的时间复杂度为 $O(nlogn)$ 的排序算法。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ul>
+<li><p>选择排序和插入排序的时间复杂度相同，都是$O(n^2)$，在实际的软件开发中，为什么更倾向于使用插入排序而不是冒泡排序算法呢？</p>
+<blockquote>
+<p>前面分析冒泡排序和插入排序的时候讲到，冒泡排序不管怎么优化，元素交换的次数是一个固定值，是原始数据的逆序度。插入排序是同样的，不管怎么优化，元素移动的次数也等于原始数据的逆序度。</p>
+<p>但是，从代码实现上来看，冒泡排序的数据交换要比插入排序的数据移动要复杂，冒泡排序需要 <code>3</code> 个赋值操作，而插入排序只需要 <code>1</code> 个。来看这段操作：</p>
+</blockquote>
+<pre><code class="hljs java">冒泡排序中数据的交换操作：
+<span class="hljs-keyword">if</span> (a[j] &gt; a[j+<span class="hljs-number">1</span>]) &#123; <span class="hljs-comment">// 交换</span>
+   <span class="hljs-keyword">int</span> tmp = a[j];
+   a[j] = a[j+<span class="hljs-number">1</span>];
+   a[j+<span class="hljs-number">1</span>] = tmp;
+   flag = <span class="hljs-keyword">true</span>;
+&#125;
+
+插入排序中数据的移动操作：
+<span class="hljs-keyword">if</span> (a[j] &gt; value) &#123;
+  a[j+<span class="hljs-number">1</span>] = a[j];  <span class="hljs-comment">// 数据移动</span>
+&#125; <span class="hljs-keyword">else</span> &#123;
+  <span class="hljs-keyword">break</span>;
+&#125;</code></pre>
+<blockquote>
+<p>把执行一个赋值语句的时间粗略地计为单位时间（<code>unit_time</code>），然后分别用冒泡排序和插入排序对同一个逆序度是 <code>K</code> 的数组进行排序。用冒泡排序，需要 <code>K</code> 次交换操作，每次需要 <code>3</code> 个赋值语句，所以交换操&gt; 作总耗时就是 <code>3*K</code> 单位时间。而插入排序中数据移动操作只需要 <code>K</code> 个单位时间。</p>
+<p>这个只是非常理论的分析，为了实验，针对上面的冒泡排序和插入排序的 <code>Java</code> 代码，写了一个性能对比测试程序，随机生成 <code>10000</code> 个数组，每个数组中包含 <code>200</code> 个数据，然后在机器上分别用冒泡和插入排序算&gt; 法来排序，冒泡排序算法大约 <code>700ms</code> 才能执行完成，而插入排序只需要 <code>100ms</code> 左右就能搞定！</p>
+<p>所以，虽然冒泡排序和插入排序在时间复杂度上是一样的，都是 $O(n^2)$，但是如果希望把性能优化做到极致，那肯定首选插入排序。插入排序的算法思路也有很大的优化空间，只是讲了最基础的一种。如果你对插入排&gt; 序的优化感兴趣，可以自行学习一下希尔排序。</p>
+</blockquote>
+</li>
+<li><p>特定算法是依赖特定的数据结构的。上面的几种排序算法，都是基于数组实现的。如果数据存储在链表中，这三种排序算法还能工作吗？如果能，那相应的时间、空间复杂度又是多少呢？</p>
+</li>
+</ul>
+<p>欢迎留言和我分享。</p>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/">数据结构与算法(中级)</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%8E%92%E5%BA%8F/">排序</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/passages/9/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">9.排序（下）</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/passages/recursion/">
+                        <span class="hidden-mobile">递归算法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+    <div id="vcomments"></div>
+    <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+    <script type="text/javascript">
+        var oldLoadVa = window.onload;
+        window.onload = function () {
+            oldLoadVa && oldLoadVa();
+
+            new Valine({
+                el: "#vcomments",
+                app_id: "O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",
+                app_key: "5Rl3Rhl9zc8BJNvrPcncKWFy",
+                placeholder: "说点什么吧~",
+                path: window.location.pathname,
+                avatar: "retro",
+                meta: ["nick","mail","link"],
+                pageSize: "10",
+                lang: "zh-CN",
+                highlight: true,
+                recordIP: true,
+                serverURLs: "https://lean.muchen.fun",
+            });
+        };
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments
+            powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><br><div class="text-center">欢迎关注我的公众号</div>
+    </div>
+  </div>
+
+
+    
+</main>
+
+
+    <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+
+
+
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+                <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mx-3">
+                <div class="md-form mb-5">
+                    <input type="text" id="local-search-input" class="form-control validate">
+                    <label data-error="x"
+                           data-success="v"
+                           for="local-search-input">关键词</label>
+                </div>
+                <div class="list-group" id="local-search-result"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    <div>
+      <span id="timeDate">载入天数...</span>
+      <span id="times">载入时分秒...</span>
+      <script>
+        var now = new Date();
+
+        function createtime() {
+          var grt = new Date("07/12/2019 00:00:00");//此处修改你的建站时间或者网站上线时间
+          now.setTime(now.getTime() + 250);
+          days = (now - grt) / 1000 / 60 / 60 / 24;
+          dnum = Math.floor(days);
+          hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+          hnum = Math.floor(hours);
+          if (String(hnum).length == 1) {
+            hnum = "0" + hnum;
+          }
+          minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+          mnum = Math.floor(minutes);
+          if (String(mnum).length == 1) {
+            mnum = "0" + mnum;
+          }
+          seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+          snum = Math.round(seconds);
+          if (String(snum).length == 1) {
+            snum = "0" + snum;
+          }
+          document.getElementById("timeDate").innerHTML = "本站已运行&nbsp" + dnum + "&nbsp天";
+          document.getElementById("times").innerHTML = hnum + "&nbsp小时&nbsp" + mnum + "&nbsp分&nbsp" + snum + "&nbsp秒";
+        }
+
+        setInterval("createtime()", 250);
+      </script>
+    </div>
+    <p id="hitokoto">:D 获取中...</p>
+    <script>
+      fetch('https://v1.hitokoto.cn')
+              .then(response => response.json())
+              .then(data => {
+                const hitokoto = document.getElementById('hitokoto')
+                hitokoto.innerText = data.hitokoto + '--「' + data.from + '」'
+              })
+              .catch(console.error)
+    </script>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+    <script  src="/js/lazyload.js" ></script>
+
+
+
+    
+
+
+
+
+    <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+    <script  src="/js/clipboard-use.js" ></script>
+
+
+
+    <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+    
+<script src="https://static.muchen.fun/js/custom.js"></script>
+
+
+
+<!-- Plugins -->
+
+
+    
+        <!-- Baidu Analytics -->
+        <script defer>
+            var _hmt = _hmt || [];
+            (function () {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    
+
+    
+        <!-- Google Analytics -->
+        <script defer>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-144841374-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+    <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+    <script>
+        var typed = new Typed('#subtitle', {
+            strings: [
+                '  ',
+                "8.排序（上）&nbsp;",
+            ],
+            cursorChar: "_",
+            typeSpeed: 60,
+            loop: false,
+        });
+        typed.stop();
+        $(document).ready(function () {
+            $(".typed-cursor").addClass("h2");
+            typed.start();
+        });
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+    <script>
+        anchors.options = {
+            placement: "right",
+            visible: "hover",
+            
+        };
+        var el = "h1,h2,h3,h4,h5,h6".split(",");
+        var res = [];
+        for (item of el) {
+            res.push(".markdown-body > " + item)
+        }
+        anchors.add(res.join(", "))
+    </script>
+
+
+
+    <script  src="/js/local-search.js" ></script>
+    <script>
+        var path = "/local-search.xml";
+        var inputArea = document.querySelector("#local-search-input");
+        inputArea.onclick = function () {
+            searchFunc(path, 'local-search-input', 'local-search-result');
+            this.onclick = null
+        }
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+    <script>
+        $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+            function () {
+                var element = document.createElement('a');
+                $(element).attr('data-fancybox', 'images');
+                $(element).attr('href', $(this).attr('src'));
+                $(this).wrap(element);
+            }
+        );
+    </script>
+
+
+
+
+
+    
+
+    
+        <!-- MathJax -->
+        <script>
+            MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']]
+                },
+                options: {
+                    renderActions: {
+                        findScript: [10, doc => {
+                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                                const display = !!node.type.match(/; *mode=display/);
+                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                                const text = document.createTextNode('');
+                                node.parentNode.replaceChild(text, node);
+                                math.start = {node: text, delim: '', n: 0};
+                                math.end = {node: text, delim: '', n: 0};
+                                doc.math.push(math);
+                            });
+                        }, '', false],
+                        insertedScript: [200, () => {
+                            document.querySelectorAll('mjx-container').forEach(node => {
+                                let target = node.parentNode;
+                                if (target.nodeName.toLowerCase() === 'li') {
+                                    target.parentNode.classList.add('has-jax');
+                                }
+                            });
+                        }, '', false]
+                    }
+                }
+            };
+        </script>
+
+        <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+    
+
+
+
+    
+    
+        <script>
+            !function (e, t, a) {
+                function r() {
+                    for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+                    requestAnimationFrame(r)
+                }
+
+                function n() {
+                    var t = "function" == typeof e.onclick && e.onclick;
+                    e.onclick = function (e) {
+                        t && t(), o(e)
+                    }
+                }
+
+                function o(e) {
+                    var a = t.createElement("div");
+                    a.className = "heart", s.push({
+                        el: a,
+                        x: e.clientX - 5,
+                        y: e.clientY - 5,
+                        scale: 1,
+                        alpha: 1,
+                        color: c()
+                    }), t.body.appendChild(a)
+                }
+
+                function i(e) {
+                    var a = t.createElement("style");
+                    a.type = "text/css";
+                    try {
+                        a.appendChild(t.createTextNode(e))
+                    } catch (t) {
+                        a.styleSheet.cssText = e
+                    }
+                    t.getElementsByTagName("head")[0].appendChild(a)
+                }
+
+                function c() {
+                    return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+                }
+
+                var s = [];
+                e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+                    setTimeout(e, 1e3 / 60)
+                }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+            }(window, document);
+        </script>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png">
+    <link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <meta name="theme-color" content="#2f4154">
+    <meta name="description" content="沐晨的个人博客,技术博客">
+    <meta name="author" content="Li Duo">
+    <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
+    <title>13.二分查找（下） - MuChen&#39;s Blog</title>
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+    
+<link rel="stylesheet" href="https://static.muchen.fun/css/custom.css?t=0.1423425.css">
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+<script>
+    var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+    // 依次判断 系统暗黑模式 指定时间 缓存 dark
+    if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+        if (!(isNight && localStorage.getItem('noDark') === '1')) {
+            document.body.classList.add('dark');
+        }
+    }
+    document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
+</script>
+<header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+    <div class="container">
+        <a class="navbar-brand"
+           href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a>
+
+        <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="animated-icon"><span></span><span></span><span></span></div>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto text-center">
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/archives/">
+                            <i class="iconfont icon-archive-fill"></i>
+                            归档</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/categories/">
+                            <i class="iconfont icon-category-fill"></i>
+                            分类</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tags/">
+                            <i class="iconfont icon-tags-fill"></i>
+                            标签</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/messageBoard/">
+                            <i class="iconfont icon-speakernotes"></i>
+                            留言</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about/">
+                            <i class="iconfont icon-user-fill"></i>
+                            关于</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/links/">
+                            <i class="iconfont icon-link-fill"></i>
+                            友链</a>
+                    </li>
+                
+                
+                    <li class="nav-item" id="search-btn">
+                        <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                                    class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+                    </li>
+                
+                <li class="nav-item">
+                    <a id="dark" class="nav-link" onclick="switchDarkMode()">
+                        <i class="iconfont icon-sun"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/images/07.jpg') no-repeat center center;
+                 background-size: cover;">
+        <div class="full-bg-img">
+            <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+                <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+                
+            </span>
+
+                    
+                        
+                            <div class="mt-3 post-meta">
+                                <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                                <time datetime="2019-07-21 14:24">
+                                    2019年7月21日 下午
+                                </time>
+                            </div>
+                        
+
+                        <div class="mt-1">
+                            
+                                
+                                <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    3.4k 字
+                  </span>
+                            
+
+                            
+                                
+                                <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                                    
+                                    
+                                    49
+                                     分钟
+                  </span>
+                            
+
+                            
+                                <!-- 不蒜子统计文章PV -->
+                                
+                                <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
+                    <i class="iconfont icon-eye" aria-hidden="true"></i>
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>
+                            
+                        </div>
+                    
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    
+        
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：9 个月前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <!-- more -->
+<p>通过 <code>IP</code> 地址来查找 <code>IP</code> 归属地的功能，不知道你有没有用过？没用过也没关系，现在可以打开百度，在搜索框里随便输一个 <code>IP</code> 地址，就会看到它的归属地。</p>
+<p>这个功能并不复杂，它是通过维护一个很大的 <code>IP</code> 地址库来实现的。地址库中包括 <code>IP</code> 地址范围和归属地的对应关系。</p>
+<p>当想要查询 <code>202.102.133.13</code> 这个 <code>IP</code> 地址的归属地时，就在地址库中搜索，发现这个 <code>IP</code> 地址落在 <code>[202.102.133.0, 202.102.133.255]</code> 这个地址范围内，那就可以将这个 <code>IP</code> 地址范围对应的归属地“山东东营市”显示给用户了。</p>
+<pre><code class="hljs plain">[202.102.133.0, 202.102.133.255]  山东东营市 
+[202.102.135.0, 202.102.136.255]  山东烟台 
+[202.102.156.34, 202.102.157.255] 山东青岛 
+[202.102.48.0, 202.102.48.255] 江苏宿迁 
+[202.102.49.15, 202.102.51.251] 江苏泰州 
+[202.102.56.0, 202.102.56.255] 江苏连云港</code></pre>
+<p>现在的问题是，在庞大的地址库中逐一比对 <code>IP</code> 地址所在的区间，是非常耗时的。<font color='green'>假设有 <code>12</code> 万条这样的 <code>IP</code> 区间与归属地的对应关系，如何快速定位出一个 <code>IP</code> 地址的归属地呢？</font></p>
+<p>不知道你有没有听过这样一个说法：“十个二分九个错”。二分查找虽然原理极其简单，但是想要写出没有 <code>Bug</code> 的二分查找并不容易。<br>唐纳德·克努特（<code>Donald E.Knuth</code>）在《计算机程序设计艺术》的第 <code>3</code> 卷《排序和查找》中说到：“尽管第一个二分查找算法于 <code>1946</code> 年出现，然而第一个完全正确的二分查找算法实现直到 <code>1962</code> 年才出现。”<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/17/e7d1ebc0-d90c-11e9-9f8f-f11c7654af16.png" srcset="/img/loading.gif" alt="image.png"><br>需要特别说明一点，为了简化讲解，下面的内容，都以数据是从小到大排列为前提，如果你要处理的数据是从大到小排列的，解决思路也是一样的。</p>
+<h2 id="变体一：查找第一个值等于给定值的元素"><a href="#变体一：查找第一个值等于给定值的元素" class="headerlink" title="变体一：查找第一个值等于给定值的元素"></a>变体一：查找第一个值等于给定值的元素</h2><p>上一篇中的二分查找是最简单的一种，即有序数据集合中不存在重复的数据，在其中查找值等于某个给定值的数据。如果将这个问题稍微修改下，有序数据集合中存在重复的数据，希望找到第一个值等于给定值的数据，这样之前的二分查找代码还能继续工作吗？</p>
+<p>比如下面这样一个有序数组，其中，<code>a[5]</code>，<code>a[6]</code>，<code>a[7]</code> 的值都等于 <code>8</code>，是重复的数据。希望查找第一个等于 <code>8</code> 的数据，也就是下标是 <code>5</code> 的元素。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/17/39001620-d90d-11e9-9f8f-f11c7654af16.png" srcset="/img/loading.gif" alt="image.png"><br>如果用上一篇的二分查找的代码实现，首先拿 <code>8</code> 与区间的中间值 <code>a[4]</code> 比较，<code>8</code> 比 <code>6</code> 大，于是在下标 <code>5</code> 到 <code>9</code> 之间继续查找。下标 <code>5</code> 和 <code>9</code> 的中间位置是下标 <code>7</code>，<code>a[7]</code> 正好等于 <code>8</code>，所以代码就返回了。</p>
+<p>尽管 <code>a[7]</code> 也等于 <code>8</code>，但它并不是想要找的第一个等于 <code>8</code> 的元素，因为第一个值等于 <code>8</code> 的元素是数组下标为 <code>5</code> 的元素。上一篇的二分查找代码就无法处理这种情况了。所以，针对这个变形问题，可以稍微改造一下上一节的代码。</p>
+<p><code>100</code> 个人写二分查找就会有 <code>100</code> 种写法。网上有很多关于变形二分查找的实现方法，有很多写得非常简洁，比如下面这个写法。但是，尽管简洁，理解起来却非常烧脑，也很容易写错。</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">bsearch</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] a, <span class="hljs-keyword">int</span> n, <span class="hljs-keyword">int</span> value)</span> </span>&#123;
+  <span class="hljs-keyword">int</span> low = <span class="hljs-number">0</span>;
+  <span class="hljs-keyword">int</span> high = n - <span class="hljs-number">1</span>;
+  <span class="hljs-keyword">while</span> (low &lt;= high) &#123;
+    <span class="hljs-keyword">int</span> mid = low + ((high - low) &gt;&gt; <span class="hljs-number">1</span>);
+    <span class="hljs-keyword">if</span> (a[mid] &gt;= value) &#123;
+      high = mid - <span class="hljs-number">1</span>;
+    &#125; <span class="hljs-keyword">else</span> &#123;
+      low = mid + <span class="hljs-number">1</span>;
+    &#125;
+  &#125;
+
+  <span class="hljs-keyword">if</span> (low &lt; n &amp;&amp; a[low]==value) <span class="hljs-keyword">return</span> low;
+  <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;
+&#125;</code></pre>
+<p>看完这个实现之后，是不是觉得很不好理解？如果你只是死记硬背这个写法，我敢保证，过不了几天，你就会全都忘光，再让你写，<code>90%</code> 的可能会写错。所以，换了一种实现方法，你看看是不是更容易理解呢？</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">bsearch</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] a, <span class="hljs-keyword">int</span> n, <span class="hljs-keyword">int</span> value)</span> </span>&#123;
+  <span class="hljs-keyword">int</span> low = <span class="hljs-number">0</span>;
+  <span class="hljs-keyword">int</span> high = n - <span class="hljs-number">1</span>;
+  <span class="hljs-keyword">while</span> (low &lt;= high) &#123;
+    <span class="hljs-keyword">int</span> mid =  low + ((high - low) &gt;&gt; <span class="hljs-number">1</span>);
+    <span class="hljs-keyword">if</span> (a[mid] &gt; value) &#123;
+      high = mid - <span class="hljs-number">1</span>;
+    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (a[mid] &lt; value) &#123;
+      low = mid + <span class="hljs-number">1</span>;
+    &#125; <span class="hljs-keyword">else</span> &#123;
+      <span class="hljs-keyword">if</span> ((mid == <span class="hljs-number">0</span>) || (a[mid - <span class="hljs-number">1</span>] != value)) <span class="hljs-keyword">return</span> mid;
+      <span class="hljs-keyword">else</span> high = mid - <span class="hljs-number">1</span>;
+    &#125;
+  &#125;
+  <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;
+&#125;</code></pre>
+<p>稍微解释一下这段代码。<code>a[mid]</code> 跟要查找的 <code>value</code> 的大小关系有三种情况：大于、小于、等于。对于 <code>a[mid]&gt;value</code> 的情况，需要更新 <code>high= mid-1</code>；对于 <code>a[mid]&lt;value</code> 的情况，需要更新 <code>low=mid+1</code>。这两点都很好理解。那当 <code>a[mid]=value</code> 的时候应该如何处理呢？</p>
+<p>如果查找的是任意一个值等于给定值的元素，当 <code>a[mid]</code> 等于要查找的值时，<code>a[mid]</code> 就是要找的元素。但是，如果求解的是第一个值等于给定值的元素，当 <code>a[mid]</code> 等于要查找的值时，就需要确认一下这个 <code>a[mid]</code> 是不是第一个值等于给定值的元素。</p>
+<p>重点看第 <code>11</code> 行代码。如果 <code>mid</code> 等于 <code>0</code>，那这个元素已经是数组的第一个元素，那它肯定是要找的；如果 <code>mid</code> 不等于 <code>0</code>，但 <code>a[mid]</code> 的前一个元素 <code>a[mid-1]</code> 不等于 <code>value</code>，那也说明 <code>a[mid]</code> 就是要找的第一个值等于给定值的元素。</p>
+<p>如果经过检查之后发现 <code>a[mid]</code> 前面的一个元素 <code>a[mid-1]</code> 也等于 <code>value</code>，那说明此时的 <code>a[mid]</code> 肯定不是要查找的第一个值等于给定值的元素。那就更新 <code>high=mid-1</code>，因为要找的元素肯定出现在 <code>[low, mid-1]</code> 之间。</p>
+<p>对比上面的两段代码，是不是下面那种更好理解？实际上，<strong>很多人都觉得变形的二分查找很难写，主要原因是太追求第一种那样完美、简洁的写法。</strong>而对于做工程开发的人来说，代码易读懂、没 <code>Bug</code>，其实更重要，所以我觉得第二种写法更好。</p>
+<h2 id="变体二：查找最后一个值等于给定值的元素"><a href="#变体二：查找最后一个值等于给定值的元素" class="headerlink" title="变体二：查找最后一个值等于给定值的元素"></a>变体二：查找最后一个值等于给定值的元素</h2><p>前面的问题是查找第一个值等于给定值的元素，现在把问题稍微改一下，查找最后一个值等于给定值的元素，又该如何做呢？</p>
+<p>如果掌握了前面的写法，那这个问题你应该很轻松就能解决。你可以先试着实现一下，然后跟下面的对比一下。</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">bsearch</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] a, <span class="hljs-keyword">int</span> n, <span class="hljs-keyword">int</span> value)</span> </span>&#123;
+  <span class="hljs-keyword">int</span> low = <span class="hljs-number">0</span>;
+  <span class="hljs-keyword">int</span> high = n - <span class="hljs-number">1</span>;
+  <span class="hljs-keyword">while</span> (low &lt;= high) &#123;
+    <span class="hljs-keyword">int</span> mid =  low + ((high - low) &gt;&gt; <span class="hljs-number">1</span>);
+    <span class="hljs-keyword">if</span> (a[mid] &gt; value) &#123;
+      high = mid - <span class="hljs-number">1</span>;
+    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (a[mid] &lt; value) &#123;
+      low = mid + <span class="hljs-number">1</span>;
+    &#125; <span class="hljs-keyword">else</span> &#123;
+      <span class="hljs-keyword">if</span> ((mid == n - <span class="hljs-number">1</span>) || (a[mid + <span class="hljs-number">1</span>] != value)) <span class="hljs-keyword">return</span> mid;
+      <span class="hljs-keyword">else</span> low = mid + <span class="hljs-number">1</span>;
+    &#125;
+  &#125;
+  <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;
+&#125;</code></pre>
+<p>还是重点看第 <code>11</code> 行代码。如果 <code>a[mid]</code> 这个元素已经是数组中的最后一个元素了，那它肯定是要找的；如果 <code>a[mid]</code> 的后一个元素 <code>a[mid+1]</code> 不等于 <code>value</code>，那也说明 <code>a[mid]</code> 就是要找的最后一个值等于给定值的元素。</p>
+<p>如果经过检查之后，发现 <code>a[mid]</code> 后面的一个元素 <code>a[mid+1]</code> 也等于 <code>value</code>，那说明当前的这个 <code>a[mid]</code> 并不是最后一个值等于给定值的元素。就更新 <code>low=mid+1</code>，因为要找的元素肯定出现在 <code>[mid+1, high]</code> 之间。</p>
+<h2 id="变体三：查找第一个大于等于给定值的元素"><a href="#变体三：查找第一个大于等于给定值的元素" class="headerlink" title="变体三：查找第一个大于等于给定值的元素"></a>变体三：查找第一个大于等于给定值的元素</h2><p>现在再来看另外一类变形问题。在有序数组中，查找第一个大于等于给定值的元素。比如，数组中存储的这样一个序列：<code>3，4，6，7，10</code>。如果查找第一个大于等于 <code>5</code> 的元素，那就是 <code>6</code>。</p>
+<p>实际上，实现的思路跟前面的那两种变形问题的实现思路类似，代码写起来甚至更简洁。</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">bsearch</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] a, <span class="hljs-keyword">int</span> n, <span class="hljs-keyword">int</span> value)</span> </span>&#123;
+  <span class="hljs-keyword">int</span> low = <span class="hljs-number">0</span>;
+  <span class="hljs-keyword">int</span> high = n - <span class="hljs-number">1</span>;
+  <span class="hljs-keyword">while</span> (low &lt;= high) &#123;
+    <span class="hljs-keyword">int</span> mid =  low + ((high - low) &gt;&gt; <span class="hljs-number">1</span>);
+    <span class="hljs-keyword">if</span> (a[mid] &gt;= value) &#123;
+      <span class="hljs-keyword">if</span> ((mid == <span class="hljs-number">0</span>) || (a[mid - <span class="hljs-number">1</span>] &lt; value)) <span class="hljs-keyword">return</span> mid;
+      <span class="hljs-keyword">else</span> high = mid - <span class="hljs-number">1</span>;
+    &#125; <span class="hljs-keyword">else</span> &#123;
+      low = mid + <span class="hljs-number">1</span>;
+    &#125;
+  &#125;
+  <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;
+&#125;</code></pre>
+<p>如果 <code>a[mid]</code> 小于要查找的值 <code>value</code>，那要查找的值肯定在 <code>[mid+1, high]</code> 之间，所以，更新 <code>low=mid+1</code>。</p>
+<p>对于 <code>a[mid]</code> 大于等于给定值 <code>value</code> 的情况，要先看下这个 <code>a[mid]</code> 是不是要找的第一个值大于等于给定值的元素。如果 <code>a[mid]</code> 前面已经没有元素，或者前面一个元素小于要查找的值 <code>value</code>，那 <code>a[mid]</code> 就是要找的元素。这段逻辑对应的代码是第 <code>7</code> 行。</p>
+<p>如果 <code>a[mid-1]</code> 也大于等于要查找的值 <code>value</code>，那说明要查找的元素在 <code>[low, mid-1]</code> 之间，所以，将 <code>high</code> 更新为 <code>mid-1</code>。</p>
+<h2 id="变体四：查找最后一个小于等于给定值的元素"><a href="#变体四：查找最后一个小于等于给定值的元素" class="headerlink" title="变体四：查找最后一个小于等于给定值的元素"></a>变体四：查找最后一个小于等于给定值的元素</h2><p>现在，来看最后一种二分查找的变形问题，查找最后一个小于等于给定值的元素。比如，数组中存储了这样一组数据：<code>3，5，6，8，9，10</code>。最后一个小于等于 <code>7</code> 的元素就是 <code>6</code>。是不是有点类似上面那一种？实际上，实现思路也是一样的。</p>
+<p>有了前面的基础，完全可以自己写出来了，所以就不详细分析了。把代码贴出来，你可以写完之后对比一下。</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">bsearch7</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] a, <span class="hljs-keyword">int</span> n, <span class="hljs-keyword">int</span> value)</span> </span>&#123;
+  <span class="hljs-keyword">int</span> low = <span class="hljs-number">0</span>;
+  <span class="hljs-keyword">int</span> high = n - <span class="hljs-number">1</span>;
+  <span class="hljs-keyword">while</span> (low &lt;= high) &#123;
+    <span class="hljs-keyword">int</span> mid =  low + ((high - low) &gt;&gt; <span class="hljs-number">1</span>);
+    <span class="hljs-keyword">if</span> (a[mid] &gt; value) &#123;
+      high = mid - <span class="hljs-number">1</span>;
+    &#125; <span class="hljs-keyword">else</span> &#123;
+      <span class="hljs-keyword">if</span> ((mid == n - <span class="hljs-number">1</span>) || (a[mid + <span class="hljs-number">1</span>] &gt; value)) <span class="hljs-keyword">return</span> mid;
+      <span class="hljs-keyword">else</span> low = mid + <span class="hljs-number">1</span>;
+    &#125;
+  &#125;
+  <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;
+&#125;</code></pre>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>凡是用二分查找能解决的，绝大部分更倾向于用散列表或者二叉查找树。即便是二分查找在内存使用上更节省，但是毕竟内存如此紧缺的情况并不多。那二分查找真的没什么用处了吗？</p>
+<p>实际上，上一篇的求“值等于给定值”的二分查找确实不怎么会被用到，二分查找更适合用在“近似”查找问题，在这类问题上，二分查找的优势更加明显。比如上面的这几种变体问题，用其他数据结构，比如散列表、二叉树，就比较难实现了。</p>
+<p>变体的二分查找算法写起来非常烧脑，很容易因为细节处理不好而产生 <code>Bug</code>，这些容易出错的细节有：<strong>终止条件、区间上下界更新方法、返回值选择</strong>。所以上面的内容你最好能用自己实现一遍，对锻炼编码能力、逻辑思维、写出 <code>Bug free</code> 代码，会很有帮助。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ul>
+<li><p>如何快速定位出一个 <code>IP</code> 地址的归属地？</p>
+<blockquote>
+<p> 现在这个问题应该很简单了。如果 <code>IP</code> 区间与归属地的对应关系不经常更新，可以先预处理这 <code>12</code> 万条数据，让其按照起始 <code>IP</code> 从小到大排序。如何来排序呢？<code>IP</code> 地址可以转化为 <code>32</code> 位的整型数。所以，可以将起始地址，按照对应的整型值的大小关系，从小到大进行排序。<br>  然后，这个问题就可以转化第四种变形问题“在有序数组中，查找最后一个小于等于某个给定值的元素”了。<br>  当要查询某个 <code>IP</code> 归属地时，可以先通过二分查找，找到最后一个起始 <code>IP</code> 小于等于这个 <code>IP</code> 的 <code>IP</code> 区间，然后，检查这个 <code>IP</code> 是否在这个 <code>IP</code> 区间内，如果在，就取出对应的归属地显示；如果不在，就返回未查找到。</p>
+</blockquote>
+</li>
+<li><p>如果有序数组是一个循环有序数组，比如 <code>4，5，6，1，2，3</code>。针对这种情况，如何实现一个求“值等于给定值”的二分查找算法呢？</p>
+<blockquote>
+<p>有三种方法查找循环有序数组</p>
+<ul>
+<li>一、</li>
+</ul>
+</blockquote>
+<ul>
+<li>找到分界下标，分成两个有序数组</li>
+<li>判断目标值在哪个有序数据范围内，做二分查找<blockquote>
+<ul>
+<li>二、</li>
+</ul>
+</blockquote>
+</li>
+<li>找到最大值的下标 <code>x</code>;</li>
+<li>所有元素下标 <code>+x</code> 偏移，超过数组范围值的取模;</li>
+<li>利用偏移后的下标做二分查找；</li>
+<li>如果找到目标下标，再作 <code>-x</code> 偏移，就是目标值实际下标。<br>两种情况最高时耗都在查找分界点上，所以时间复杂度是 $O(n)$。<br>复杂度有点高，能否优化呢？<blockquote>
+<ul>
+<li>三、<br>循环数组存在一个性质：以数组中间点为分区，会将数组分成一个有序数组和一个循环有序数组。<br>如果首元素小于 <code>mid</code>，说明前半部分是有序的，后半部分是循环有序数组；<br>如果首元素大于 <code>mid</code>，说明后半部分是有序的，前半部分是循环有序的数组；<br>如果目标元素在有序数组范围中，使用二分查找；<br>如果目标元素在循环有序数组中，设定数组边界后，使用以上方法继续查找。<br>时间复杂度为 $O(logn)$。</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/">数据结构与算法(中级)</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/">二分查找</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/passages/14/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">14.跳表</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/passages/12/">
+                        <span class="hidden-mobile">12.二分查找（上）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+    <div id="vcomments"></div>
+    <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+    <script type="text/javascript">
+        var oldLoadVa = window.onload;
+        window.onload = function () {
+            oldLoadVa && oldLoadVa();
+
+            new Valine({
+                el: "#vcomments",
+                app_id: "O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",
+                app_key: "5Rl3Rhl9zc8BJNvrPcncKWFy",
+                placeholder: "说点什么吧~",
+                path: window.location.pathname,
+                avatar: "retro",
+                meta: ["nick","mail","link"],
+                pageSize: "10",
+                lang: "zh-CN",
+                highlight: true,
+                recordIP: true,
+                serverURLs: "https://lean.muchen.fun",
+            });
+        };
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments
+            powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><br><div class="text-center">欢迎关注我的公众号</div>
+    </div>
+  </div>
+
+
+    
+</main>
+
+
+    <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+
+
+
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+                <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mx-3">
+                <div class="md-form mb-5">
+                    <input type="text" id="local-search-input" class="form-control validate">
+                    <label data-error="x"
+                           data-success="v"
+                           for="local-search-input">关键词</label>
+                </div>
+                <div class="list-group" id="local-search-result"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    <div>
+      <span id="timeDate">载入天数...</span>
+      <span id="times">载入时分秒...</span>
+      <script>
+        var now = new Date();
+
+        function createtime() {
+          var grt = new Date("07/12/2019 00:00:00");//此处修改你的建站时间或者网站上线时间
+          now.setTime(now.getTime() + 250);
+          days = (now - grt) / 1000 / 60 / 60 / 24;
+          dnum = Math.floor(days);
+          hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+          hnum = Math.floor(hours);
+          if (String(hnum).length == 1) {
+            hnum = "0" + hnum;
+          }
+          minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+          mnum = Math.floor(minutes);
+          if (String(mnum).length == 1) {
+            mnum = "0" + mnum;
+          }
+          seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+          snum = Math.round(seconds);
+          if (String(snum).length == 1) {
+            snum = "0" + snum;
+          }
+          document.getElementById("timeDate").innerHTML = "本站已运行&nbsp" + dnum + "&nbsp天";
+          document.getElementById("times").innerHTML = hnum + "&nbsp小时&nbsp" + mnum + "&nbsp分&nbsp" + snum + "&nbsp秒";
+        }
+
+        setInterval("createtime()", 250);
+      </script>
+    </div>
+    <p id="hitokoto">:D 获取中...</p>
+    <script>
+      fetch('https://v1.hitokoto.cn')
+              .then(response => response.json())
+              .then(data => {
+                const hitokoto = document.getElementById('hitokoto')
+                hitokoto.innerText = data.hitokoto + '--「' + data.from + '」'
+              })
+              .catch(console.error)
+    </script>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+    <script  src="/js/lazyload.js" ></script>
+
+
+
+    
+
+
+
+
+    <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+    <script  src="/js/clipboard-use.js" ></script>
+
+
+
+    <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+    
+<script src="https://static.muchen.fun/js/custom.js"></script>
+
+
+
+<!-- Plugins -->
+
+
+    
+        <!-- Baidu Analytics -->
+        <script defer>
+            var _hmt = _hmt || [];
+            (function () {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    
+
+    
+        <!-- Google Analytics -->
+        <script defer>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-144841374-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+    <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+    <script>
+        var typed = new Typed('#subtitle', {
+            strings: [
+                '  ',
+                "13.二分查找（下）&nbsp;",
+            ],
+            cursorChar: "_",
+            typeSpeed: 60,
+            loop: false,
+        });
+        typed.stop();
+        $(document).ready(function () {
+            $(".typed-cursor").addClass("h2");
+            typed.start();
+        });
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+    <script>
+        anchors.options = {
+            placement: "right",
+            visible: "hover",
+            
+        };
+        var el = "h1,h2,h3,h4,h5,h6".split(",");
+        var res = [];
+        for (item of el) {
+            res.push(".markdown-body > " + item)
+        }
+        anchors.add(res.join(", "))
+    </script>
+
+
+
+    <script  src="/js/local-search.js" ></script>
+    <script>
+        var path = "/local-search.xml";
+        var inputArea = document.querySelector("#local-search-input");
+        inputArea.onclick = function () {
+            searchFunc(path, 'local-search-input', 'local-search-result');
+            this.onclick = null
+        }
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+    <script>
+        $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+            function () {
+                var element = document.createElement('a');
+                $(element).attr('data-fancybox', 'images');
+                $(element).attr('href', $(this).attr('src'));
+                $(this).wrap(element);
+            }
+        );
+    </script>
+
+
+
+
+
+    
+
+    
+        <!-- MathJax -->
+        <script>
+            MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']]
+                },
+                options: {
+                    renderActions: {
+                        findScript: [10, doc => {
+                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                                const display = !!node.type.match(/; *mode=display/);
+                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                                const text = document.createTextNode('');
+                                node.parentNode.replaceChild(text, node);
+                                math.start = {node: text, delim: '', n: 0};
+                                math.end = {node: text, delim: '', n: 0};
+                                doc.math.push(math);
+                            });
+                        }, '', false],
+                        insertedScript: [200, () => {
+                            document.querySelectorAll('mjx-container').forEach(node => {
+                                let target = node.parentNode;
+                                if (target.nodeName.toLowerCase() === 'li') {
+                                    target.parentNode.classList.add('has-jax');
+                                }
+                            });
+                        }, '', false]
+                    }
+                }
+            };
+        </script>
+
+        <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+    
+
+
+
+    
+    
+        <script>
+            !function (e, t, a) {
+                function r() {
+                    for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+                    requestAnimationFrame(r)
+                }
+
+                function n() {
+                    var t = "function" == typeof e.onclick && e.onclick;
+                    e.onclick = function (e) {
+                        t && t(), o(e)
+                    }
+                }
+
+                function o(e) {
+                    var a = t.createElement("div");
+                    a.className = "heart", s.push({
+                        el: a,
+                        x: e.clientX - 5,
+                        y: e.clientY - 5,
+                        scale: 1,
+                        alpha: 1,
+                        color: c()
+                    }), t.body.appendChild(a)
+                }
+
+                function i(e) {
+                    var a = t.createElement("style");
+                    a.type = "text/css";
+                    try {
+                        a.appendChild(t.createTextNode(e))
+                    } catch (t) {
+                        a.styleSheet.cssText = e
+                    }
+                    t.getElementsByTagName("head")[0].appendChild(a)
+                }
+
+                function c() {
+                    return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+                }
+
+                var s = [];
+                e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+                    setTimeout(e, 1e3 / 60)
+                }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+            }(window, document);
+        </script>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
