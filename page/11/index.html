@@ -17,7 +17,7 @@
     <meta name="description" content="沐晨的个人博客,技术博客">
     <meta name="author" content="Li Duo">
     <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
-    <title>设计模式之美学习（三十一） - MuChen&#39;s Blog</title>
+    <title>MuChen&#39;s Blog</title>
 
     <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
@@ -60,7 +60,7 @@
     }
     document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
 </script>
-<header style="height: 70vh;">
+<header style="height: 100vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
     <div class="container">
         <a class="navbar-brand"
@@ -147,7 +147,7 @@
 </nav>
 
     <div class="view intro-2" id="background" parallax=true
-         style="background: url('/images/07.jpg') no-repeat center center;
+         style="background: url('/images/03.jpg') no-repeat center center;
                  background-size: cover;">
         <div class="full-bg-img">
             <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -157,47 +157,12 @@
             </span>
 
                     
-                        
-                            <div class="mt-3 post-meta">
-                                <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-                                <time datetime="2020-05-06 14:49">
-                                    2020年5月6日 下午
-                                </time>
-                            </div>
-                        
-
-                        <div class="mt-1">
-                            
-                                
-                                <span class="post-meta mr-2">
-                    <i class="iconfont icon-chart"></i>
-                    385 字
-                  </span>
-                            
-
-                            
-                                
-                                <span class="post-meta mr-2">
-                      <i class="iconfont icon-clock-fill"></i>
-                                    
-                                    
-                                    4
-                                     分钟
-                  </span>
-                            
-
-                            
-                                <!-- 不蒜子统计文章PV -->
-                                
-                                <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
-                    <i class="iconfont icon-eye" aria-hidden="true"></i>
-                    <span id="busuanzi_value_page_pv"></span> 次
-                  </span>
-                            
-                        </div>
-                    
                 </div>
 
+                
+                    <div class="scroll-down-bar">
+                        <i class="iconfont icon-arrowdown"></i>
+                    </div>
                 
             </div>
         </div>
@@ -206,140 +171,340 @@
 
 <main>
     
+        <div class="container nopadding-md">
+            <div class="py-5" id="board"
+                    style=margin-top:0>
+                
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 col-md-10 m-auto">
+                            
+
+
+    <div class="row mx-auto index-card">
         
+        
+        <div class="col-12 col-md-12 mx-auto index-info">
+            <a class="index-header" href="/passages/Kafka/">SpringBoot Kafka的配置</a>
 
-<div class="container-fluid">
-  <div class="row">
-    <div class="d-none d-lg-block col-lg-2"></div>
-    <div class="col-lg-8 nopadding-md">
-      <div class="container nopadding-md" id="board-ctn">
-        <div class="py-5" id="board">
-          <div class="post-content mx-auto" id="post">
-            
-              <p class="note note-info">
+            <a href="/passages/Kafka/" class="index-excerpt">
                 
-                  本文最后更新于：2 小时前
                 
-              </p>
-            
-            <article class="markdown-body">
-              <p>为什么不推荐使用单例模式？</p>
-<a id="more"></a>
+                    
+                
+                <div>Kafka从零开始配置</div>
+            </a>
 
-<h2 id="单例存在哪些问题？"><a href="#单例存在哪些问题？" class="headerlink" title="单例存在哪些问题？"></a>单例存在哪些问题？</h2><ul>
-<li><p>单例对 <code>OOP</code> 特性的支持不友好</p>
-</li>
-<li><p>单例会隐藏类之间的依赖关系</p>
-</li>
-<li><p>单例对代码的扩展性不友好</p>
-</li>
-<li><p>单例对代码的可测试性不友好</p>
-</li>
-<li><p>单例不支持有参数的构造函数</p>
-</li>
-</ul>
-<h2 id="单例有什么替代解决方案？"><a href="#单例有什么替代解决方案？" class="headerlink" title="单例有什么替代解决方案？"></a>单例有什么替代解决方案？</h2><p>为了保证全局唯一，除了使用单例，我们还可以用静态方法来实现。不过，静态方法这种实现思路，并不能解决我们之前提到的问题。如果要完全解决这些问题，我们可能要从根上，寻找其他方式来实现全局唯一类了。<br>比如，通过工厂模式、<code>IOC</code> 容器（比如 <code>Spring IOC</code> 容器）来保证，由程序员自己来保证（自己在编写代码的时候自己保证不要创建两个类对象）。</p>
-<p>有人把单例当作反模式，主张杜绝在项目中使用。个人觉得这有点极端。<strong>模式没有对错，关键看你怎么用</strong>。<br>如果单例类并没有后续扩展的需求，并且不依赖外部系统，那设计成单例类就没有太大问题。对于一些全局的类，我们在其他地方 <code>new</code> 的话，还要在类之间传来传去，不如直接做成单例类，使用起来简洁方便。</p>
-<p>参考: <a href="https://time.geekbang.org/column/article/194068" target="_blank" rel="noopener">单例模式（中）：我为什么不推荐使用单例模式？又有何替代方案？</a></p>
-
-            </article>
-            <hr>
-            <div>
-              <div class="post-metas mb-3">
+            <div class="index-btm post-metas">
                 
-                  <div class="post-meta mr-3">
-                    <i class="iconfont icon-category"></i>
-                    
-                      <a class="hover-with-bg" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E8%8C%83%E5%BC%8F-%E5%88%9B%E5%BB%BA%E5%9E%8B/">设计模式与范式(创建型)</a>
-                    
-                  </div>
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-date"></i>&nbsp;2019-07-15
+                    </div>
                 
                 
-                  <div class="post-meta">
-                    <i class="iconfont icon-tags"></i>
-                    
-                      <a class="hover-with-bg" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
-                    
-                      <a class="hover-with-bg" href="/tags/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">单例模式</a>
-                    
-                  </div>
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-category"></i>
+                        
+                            <a href="/categories/%E5%90%8E%E7%AB%AF/">后端</a>
+                        
+                    </div>
                 
-              </div>
-              
-                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
-              
-              
-                <div class="post-prevnext row">
-                  <div class="post-prev col-6">
-                    
-                    
-                  </div>
-                  <div class="post-next col-6">
-                    
-                    
-                      <a href="/passages/shiro-cause-cors/">
-                        <span class="hidden-mobile">Shiro过滤器导致的前端跨域</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
-                    
-                  </div>
-                </div>
-              
+                
+                    <div class="post-meta">
+                        <i class="iconfont icon-tags"></i>
+                        
+                            <a href="/tags/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6/">消息中间件</a>
+                        
+                    </div>
+                
             </div>
-
-            
-              <!-- Comments -->
-              <div class="comments" id="comments">
-                
-                
-    <div id="vcomments"></div>
-    <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
-
-    <script type="text/javascript">
-        var oldLoadVa = window.onload;
-        window.onload = function () {
-            oldLoadVa && oldLoadVa();
-
-            new Valine({
-                el: "#vcomments",
-                app_id: "O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",
-                app_key: "5Rl3Rhl9zc8BJNvrPcncKWFy",
-                placeholder: "说点什么吧~",
-                path: window.location.pathname,
-                avatar: "retro",
-                meta: ["nick","mail","link"],
-                pageSize: "10",
-                lang: "zh-CN",
-                highlight: true,
-                recordIP: true,
-                serverURLs: "https://lean.muchen.fun",
-            });
-        };
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments
-            powered by Valine.</a></noscript>
-
-
-              </div>
-            
-          </div>
         </div>
-      </div>
     </div>
-    
-  </div>
+
+    <div class="row mx-auto index-card">
+        
+        
+        <div class="col-12 col-md-12 mx-auto index-info">
+            <a class="index-header" href="/passages/6/">6.栈</a>
+
+            <a href="/passages/6/" class="index-excerpt">
+                
+                
+                    
+                
+                <div>浏览器的前进、后退功能，你肯定很熟悉吧？假设你是 Chrome 浏览器的开发工程师，你会如何实现这个功能呢？</div>
+            </a>
+
+            <div class="index-btm post-metas">
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-date"></i>&nbsp;2019-07-15
+                    </div>
+                
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-category"></i>
+                        
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E5%88%9D%E7%BA%A7/">数据结构与算法(初级)</a>
+                        
+                    </div>
+                
+                
+                    <div class="post-meta">
+                        <i class="iconfont icon-tags"></i>
+                        
+                            <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+                        
+                            <a href="/tags/%E6%A0%88/">栈</a>
+                        
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="row mx-auto index-card">
+        
+        
+        <div class="col-12 col-md-12 mx-auto index-info">
+            <a class="index-header" href="/passages/5/">5.链表（下）</a>
+
+            <a href="/passages/5/" class="index-excerpt">
+                
+                
+                    
+                
+                <div>如何轻松写出正确的链表代码？</div>
+            </a>
+
+            <div class="index-btm post-metas">
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-date"></i>&nbsp;2019-07-14
+                    </div>
+                
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-category"></i>
+                        
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E5%88%9D%E7%BA%A7/">数据结构与算法(初级)</a>
+                        
+                    </div>
+                
+                
+                    <div class="post-meta">
+                        <i class="iconfont icon-tags"></i>
+                        
+                            <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+                        
+                            <a href="/tags/%E9%93%BE%E8%A1%A8/">链表</a>
+                        
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="row mx-auto index-card">
+        
+        
+        <div class="col-12 col-md-12 mx-auto index-info">
+            <a class="index-header" href="/passages/4/">4.链表（上）</a>
+
+            <a href="/passages/4/" class="index-excerpt">
+                
+                
+                    
+                
+                <div>如何用链表来实现 LRU 缓存淘汰策略呢？</div>
+            </a>
+
+            <div class="index-btm post-metas">
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-date"></i>&nbsp;2019-07-13
+                    </div>
+                
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-category"></i>
+                        
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E5%88%9D%E7%BA%A7/">数据结构与算法(初级)</a>
+                        
+                    </div>
+                
+                
+                    <div class="post-meta">
+                        <i class="iconfont icon-tags"></i>
+                        
+                            <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+                        
+                            <a href="/tags/%E9%93%BE%E8%A1%A8/">链表</a>
+                        
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="row mx-auto index-card">
+        
+        
+        <div class="col-12 col-md-12 mx-auto index-info">
+            <a class="index-header" href="/passages/3/">3.数组</a>
+
+            <a href="/passages/3/" class="index-excerpt">
+                
+                
+                    
+                
+                <div>在大部分编程语言中，数组都是从 0 开始编号的，但你是否下意识地想过，为什么数组要从 0 开始编号，而不是从 1 开始呢？ 从 1 开始不是更符合人类的思维习惯吗？</div>
+            </a>
+
+            <div class="index-btm post-metas">
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-date"></i>&nbsp;2019-07-13
+                    </div>
+                
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-category"></i>
+                        
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E5%88%9D%E7%BA%A7/">数据结构与算法(初级)</a>
+                        
+                    </div>
+                
+                
+                    <div class="post-meta">
+                        <i class="iconfont icon-tags"></i>
+                        
+                            <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+                        
+                            <a href="/tags/%E6%95%B0%E7%BB%84/">数组</a>
+                        
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="row mx-auto index-card">
+        
+        
+        <div class="col-12 col-md-12 mx-auto index-info">
+            <a class="index-header" href="/passages/2/">2.浅析最好、最坏、平均、均摊时间复杂度</a>
+
+            <a href="/passages/2/" class="index-excerpt">
+                
+                
+                    
+                
+                <div>
+一、复杂度分析的4个概念
+最坏情况时间复杂度：代码在最理想情况下执行的时间复杂度。
+最好情况时间复杂度：代码在最坏情况下执行的时间复杂度。
+平均时间复杂度：用代码在所有情况下执行的次数的加权平均值表示。
+均摊时间复杂度：在代码执行的所有复杂度情况中绝大部分是低级别的复杂度，个别情况是高级别复杂度且发生具有时序关系时，可以将个别高级别复杂度均摊到低级别复杂度上。基本上均摊结果就等于低级别复杂度。
 </div>
+            </a>
 
-<!-- Custom -->
-
-  <div class="col-lg-7 mx-auto nopadding-md">
-    <div class="container custom post-content mx-auto">
-      <img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><br><div class="text-center">欢迎关注我的公众号</div>
+            <div class="index-btm post-metas">
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-date"></i>&nbsp;2019-07-13
+                    </div>
+                
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-category"></i>
+                        
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E5%85%A5%E9%97%A8/">数据结构与算法(入门)</a>
+                        
+                    </div>
+                
+                
+                    <div class="post-meta">
+                        <i class="iconfont icon-tags"></i>
+                        
+                            <a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+                        
+                    </div>
+                
+            </div>
+        </div>
     </div>
-  </div>
+
+    <div class="row mx-auto index-card">
+        
+        
+        <div class="col-12 col-md-12 mx-auto index-info">
+            <a class="index-header" href="/passages/1/">1.复杂度分析</a>
+
+            <a href="/passages/1/" class="index-excerpt">
+                
+                
+                    
+                
+                <div>
+
+一、什么是复杂度分析？
+数据结构和算法解决是“如何让计算机更快时间、更省空间的解决问题”。
+因此需从执行时间和占用空间两个维度来评估数据结构和算法的性能。
+分别用时间复杂度和空间复杂度两个概念来描述性能问题，二者统称为复杂度。
+复杂度描述的是算法执行时间（或占用空间）与数据规模的增长关系。
+
+二、为什么要进行复杂度分析？
+和性能测试相比，复杂度分析有不依赖执行环境、成本低、效率高、易操作、指导</div>
+            </a>
+
+            <div class="index-btm post-metas">
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-date"></i>&nbsp;2019-07-12
+                    </div>
+                
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-category"></i>
+                        
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E5%85%A5%E9%97%A8/">数据结构与算法(入门)</a>
+                        
+                    </div>
+                
+                
+                    <div class="post-meta">
+                        <i class="iconfont icon-tags"></i>
+                        
+                            <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+                        
+                    </div>
+                
+            </div>
+        </div>
+    </div>
 
 
+
+    <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <a class="extend prev" rel="prev" href="/page/10/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span>
+    </span>
+    </nav>
+    
+    <script>
+        for (ele of document.getElementById("pagination").getElementsByTagName("a")) {
+            ele.href += '#board';
+        }
+    </script>
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     
 </main>
 
@@ -448,9 +613,6 @@
 
 
 
-    
-
-
 
 
     <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
@@ -518,7 +680,7 @@
         var typed = new Typed('#subtitle', {
             strings: [
                 '  ',
-                "设计模式之美学习（三十一）&nbsp;",
+                "Learn To Learn&nbsp;",
             ],
             cursorChar: "_",
             typeSpeed: 60,
@@ -562,62 +724,9 @@
 
 
 
-    <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
-    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
-
-    <script>
-        $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
-            function () {
-                var element = document.createElement('a');
-                $(element).attr('data-fancybox', 'images');
-                $(element).attr('href', $(this).attr('src'));
-                $(this).wrap(element);
-            }
-        );
-    </script>
 
 
 
-
-
-    
-
-    
-        <!-- MathJax -->
-        <script>
-            MathJax = {
-                tex: {
-                    inlineMath: [['$', '$'], ['\\(', '\\)']]
-                },
-                options: {
-                    renderActions: {
-                        findScript: [10, doc => {
-                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
-                                const display = !!node.type.match(/; *mode=display/);
-                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
-                                const text = document.createTextNode('');
-                                node.parentNode.replaceChild(text, node);
-                                math.start = {node: text, delim: '', n: 0};
-                                math.end = {node: text, delim: '', n: 0};
-                                doc.math.push(math);
-                            });
-                        }, '', false],
-                        insertedScript: [200, () => {
-                            document.querySelectorAll('mjx-container').forEach(node => {
-                                let target = node.parentNode;
-                                if (target.nodeName.toLowerCase() === 'li') {
-                                    target.parentNode.classList.add('has-jax');
-                                }
-                            });
-                        }, '', false]
-                    }
-                }
-            };
-        </script>
-
-        <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
-
-    
 
 
 
