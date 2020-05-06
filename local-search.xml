@@ -1161,9 +1161,9 @@
     
     <tags>
       
-      <tag>二叉树</tag>
-      
       <tag>堆</tag>
+      
+      <tag>二叉树</tag>
       
     </tags>
     
@@ -1242,9 +1242,9 @@
     
     <tags>
       
-      <tag>队列</tag>
-      
       <tag>栈</tag>
+      
+      <tag>队列</tag>
       
       <tag>递归</tag>
       
@@ -1271,9 +1271,9 @@
     
     <tags>
       
-      <tag>链表</tag>
-      
       <tag>数组</tag>
+      
+      <tag>链表</tag>
       
     </tags>
     
