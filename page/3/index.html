@@ -58,7 +58,6 @@
             document.body.classList.add('dark');
         }
     }
-    document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
 </script>
 <header style="height: 100vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
@@ -180,6 +179,46 @@
                         <div class="col-12 col-md-10 m-auto">
                             
 
+
+    <div class="row mx-auto index-card">
+        
+        
+        <div class="col-12 col-md-12 mx-auto index-info">
+            <a class="index-header" href="/passages/java-memory-model/">Java的内存模型</a>
+
+            <a href="/passages/java-memory-model/" class="index-excerpt">
+                
+                
+                    
+                
+                <div>Java的内存模型是什么？一起来了解一下。</div>
+            </a>
+
+            <div class="index-btm post-metas">
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-date"></i>&nbsp;2019-12-17
+                    </div>
+                
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-category"></i>
+                        
+                            <a href="/categories/%E5%90%8E%E7%AB%AF/">后端</a>
+                        
+                    </div>
+                
+                
+                    <div class="post-meta">
+                        <i class="iconfont icon-tags"></i>
+                        
+                            <a href="/tags/Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/">Java内存模型</a>
+                        
+                    </div>
+                
+            </div>
+        </div>
+    </div>
 
     <div class="row mx-auto index-card">
         
@@ -541,46 +580,6 @@
         </div>
     </div>
 
-    <div class="row mx-auto index-card">
-        
-        
-        <div class="col-12 col-md-12 mx-auto index-info">
-            <a class="index-header" href="/passages/design-pattern-learn-8/">设计模式之美学习（八）</a>
-
-            <a href="/passages/design-pattern-learn-8/" class="index-excerpt">
-                
-                
-                    
-                
-                <div>为何说要多用组合少用继承？如何决定该用组合还是继承？</div>
-            </a>
-
-            <div class="index-btm post-metas">
-                
-                    <div class="post-meta mr-3">
-                        <i class="iconfont icon-date"></i>&nbsp;2019-11-25
-                    </div>
-                
-                
-                    <div class="post-meta mr-3">
-                        <i class="iconfont icon-category"></i>
-                        
-                            <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">设计模式(面向对象)</a>
-                        
-                    </div>
-                
-                
-                    <div class="post-meta">
-                        <i class="iconfont icon-tags"></i>
-                        
-                            <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
-                        
-                    </div>
-                
-            </div>
-        </div>
-    </div>
-
 
 
     <nav aria-label="navigation">
@@ -653,6 +652,7 @@
       <span id="timeDate">载入天数...</span>
       <span id="times">载入时分秒...</span>
       <script>
+        document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
         var now = new Date();
 
         function createtime() {

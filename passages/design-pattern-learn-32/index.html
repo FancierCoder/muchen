@@ -17,7 +17,7 @@
     <meta name="description" content="沐晨的个人博客,技术博客">
     <meta name="author" content="Li Duo">
     <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
-    <title>标签 - 二叉树 - MuChen&#39;s Blog</title>
+    <title>设计模式之美学习（三十二） - MuChen&#39;s Blog</title>
 
     <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
@@ -59,7 +59,7 @@
         }
     }
 </script>
-<header style="height: 80vh;">
+<header style="height: 70vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
     <div class="container">
         <a class="navbar-brand"
@@ -146,7 +146,7 @@
 </nav>
 
     <div class="view intro-2" id="background" parallax=true
-         style="background: url('/images/06.jpg') no-repeat center center;
+         style="background: url('/images/07.jpg') no-repeat center center;
                  background-size: cover;">
         <div class="full-bg-img">
             <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -155,6 +155,45 @@
                 
             </span>
 
+                    
+                        
+                            <div class="mt-3 post-meta">
+                                <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                                <time datetime="2020-05-07 15:56">
+                                    2020年5月7日 下午
+                                </time>
+                            </div>
+                        
+
+                        <div class="mt-1">
+                            
+                                
+                                <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    704 字
+                  </span>
+                            
+
+                            
+                                
+                                <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                                    
+                                    
+                                    10
+                                     分钟
+                  </span>
+                            
+
+                            
+                                <!-- 不蒜子统计文章PV -->
+                                
+                                <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
+                    <i class="iconfont icon-eye" aria-hidden="true"></i>
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>
+                            
+                        </div>
                     
                 </div>
 
@@ -166,49 +205,180 @@
 
 <main>
     
-        <div class="container nopadding-md">
-            <div class="py-5" id="board"
-                    >
-                
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12 col-md-10 m-auto">
-                            
+        
 
-<div class="list-group">
-    <!--  <p class="h4">共计 3 篇文章</p>-->
-    <hr>
-    
-        
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
             
-            <p class="h5">2019</p>
-        
-        <a href="/passages/leetcode-binarytree-heap/" class="list-group-item list-group-item-action">
-            <span class="archive-post-title">LeetCode刷题：二叉树和堆</span>
-            <span style="float: right;">09-05</span>
-        </a>
+              <p class="note note-info">
+                
+                  本文最后更新于：21 分钟前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <p>如何设计实现一个集群环境下的分布式单例模式？</p>
+<a id="more"></a>
+
+<h2 id="如何理解单例模式的唯一性？"><a href="#如何理解单例模式的唯一性？" class="headerlink" title="如何理解单例模式的唯一性？"></a>如何理解单例模式的唯一性？</h2><p>单例类中对象的唯一性的作用范围是“进程唯一”的。“进程唯一”指的是进程内唯一，进程间不唯一；“线程唯一”指的是线程内唯一，线程间可以不唯一。实际上，“进程唯一”就意味着线程内、线程间都唯一，这也是“进程唯一”和“线程唯一”的区别之处。“集群唯一”指的是进程内唯一、进程间也唯一。</p>
+<h2 id="如何实现线程唯一的单例？"><a href="#如何实现线程唯一的单例？" class="headerlink" title="如何实现线程唯一的单例？"></a>如何实现线程唯一的单例？</h2><p>我们通过一个 <code>HashMap</code> 来存储对象，其中 <code>key</code> 是线程 <code>ID</code>，<code>value</code> 是对象。这样我们就可以做到，不同的线程对应不同的对象，同一个线程只能对应一个对象。实际上，<code>Java</code> 语言本身提供了 <code>ThreadLocal</code> 并发工具类，可以更加轻松地实现线程唯一单例。</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">IdGenerator</span> </span>&#123;
+  <span class="hljs-keyword">private</span> AtomicLong id = <span class="hljs-keyword">new</span> AtomicLong(<span class="hljs-number">0</span>);
+
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> ConcurrentHashMap&lt;Long, IdGenerator&gt; instances
+          = <span class="hljs-keyword">new</span> ConcurrentHashMap&lt;&gt;();
+
+  <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">IdGenerator</span><span class="hljs-params">()</span> </span>&#123;&#125;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> IdGenerator <span class="hljs-title">getInstance</span><span class="hljs-params">()</span> </span>&#123;
+    Long currentThreadId = Thread.currentThread().getId();
+    instances.putIfAbsent(currentThreadId, <span class="hljs-keyword">new</span> IdGenerator());
+    <span class="hljs-keyword">return</span> instances.get(currentThreadId);
+  &#125;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">long</span> <span class="hljs-title">getId</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-keyword">return</span> id.incrementAndGet();
+  &#125;
+&#125;</code></pre>
+
+<h2 id="如何实现集群环境下的单例？"><a href="#如何实现集群环境下的单例？" class="headerlink" title="如何实现集群环境下的单例？"></a>如何实现集群环境下的单例？</h2><p>我们需要把这个单例对象序列化并存储到外部共享存储区（比如文件）。进程在使用这个单例对象的时候，需要先从外部共享存储区中将它读取到内存，并反序列化成对象，然后再使用，使用完成之后还需要再存储回外部共享存储区。为了保证任何时刻在进程间都只有一份对象存在，一个进程在获取到对象之后，需要对对象加锁，避免其他进程再将其获取。在进程使用完这个对象之后，需要显式地将对象从内存中删除，并且释放对对象的加锁。</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">IdGenerator</span> </span>&#123;
+  <span class="hljs-keyword">private</span> AtomicLong id = <span class="hljs-keyword">new</span> AtomicLong(<span class="hljs-number">0</span>);
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> IdGenerator instance;
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> SharedObjectStorage storage = FileSharedObjectStorage(<span class="hljs-comment">/*入参省略，比如文件地址*/</span>);
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> DistributedLock lock = <span class="hljs-keyword">new</span> DistributedLock();
+  
+  <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">IdGenerator</span><span class="hljs-params">()</span> </span>&#123;&#125;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">synchronized</span> <span class="hljs-keyword">static</span> IdGenerator <span class="hljs-title">getInstance</span><span class="hljs-params">()</span> 
+    <span class="hljs-title">if</span> <span class="hljs-params">(instance == <span class="hljs-keyword">null</span>)</span> </span>&#123;
+      lock.lock();
+      instance = storage.load(IdGenerator.class);
+    &#125;
+    <span class="hljs-keyword">return</span> instance;
+  &#125;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> synchroinzed <span class="hljs-keyword">void</span> <span class="hljs-title">freeInstance</span><span class="hljs-params">()</span> </span>&#123;
+    storage.save(<span class="hljs-keyword">this</span>, IdGeneator.class);
+    instance = <span class="hljs-keyword">null</span>; <span class="hljs-comment">//释放对象</span>
+    lock.unlock();
+  &#125;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">long</span> <span class="hljs-title">getId</span><span class="hljs-params">()</span> </span>&#123; 
+    <span class="hljs-keyword">return</span> id.incrementAndGet();
+  &#125;
+&#125;
+
+<span class="hljs-comment">// IdGenerator使用举例</span>
+IdGenerator idGeneator = IdGenerator.getInstance();
+<span class="hljs-keyword">long</span> id = idGenerator.getId();
+IdGenerator.freeInstance();</code></pre>
+
+<h2 id="如何实现一个多例模式？"><a href="#如何实现一个多例模式？" class="headerlink" title="如何实现一个多例模式？"></a>如何实现一个多例模式？</h2><p>“单例”指的是一个类只能创建一个对象。对应地，“多例”指的就是一个类可以创建多个对象，但是个数是有限制的，比如只能创建 <code>3</code> 个对象。多例的实现也比较简单，通过一个 <code>Map</code> 来存储对象类型和对象之间的对应关系，来控制对象的个数。</p>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E8%8C%83%E5%BC%8F-%E5%88%9B%E5%BB%BA%E5%9E%8B/">设计模式与范式(创建型)</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">单例模式</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/passages/design-pattern-learn-31/">
+                        <span class="hidden-mobile">设计模式之美学习（三十一）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+    <div id="vcomments"></div>
+    <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+    <script type="text/javascript">
+        var oldLoadVa = window.onload;
+        window.onload = function () {
+            oldLoadVa && oldLoadVa();
+
+            new Valine({
+                el: "#vcomments",
+                app_id: "O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",
+                app_key: "5Rl3Rhl9zc8BJNvrPcncKWFy",
+                placeholder: "说点什么吧~",
+                path: window.location.pathname,
+                avatar: "retro",
+                meta: ["nick","mail","link"],
+                pageSize: "10",
+                lang: "zh-CN",
+                highlight: true,
+                recordIP: true,
+                serverURLs: "https://lean.muchen.fun",
+            });
+        };
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments
+            powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
     
-        
-        <a href="/passages/21/" class="list-group-item list-group-item-action">
-            <span class="archive-post-title">21.二叉树（下）</span>
-            <span style="float: right;">07-28</span>
-        </a>
-    
-        
-        <a href="/passages/20/" class="list-group-item list-group-item-action">
-            <span class="archive-post-title">20.二叉树（上）</span>
-            <span style="float: right;">07-27</span>
-        </a>
-    
+  </div>
 </div>
 
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><br><div class="text-center">欢迎关注我的公众号</div>
+    </div>
+  </div>
 
 
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     
 </main>
 
@@ -318,6 +488,9 @@
 
 
 
+    
+
+
 
 
     <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
@@ -385,7 +558,7 @@
         var typed = new Typed('#subtitle', {
             strings: [
                 '  ',
-                "标签 - 二叉树&nbsp;",
+                "设计模式之美学习（三十二）&nbsp;",
             ],
             cursorChar: "_",
             typeSpeed: 60,
@@ -429,9 +602,62 @@
 
 
 
+    <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+    <script>
+        $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+            function () {
+                var element = document.createElement('a');
+                $(element).attr('data-fancybox', 'images');
+                $(element).attr('href', $(this).attr('src'));
+                $(this).wrap(element);
+            }
+        );
+    </script>
 
 
 
+
+
+    
+
+    
+        <!-- MathJax -->
+        <script>
+            MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']]
+                },
+                options: {
+                    renderActions: {
+                        findScript: [10, doc => {
+                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                                const display = !!node.type.match(/; *mode=display/);
+                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                                const text = document.createTextNode('');
+                                node.parentNode.replaceChild(text, node);
+                                math.start = {node: text, delim: '', n: 0};
+                                math.end = {node: text, delim: '', n: 0};
+                                doc.math.push(math);
+                            });
+                        }, '', false],
+                        insertedScript: [200, () => {
+                            document.querySelectorAll('mjx-container').forEach(node => {
+                                let target = node.parentNode;
+                                if (target.nodeName.toLowerCase() === 'li') {
+                                    target.parentNode.classList.add('has-jax');
+                                }
+                            });
+                        }, '', false]
+                    }
+                }
+            };
+        </script>
+
+        <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+    
 
 
 

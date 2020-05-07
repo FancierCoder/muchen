@@ -58,7 +58,6 @@
             document.body.classList.add('dark');
         }
     }
-    document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
 </script>
 <header style="height: 60vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
@@ -177,12 +176,18 @@
                             
 
 <div class="list-group">
-    <p class="h4">共计 107 篇文章</p>
+    <p class="h4">共计 108 篇文章</p>
     <hr>
     
         
             
             <p class="h5">2020</p>
+        
+        <a href="/passages/design-pattern-learn-24/" class="list-group-item list-group-item-action">
+            <span class="archive-post-title">设计模式之美学习（二十四）</span>
+            <span style="float: right;">01-06</span>
+        </a>
+    
         
         <a href="/passages/design-pattern-learn-23/" class="list-group-item list-group-item-action">
             <span class="archive-post-title">设计模式之美学习（二十三）</span>
@@ -238,12 +243,6 @@
         <a href="/passages/design-pattern-learn-18/" class="list-group-item list-group-item-action">
             <span class="archive-post-title">设计模式之美学习（十八）</span>
             <span style="float: right;">12-18</span>
-        </a>
-    
-        
-        <a href="/passages/java-memory-model/" class="list-group-item list-group-item-action">
-            <span class="archive-post-title">Java的内存模型</span>
-            <span style="float: right;">12-17</span>
         </a>
     
 </div>
@@ -318,6 +317,7 @@
       <span id="timeDate">载入天数...</span>
       <span id="times">载入时分秒...</span>
       <script>
+        document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
         var now = new Date();
 
         function createtime() {

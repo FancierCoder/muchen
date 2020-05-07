@@ -58,7 +58,6 @@
             document.body.classList.add('dark');
         }
     }
-    document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
 </script>
 <header style="height: 100vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
@@ -180,6 +179,48 @@
                         <div class="col-12 col-md-10 m-auto">
                             
 
+
+    <div class="row mx-auto index-card">
+        
+        
+        <div class="col-12 col-md-12 mx-auto index-info">
+            <a class="index-header" href="/passages/36/">36.回溯算法</a>
+
+            <a href="/passages/36/" class="index-excerpt">
+                
+                
+                    
+                
+                <div>从电影《蝴蝶效应》中学习回溯算法的核心思想</div>
+            </a>
+
+            <div class="index-btm post-metas">
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-date"></i>&nbsp;2019-08-12
+                    </div>
+                
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-category"></i>
+                        
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/">数据结构与算法(中级)</a>
+                        
+                    </div>
+                
+                
+                    <div class="post-meta">
+                        <i class="iconfont icon-tags"></i>
+                        
+                            <a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+                        
+                            <a href="/tags/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/">时间复杂度</a>
+                        
+                    </div>
+                
+            </div>
+        </div>
+    </div>
 
     <div class="row mx-auto index-card">
         
@@ -555,50 +596,6 @@
         </div>
     </div>
 
-    <div class="row mx-auto index-card">
-        
-        
-        <div class="col-12 col-md-12 mx-auto index-info">
-            <a class="index-header" href="/passages/26/">26.堆的应用</a>
-
-            <a href="/passages/26/" class="index-excerpt">
-                
-                
-                    
-                
-                <div>如何快速获取到Top 10最热门的搜索关键词？</div>
-            </a>
-
-            <div class="index-btm post-metas">
-                
-                    <div class="post-meta mr-3">
-                        <i class="iconfont icon-date"></i>&nbsp;2019-08-02
-                    </div>
-                
-                
-                    <div class="post-meta mr-3">
-                        <i class="iconfont icon-category"></i>
-                        
-                            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/">数据结构与算法(中级)</a>
-                        
-                    </div>
-                
-                
-                    <div class="post-meta">
-                        <i class="iconfont icon-tags"></i>
-                        
-                            <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
-                        
-                            <a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
-                        
-                            <a href="/tags/%E5%A0%86/">堆</a>
-                        
-                    </div>
-                
-            </div>
-        </div>
-    </div>
-
 
 
     <nav aria-label="navigation">
@@ -671,6 +668,7 @@
       <span id="timeDate">载入天数...</span>
       <span id="times">载入时分秒...</span>
       <script>
+        document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
         var now = new Date();
 
         function createtime() {

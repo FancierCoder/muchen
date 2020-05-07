@@ -58,7 +58,6 @@
             document.body.classList.add('dark');
         }
     }
-    document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
 </script>
 <header style="height: 100vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
@@ -180,6 +179,46 @@
                         <div class="col-12 col-md-10 m-auto">
                             
 
+
+    <div class="row mx-auto index-card">
+        
+        
+        <div class="col-12 col-md-12 mx-auto index-info">
+            <a class="index-header" href="/passages/java-atomic-introduction/">Java Atomic简介</a>
+
+            <a href="/passages/java-atomic-introduction/" class="index-excerpt">
+                
+                
+                    
+                
+                <div>所谓Atomic，翻译过来就是原子。原子操作一般都是底层通过CPU的指令来实现。而atomic包下的这些类，则可以让我们在多线程环境下，通过一种无锁的原子操作来实现线程安全。</div>
+            </a>
+
+            <div class="index-btm post-metas">
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-date"></i>&nbsp;2019-10-16
+                    </div>
+                
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-category"></i>
+                        
+                            <a href="/categories/%E5%90%8E%E7%AB%AF/">后端</a>
+                        
+                    </div>
+                
+                
+                    <div class="post-meta">
+                        <i class="iconfont icon-tags"></i>
+                        
+                            <a href="/tags/Java-Atomic/">Java Atomic</a>
+                        
+                    </div>
+                
+            </div>
+        </div>
+    </div>
 
     <div class="row mx-auto index-card">
         
@@ -574,53 +613,11 @@
                     <div class="post-meta">
                         <i class="iconfont icon-tags"></i>
                         
-                            <a href="/tags/%E6%A0%88/">栈</a>
-                        
                             <a href="/tags/%E9%98%9F%E5%88%97/">队列</a>
                         
+                            <a href="/tags/%E6%A0%88/">栈</a>
+                        
                             <a href="/tags/%E9%80%92%E5%BD%92/">递归</a>
-                        
-                    </div>
-                
-            </div>
-        </div>
-    </div>
-
-    <div class="row mx-auto index-card">
-        
-        
-        <div class="col-12 col-md-12 mx-auto index-info">
-            <a class="index-header" href="/passages/leetcode-array-and-list/">LeetCode刷题：数组和链表</a>
-
-            <a href="/passages/leetcode-array-and-list/" class="index-excerpt">
-                
-                
-                    
-                
-                <div>一起开启刷题之旅！</div>
-            </a>
-
-            <div class="index-btm post-metas">
-                
-                    <div class="post-meta mr-3">
-                        <i class="iconfont icon-date"></i>&nbsp;2019-08-30
-                    </div>
-                
-                
-                    <div class="post-meta mr-3">
-                        <i class="iconfont icon-category"></i>
-                        
-                            <a href="/categories/LEETCODE/">LEETCODE</a>
-                        
-                    </div>
-                
-                
-                    <div class="post-meta">
-                        <i class="iconfont icon-tags"></i>
-                        
-                            <a href="/tags/%E6%95%B0%E7%BB%84/">数组</a>
-                        
-                            <a href="/tags/%E9%93%BE%E8%A1%A8/">链表</a>
                         
                     </div>
                 
@@ -700,6 +697,7 @@
       <span id="timeDate">载入天数...</span>
       <span id="times">载入时分秒...</span>
       <script>
+        document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
         var now = new Date();
 
         function createtime() {
