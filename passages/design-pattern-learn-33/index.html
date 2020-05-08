@@ -17,7 +17,7 @@
     <meta name="description" content="沐晨的个人博客,技术博客">
     <meta name="author" content="Li Duo">
     <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
-    <title>Shiro过滤器导致的前端跨域 - MuChen&#39;s Blog</title>
+    <title>设计模式之美学习（三十三） - MuChen&#39;s Blog</title>
 
     <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
@@ -159,8 +159,8 @@
                         
                             <div class="mt-3 post-meta">
                                 <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-                                <time datetime="2020-05-06 13:57">
-                                    2020年5月6日 下午
+                                <time datetime="2020-05-08 18:41">
+                                    2020年5月8日 晚上
                                 </time>
                             </div>
                         
@@ -170,7 +170,7 @@
                                 
                                 <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1.2k 字
+                    1.4k 字
                   </span>
                             
 
@@ -217,151 +217,137 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2 天前
+                  本文最后更新于：16 分钟前
                 
               </p>
             
             <article class="markdown-body">
-              <!-- more -->
-<h2 id="问题背景"><a href="#问题背景" class="headerlink" title="问题背景"></a>问题背景</h2><p>公司项目是前后端分离的，最近要求在请求时都要在请求头加入自定义的 <code>token</code>，在做接口调试时，前端总是请求不通，然而自己用 <code>POSTMAN</code> 等工具时都可以，这就出现了问题，也就是 <strong>复杂请求</strong> 的跨域问题。</p>
-<h2 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h2><blockquote>
-<p>部分文段摘自 <a href="http://www.ruanyifeng.com/blog/2016/04/cors.html" target="_blank" rel="noopener">跨域资源共享 CORS 详解</a></p>
-</blockquote>
-<h3 id="复杂请求"><a href="#复杂请求" class="headerlink" title="复杂请求"></a>复杂请求</h3><p>浏览器将<code>CORS</code>请求分成两类：简单请求（<code>simple request</code>）和非简单请求（<code>not-so-simple request</code>）。</p>
-<p>只要同时满足以下两大条件，就属于简单请求。</p>
+              <p>为什么说没事不要随便用工厂模式创建对象？</p>
+<a id="more"></a>
+
+<p>一般情况下，工厂模式分为三种更加细分的类型：简单工厂、工厂方法和抽象工厂。不过，在 <code>GoF</code> 的《设计模式》一书中，它将简单工厂模式看作是工厂方法模式的一种特例，所以工厂模式只被分成了工厂方法和抽象工厂两类。实际上，前面一种分类方法更加常见。</p>
 <ul>
-<li>请求方法是以下三种方法之一：<pre><code class="hljs plain">HEAD
-GET
-POST</code></pre></li>
-<li><code>HTTP</code>的头信息不超出以下几种字段：<pre><code class="hljs plain">Accept
-Accept-Language
-Content-Language
-Last-Event-ID
-Content-Type: 只限于三个值 application&#x2F;x-www-form-urlencoded multipart&#x2F;form-data text&#x2F;plain</code></pre>
-这是为了兼容表单（<code>form</code>），因为历史上表单一直可以发出跨域请求。<code>AJAX</code> 的跨域设计就是，只要表单可以发，<code>AJAX</code> 就可以直接发。</li>
+<li>什么时候该用工厂模式？相对于直接 <code>new</code> 来创建对象，用工厂模式来创建究竟有什么好处呢？</li>
 </ul>
-<p>凡是不同时满足上面两个条件，就属于非简单请求。</p>
-<h3 id="预检请求"><a href="#预检请求" class="headerlink" title="预检请求"></a>预检请求</h3><p>非简单请求的<code>CORS</code>请求，会在正式通信之前，增加一次<code>HTTP</code>查询请求，称为”预检”请求（<code>preflight</code>）。</p>
-<p>浏览器先询问服务器，当前网页所在的域名是否在服务器的许可名单之中，以及可以使用哪些<code>HTTP</code>动词和头信息字段。只有得到肯定答复，浏览器才会发出正式的<code>XMLHttpRequest</code>请求，否则就报错。</p>
-<h3 id="过滤器"><a href="#过滤器" class="headerlink" title="过滤器"></a>过滤器</h3><p>由于项目中的 <code>shiro</code> 使用了 <code>UserFilter</code>, 下面是其代码：</p>
-<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UserFilter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AccessControlFilter</span> </span>&#123;
-    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">UserFilter</span><span class="hljs-params">()</span> </span>&#123;
+<p>三种工厂模式中，简单工厂和工厂方法比较常用，抽象工厂的应用场景比较特殊，所以很少用到。下面重点对前两种工厂模式的应用场景进行总结。</p>
+<p>当创建逻辑比较复杂，是一个“大工程”的时候，我们就考虑使用工厂模式，封装对象的创建过程，将对象的创建和使用相分离。何为创建逻辑比较复杂呢？有下面两种情况。</p>
+<ul>
+<li>第一种情况：类似规则配置解析的例子，代码中存在 <code>if-else</code> 分支判断，动态地根据不同的类型创建不同的对象。针对这种情况，我们就考虑使用工厂模式，将这一大坨 <code>if-else</code> 创建对象的代码抽离出来，放到工厂类中。</li>
+</ul>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">RuleConfigSource</span> </span>&#123;
+  <span class="hljs-function"><span class="hljs-keyword">public</span> RuleConfig <span class="hljs-title">load</span><span class="hljs-params">(String ruleConfigFilePath)</span> </span>&#123;
+    String ruleConfigFileExtension = getFileExtension(ruleConfigFilePath);
+    IRuleConfigParser parser = RuleConfigParserFactory.createParser(ruleConfigFileExtension);
+    <span class="hljs-keyword">if</span> (parser == <span class="hljs-keyword">null</span>) &#123;
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> InvalidRuleConfigException(
+              <span class="hljs-string">"Rule config file format is not supported: "</span> + ruleConfigFilePath);
     &#125;
 
-    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">isAccessAllowed</span><span class="hljs-params">(ServletRequest request, ServletResponse response, Object mappedValue)</span> </span>&#123;
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.isLoginRequest(request, response)) &#123;
-            <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
-        &#125; <span class="hljs-keyword">else</span> &#123;
-            Subject subject = <span class="hljs-keyword">this</span>.getSubject(request, response);
-            <span class="hljs-keyword">return</span> subject.getPrincipal() != <span class="hljs-keyword">null</span>;
-        &#125;
-    &#125;
+    String configText = <span class="hljs-string">""</span>;
+    <span class="hljs-comment">//从ruleConfigFilePath文件中读取配置文本到configText中</span>
+    RuleConfig ruleConfig = parser.parse(configText);
+    <span class="hljs-keyword">return</span> ruleConfig;
+  &#125;
 
-    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">onAccessDenied</span><span class="hljs-params">(ServletRequest request, ServletResponse response)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
-        <span class="hljs-keyword">this</span>.saveRequestAndRedirectToLogin(request, response);
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+  <span class="hljs-function"><span class="hljs-keyword">private</span> String <span class="hljs-title">getFileExtension</span><span class="hljs-params">(String filePath)</span> </span>&#123;
+    <span class="hljs-comment">//...解析文件名获取扩展名，比如rule.json，返回json</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-string">"json"</span>;
+  &#125;
+&#125;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">RuleConfigParserFactory</span> </span>&#123;
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> IRuleConfigParser <span class="hljs-title">createParser</span><span class="hljs-params">(String configFormat)</span> </span>&#123;
+    IRuleConfigParser parser = <span class="hljs-keyword">null</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-string">"json"</span>.equalsIgnoreCase(configFormat)) &#123;
+      parser = <span class="hljs-keyword">new</span> JsonRuleConfigParser();
+    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">"xml"</span>.equalsIgnoreCase(configFormat)) &#123;
+      parser = <span class="hljs-keyword">new</span> XmlRuleConfigParser();
+    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">"yaml"</span>.equalsIgnoreCase(configFormat)) &#123;
+      parser = <span class="hljs-keyword">new</span> YamlRuleConfigParser();
+    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">"properties"</span>.equalsIgnoreCase(configFormat)) &#123;
+      parser = <span class="hljs-keyword">new</span> PropertiesRuleConfigParser();
     &#125;
+    <span class="hljs-keyword">return</span> parser;
+  &#125;
+&#125;
+<span class="hljs-comment">//如果 parser 可以复用，为了节省内存和对象创建的时间，我们可以将 parser 事先创建好缓存起来。</span>
+<span class="hljs-comment">//当调用 createParser() 函数的时候，我们从缓存中取出 parser 对象直接使用。</span>
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">RuleConfigParserFactory</span> </span>&#123;
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Map&lt;String, RuleConfigParser&gt; cachedParsers = <span class="hljs-keyword">new</span> HashMap&lt;&gt;();
+
+  <span class="hljs-keyword">static</span> &#123;
+    cachedParsers.put(<span class="hljs-string">"json"</span>, <span class="hljs-keyword">new</span> JsonRuleConfigParser());
+    cachedParsers.put(<span class="hljs-string">"xml"</span>, <span class="hljs-keyword">new</span> XmlRuleConfigParser());
+    cachedParsers.put(<span class="hljs-string">"yaml"</span>, <span class="hljs-keyword">new</span> YamlRuleConfigParser());
+    cachedParsers.put(<span class="hljs-string">"properties"</span>, <span class="hljs-keyword">new</span> PropertiesRuleConfigParser());
+  &#125;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> IRuleConfigParser <span class="hljs-title">createParser</span><span class="hljs-params">(String configFormat)</span> </span>&#123;
+    <span class="hljs-keyword">if</span> (configFormat == <span class="hljs-keyword">null</span> || configFormat.isEmpty()) &#123;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;<span class="hljs-comment">//返回null还是IllegalArgumentException全凭你自己说了算</span>
+    &#125;
+    IRuleConfigParser parser = cachedParsers.get(configFormat.toLowerCase());
+    <span class="hljs-keyword">return</span> parser;
+  &#125;
 &#125;</code></pre>
-<p>可以看出过滤器在过滤时上面的判断是用来判断是否为登录请求的，否则就去寻找登录凭证。而在 <code>OPTIONS</code> 请求中，是没有携带上 <code>token</code> 信息的，下面是当时情况下请求的 <code>header</code>:</p>
-<pre><code class="hljs http">=== MimeHeaders ===
-host = 192.168.7.139:4000
-connection = keep-alive
-accept = */*
-access-control-request-method = POST
-access-control-request-headers = content-type,x-admin-token
-origin = http://192.168.7.117:8080
-sec-fetch-mode = cors
-referer = http://192.168.7.117:8080/
-user-agent = Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36
-accept-encoding = gzip, deflate
-accept-language = zh-CN,zh;q=0.9</code></pre>
-<p>可以看到 <code>token</code> 是被带在了 <code>access-control-request-headers</code> 中，这样 <code>shiro</code> 是找不到登录凭证的，请求自然就被拒绝了。</p>
-<h2 id="问题解决"><a href="#问题解决" class="headerlink" title="问题解决"></a>问题解决</h2><p>解决办法就是重写 <code>UserFilter</code>(具体看项目用的是哪个过滤器) 的 <code>isAccessAllowed</code> 方法，代码如下：</p>
-<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">StatelessAuthcFilter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">UserFilter</span> </span>&#123;
 
-    <span class="hljs-meta">@Override</span>
-    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">preHandle</span><span class="hljs-params">(ServletRequest request, ServletResponse response)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
-        HttpServletRequest httpRequest = WebUtils.toHttp(request);
-        HttpServletResponse httpResponse = WebUtils.toHttp(response);
-        <span class="hljs-keyword">if</span> (httpRequest.getMethod().equals(RequestMethod.OPTIONS.name())) &#123;
-            httpResponse.setHeader(<span class="hljs-string">"Access-control-Allow-Origin"</span>, httpRequest.getHeader(<span class="hljs-string">"Origin"</span>));
-            httpResponse.setHeader(<span class="hljs-string">"Access-Control-Allow-Methods"</span>, httpRequest.getMethod());
-            httpResponse.setHeader(<span class="hljs-string">"Access-Control-Allow-Headers"</span>, httpRequest.getHeader(<span class="hljs-string">"Access-Control-Request-Headers"</span>));
-            httpResponse.setStatus(HttpStatus.OK.value());
-            <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
-        &#125;
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.preHandle(request, response);
+<ul>
+<li>还有一种情况，尽管我们不需要根据不同的类型创建不同的对象，但是，单个对象本身的创建过程比较复杂，比如前面提到的要组合其他类对象，做各种初始化操作。在这种情况下，我们也可以考虑使用工厂模式，将对象的创建过程封装到工厂类中。</li>
+</ul>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">RuleConfigSource</span> </span>&#123;
+  <span class="hljs-function"><span class="hljs-keyword">public</span> RuleConfig <span class="hljs-title">load</span><span class="hljs-params">(String ruleConfigFilePath)</span> </span>&#123;
+    String ruleConfigFileExtension = getFileExtension(ruleConfigFilePath);
+
+    IRuleConfigParserFactory parserFactory = RuleConfigParserFactoryMap.getParserFactory(ruleConfigFileExtension);
+    <span class="hljs-keyword">if</span> (parserFactory == <span class="hljs-keyword">null</span>) &#123;
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> InvalidRuleConfigException(<span class="hljs-string">"Rule config file format is not supported: "</span> + ruleConfigFilePath);
     &#125;
+    IRuleConfigParser parser = parserFactory.createParser();
+
+    String configText = <span class="hljs-string">""</span>;
+    <span class="hljs-comment">//从ruleConfigFilePath文件中读取配置文本到configText中</span>
+    RuleConfig ruleConfig = parser.parse(configText);
+    <span class="hljs-keyword">return</span> ruleConfig;
+  &#125;
+
+  <span class="hljs-function"><span class="hljs-keyword">private</span> String <span class="hljs-title">getFileExtension</span><span class="hljs-params">(String filePath)</span> </span>&#123;
+    <span class="hljs-comment">//...解析文件名获取扩展名，比如rule.json，返回json</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-string">"json"</span>;
+  &#125;
+&#125;
+
+<span class="hljs-comment">//因为工厂类只包含方法，不包含成员变量，完全可以复用，</span>
+<span class="hljs-comment">//不需要每次都创建新的工厂类对象，所以，简单工厂模式的第二种实现思路更加合适。</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">RuleConfigParserFactoryMap</span> </span>&#123; <span class="hljs-comment">//工厂的工厂</span>
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Map&lt;String, IRuleConfigParserFactory&gt; cachedFactories = <span class="hljs-keyword">new</span> HashMap&lt;&gt;();
+
+  <span class="hljs-keyword">static</span> &#123;
+    cachedFactories.put(<span class="hljs-string">"json"</span>, <span class="hljs-keyword">new</span> JsonRuleConfigParserFactory());
+    cachedFactories.put(<span class="hljs-string">"xml"</span>, <span class="hljs-keyword">new</span> XmlRuleConfigParserFactory());
+    cachedFactories.put(<span class="hljs-string">"yaml"</span>, <span class="hljs-keyword">new</span> YamlRuleConfigParserFactory());
+    cachedFactories.put(<span class="hljs-string">"properties"</span>, <span class="hljs-keyword">new</span> PropertiesRuleConfigParserFactory());
+  &#125;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> IRuleConfigParserFactory <span class="hljs-title">getParserFactory</span><span class="hljs-params">(String type)</span> </span>&#123;
+    <span class="hljs-keyword">if</span> (type == <span class="hljs-keyword">null</span> || type.isEmpty()) &#123;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+    &#125;
+    IRuleConfigParserFactory parserFactory = cachedFactories.get(type.toLowerCase());
+    <span class="hljs-keyword">return</span> parserFactory;
+  &#125;
 &#125;</code></pre>
-<p>然后再去 shiro 配置中将 user 过滤器修改为自定义的过滤器：</p>
-<pre><code class="hljs java"><span class="hljs-comment">/**
-     * Shiro过滤器配置
-     */</span>
-    <span class="hljs-meta">@Bean</span>
-    <span class="hljs-function"><span class="hljs-keyword">public</span> ShiroFilterFactoryBean <span class="hljs-title">shiroFilterFactoryBean</span><span class="hljs-params">(SecurityManager securityManager)</span> </span>&#123;
-        ShiroFilterFactoryBean shiroFilterFactoryBean = <span class="hljs-keyword">new</span> ShiroFilterFactoryBean();
-        <span class="hljs-comment">// Shiro的核心安全接口,这个属性是必须的</span>
-        shiroFilterFactoryBean.setSecurityManager(securityManager);
-        <span class="hljs-comment">// 身份认证失败，则跳转到登录页面的配置</span>
-        shiroFilterFactoryBean.setLoginUrl(loginUrl);
-        <span class="hljs-comment">// 权限认证失败，则跳转到指定页面</span>
-        shiroFilterFactoryBean.setUnauthorizedUrl(unauthorizedUrl);
 
-        Map&lt;String, Filter&gt; filters = <span class="hljs-keyword">new</span> LinkedHashMap&lt;&gt;();
-        filters.put(<span class="hljs-string">"user"</span>, <span class="hljs-keyword">new</span> StatelessAuthcFilter());
-        shiroFilterFactoryBean.setFilters(filters);
-
-        <span class="hljs-comment">// Shiro连接约束配置，即过滤链的定义</span>
-        Map&lt;String, String&gt; filterChainDefinitionMap = <span class="hljs-keyword">new</span> LinkedHashMap&lt;&gt;();
-        <span class="hljs-comment">// 对静态资源设置匿名访问</span>
-        filterChainDefinitionMap.put(<span class="hljs-string">"/favicon.ico**"</span>, <span class="hljs-string">"anon"</span>);
-        filterChainDefinitionMap.put(<span class="hljs-string">"/css/**"</span>, <span class="hljs-string">"anon"</span>);
-        filterChainDefinitionMap.put(<span class="hljs-string">"/docs/**"</span>, <span class="hljs-string">"anon"</span>);
-        filterChainDefinitionMap.put(<span class="hljs-string">"/fonts/**"</span>, <span class="hljs-string">"anon"</span>);
-        filterChainDefinitionMap.put(<span class="hljs-string">"/img/**"</span>, <span class="hljs-string">"anon"</span>);
-        filterChainDefinitionMap.put(<span class="hljs-string">"/ajax/**"</span>, <span class="hljs-string">"anon"</span>);
-        filterChainDefinitionMap.put(<span class="hljs-string">"/js/**"</span>, <span class="hljs-string">"anon"</span>);
-        <span class="hljs-comment">// 不需要拦截的访问</span>
-        filterChainDefinitionMap.put(<span class="hljs-string">"/auth/login"</span>, <span class="hljs-string">"anon"</span>);
-        <span class="hljs-comment">// 所有请求需要认证</span>
-        filterChainDefinitionMap.put(<span class="hljs-string">"/**"</span>, <span class="hljs-string">"user"</span>);
-        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
-        <span class="hljs-keyword">return</span> shiroFilterFactoryBean;
-    &#125;</code></pre>
-<p>本以为这样就好了，但实际上在页面重定向后再请求接口还是有问题，这是因为重定向会会默认把请求头清空，所以还需要将 <code>onAccessDenied</code> 方法重写，完整的代码如下：</p>
-<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">StatelessAuthcFilter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">UserFilter</span> </span>&#123;
-
-    <span class="hljs-meta">@Override</span>
-    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">preHandle</span><span class="hljs-params">(ServletRequest request, ServletResponse response)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
-        HttpServletRequest httpRequest = WebUtils.toHttp(request);
-        HttpServletResponse httpResponse = WebUtils.toHttp(response);
-        <span class="hljs-keyword">if</span> (httpRequest.getMethod().equals(RequestMethod.OPTIONS.name())) &#123;
-            httpResponse.setHeader(<span class="hljs-string">"Access-control-Allow-Origin"</span>, httpRequest.getHeader(<span class="hljs-string">"Origin"</span>));
-            httpResponse.setHeader(<span class="hljs-string">"Access-Control-Allow-Methods"</span>, httpRequest.getMethod());
-            httpResponse.setHeader(<span class="hljs-string">"Access-Control-Allow-Headers"</span>, httpRequest.getHeader(<span class="hljs-string">"Access-Control-Request-Headers"</span>));
-            httpResponse.setStatus(HttpStatus.OK.value());
-            <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
-        &#125;
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.preHandle(request, response);
-    &#125;
-
-    <span class="hljs-meta">@Override</span>
-    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">onAccessDenied</span><span class="hljs-params">(ServletRequest request, ServletResponse response)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
-        HttpServletResponse httpResp = WebUtils.toHttp(response);
-        HttpServletRequest httpReq = WebUtils.toHttp(request);
-
-        <span class="hljs-comment">/*系统重定向会默认把请求头清空，这里通过拦截器重新设置请求头，解决跨域问题*/</span>
-        httpResp.addHeader(<span class="hljs-string">"Access-Control-Allow-Origin"</span>, httpReq.getHeader(<span class="hljs-string">"Origin"</span>));
-        httpResp.addHeader(<span class="hljs-string">"Access-Control-Allow-Headers"</span>, <span class="hljs-string">"*"</span>);
-        httpResp.addHeader(<span class="hljs-string">"Access-Control-Allow-Methods"</span>, <span class="hljs-string">"*"</span>);
-        httpResp.addHeader(<span class="hljs-string">"Access-Control-Allow-Credentials"</span>, <span class="hljs-string">"true"</span>);
-
-        <span class="hljs-keyword">this</span>.saveRequestAndRedirectToLogin(request, response);
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
-    &#125;
-
-&#125;</code></pre>
-<p>这样就解决了 <code>shiro</code> 导致的跨域问题，如果内容对你有所帮助，可以分享给你的好友共同学习。</p>
+<p>对于第一种情况，当每个对象的创建逻辑都比较简单的时候，推荐使用简单工厂模式，将多个对象的创建逻辑放到一个工厂类中。当每个对象的创建逻辑都比较复杂的时候，为了避免设计一个过于庞大的简单工厂类，推荐使用工厂方法模式，将创建逻辑拆分得更细，每个对象的创建逻辑独立到各自的工厂类中。同理，对于第二种情况，因为单个对象本身的创建逻辑就比较复杂，所以，建议使用工厂方法模式。</p>
+<p>除了刚刚提到的这几种情况之外，如果创建对象的逻辑并不复杂，那我们就直接通过 <code>new</code> 来创建对象就可以了，不需要使用工厂模式。</p>
+<p>现在，我们上升一个思维层面来看工厂模式，它的作用无外乎下面这四个。这也是判断要不要使用工厂模式的最本质的参考标准。</p>
+<ul>
+<li>封装变化：创建逻辑有可能变化，封装成工厂类之后，创建逻辑的变更对调用者透明。</li>
+<li>代码复用：创建代码抽离到独立的工厂类之后可以复用。</li>
+<li>隔离复杂性：封装复杂的创建逻辑，调用者无需了解如何创建对象。</li>
+<li>控制复杂度：将创建代码抽离出来，让原本的函数或类职责更单一，代码更简洁。</li>
+</ul>
+<p>参考：<a href="https://time.geekbang.org/column/article/197254" target="_blank" rel="noopener">工厂模式（上）：我为什么说没事不要随便用工厂模式创建对象？</a></p>
 
             </article>
             <hr>
@@ -371,7 +357,7 @@ accept-language = zh-CN,zh;q=0.9</code></pre>
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/%E8%B8%A9%E5%9D%91%E7%BB%8F%E5%8E%86/">踩坑经历</a>
+                      <a class="hover-with-bg" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E8%8C%83%E5%BC%8F-%E5%88%9B%E5%BB%BA%E5%9E%8B/">设计模式与范式(创建型)</a>
                     
                   </div>
                 
@@ -379,9 +365,9 @@ accept-language = zh-CN,zh;q=0.9</code></pre>
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/SHIRO/">SHIRO</a>
+                      <a class="hover-with-bg" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
                     
-                      <a class="hover-with-bg" href="/tags/%E8%B7%A8%E5%9F%9F/">跨域</a>
+                      <a class="hover-with-bg" href="/tags/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/">工厂模式</a>
                     
                   </div>
                 
@@ -394,18 +380,12 @@ accept-language = zh-CN,zh;q=0.9</code></pre>
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/passages/design-pattern-learn-31/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">设计模式之美学习（三十一）</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </div>
                   <div class="post-next col-6">
                     
                     
-                      <a href="/passages/design-pattern-learn-30/">
-                        <span class="hidden-mobile">设计模式之美学习（三十）</span>
+                      <a href="/passages/design-pattern-learn-32/">
+                        <span class="hidden-mobile">设计模式之美学习（三十二）</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -454,14 +434,6 @@ accept-language = zh-CN,zh;q=0.9</code></pre>
         </div>
       </div>
     </div>
-    
-      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
-        <div id="toc">
-    <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
-    <div id="tocbot"></div>
-</div>
-
-      </div>
     
   </div>
 </div>
@@ -585,31 +557,6 @@ accept-language = zh-CN,zh;q=0.9</code></pre>
 
 
     
-    <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
-    <script>
-        $(document).ready(function () {
-            var boardCtn = $('#board-ctn');
-            var boardTop = boardCtn.offset().top;
-
-            tocbot.init({
-                tocSelector: '#tocbot',
-                contentSelector: '.post-content',
-                headingSelector: 'h1,h2,h3,h4,h5,h6',
-                linkClass: 'tocbot-link',
-                activeLinkClass: 'tocbot-active-link',
-                listClass: 'tocbot-list',
-                isCollapsedClass: 'tocbot-is-collapsed',
-                collapsibleClass: 'tocbot-is-collapsible',
-                collapseDepth: 0,
-                scrollSmooth: true,
-                headingsOffset: -boardTop
-            });
-            if ($('.toc-list-item').length > 0) {
-                $('#toc').css('visibility', 'visible');
-            }
-        });
-    </script>
-
 
 
 
@@ -679,7 +626,7 @@ accept-language = zh-CN,zh;q=0.9</code></pre>
         var typed = new Typed('#subtitle', {
             strings: [
                 '  ',
-                "Shiro过滤器导致的前端跨域&nbsp;",
+                "设计模式之美学习（三十三）&nbsp;",
             ],
             cursorChar: "_",
             typeSpeed: 60,
