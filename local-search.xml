@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>设计模式之美学习（三十四）</title>
+    <link href="/passages/design-pattern-learn-34/"/>
+    <url>/passages/design-pattern-learn-34/</url>
+    
+    <content type="html"><![CDATA[<p>如何设计实现一个Dependency Injection框架？</p><a id="more"></a><h2 id="工厂模式和-DI-容器有何区别？"><a href="#工厂模式和-DI-容器有何区别？" class="headerlink" title="工厂模式和 DI 容器有何区别？"></a>工厂模式和 DI 容器有何区别？</h2><p>实际上，<code>DI</code> 容器底层最基本的设计思路就是基于工厂模式的。<code>DI</code> 容器相当于一个大的工厂类，负责在程序启动的时候，根据配置（要创建哪些类对象，每个类对象的创建需要依赖哪些其他类对象）事先创建好对象。当应用程序需要使用某个类对象的时候，直接从容器中获取即可。正是因为它持有一堆对象，所以这个框架才被称为“容器”。</p><p><code>DI</code> 容器相对于我们上节课讲的工厂模式的例子来说，它处理的是更大的对象创建工程。上节课讲的工厂模式中，一个工厂类只负责某个类对象或者某一组相关类对象（继承自同一抽象类或者接口的子类）的创建，而 <code>DI</code> 容器负责的是整个应用中所有类对象的创建。</p><h2 id="DI-容器的核心功能有哪些？"><a href="#DI-容器的核心功能有哪些？" class="headerlink" title="DI 容器的核心功能有哪些？"></a>DI 容器的核心功能有哪些？</h2><p>一个简单的 <code>DI</code> 容器的核心功能一般有三个：配置解析、对象创建和对象生命周期管理。</p><h2 id="如何实现一个简单的-DI-容器？"><a href="#如何实现一个简单的-DI-容器？" class="headerlink" title="如何实现一个简单的 DI 容器？"></a>如何实现一个简单的 DI 容器？</h2><p>实际上，用 <code>Java</code> 语言来实现一个简单的 <code>DI</code> 容器，核心逻辑只需要包括这样两个部分：配置文件解析、根据配置文件通过“反射”语法来创建对象。</p><p>核心工厂类设计:</p><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BeansFactory</span> </span>&#123;  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> ConcurrentHashMap&lt;String, Object&gt; singletonObjects = <span class="hljs-keyword">new</span> ConcurrentHashMap&lt;&gt;();  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> ConcurrentHashMap&lt;String, BeanDefinition&gt; beanDefinitions = <span class="hljs-keyword">new</span> ConcurrentHashMap&lt;&gt;();  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">addBeanDefinitions</span><span class="hljs-params">(List&lt;BeanDefinition&gt; beanDefinitionList)</span> </span>&#123;    <span class="hljs-keyword">for</span> (BeanDefinition beanDefinition : beanDefinitionList) &#123;      <span class="hljs-keyword">this</span>.beanDefinitions.putIfAbsent(beanDefinition.getId(), beanDefinition);    &#125;    <span class="hljs-keyword">for</span> (BeanDefinition beanDefinition : beanDefinitionList) &#123;      <span class="hljs-keyword">if</span> (beanDefinition.isLazyInit() == <span class="hljs-keyword">false</span> &amp;&amp; beanDefinition.isSingleton()) &#123;        createBean(beanDefinition);      &#125;    &#125;  &#125;  <span class="hljs-function"><span class="hljs-keyword">public</span> Object <span class="hljs-title">getBean</span><span class="hljs-params">(String beanId)</span> </span>&#123;    BeanDefinition beanDefinition = beanDefinitions.get(beanId);    <span class="hljs-keyword">if</span> (beanDefinition == <span class="hljs-keyword">null</span>) &#123;      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> NoSuchBeanDefinitionException(<span class="hljs-string">"Bean is not defined: "</span> + beanId);    &#125;    <span class="hljs-keyword">return</span> createBean(beanDefinition);  &#125;  <span class="hljs-meta">@VisibleForTesting</span>  <span class="hljs-function"><span class="hljs-keyword">protected</span> Object <span class="hljs-title">createBean</span><span class="hljs-params">(BeanDefinition beanDefinition)</span> </span>&#123;    <span class="hljs-keyword">if</span> (beanDefinition.isSingleton() &amp;&amp; singletonObjects.contains(beanDefinition.getId())) &#123;      <span class="hljs-keyword">return</span> singletonObjects.get(beanDefinition.getId());    &#125;    Object bean = <span class="hljs-keyword">null</span>;    <span class="hljs-keyword">try</span> &#123;      Class beanClass = Class.forName(beanDefinition.getClassName());      List&lt;BeanDefinition.ConstructorArg&gt; args = beanDefinition.getConstructorArgs();      <span class="hljs-keyword">if</span> (args.isEmpty()) &#123;        bean = beanClass.newInstance();      &#125; <span class="hljs-keyword">else</span> &#123;        Class[] argClasses = <span class="hljs-keyword">new</span> Class[args.size()];        Object[] argObjects = <span class="hljs-keyword">new</span> Object[args.size()];        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; args.size(); ++i) &#123;          BeanDefinition.ConstructorArg arg = args.get(i);          <span class="hljs-keyword">if</span> (!arg.getIsRef()) &#123;            argClasses[i] = arg.getType();            argObjects[i] = arg.getArg();          &#125; <span class="hljs-keyword">else</span> &#123;            BeanDefinition refBeanDefinition = beanDefinitions.get(arg.getArg());            <span class="hljs-keyword">if</span> (refBeanDefinition == <span class="hljs-keyword">null</span>) &#123;              <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> NoSuchBeanDefinitionException(<span class="hljs-string">"Bean is not defined: "</span> + arg.getArg());            &#125;            argClasses[i] = Class.forName(refBeanDefinition.getClassName());            argObjects[i] = createBean(refBeanDefinition);          &#125;        &#125;        bean = beanClass.getConstructor(argClasses).newInstance(argObjects);      &#125;    &#125; <span class="hljs-keyword">catch</span> (ClassNotFoundException | IllegalAccessException            | InstantiationException | NoSuchMethodException | InvocationTargetException e) &#123;      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> BeanCreationFailureException(<span class="hljs-string">""</span>, e);    &#125;    <span class="hljs-keyword">if</span> (bean != <span class="hljs-keyword">null</span> &amp;&amp; beanDefinition.isSingleton()) &#123;      singletonObjects.putIfAbsent(beanDefinition.getId(), bean);      <span class="hljs-keyword">return</span> singletonObjects.get(beanDefinition.getId());    &#125;    <span class="hljs-keyword">return</span> bean;  &#125;&#125;</code></pre><h2 id="重点内容"><a href="#重点内容" class="headerlink" title="重点内容"></a>重点内容</h2><p><code>DI</code> 容器在一些软件开发中已经成为了标配，比如 <code>Spring IOC</code>、<code>Google Guice</code>。但是，大部分人可能只是把它当作一个黑盒子来使用，并未真正去了解它的底层是如何实现的。当然，如果只是做一些简单的小项目，简单会用就足够了，但是，如果我们面对的是非常复杂的系统，当系统出现问题的时候，对底层原理的掌握程度，决定了我们排查问题的能力，直接影响到我们排查问题的效率。</p><p>一个简单的 <code>DI</code> 容器的实现原理，其核心逻辑主要包括：配置文件解析，以及根据配置文件通过“反射”语法来创建对象。其中，创建对象的过程就应用到了我们在学的工厂模式。对象创建、组装、管理完全有 <code>DI</code> 容器来负责，跟具体业务代码解耦，让程序员聚焦在业务代码的开发上。</p><p>参考：<a href="https://time.geekbang.org/column/article/198614" target="_blank" rel="noopener">工厂模式（下）：如何设计实现一个Dependency Injection框架？</a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>设计模式与范式(创建型)</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>设计模式</tag>
+      
+      <tag>工厂模式</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>设计模式之美学习（三十三）</title>
     <link href="/passages/design-pattern-learn-33/"/>
     <url>/passages/design-pattern-learn-33/</url>
@@ -1296,9 +1323,9 @@
     
     <tags>
       
-      <tag>栈</tag>
-      
       <tag>队列</tag>
+      
+      <tag>栈</tag>
       
       <tag>递归</tag>
       
