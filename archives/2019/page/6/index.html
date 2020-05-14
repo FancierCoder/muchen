@@ -7,8 +7,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="apple-touch-icon" sizes="76x76" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/touch-icon.png">
-    <link rel="icon" type="image/png" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/favicon.ico">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png">
+    <link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico">
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -16,7 +16,7 @@
     <meta name="theme-color" content="#2f4154">
     <meta name="description" content="沐晨的个人博客,技术博客">
     <meta name="author" content="Li Duo">
-    <meta name="keywords" content="个人博客,个人见解">
+    <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
     <title>归档 - MuChen&#39;s Blog</title>
 
     <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
@@ -50,6 +50,15 @@
 
 
 <body>
+<script>
+    var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+    // 依次判断 系统暗黑模式 指定时间 缓存 dark
+    if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+        if (!(isNight && localStorage.getItem('noDark') === '1')) {
+            document.body.classList.add('dark');
+        }
+    }
+</script>
 <header style="height: 60vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
     <div class="container">
@@ -153,16 +162,6 @@
             </div>
         </div>
     </div>
-    <script>
-        var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
-        // 依次判断 系统暗黑模式 指定时间 缓存 dark
-        if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
-            if (!(isNight && localStorage.getItem('noDark') === '1')) {
-                document.body.classList.add('dark');
-            }
-        }
-        document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
-    </script>
 </header>
 
 <main>
@@ -177,89 +176,77 @@
                             
 
 <div class="list-group">
-    <p class="h4">共计 106 篇文章</p>
+    <p class="h4">共计 114 篇文章</p>
     <hr>
     
         
             
             <p class="h5">2019</p>
         
-        <a href="/passages/33/" class="list-group-item list-group-item-action">
-            <span class="archive-post-title">33.`AC`自动机</span>
-            <span style="float: right;">08-09</span>
+        <a href="/passages/43/" class="list-group-item list-group-item-action">
+            <span class="archive-post-title">43.概率统计</span>
+            <span style="float: right;">08-19</span>
         </a>
     
         
-        <a href="/passages/32/" class="list-group-item list-group-item-action">
-            <span class="archive-post-title">32.`Trie`树</span>
-            <span style="float: right;">08-08</span>
+        <a href="/passages/42/" class="list-group-item list-group-item-action">
+            <span class="archive-post-title">42.位图</span>
+            <span style="float: right;">08-18</span>
         </a>
     
         
-        <a href="/passages/31/" class="list-group-item list-group-item-action">
-            <span class="archive-post-title">31.字符串匹配基础（下）</span>
-            <span style="float: right;">08-07</span>
+        <a href="/passages/41/" class="list-group-item list-group-item-action">
+            <span class="archive-post-title">41.最短路径</span>
+            <span style="float: right;">08-17</span>
         </a>
     
         
-        <a href="/passages/30/" class="list-group-item list-group-item-action">
-            <span class="archive-post-title">30.字符串匹配基础（中）</span>
-            <span style="float: right;">08-06</span>
+        <a href="/passages/40/" class="list-group-item list-group-item-action">
+            <span class="archive-post-title">40.拓扑排序</span>
+            <span style="float: right;">08-16</span>
         </a>
     
         
-        <a href="/passages/29/" class="list-group-item list-group-item-action">
-            <span class="archive-post-title">29.字符串匹配基础（上）</span>
-            <span style="float: right;">08-05</span>
+        <a href="/passages/39/" class="list-group-item list-group-item-action">
+            <span class="archive-post-title">39.动态规划实战</span>
+            <span style="float: right;">08-15</span>
         </a>
     
         
-        <a href="/passages/28/" class="list-group-item list-group-item-action">
-            <span class="archive-post-title">28.深度和广度优先搜索</span>
-            <span style="float: right;">08-04</span>
+        <a href="/passages/38/" class="list-group-item list-group-item-action">
+            <span class="archive-post-title">38.动态规划理论</span>
+            <span style="float: right;">08-14</span>
         </a>
     
         
-        <a href="/passages/27/" class="list-group-item list-group-item-action">
-            <span class="archive-post-title">27.图的表示</span>
-            <span style="float: right;">08-03</span>
+        <a href="/passages/37/" class="list-group-item list-group-item-action">
+            <span class="archive-post-title">37.初识动态规划</span>
+            <span style="float: right;">08-13</span>
         </a>
     
         
-        <a href="/passages/26/" class="list-group-item list-group-item-action">
-            <span class="archive-post-title">26.堆的应用</span>
-            <span style="float: right;">08-02</span>
+        <a href="/passages/36/" class="list-group-item list-group-item-action">
+            <span class="archive-post-title">36.回溯算法</span>
+            <span style="float: right;">08-12</span>
         </a>
     
         
-        <a href="/passages/25/" class="list-group-item list-group-item-action">
-            <span class="archive-post-title">25.堆和堆排序</span>
-            <span style="float: right;">08-01</span>
+        <a href="/passages/35/" class="list-group-item list-group-item-action">
+            <span class="archive-post-title">35.分治算法</span>
+            <span style="float: right;">08-11</span>
         </a>
     
         
-        <a href="/passages/24/" class="list-group-item list-group-item-action">
-            <span class="archive-post-title">24.递归树</span>
-            <span style="float: right;">07-31</span>
-        </a>
-    
-        
-        <a href="/passages/23/" class="list-group-item list-group-item-action">
-            <span class="archive-post-title">23.红黑树（下）</span>
-            <span style="float: right;">07-30</span>
-        </a>
-    
-        
-        <a href="/passages/22/" class="list-group-item list-group-item-action">
-            <span class="archive-post-title">22.红黑树（上）</span>
-            <span style="float: right;">07-29</span>
+        <a href="/passages/34/" class="list-group-item list-group-item-action">
+            <span class="archive-post-title">34.贪心算法</span>
+            <span style="float: right;">08-10</span>
         </a>
     
 </div>
 
     <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <a class="extend prev" rel="prev" href="/archives/2019/page/5/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/archives/2019/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/2019/page/4/">4</a><a class="page-number" href="/archives/2019/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/archives/2019/page/7/">7</a><a class="page-number" href="/archives/2019/page/8/">8</a><a class="extend next" rel="next" href="/archives/2019/page/7/"><i class="iconfont icon-arrowright"></i></a>
+      <a class="extend prev" rel="prev" href="/archives/2019/page/5/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/archives/2019/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/2019/page/4/">4</a><a class="page-number" href="/archives/2019/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/archives/2019/page/7/">7</a><a class="page-number" href="/archives/2019/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/archives/2019/page/10/">10</a><a class="extend next" rel="next" href="/archives/2019/page/7/"><i class="iconfont icon-arrowright"></i></a>
     </span>
     </nav>
     
@@ -327,6 +314,7 @@
       <span id="timeDate">载入天数...</span>
       <span id="times">载入时分秒...</span>
       <script>
+        document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
         var now = new Date();
 
         function createtime() {
@@ -454,7 +442,7 @@
                 "归档&nbsp;",
             ],
             cursorChar: "_",
-            typeSpeed: 60,
+            typeSpeed: 70,
             loop: false,
         });
         typed.stop();

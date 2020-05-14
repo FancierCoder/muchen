@@ -7,8 +7,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="apple-touch-icon" sizes="76x76" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/touch-icon.png">
-    <link rel="icon" type="image/png" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/favicon.ico">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png">
+    <link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico">
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -16,7 +16,7 @@
     <meta name="theme-color" content="#2f4154">
     <meta name="description" content="沐晨的个人博客,技术博客">
     <meta name="author" content="Li Duo">
-    <meta name="keywords" content="个人博客,个人见解">
+    <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
     <title>MuChen&#39;s Blog</title>
 
     <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
@@ -50,6 +50,15 @@
 
 
 <body>
+<script>
+    var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+    // 依次判断 系统暗黑模式 指定时间 缓存 dark
+    if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+        if (!(isNight && localStorage.getItem('noDark') === '1')) {
+            document.body.classList.add('dark');
+        }
+    }
+</script>
 <header style="height: 100vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
     <div class="container">
@@ -137,7 +146,7 @@
 </nav>
 
     <div class="view intro-2" id="background" parallax=true
-         style="background: url('/images/03.jpg') no-repeat center center;
+         style="background: url('https://static.muchen.fun/picture/PAK%20TUA%20FROM%20PAYA%20KUMBUH%20INDONESIA.jpg') no-repeat center center;
                  background-size: cover;">
         <div class="full-bg-img">
             <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -157,16 +166,6 @@
             </div>
         </div>
     </div>
-    <script>
-        var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
-        // 依次判断 系统暗黑模式 指定时间 缓存 dark
-        if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
-            if (!(isNight && localStorage.getItem('noDark') === '1')) {
-                document.body.classList.add('dark');
-            }
-        }
-        document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
-    </script>
 </header>
 
 <main>
@@ -180,6 +179,342 @@
                         <div class="col-12 col-md-10 m-auto">
                             
 
+
+    <div class="row mx-auto index-card">
+        
+        
+        <div class="col-12 col-md-12 mx-auto index-info">
+            <a class="index-header" href="/passages/design-pattern-learn-38/">设计模式之美学习（三十八）</a>
+
+            <a href="/passages/design-pattern-learn-38/" class="index-excerpt">
+                
+                
+                    
+                
+                <div>如何实现支持不同类型和渠道的消息推送系统？</div>
+            </a>
+
+            <div class="index-btm post-metas">
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-date"></i>&nbsp;2020-05-14
+                    </div>
+                
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-category"></i>
+                        
+                            <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E8%8C%83%E5%BC%8F-%E7%BB%93%E6%9E%84%E5%9E%8B/">设计模式与范式(结构型)</a>
+                        
+                    </div>
+                
+                
+                    <div class="post-meta">
+                        <i class="iconfont icon-tags"></i>
+                        
+                            <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+                        
+                            <a href="/tags/%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/">桥接模式</a>
+                        
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="row mx-auto index-card">
+        
+        
+        <div class="col-12 col-md-12 mx-auto index-info">
+            <a class="index-header" href="/passages/design-pattern-learn-37/">设计模式之美学习（三十七）</a>
+
+            <a href="/passages/design-pattern-learn-37/" class="index-excerpt">
+                
+                
+                    
+                
+                <div>代理在RPC、缓存、监控等场景中的应用</div>
+            </a>
+
+            <div class="index-btm post-metas">
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-date"></i>&nbsp;2020-05-13
+                    </div>
+                
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-category"></i>
+                        
+                            <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E8%8C%83%E5%BC%8F-%E7%BB%93%E6%9E%84%E5%9E%8B/">设计模式与范式(结构型)</a>
+                        
+                    </div>
+                
+                
+                    <div class="post-meta">
+                        <i class="iconfont icon-tags"></i>
+                        
+                            <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+                        
+                            <a href="/tags/%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/">代理模式</a>
+                        
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="row mx-auto index-card">
+        
+        
+        <div class="col-12 col-md-12 mx-auto index-info">
+            <a class="index-header" href="/passages/design-pattern-learn-36/">设计模式之美学习（三十六）</a>
+
+            <a href="/passages/design-pattern-learn-36/" class="index-excerpt">
+                
+                
+                    
+                
+                <div>如何最快速地clone一个HashMap散列表？</div>
+            </a>
+
+            <div class="index-btm post-metas">
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-date"></i>&nbsp;2020-05-12
+                    </div>
+                
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-category"></i>
+                        
+                            <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E8%8C%83%E5%BC%8F-%E5%88%9B%E5%BB%BA%E5%9E%8B/">设计模式与范式(创建型)</a>
+                        
+                    </div>
+                
+                
+                    <div class="post-meta">
+                        <i class="iconfont icon-tags"></i>
+                        
+                            <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+                        
+                            <a href="/tags/%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/">原型模式</a>
+                        
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="row mx-auto index-card">
+        
+        
+        <div class="col-12 col-md-12 mx-auto index-info">
+            <a class="index-header" href="/passages/design-pattern-learn-35/">设计模式之美学习（三十五）</a>
+
+            <a href="/passages/design-pattern-learn-35/" class="index-excerpt">
+                
+                
+                    
+                
+                <div>构造函数、set方法、建造者模式三种对象创建方式。</div>
+            </a>
+
+            <div class="index-btm post-metas">
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-date"></i>&nbsp;2020-05-11
+                    </div>
+                
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-category"></i>
+                        
+                            <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E8%8C%83%E5%BC%8F-%E5%88%9B%E5%BB%BA%E5%9E%8B/">设计模式与范式(创建型)</a>
+                        
+                    </div>
+                
+                
+                    <div class="post-meta">
+                        <i class="iconfont icon-tags"></i>
+                        
+                            <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+                        
+                            <a href="/tags/%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F/">建造者模式</a>
+                        
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="row mx-auto index-card">
+        
+        
+        <div class="col-12 col-md-12 mx-auto index-info">
+            <a class="index-header" href="/passages/design-pattern-learn-34/">设计模式之美学习（三十四）</a>
+
+            <a href="/passages/design-pattern-learn-34/" class="index-excerpt">
+                
+                
+                    
+                
+                <div>如何设计实现一个Dependency Injection框架？</div>
+            </a>
+
+            <div class="index-btm post-metas">
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-date"></i>&nbsp;2020-05-09
+                    </div>
+                
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-category"></i>
+                        
+                            <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E8%8C%83%E5%BC%8F-%E5%88%9B%E5%BB%BA%E5%9E%8B/">设计模式与范式(创建型)</a>
+                        
+                    </div>
+                
+                
+                    <div class="post-meta">
+                        <i class="iconfont icon-tags"></i>
+                        
+                            <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+                        
+                            <a href="/tags/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/">工厂模式</a>
+                        
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="row mx-auto index-card">
+        
+        
+        <div class="col-12 col-md-12 mx-auto index-info">
+            <a class="index-header" href="/passages/design-pattern-learn-33/">设计模式之美学习（三十三）</a>
+
+            <a href="/passages/design-pattern-learn-33/" class="index-excerpt">
+                
+                
+                    
+                
+                <div>为什么说没事不要随便用工厂模式创建对象？</div>
+            </a>
+
+            <div class="index-btm post-metas">
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-date"></i>&nbsp;2020-05-08
+                    </div>
+                
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-category"></i>
+                        
+                            <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E8%8C%83%E5%BC%8F-%E5%88%9B%E5%BB%BA%E5%9E%8B/">设计模式与范式(创建型)</a>
+                        
+                    </div>
+                
+                
+                    <div class="post-meta">
+                        <i class="iconfont icon-tags"></i>
+                        
+                            <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+                        
+                            <a href="/tags/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/">工厂模式</a>
+                        
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="row mx-auto index-card">
+        
+        
+        <div class="col-12 col-md-12 mx-auto index-info">
+            <a class="index-header" href="/passages/design-pattern-learn-32/">设计模式之美学习（三十二）</a>
+
+            <a href="/passages/design-pattern-learn-32/" class="index-excerpt">
+                
+                
+                    
+                
+                <div>如何设计实现一个集群环境下的分布式单例模式？</div>
+            </a>
+
+            <div class="index-btm post-metas">
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-date"></i>&nbsp;2020-05-07
+                    </div>
+                
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-category"></i>
+                        
+                            <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E8%8C%83%E5%BC%8F-%E5%88%9B%E5%BB%BA%E5%9E%8B/">设计模式与范式(创建型)</a>
+                        
+                    </div>
+                
+                
+                    <div class="post-meta">
+                        <i class="iconfont icon-tags"></i>
+                        
+                            <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+                        
+                            <a href="/tags/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">单例模式</a>
+                        
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="row mx-auto index-card">
+        
+        
+        <div class="col-12 col-md-12 mx-auto index-info">
+            <a class="index-header" href="/passages/design-pattern-learn-31/">设计模式之美学习（三十一）</a>
+
+            <a href="/passages/design-pattern-learn-31/" class="index-excerpt">
+                
+                
+                    
+                
+                <div>为什么不推荐使用单例模式？</div>
+            </a>
+
+            <div class="index-btm post-metas">
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-date"></i>&nbsp;2020-05-06
+                    </div>
+                
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-category"></i>
+                        
+                            <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E8%8C%83%E5%BC%8F-%E5%88%9B%E5%BB%BA%E5%9E%8B/">设计模式与范式(创建型)</a>
+                        
+                    </div>
+                
+                
+                    <div class="post-meta">
+                        <i class="iconfont icon-tags"></i>
+                        
+                            <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+                        
+                            <a href="/tags/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">单例模式</a>
+                        
+                    </div>
+                
+            </div>
+        </div>
+    </div>
 
     <div class="row mx-auto index-card">
         
@@ -214,6 +549,8 @@
                         <i class="iconfont icon-tags"></i>
                         
                             <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+                        
+                            <a href="/tags/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">单例模式</a>
                         
                     </div>
                 
@@ -261,253 +598,11 @@
         </div>
     </div>
 
-    <div class="row mx-auto index-card">
-        
-        
-        <div class="col-12 col-md-12 mx-auto index-info">
-            <a class="index-header" href="/passages/design-pattern-learn-sum-2/">设计模式之美学习（总结一）</a>
-
-            <a href="/passages/design-pattern-learn-sum-2/" class="index-excerpt">
-                
-                
-                    
-                
-                <div>总结回顾面向对象、设计原则、编程规范、重构技巧等知识点</div>
-            </a>
-
-            <div class="index-btm post-metas">
-                
-                    <div class="post-meta mr-3">
-                        <i class="iconfont icon-date"></i>&nbsp;2020-05-02
-                    </div>
-                
-                
-                    <div class="post-meta mr-3">
-                        <i class="iconfont icon-category"></i>
-                        
-                            <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%A7%84%E8%8C%83%E4%B8%8E%E9%87%8D%E6%9E%84/">设计模式(规范与重构)</a>
-                        
-                    </div>
-                
-                
-                    <div class="post-meta">
-                        <i class="iconfont icon-tags"></i>
-                        
-                            <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
-                        
-                    </div>
-                
-            </div>
-        </div>
-    </div>
-
-    <div class="row mx-auto index-card">
-        
-        
-        <div class="col-12 col-md-12 mx-auto index-info">
-            <a class="index-header" href="/passages/shiro-cause-cors/">Shiro过滤器导致的前端跨域</a>
-
-            <a href="/passages/shiro-cause-cors/" class="index-excerpt">
-                
-                
-                    
-                
-                <div>Shiro会导致跨域？</div>
-            </a>
-
-            <div class="index-btm post-metas">
-                
-                    <div class="post-meta mr-3">
-                        <i class="iconfont icon-date"></i>&nbsp;2020-04-19
-                    </div>
-                
-                
-                    <div class="post-meta mr-3">
-                        <i class="iconfont icon-category"></i>
-                        
-                            <a href="/categories/%E8%B8%A9%E5%9D%91%E7%BB%8F%E5%8E%86/">踩坑经历</a>
-                        
-                    </div>
-                
-                
-                    <div class="post-meta">
-                        <i class="iconfont icon-tags"></i>
-                        
-                            <a href="/tags/SHIRO/">SHIRO</a>
-                        
-                            <a href="/tags/%E8%B7%A8%E5%9F%9F/">跨域</a>
-                        
-                    </div>
-                
-            </div>
-        </div>
-    </div>
-
-    <div class="row mx-auto index-card">
-        
-        
-        <div class="col-12 col-md-12 mx-auto index-info">
-            <a class="index-header" href="/passages/design-pattern-learn-28/">设计模式之美学习（二十八）</a>
-
-            <a href="/passages/design-pattern-learn-28/" class="index-excerpt">
-                
-                
-                    
-                
-                <div>让你最快速地改善代码质量的20条编程规范（中）</div>
-            </a>
-
-            <div class="index-btm post-metas">
-                
-                    <div class="post-meta mr-3">
-                        <i class="iconfont icon-date"></i>&nbsp;2020-01-15
-                    </div>
-                
-                
-                    <div class="post-meta mr-3">
-                        <i class="iconfont icon-category"></i>
-                        
-                            <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%A7%84%E8%8C%83%E4%B8%8E%E9%87%8D%E6%9E%84/">设计模式(规范与重构)</a>
-                        
-                    </div>
-                
-                
-                    <div class="post-meta">
-                        <i class="iconfont icon-tags"></i>
-                        
-                            <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
-                        
-                    </div>
-                
-            </div>
-        </div>
-    </div>
-
-    <div class="row mx-auto index-card">
-        
-        
-        <div class="col-12 col-md-12 mx-auto index-info">
-            <a class="index-header" href="/passages/design-pattern-learn-27/">设计模式之美学习（二十七）</a>
-
-            <a href="/passages/design-pattern-learn-27/" class="index-excerpt">
-                
-                
-                    
-                
-                <div>让你最快速地改善代码质量的20条编程规范（上）</div>
-            </a>
-
-            <div class="index-btm post-metas">
-                
-                    <div class="post-meta mr-3">
-                        <i class="iconfont icon-date"></i>&nbsp;2020-01-13
-                    </div>
-                
-                
-                    <div class="post-meta mr-3">
-                        <i class="iconfont icon-category"></i>
-                        
-                            <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%A7%84%E8%8C%83%E4%B8%8E%E9%87%8D%E6%9E%84/">设计模式(规范与重构)</a>
-                        
-                    </div>
-                
-                
-                    <div class="post-meta">
-                        <i class="iconfont icon-tags"></i>
-                        
-                            <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
-                        
-                    </div>
-                
-            </div>
-        </div>
-    </div>
-
-    <div class="row mx-auto index-card">
-        
-        
-        <div class="col-12 col-md-12 mx-auto index-info">
-            <a class="index-header" href="/passages/design-pattern-learn-26/">设计模式之美学习（二十六）</a>
-
-            <a href="/passages/design-pattern-learn-26/" class="index-excerpt">
-                
-                
-                    
-                
-                <div>如何通过封装、抽象、模块化、中间层等解耦代码？</div>
-            </a>
-
-            <div class="index-btm post-metas">
-                
-                    <div class="post-meta mr-3">
-                        <i class="iconfont icon-date"></i>&nbsp;2020-01-11
-                    </div>
-                
-                
-                    <div class="post-meta mr-3">
-                        <i class="iconfont icon-category"></i>
-                        
-                            <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%A7%84%E8%8C%83%E4%B8%8E%E9%87%8D%E6%9E%84/">设计模式(规范与重构)</a>
-                        
-                    </div>
-                
-                
-                    <div class="post-meta">
-                        <i class="iconfont icon-tags"></i>
-                        
-                            <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
-                        
-                    </div>
-                
-            </div>
-        </div>
-    </div>
-
-    <div class="row mx-auto index-card">
-        
-        
-        <div class="col-12 col-md-12 mx-auto index-info">
-            <a class="index-header" href="/passages/design-pattern-learn-25/">设计模式之美学习（二十五）</a>
-
-            <a href="/passages/design-pattern-learn-25/" class="index-excerpt">
-                
-                
-                    
-                
-                <div>什么是代码的可测试性？如何写出可测试性好的代码？</div>
-            </a>
-
-            <div class="index-btm post-metas">
-                
-                    <div class="post-meta mr-3">
-                        <i class="iconfont icon-date"></i>&nbsp;2020-01-08
-                    </div>
-                
-                
-                    <div class="post-meta mr-3">
-                        <i class="iconfont icon-category"></i>
-                        
-                            <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%A7%84%E8%8C%83%E4%B8%8E%E9%87%8D%E6%9E%84/">设计模式(规范与重构)</a>
-                        
-                    </div>
-                
-                
-                    <div class="post-meta">
-                        <i class="iconfont icon-tags"></i>
-                        
-                            <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
-                        
-                    </div>
-                
-            </div>
-        </div>
-    </div>
-
 
 
     <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/2/"><i class="iconfont icon-arrowright"></i></a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/2/"><i class="iconfont icon-arrowright"></i></a>
     </span>
     </nav>
     
@@ -575,6 +670,7 @@
       <span id="timeDate">载入天数...</span>
       <span id="times">载入时分秒...</span>
       <script>
+        document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
         var now = new Date();
 
         function createtime() {
@@ -702,7 +798,7 @@
                 "Learn To Learn&nbsp;",
             ],
             cursorChar: "_",
-            typeSpeed: 60,
+            typeSpeed: 70,
             loop: false,
         });
         typed.stop();

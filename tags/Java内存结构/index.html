@@ -7,8 +7,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="apple-touch-icon" sizes="76x76" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/touch-icon.png">
-    <link rel="icon" type="image/png" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/favicon.ico">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png">
+    <link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico">
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -16,7 +16,7 @@
     <meta name="theme-color" content="#2f4154">
     <meta name="description" content="沐晨的个人博客,技术博客">
     <meta name="author" content="Li Duo">
-    <meta name="keywords" content="个人博客,个人见解">
+    <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
     <title>标签 - Java内存结构 - MuChen&#39;s Blog</title>
 
     <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
@@ -50,6 +50,15 @@
 
 
 <body>
+<script>
+    var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+    // 依次判断 系统暗黑模式 指定时间 缓存 dark
+    if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+        if (!(isNight && localStorage.getItem('noDark') === '1')) {
+            document.body.classList.add('dark');
+        }
+    }
+</script>
 <header style="height: 80vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
     <div class="container">
@@ -153,16 +162,6 @@
             </div>
         </div>
     </div>
-    <script>
-        var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
-        // 依次判断 系统暗黑模式 指定时间 缓存 dark
-        if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
-            if (!(isNight && localStorage.getItem('noDark') === '1')) {
-                document.body.classList.add('dark');
-            }
-        }
-        document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
-    </script>
 </header>
 
 <main>
@@ -249,6 +248,7 @@
       <span id="timeDate">载入天数...</span>
       <span id="times">载入时分秒...</span>
       <script>
+        document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
         var now = new Date();
 
         function createtime() {
@@ -376,7 +376,7 @@
                 "标签 - Java内存结构&nbsp;",
             ],
             cursorChar: "_",
-            typeSpeed: 60,
+            typeSpeed: 70,
             loop: false,
         });
         typed.stop();

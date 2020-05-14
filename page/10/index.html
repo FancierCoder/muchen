@@ -7,8 +7,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="apple-touch-icon" sizes="76x76" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/touch-icon.png">
-    <link rel="icon" type="image/png" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/favicon.ico">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png">
+    <link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico">
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -16,7 +16,7 @@
     <meta name="theme-color" content="#2f4154">
     <meta name="description" content="沐晨的个人博客,技术博客">
     <meta name="author" content="Li Duo">
-    <meta name="keywords" content="个人博客,个人见解">
+    <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
     <title>MuChen&#39;s Blog</title>
 
     <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
@@ -50,6 +50,15 @@
 
 
 <body>
+<script>
+    var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+    // 依次判断 系统暗黑模式 指定时间 缓存 dark
+    if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+        if (!(isNight && localStorage.getItem('noDark') === '1')) {
+            document.body.classList.add('dark');
+        }
+    }
+</script>
 <header style="height: 100vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
     <div class="container">
@@ -137,7 +146,7 @@
 </nav>
 
     <div class="view intro-2" id="background" parallax=true
-         style="background: url('/images/03.jpg') no-repeat center center;
+         style="background: url('https://static.muchen.fun/picture/PAK%20TUA%20FROM%20PAYA%20KUMBUH%20INDONESIA.jpg') no-repeat center center;
                  background-size: cover;">
         <div class="full-bg-img">
             <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -157,16 +166,6 @@
             </div>
         </div>
     </div>
-    <script>
-        var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
-        // 依次判断 系统暗黑模式 指定时间 缓存 dark
-        if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
-            if (!(isNight && localStorage.getItem('noDark') === '1')) {
-                document.body.classList.add('dark');
-            }
-        }
-        document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
-    </script>
 </header>
 
 <main>
@@ -185,144 +184,20 @@
         
         
         <div class="col-12 col-md-12 mx-auto index-info">
-            <a class="index-header" href="/passages/32/">32.`Trie`树</a>
+            <a class="index-header" href="/passages/22/">22.红黑树（上）</a>
 
-            <a href="/passages/32/" class="index-excerpt">
+            <a href="/passages/22/" class="index-excerpt">
                 
                 
                     
                 
-                <div>如何实现搜索引擎的搜索关键词提示功能？</div>
+                <div>为什么工程中都喜欢用红黑树，而不是其他平衡二叉查找树呢？</div>
             </a>
 
             <div class="index-btm post-metas">
                 
                     <div class="post-meta mr-3">
-                        <i class="iconfont icon-date"></i>&nbsp;2019-08-08
-                    </div>
-                
-                
-                    <div class="post-meta mr-3">
-                        <i class="iconfont icon-category"></i>
-                        
-                            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/">数据结构与算法(中级)</a>
-                        
-                    </div>
-                
-                
-                    <div class="post-meta">
-                        <i class="iconfont icon-tags"></i>
-                        
-                            <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
-                        
-                    </div>
-                
-            </div>
-        </div>
-    </div>
-
-    <div class="row mx-auto index-card">
-        
-        
-        <div class="col-12 col-md-12 mx-auto index-info">
-            <a class="index-header" href="/passages/31/">31.字符串匹配基础（下）</a>
-
-            <a href="/passages/31/" class="index-excerpt">
-                
-                
-                    
-                
-                <div>如何借助`BM`算法轻松理解`KMP`算法？</div>
-            </a>
-
-            <div class="index-btm post-metas">
-                
-                    <div class="post-meta mr-3">
-                        <i class="iconfont icon-date"></i>&nbsp;2019-08-07
-                    </div>
-                
-                
-                    <div class="post-meta mr-3">
-                        <i class="iconfont icon-category"></i>
-                        
-                            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/">数据结构与算法(中级)</a>
-                        
-                    </div>
-                
-                
-                    <div class="post-meta">
-                        <i class="iconfont icon-tags"></i>
-                        
-                            <a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
-                        
-                            <a href="/tags/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/">时间复杂度</a>
-                        
-                    </div>
-                
-            </div>
-        </div>
-    </div>
-
-    <div class="row mx-auto index-card">
-        
-        
-        <div class="col-12 col-md-12 mx-auto index-info">
-            <a class="index-header" href="/passages/30/">30.字符串匹配基础（中）</a>
-
-            <a href="/passages/30/" class="index-excerpt">
-                
-                
-                    
-                
-                <div>对于查找功能是重要功能的软件来说，比如一些文本编辑器，它们的查找功能都是用哪种算法来实现的呢？有没有比 `BF` 算法和 `RK` 算法更加高效的字符串匹配算法呢？</div>
-            </a>
-
-            <div class="index-btm post-metas">
-                
-                    <div class="post-meta mr-3">
-                        <i class="iconfont icon-date"></i>&nbsp;2019-08-06
-                    </div>
-                
-                
-                    <div class="post-meta mr-3">
-                        <i class="iconfont icon-category"></i>
-                        
-                            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/">数据结构与算法(中级)</a>
-                        
-                    </div>
-                
-                
-                    <div class="post-meta">
-                        <i class="iconfont icon-tags"></i>
-                        
-                            <a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
-                        
-                            <a href="/tags/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/">时间复杂度</a>
-                        
-                    </div>
-                
-            </div>
-        </div>
-    </div>
-
-    <div class="row mx-auto index-card">
-        
-        
-        <div class="col-12 col-md-12 mx-auto index-info">
-            <a class="index-header" href="/passages/29/">29.字符串匹配基础（上）</a>
-
-            <a href="/passages/29/" class="index-excerpt">
-                
-                
-                    
-                
-                <div>如何借助哈希算法实现高效字符串匹配？</div>
-            </a>
-
-            <div class="index-btm post-metas">
-                
-                    <div class="post-meta mr-3">
-                        <i class="iconfont icon-date"></i>&nbsp;2019-08-05
+                        <i class="iconfont icon-date"></i>&nbsp;2019-07-29
                     </div>
                 
                 
@@ -341,7 +216,7 @@
                         
                             <a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
                         
-                            <a href="/tags/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/">时间复杂度</a>
+                            <a href="/tags/%E7%BA%A2%E9%BB%91%E6%A0%91/">红黑树</a>
                         
                     </div>
                 
@@ -353,102 +228,20 @@
         
         
         <div class="col-12 col-md-12 mx-auto index-info">
-            <a class="index-header" href="/passages/28/">28.深度和广度优先搜索</a>
+            <a class="index-header" href="/passages/21/">21.二叉树（下）</a>
 
-            <a href="/passages/28/" class="index-excerpt">
+            <a href="/passages/21/" class="index-excerpt">
                 
                 
                     
                 
-                <div>如何找出社交网络中的三度好友关系？</div>
+                <div>有了如此高效的散列表，为什么还需要二叉树？</div>
             </a>
 
             <div class="index-btm post-metas">
                 
                     <div class="post-meta mr-3">
-                        <i class="iconfont icon-date"></i>&nbsp;2019-08-04
-                    </div>
-                
-                
-                    <div class="post-meta mr-3">
-                        <i class="iconfont icon-category"></i>
-                        
-                            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/">数据结构与算法(中级)</a>
-                        
-                    </div>
-                
-                
-                    <div class="post-meta">
-                        <i class="iconfont icon-tags"></i>
-                        
-                            <a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
-                        
-                            <a href="/tags/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/">时间复杂度</a>
-                        
-                    </div>
-                
-            </div>
-        </div>
-    </div>
-
-    <div class="row mx-auto index-card">
-        
-        
-        <div class="col-12 col-md-12 mx-auto index-info">
-            <a class="index-header" href="/passages/27/">27.图的表示</a>
-
-            <a href="/passages/27/" class="index-excerpt">
-                
-                
-                    
-                
-                <div>如何存储微博、微信等这些社交网络的好友关系呢？</div>
-            </a>
-
-            <div class="index-btm post-metas">
-                
-                    <div class="post-meta mr-3">
-                        <i class="iconfont icon-date"></i>&nbsp;2019-08-03
-                    </div>
-                
-                
-                    <div class="post-meta mr-3">
-                        <i class="iconfont icon-category"></i>
-                        
-                            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/">数据结构与算法(中级)</a>
-                        
-                    </div>
-                
-                
-                    <div class="post-meta">
-                        <i class="iconfont icon-tags"></i>
-                        
-                            <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
-                        
-                    </div>
-                
-            </div>
-        </div>
-    </div>
-
-    <div class="row mx-auto index-card">
-        
-        
-        <div class="col-12 col-md-12 mx-auto index-info">
-            <a class="index-header" href="/passages/26/">26.堆的应用</a>
-
-            <a href="/passages/26/" class="index-excerpt">
-                
-                
-                    
-                
-                <div>如何快速获取到Top 10最热门的搜索关键词？</div>
-            </a>
-
-            <div class="index-btm post-metas">
-                
-                    <div class="post-meta mr-3">
-                        <i class="iconfont icon-date"></i>&nbsp;2019-08-02
+                        <i class="iconfont icon-date"></i>&nbsp;2019-07-28
                     </div>
                 
                 
@@ -467,7 +260,7 @@
                         
                             <a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
                         
-                            <a href="/tags/%E5%A0%86/">堆</a>
+                            <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/">二叉树</a>
                         
                     </div>
                 
@@ -479,20 +272,20 @@
         
         
         <div class="col-12 col-md-12 mx-auto index-info">
-            <a class="index-header" href="/passages/25/">25.堆和堆排序</a>
+            <a class="index-header" href="/passages/20/">20.二叉树（上）</a>
 
-            <a href="/passages/25/" class="index-excerpt">
+            <a href="/passages/20/" class="index-excerpt">
                 
                 
                     
                 
-                <div>为什么说堆排序没有快速排序快？</div>
+                <div>什么样的二叉树适合用数组来存储？</div>
             </a>
 
             <div class="index-btm post-metas">
                 
                     <div class="post-meta mr-3">
-                        <i class="iconfont icon-date"></i>&nbsp;2019-08-01
+                        <i class="iconfont icon-date"></i>&nbsp;2019-07-27
                     </div>
                 
                 
@@ -511,9 +304,311 @@
                         
                             <a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
                         
-                            <a href="/tags/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/">时间复杂度</a>
+                            <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/">二叉树</a>
                         
-                            <a href="/tags/%E5%A0%86/">堆</a>
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="row mx-auto index-card">
+        
+        
+        <div class="col-12 col-md-12 mx-auto index-info">
+            <a class="index-header" href="/passages/19/">19.哈希算法（下）</a>
+
+            <a href="/passages/19/" class="index-excerpt">
+                
+                
+                    
+                
+                <div>哈希算法在分布式系统中有哪些应用？</div>
+            </a>
+
+            <div class="index-btm post-metas">
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-date"></i>&nbsp;2019-07-26
+                    </div>
+                
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-category"></i>
+                        
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/">数据结构与算法(中级)</a>
+                        
+                    </div>
+                
+                
+                    <div class="post-meta">
+                        <i class="iconfont icon-tags"></i>
+                        
+                            <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+                        
+                            <a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+                        
+                            <a href="/tags/%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95/">哈希算法</a>
+                        
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="row mx-auto index-card">
+        
+        
+        <div class="col-12 col-md-12 mx-auto index-info">
+            <a class="index-header" href="/passages/18/">18.哈希算法（上）</a>
+
+            <a href="/passages/18/" class="index-excerpt">
+                
+                
+                    
+                
+                <div>如何防止数据库中的用户信息被脱库？</div>
+            </a>
+
+            <div class="index-btm post-metas">
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-date"></i>&nbsp;2019-07-25
+                    </div>
+                
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-category"></i>
+                        
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/">数据结构与算法(中级)</a>
+                        
+                    </div>
+                
+                
+                    <div class="post-meta">
+                        <i class="iconfont icon-tags"></i>
+                        
+                            <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+                        
+                            <a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+                        
+                            <a href="/tags/%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95/">哈希算法</a>
+                        
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="row mx-auto index-card">
+        
+        
+        <div class="col-12 col-md-12 mx-auto index-info">
+            <a class="index-header" href="/passages/17/">17.散列表（下）</a>
+
+            <a href="/passages/17/" class="index-excerpt">
+                
+                
+                    
+                
+                <div>为什么散列表和链表经常会一起使用？</div>
+            </a>
+
+            <div class="index-btm post-metas">
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-date"></i>&nbsp;2019-07-24
+                    </div>
+                
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-category"></i>
+                        
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/">数据结构与算法(中级)</a>
+                        
+                    </div>
+                
+                
+                    <div class="post-meta">
+                        <i class="iconfont icon-tags"></i>
+                        
+                            <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+                        
+                            <a href="/tags/%E6%95%A3%E5%88%97%E8%A1%A8/">散列表</a>
+                        
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="row mx-auto index-card">
+        
+        
+        <div class="col-12 col-md-12 mx-auto index-info">
+            <a class="index-header" href="/passages/16/">16.散列表（中）</a>
+
+            <a href="/passages/16/" class="index-excerpt">
+                
+                
+                    
+                
+                <div>如何打造一个工业级水平的散列表？</div>
+            </a>
+
+            <div class="index-btm post-metas">
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-date"></i>&nbsp;2019-07-24
+                    </div>
+                
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-category"></i>
+                        
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/">数据结构与算法(中级)</a>
+                        
+                    </div>
+                
+                
+                    <div class="post-meta">
+                        <i class="iconfont icon-tags"></i>
+                        
+                            <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+                        
+                            <a href="/tags/%E6%95%A3%E5%88%97%E8%A1%A8/">散列表</a>
+                        
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="row mx-auto index-card">
+        
+        
+        <div class="col-12 col-md-12 mx-auto index-info">
+            <a class="index-header" href="/passages/15/">15.散列表（上）</a>
+
+            <a href="/passages/15/" class="index-excerpt">
+                
+                
+                    
+                
+                <div>Word 的单词拼写检查功能，虽然很小但却非常实用。你有没有想过，这个功能是如何实现的呢？</div>
+            </a>
+
+            <div class="index-btm post-metas">
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-date"></i>&nbsp;2019-07-23
+                    </div>
+                
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-category"></i>
+                        
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/">数据结构与算法(中级)</a>
+                        
+                    </div>
+                
+                
+                    <div class="post-meta">
+                        <i class="iconfont icon-tags"></i>
+                        
+                            <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+                        
+                            <a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+                        
+                            <a href="/tags/%E6%95%A3%E5%88%97%E8%A1%A8/">散列表</a>
+                        
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="row mx-auto index-card">
+        
+        
+        <div class="col-12 col-md-12 mx-auto index-info">
+            <a class="index-header" href="/passages/14/">14.跳表</a>
+
+            <a href="/passages/14/" class="index-excerpt">
+                
+                
+                    
+                
+                <div>为什么`Redis`一定要用跳表来实现有序集合？</div>
+            </a>
+
+            <div class="index-btm post-metas">
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-date"></i>&nbsp;2019-07-22
+                    </div>
+                
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-category"></i>
+                        
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/">数据结构与算法(中级)</a>
+                        
+                    </div>
+                
+                
+                    <div class="post-meta">
+                        <i class="iconfont icon-tags"></i>
+                        
+                            <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+                        
+                            <a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+                        
+                            <a href="/tags/%E8%B7%B3%E8%A1%A8/">跳表</a>
+                        
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="row mx-auto index-card">
+        
+        
+        <div class="col-12 col-md-12 mx-auto index-info">
+            <a class="index-header" href="/passages/13/">13.二分查找（下）</a>
+
+            <a href="/passages/13/" class="index-excerpt">
+                
+                
+                    
+                
+                <div>如何快速定位`IP`对应的省份地址？</div>
+            </a>
+
+            <div class="index-btm post-metas">
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-date"></i>&nbsp;2019-07-21
+                    </div>
+                
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-category"></i>
+                        
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/">数据结构与算法(中级)</a>
+                        
+                    </div>
+                
+                
+                    <div class="post-meta">
+                        <i class="iconfont icon-tags"></i>
+                        
+                            <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+                        
+                            <a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+                        
+                            <a href="/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/">二分查找</a>
                         
                     </div>
                 
@@ -525,7 +620,7 @@
 
     <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <a class="extend prev" rel="prev" href="/page/9/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/11/"><i class="iconfont icon-arrowright"></i></a>
+      <a class="extend prev" rel="prev" href="/page/9/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/11/"><i class="iconfont icon-arrowright"></i></a>
     </span>
     </nav>
     
@@ -593,6 +688,7 @@
       <span id="timeDate">载入天数...</span>
       <span id="times">载入时分秒...</span>
       <script>
+        document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
         var now = new Date();
 
         function createtime() {
@@ -720,7 +816,7 @@
                 "Learn To Learn&nbsp;",
             ],
             cursorChar: "_",
-            typeSpeed: 60,
+            typeSpeed: 70,
             loop: false,
         });
         typed.stop();

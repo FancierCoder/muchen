@@ -7,8 +7,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="apple-touch-icon" sizes="76x76" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/touch-icon.png">
-    <link rel="icon" type="image/png" href="https://muchen-img.oss-cn-hongkong.aliyuncs.com/images/favicon.ico">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png">
+    <link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico">
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -16,7 +16,7 @@
     <meta name="theme-color" content="#2f4154">
     <meta name="description" content="沐晨的个人博客,技术博客">
     <meta name="author" content="Li Duo">
-    <meta name="keywords" content="个人博客,个人见解">
+    <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
     <title>MuChen&#39;s Blog</title>
 
     <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
@@ -50,6 +50,15 @@
 
 
 <body>
+<script>
+    var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+    // 依次判断 系统暗黑模式 指定时间 缓存 dark
+    if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+        if (!(isNight && localStorage.getItem('noDark') === '1')) {
+            document.body.classList.add('dark');
+        }
+    }
+</script>
 <header style="height: 100vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
     <div class="container">
@@ -137,7 +146,7 @@
 </nav>
 
     <div class="view intro-2" id="background" parallax=true
-         style="background: url('/images/03.jpg') no-repeat center center;
+         style="background: url('https://static.muchen.fun/picture/PAK%20TUA%20FROM%20PAYA%20KUMBUH%20INDONESIA.jpg') no-repeat center center;
                  background-size: cover;">
         <div class="full-bg-img">
             <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -157,16 +166,6 @@
             </div>
         </div>
     </div>
-    <script>
-        var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
-        // 依次判断 系统暗黑模式 指定时间 缓存 dark
-        if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
-            if (!(isNight && localStorage.getItem('noDark') === '1')) {
-                document.body.classList.add('dark');
-            }
-        }
-        document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
-    </script>
 </header>
 
 <main>
@@ -501,11 +500,95 @@
         </div>
     </div>
 
+    <div class="row mx-auto index-card">
+        
+        
+        <div class="col-12 col-md-12 mx-auto index-info">
+            <a class="index-header" href="/passages/201909Interview-summary/">9月面试总结</a>
+
+            <a href="/passages/201909Interview-summary/" class="index-excerpt">
+                
+                
+                    
+                
+                <div>最近在面试新工作，记录一下面试中问到的问题，以及我的理解。</div>
+            </a>
+
+            <div class="index-btm post-metas">
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-date"></i>&nbsp;2019-09-23
+                    </div>
+                
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-category"></i>
+                        
+                            <a href="/categories/%E9%9D%A2%E8%AF%95/">面试</a>
+                        
+                    </div>
+                
+                
+                    <div class="post-meta">
+                        <i class="iconfont icon-tags"></i>
+                        
+                            <a href="/tags/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93/">面试总结</a>
+                        
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="row mx-auto index-card">
+        
+        
+        <div class="col-12 col-md-12 mx-auto index-info">
+            <a class="index-header" href="/passages/leetcode-day190911/">LEETCODE：数组（一）</a>
+
+            <a href="/passages/leetcode-day190911/" class="index-excerpt">
+                
+                
+                    
+                
+                <div>LEETCODE数组题目刷起来！</div>
+            </a>
+
+            <div class="index-btm post-metas">
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-date"></i>&nbsp;2019-09-11
+                    </div>
+                
+                
+                    <div class="post-meta mr-3">
+                        <i class="iconfont icon-category"></i>
+                        
+                            <a href="/categories/LEETCODE/">LEETCODE</a>
+                        
+                    </div>
+                
+                
+                    <div class="post-meta">
+                        <i class="iconfont icon-tags"></i>
+                        
+                            <a href="/tags/%E6%95%B0%E7%BB%84/">数组</a>
+                        
+                            <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/">双指针</a>
+                        
+                            <a href="/tags/%E5%88%B7%E9%A2%98/">刷题</a>
+                        
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+
 
 
     <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <a class="extend prev" rel="prev" href="/page/4/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/6/"><i class="iconfont icon-arrowright"></i></a>
+      <a class="extend prev" rel="prev" href="/page/4/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/6/"><i class="iconfont icon-arrowright"></i></a>
     </span>
     </nav>
     
@@ -573,6 +656,7 @@
       <span id="timeDate">载入天数...</span>
       <span id="times">载入时分秒...</span>
       <script>
+        document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
         var now = new Date();
 
         function createtime() {
@@ -700,7 +784,7 @@
                 "Learn To Learn&nbsp;",
             ],
             cursorChar: "_",
-            typeSpeed: 60,
+            typeSpeed: 70,
             loop: false,
         });
         typed.stop();

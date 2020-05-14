@@ -4,6 +4,222 @@
   
   
   <entry>
+    <title>设计模式之美学习（三十八）</title>
+    <link href="/passages/design-pattern-learn-38/"/>
+    <url>/passages/design-pattern-learn-38/</url>
+    
+    <content type="html"><![CDATA[<p>如何实现支持不同类型和渠道的消息推送系统？</p><a id="more"></a><h2 id="桥接模式的原理解析"><a href="#桥接模式的原理解析" class="headerlink" title="桥接模式的原理解析"></a>桥接模式的原理解析</h2><p>桥接模式，也叫作桥梁模式，英文是 <code>Bridge Design Pattern</code></p><p>对于这个模式有两种不同的理解方式。在 <code>GoF</code> 的《设计模式》一书中，桥接模式被定义为：“将抽象和实现解耦，让它们可以独立变化。”在其他资料和书籍中，还有另外一种更加简单的理解方式：“一个类存在两个（或多个）独立变化的维度，我们通过组合的方式，让这两个（或多个）维度可以独立进行扩展。”。</p><p>对于第一种 <code>GoF</code> 的理解方式，弄懂定义中“抽象”和“实现”两个概念，是理解它的关键。定义中的“抽象”，指的并非“抽象类”或“接口”，而是被抽象出来的一套“类库”，它只包含骨架代码，真正的业务逻辑需要委派给定义中的“实现”来完成。而定义中的“实现”，也并非“接口的实现类”，而是一套独立的“类库”。“抽象”和“实现”独立开发，通过对象之间的组合关系，组装在一起。</p><p>对于第二种理解方式，它非常类似“组合优于继承”设计原则，通过组合关系来替代继承关系，避免继承层次的指数级爆炸。</p><h2 id="桥接模式的应用举例"><a href="#桥接模式的应用举例" class="headerlink" title="桥接模式的应用举例"></a>桥接模式的应用举例</h2><p>根据不同的告警规则，触发不同类型的告警。告警支持多种通知渠道，包括：邮件、短信、微信、自动语音电话。通知的紧急程度有多种类型，包括：<code>SEVERE</code>（严重）、<code>URGENCY</code>（紧急）、<code>NORMAL</code>（普通）、<code>TRIVIAL</code>（无关紧要）。不同的紧急程度对应不同的通知渠道。比如，<code>SEVERE</code>（严重）级别的消息会通过“自动语音电话”告知相关人员。</p><p>先来看最简单、最直接的一种实现方式。代码如下所示：</p><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">enum</span> NotificationEmergencyLevel &#123;  SEVERE, URGENCY, NORMAL, TRIVIAL&#125;<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Notification</span> </span>&#123;  <span class="hljs-keyword">private</span> List&lt;String&gt; emailAddresses;  <span class="hljs-keyword">private</span> List&lt;String&gt; telephones;  <span class="hljs-keyword">private</span> List&lt;String&gt; wechatIds;  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Notification</span><span class="hljs-params">()</span> </span>&#123;&#125;  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setEmailAddress</span><span class="hljs-params">(List&lt;String&gt; emailAddress)</span> </span>&#123;    <span class="hljs-keyword">this</span>.emailAddresses = emailAddress;  &#125;  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setTelephones</span><span class="hljs-params">(List&lt;String&gt; telephones)</span> </span>&#123;    <span class="hljs-keyword">this</span>.telephones = telephones;  &#125;  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setWechatIds</span><span class="hljs-params">(List&lt;String&gt; wechatIds)</span> </span>&#123;    <span class="hljs-keyword">this</span>.wechatIds = wechatIds;  &#125;  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">notify</span><span class="hljs-params">(NotificationEmergencyLevel level, String message)</span> </span>&#123;    <span class="hljs-keyword">if</span> (level.equals(NotificationEmergencyLevel.SEVERE)) &#123;      <span class="hljs-comment">//...自动语音电话</span>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (level.equals(NotificationEmergencyLevel.URGENCY)) &#123;      <span class="hljs-comment">//...发微信</span>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (level.equals(NotificationEmergencyLevel.NORMAL)) &#123;      <span class="hljs-comment">//...发邮件</span>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (level.equals(NotificationEmergencyLevel.TRIVIAL)) &#123;      <span class="hljs-comment">//...发邮件</span>    &#125;  &#125;&#125;<span class="hljs-comment">//在API监控告警的例子中，我们如下方式来使用Notification类：</span><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ErrorAlertHandler</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AlertHandler</span> </span>&#123;  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ErrorAlertHandler</span><span class="hljs-params">(AlertRule rule, Notification notification)</span></span>&#123;    <span class="hljs-keyword">super</span>(rule, notification);  &#125;  <span class="hljs-meta">@Override</span>  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">check</span><span class="hljs-params">(ApiStatInfo apiStatInfo)</span> </span>&#123;    <span class="hljs-keyword">if</span> (apiStatInfo.getErrorCount() &gt; rule.getMatchedRule(apiStatInfo.getApi()).getMaxErrorCount()) &#123;      notification.notify(NotificationEmergencyLevel.SEVERE, <span class="hljs-string">"..."</span>);    &#125;  &#125;&#125;</code></pre><p><code>Notification</code> 类的代码实现有一个最明显的问题，那就是有很多 <code>if-else</code> 分支逻辑。实际上，如果每个分支中的代码都不复杂，后期也没有无限膨胀的可能（增加更多 <code>if-else</code> 分支判断），那这样的设计问题并不大，没必要非得一定要摒弃 <code>if-else</code> 分支逻辑。</p><p>不过，<code>Notification</code> 的代码显然不符合这个条件。因为每个 <code>if-else</code> 分支中的代码逻辑都比较复杂，发送通知的所有逻辑都扎堆在 <code>Notification</code> 类中。我们知道，类的代码越多，就越难读懂，越难修改，维护的成本也就越高。很多设计模式都是试图将庞大的类拆分成更细小的类，然后再通过某种更合理的结构组装在一起。</p><p>针对 <code>Notification</code> 的代码，我们将不同渠道的发送逻辑剥离出来，形成独立的消息发送类（<code>MsgSender</code> 相关类）。其中，<code>Notification</code> 类相当于抽象，<code>MsgSender</code> 类相当于实现，两者可以独立开发，通过组合关系（也就是桥梁）任意组合在一起。所谓任意组合的意思就是，不同紧急程度的消息和发送渠道之间的对应关系，不是在代码中固定写死的，我们可以动态地去指定（比如，通过读取配置来获取对应关系）。</p><p>按照这个设计思路，我们对代码进行重构。重构之后的代码如下所示：</p><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">MsgSender</span> </span>&#123;  <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">send</span><span class="hljs-params">(String message)</span></span>;&#125;<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TelephoneMsgSender</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">MsgSender</span> </span>&#123;  <span class="hljs-keyword">private</span> List&lt;String&gt; telephones;  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">TelephoneMsgSender</span><span class="hljs-params">(List&lt;String&gt; telephones)</span> </span>&#123;    <span class="hljs-keyword">this</span>.telephones = telephones;  &#125;  <span class="hljs-meta">@Override</span>  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">send</span><span class="hljs-params">(String message)</span> </span>&#123;    <span class="hljs-comment">//...</span>  &#125;&#125;<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EmailMsgSender</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">MsgSender</span> </span>&#123;  <span class="hljs-comment">// 与TelephoneMsgSender代码结构类似，所以省略...</span>&#125;<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">WechatMsgSender</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">MsgSender</span> </span>&#123;  <span class="hljs-comment">// 与TelephoneMsgSender代码结构类似，所以省略...</span>&#125;<span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Notification</span> </span>&#123;  <span class="hljs-keyword">protected</span> MsgSender msgSender;  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Notification</span><span class="hljs-params">(MsgSender msgSender)</span> </span>&#123;    <span class="hljs-keyword">this</span>.msgSender = msgSender;  &#125;  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">void</span> <span class="hljs-title">notify</span><span class="hljs-params">(String message)</span></span>;&#125;<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SevereNotification</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Notification</span> </span>&#123;  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">SevereNotification</span><span class="hljs-params">(MsgSender msgSender)</span> </span>&#123;    <span class="hljs-keyword">super</span>(msgSender);  &#125;  <span class="hljs-meta">@Override</span>  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">notify</span><span class="hljs-params">(String message)</span> </span>&#123;    msgSender.send(message);  &#125;&#125;<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UrgencyNotification</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Notification</span> </span>&#123;  <span class="hljs-comment">// 与SevereNotification代码结构类似，所以省略...</span>&#125;<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">NormalNotification</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Notification</span> </span>&#123;  <span class="hljs-comment">// 与SevereNotification代码结构类似，所以省略...</span>&#125;<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TrivialNotification</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Notification</span> </span>&#123;  <span class="hljs-comment">// 与SevereNotification代码结构类似，所以省略...</span>&#125;</code></pre><p>总体上来讲，桥接模式的原理比较难理解，但代码实现相对简单。</p><p>参考：<a href="https://time.geekbang.org/column/article/202786" target="_blank" rel="noopener">桥接模式：如何实现支持不同类型和渠道的消息推送系统？</a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>设计模式与范式(结构型)</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>设计模式</tag>
+      
+      <tag>桥接模式</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>设计模式之美学习（三十七）</title>
+    <link href="/passages/design-pattern-learn-37/"/>
+    <url>/passages/design-pattern-learn-37/</url>
+    
+    <content type="html"><![CDATA[<p>代理在RPC、缓存、监控等场景中的应用</p><a id="more"></a><h2 id="代理模式"><a href="#代理模式" class="headerlink" title="代理模式"></a>代理模式</h2><p>代理模式（<code>Proxy Design Pattern</code>）在不改变原始类（或叫被代理类）代码的情况下，通过引入代理类来给原始类附加功能。</p><h2 id="动态代理"><a href="#动态代理" class="headerlink" title="动态代理"></a>动态代理</h2><p>动态代理（<code>Dynamic Proxy</code>），就是我们不事先为每个原始类编写代理类，而是在运行的时候，动态地创建原始类对应的代理类，然后在系统中用代理类替换掉原始类。</p><p><code>Spring AOP</code> 底层的实现原理就是基于动态代理。用户配置好需要给哪些类创建代理，并定义好在执行原始类的业务代码前后执行哪些附加功能。<code>Spring</code> 为这些类创建动态代理对象，并在 <code>JVM</code> 中替代原始类对象。原本在代码中执行的原始类的方法，被换作执行代理类的方法，也就实现了给原始类添加附加功能的目的。</p><h2 id="代理模式的应用场景"><a href="#代理模式的应用场景" class="headerlink" title="代理模式的应用场景"></a>代理模式的应用场景</h2><p><strong>业务系统的非功能性需求开发</strong></p><p>代理模式最常用的一个应用场景就是，在业务系统中开发一些非功能性需求，比如：监控、统计、鉴权、限流、事务、幂等、日志。我们将这些附加功能与业务功能解耦，放到代理类中统一处理，让程序员只需要关注业务方面的开发。</p><p><strong>代理模式在 <code>RPC</code>、缓存中的应用</strong></p><p>实际上，<code>RPC</code> 框架也可以看作一种代理模式，<code>GoF</code> 的《设计模式》一书中把它称作远程代理。通过远程代理，将网络通信、数据编解码等细节隐藏起来。客户端在使用 <code>RPC</code> 服务的时候，就像使用本地函数一样，无需了解跟服务器交互的细节。除此之外，<code>RPC</code> 服务的开发者也只需要开发业务逻辑，就像开发本地使用的函数一样，不需要关注跟客户端的交互细节。</p><p>再来看代理模式在缓存中的应用。</p><p>假设我们要开发一个接口请求的缓存功能，对于某些接口请求，如果入参相同，在设定的过期时间内，直接返回缓存结果，而不用重新进行逻辑处理。比如，针对获取用户个人信息的需求，我们可以开发两个接口，一个支持缓存，一个支持实时查询。对于需要实时数据的需求，我们让其调用实时查询接口，对于不需要实时数据的需求，我们让其调用支持缓存的接口。那如何来实现接口请求的缓存功能呢？</p><p>最简单的实现方法就是刚刚我们讲到的，给每个需要支持缓存的查询需求都开发两个不同的接口，一个支持缓存，一个支持实时查询。但是，这样做显然增加了开发成本，而且会让代码看起来非常臃肿（接口个数成倍增加），也不方便缓存接口的集中管理（增加、删除缓存接口）、集中配置（比如配置每个接口缓存过期时间）。</p><p>针对这些问题，代理模式就能派上用场了，确切地说，应该是动态代理。如果是基于 <code>Spring</code> 框架来开发的话，那就可以在 <code>AOP</code> 切面中完成接口缓存的功能。在应用启动的时候，我们从配置文件中加载需要支持缓存的接口，以及相应的缓存策略（比如过期时间）等。当请求到来的时候，我们在 <code>AOP</code> 切面中拦截请求，如果请求中带有支持缓存的字段（比如 <code>http://…?..&amp;cached=true</code>），我们便从缓存（内存缓存或者 <code>Redis</code> 缓存等）中获取数据直接返回。</p><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><strong>代理模式的原理与实现</strong></p><p>在不改变原始类（或叫被代理类）的情况下，通过引入代理类来给原始类附加功能。一般情况下，我们让代理类和原始类实现同样的接口。但是，如果原始类并没有定义接口，并且原始类代码并不是我们开发维护的。在这种情况下，我们可以通过让代理类继承原始类的方法来实现代理模式。</p><p><strong>动态代理的原理与实现</strong></p><p>静态代理需要针对每个类都创建一个代理类，并且每个代理类中的代码都有点像模板式的“重复”代码，增加了维护成本和开发成本。对于静态代理存在的问题，我们可以通过动态代理来解决。我们不事先为每个原始类编写代理类，而是在运行的时候动态地创建原始类对应的代理类，然后在系统中用代理类替换掉原始类。</p><p><strong>代理模式的应用场景</strong></p><p>代理模式常用在业务系统中开发一些非功能性需求，比如：监控、统计、鉴权、限流、事务、幂等、日志。我们将这些附加功能与业务功能解耦，放到代理类统一处理，让程序员只需要关注业务方面的开发。除此之外，代理模式还可以用在 <code>RPC</code>、缓存等应用场景中。</p><p>参考：<a href="https://time.geekbang.org/column/article/201823" target="_blank" rel="noopener">代理模式：代理在RPC、缓存、监控等场景中的应用</a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>设计模式与范式(结构型)</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>设计模式</tag>
+      
+      <tag>代理模式</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>设计模式之美学习（三十六）</title>
+    <link href="/passages/design-pattern-learn-36/"/>
+    <url>/passages/design-pattern-learn-36/</url>
+    
+    <content type="html"><![CDATA[<p>如何最快速地clone一个HashMap散列表？</p><a id="more"></a><h2 id="原型模式的原理"><a href="#原型模式的原理" class="headerlink" title="原型模式的原理"></a>原型模式的原理</h2><p>如果对象的创建成本比较大，而同一个类的不同对象之间差别不大（大部分字段都相同），在这种情况下，我们可以利用对已有对象（原型）进行复制（或者叫拷贝）的方式来创建新对象，以达到节省创建时间的目的。这种基于原型来创建对象的方式就叫作原型设计模式（<code>Prototype Design Pattern</code>），简称原型模式。</p><h3 id="那何为“对象的创建成本比较大”？"><a href="#那何为“对象的创建成本比较大”？" class="headerlink" title="那何为“对象的创建成本比较大”？"></a>那何为“对象的创建成本比较大”？</h3><p>实际上，创建对象包含的申请内存、给成员变量赋值这一过程，本身并不会花费太多时间，或者说对于大部分业务系统来说，这点时间完全是可以忽略的。应用一个复杂的模式，只得到一点点的性能提升，这就是所谓的过度设计，得不偿失。</p><p>但是，如果对象中的数据需要经过复杂的计算才能得到（比如排序、计算哈希值），或者需要从 <code>RPC</code>、网络、数据库、文件系统等非常慢速的 <code>IO</code> 中读取，这种情况下，我们就可以利用原型模式，从其他已有对象中直接拷贝得到，而不用每次在创建新对象的时候，都重复执行这些耗时的操作。</p><h2 id="原型模式的两种实现方法"><a href="#原型模式的两种实现方法" class="headerlink" title="原型模式的两种实现方法"></a>原型模式的两种实现方法</h2><p>原型模式有两种实现方法，深拷贝和浅拷贝。浅拷贝只会复制对象中基本数据类型数据和引用对象的内存地址，不会递归地复制引用对象，以及引用对象的引用对象。而深拷贝得到的是一份完完全全独立的对象。所以，深拷贝比起浅拷贝来说，更加耗时，更加耗内存空间。</p><p>如果要拷贝的对象是不可变对象，浅拷贝共享不可变对象是没问题的，但对于可变对象来说，浅拷贝得到的对象和原始对象会共享部分数据，就有可能出现数据被修改的风险，也就变得复杂多了。没有充分的理由，不要为了一点点的性能提升而使用浅拷贝。</p><p>参考：<a href="https://time.geekbang.org/column/article/200786" target="_blank" rel="noopener">原型模式：如何最快速地clone一个HashMap散列表？</a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>设计模式与范式(创建型)</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>设计模式</tag>
+      
+      <tag>原型模式</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>设计模式之美学习（三十五）</title>
+    <link href="/passages/design-pattern-learn-35/"/>
+    <url>/passages/design-pattern-learn-35/</url>
+    
+    <content type="html"><![CDATA[<p>构造函数、<code>set</code>方法、建造者模式三种对象创建方式。</p><a id="more"></a><h2 id="构造函数、set方法、建造者模式三种对象创建方式区别"><a href="#构造函数、set方法、建造者模式三种对象创建方式区别" class="headerlink" title="构造函数、set方法、建造者模式三种对象创建方式区别"></a>构造函数、set方法、建造者模式三种对象创建方式区别</h2><p>建造者模式的原理和实现比较简单，重点是掌握应用场景，避免过度使用。</p><p>如果一个类中有很多属性，为了避免构造函数的参数列表过长，影响代码的可读性和易用性，我们可以通过构造函数配合 <code>set()</code> 方法来解决。但是，如果存在下面情况中的任意一种，我们就要考虑使用建造者模式了。</p><ul><li><p>我们把类的必填属性放到构造函数中，强制创建对象的时候就设置。如果必填的属性有很多，把这些必填属性都放到构造函数中设置，那构造函数就又会出现参数列表很长的问题。如果我们把必填属性通过 <code>set()</code> 方法设置，那校验这些必填属性是否已经填写的逻辑就无处安放了。</p></li><li><p>如果类的属性之间有一定的依赖关系或者约束条件，我们继续使用构造函数配合 <code>set()</code> 方法的设计思路，那这些依赖关系或约束条件的校验逻辑就无处安放了。</p></li><li><p>如果我们希望创建不可变对象，也就是说，对象在创建好之后，就不能再修改内部的属性值，要实现这个功能，我们就不能在类中暴露 <code>set()</code> 方法。构造函数配合 <code>set()</code> 方法来设置属性值的方式就不适用了。</p></li></ul><h2 id="工厂模式和建造者模式的区别"><a href="#工厂模式和建造者模式的区别" class="headerlink" title="工厂模式和建造者模式的区别"></a>工厂模式和建造者模式的区别</h2><p>工厂模式是用来创建不同但是相关类型的对象（继承同一父类或者接口的一组子类），由给定的参数来决定创建哪种类型的对象。建造者模式是用来创建一种类型的复杂对象，可以通过设置不同的可选参数，“定制化”地创建不同的对象。</p><p>实际上，我们不用非得把工厂模式、建造者模式分得那么清楚，我们需要知道的是，每个模式为什么这么设计，能解决什么问题。<strong>只有了解了这些最本质的东西，我们才能不生搬硬套，才能灵活应用，甚至可以混用各种模式创造出新的模式，来解决特定场景的问题</strong>。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>设计模式与范式(创建型)</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>设计模式</tag>
+      
+      <tag>建造者模式</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>设计模式之美学习（三十四）</title>
+    <link href="/passages/design-pattern-learn-34/"/>
+    <url>/passages/design-pattern-learn-34/</url>
+    
+    <content type="html"><![CDATA[<p>如何设计实现一个Dependency Injection框架？</p><a id="more"></a><h2 id="工厂模式和-DI-容器有何区别？"><a href="#工厂模式和-DI-容器有何区别？" class="headerlink" title="工厂模式和 DI 容器有何区别？"></a>工厂模式和 DI 容器有何区别？</h2><p>实际上，<code>DI</code> 容器底层最基本的设计思路就是基于工厂模式的。<code>DI</code> 容器相当于一个大的工厂类，负责在程序启动的时候，根据配置（要创建哪些类对象，每个类对象的创建需要依赖哪些其他类对象）事先创建好对象。当应用程序需要使用某个类对象的时候，直接从容器中获取即可。正是因为它持有一堆对象，所以这个框架才被称为“容器”。</p><p><code>DI</code> 容器相对于我们上节课讲的工厂模式的例子来说，它处理的是更大的对象创建工程。上节课讲的工厂模式中，一个工厂类只负责某个类对象或者某一组相关类对象（继承自同一抽象类或者接口的子类）的创建，而 <code>DI</code> 容器负责的是整个应用中所有类对象的创建。</p><h2 id="DI-容器的核心功能有哪些？"><a href="#DI-容器的核心功能有哪些？" class="headerlink" title="DI 容器的核心功能有哪些？"></a>DI 容器的核心功能有哪些？</h2><p>一个简单的 <code>DI</code> 容器的核心功能一般有三个：配置解析、对象创建和对象生命周期管理。</p><h2 id="如何实现一个简单的-DI-容器？"><a href="#如何实现一个简单的-DI-容器？" class="headerlink" title="如何实现一个简单的 DI 容器？"></a>如何实现一个简单的 DI 容器？</h2><p>实际上，用 <code>Java</code> 语言来实现一个简单的 <code>DI</code> 容器，核心逻辑只需要包括这样两个部分：配置文件解析、根据配置文件通过“反射”语法来创建对象。</p><p>核心工厂类设计:</p><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BeansFactory</span> </span>&#123;  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> ConcurrentHashMap&lt;String, Object&gt; singletonObjects = <span class="hljs-keyword">new</span> ConcurrentHashMap&lt;&gt;();  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> ConcurrentHashMap&lt;String, BeanDefinition&gt; beanDefinitions = <span class="hljs-keyword">new</span> ConcurrentHashMap&lt;&gt;();  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">addBeanDefinitions</span><span class="hljs-params">(List&lt;BeanDefinition&gt; beanDefinitionList)</span> </span>&#123;    <span class="hljs-keyword">for</span> (BeanDefinition beanDefinition : beanDefinitionList) &#123;      <span class="hljs-keyword">this</span>.beanDefinitions.putIfAbsent(beanDefinition.getId(), beanDefinition);    &#125;    <span class="hljs-keyword">for</span> (BeanDefinition beanDefinition : beanDefinitionList) &#123;      <span class="hljs-keyword">if</span> (beanDefinition.isLazyInit() == <span class="hljs-keyword">false</span> &amp;&amp; beanDefinition.isSingleton()) &#123;        createBean(beanDefinition);      &#125;    &#125;  &#125;  <span class="hljs-function"><span class="hljs-keyword">public</span> Object <span class="hljs-title">getBean</span><span class="hljs-params">(String beanId)</span> </span>&#123;    BeanDefinition beanDefinition = beanDefinitions.get(beanId);    <span class="hljs-keyword">if</span> (beanDefinition == <span class="hljs-keyword">null</span>) &#123;      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> NoSuchBeanDefinitionException(<span class="hljs-string">"Bean is not defined: "</span> + beanId);    &#125;    <span class="hljs-keyword">return</span> createBean(beanDefinition);  &#125;  <span class="hljs-meta">@VisibleForTesting</span>  <span class="hljs-function"><span class="hljs-keyword">protected</span> Object <span class="hljs-title">createBean</span><span class="hljs-params">(BeanDefinition beanDefinition)</span> </span>&#123;    <span class="hljs-keyword">if</span> (beanDefinition.isSingleton() &amp;&amp; singletonObjects.contains(beanDefinition.getId())) &#123;      <span class="hljs-keyword">return</span> singletonObjects.get(beanDefinition.getId());    &#125;    Object bean = <span class="hljs-keyword">null</span>;    <span class="hljs-keyword">try</span> &#123;      Class beanClass = Class.forName(beanDefinition.getClassName());      List&lt;BeanDefinition.ConstructorArg&gt; args = beanDefinition.getConstructorArgs();      <span class="hljs-keyword">if</span> (args.isEmpty()) &#123;        bean = beanClass.newInstance();      &#125; <span class="hljs-keyword">else</span> &#123;        Class[] argClasses = <span class="hljs-keyword">new</span> Class[args.size()];        Object[] argObjects = <span class="hljs-keyword">new</span> Object[args.size()];        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; args.size(); ++i) &#123;          BeanDefinition.ConstructorArg arg = args.get(i);          <span class="hljs-keyword">if</span> (!arg.getIsRef()) &#123;            argClasses[i] = arg.getType();            argObjects[i] = arg.getArg();          &#125; <span class="hljs-keyword">else</span> &#123;            BeanDefinition refBeanDefinition = beanDefinitions.get(arg.getArg());            <span class="hljs-keyword">if</span> (refBeanDefinition == <span class="hljs-keyword">null</span>) &#123;              <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> NoSuchBeanDefinitionException(<span class="hljs-string">"Bean is not defined: "</span> + arg.getArg());            &#125;            argClasses[i] = Class.forName(refBeanDefinition.getClassName());            argObjects[i] = createBean(refBeanDefinition);          &#125;        &#125;        bean = beanClass.getConstructor(argClasses).newInstance(argObjects);      &#125;    &#125; <span class="hljs-keyword">catch</span> (ClassNotFoundException | IllegalAccessException            | InstantiationException | NoSuchMethodException | InvocationTargetException e) &#123;      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> BeanCreationFailureException(<span class="hljs-string">""</span>, e);    &#125;    <span class="hljs-keyword">if</span> (bean != <span class="hljs-keyword">null</span> &amp;&amp; beanDefinition.isSingleton()) &#123;      singletonObjects.putIfAbsent(beanDefinition.getId(), bean);      <span class="hljs-keyword">return</span> singletonObjects.get(beanDefinition.getId());    &#125;    <span class="hljs-keyword">return</span> bean;  &#125;&#125;</code></pre><h2 id="重点内容"><a href="#重点内容" class="headerlink" title="重点内容"></a>重点内容</h2><p><code>DI</code> 容器在一些软件开发中已经成为了标配，比如 <code>Spring IOC</code>、<code>Google Guice</code>。但是，大部分人可能只是把它当作一个黑盒子来使用，并未真正去了解它的底层是如何实现的。当然，如果只是做一些简单的小项目，简单会用就足够了，但是，如果我们面对的是非常复杂的系统，当系统出现问题的时候，对底层原理的掌握程度，决定了我们排查问题的能力，直接影响到我们排查问题的效率。</p><p>一个简单的 <code>DI</code> 容器的实现原理，其核心逻辑主要包括：配置文件解析，以及根据配置文件通过“反射”语法来创建对象。其中，创建对象的过程就应用到了我们在学的工厂模式。对象创建、组装、管理完全有 <code>DI</code> 容器来负责，跟具体业务代码解耦，让程序员聚焦在业务代码的开发上。</p><p>参考：<a href="https://time.geekbang.org/column/article/198614" target="_blank" rel="noopener">工厂模式（下）：如何设计实现一个Dependency Injection框架？</a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>设计模式与范式(创建型)</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>设计模式</tag>
+      
+      <tag>工厂模式</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>设计模式之美学习（三十三）</title>
+    <link href="/passages/design-pattern-learn-33/"/>
+    <url>/passages/design-pattern-learn-33/</url>
+    
+    <content type="html"><![CDATA[<p>为什么说没事不要随便用工厂模式创建对象？</p><a id="more"></a><p>一般情况下，工厂模式分为三种更加细分的类型：简单工厂、工厂方法和抽象工厂。不过，在 <code>GoF</code> 的《设计模式》一书中，它将简单工厂模式看作是工厂方法模式的一种特例，所以工厂模式只被分成了工厂方法和抽象工厂两类。实际上，前面一种分类方法更加常见。</p><ul><li>什么时候该用工厂模式？相对于直接 <code>new</code> 来创建对象，用工厂模式来创建究竟有什么好处呢？</li></ul><p>三种工厂模式中，简单工厂和工厂方法比较常用，抽象工厂的应用场景比较特殊，所以很少用到。下面重点对前两种工厂模式的应用场景进行总结。</p><p>当创建逻辑比较复杂，是一个“大工程”的时候，我们就考虑使用工厂模式，封装对象的创建过程，将对象的创建和使用相分离。何为创建逻辑比较复杂呢？有下面两种情况。</p><ul><li>第一种情况：类似规则配置解析的例子，代码中存在 <code>if-else</code> 分支判断，动态地根据不同的类型创建不同的对象。针对这种情况，我们就考虑使用工厂模式，将这一大坨 <code>if-else</code> 创建对象的代码抽离出来，放到工厂类中。</li></ul><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">RuleConfigSource</span> </span>&#123;  <span class="hljs-function"><span class="hljs-keyword">public</span> RuleConfig <span class="hljs-title">load</span><span class="hljs-params">(String ruleConfigFilePath)</span> </span>&#123;    String ruleConfigFileExtension = getFileExtension(ruleConfigFilePath);    IRuleConfigParser parser = RuleConfigParserFactory.createParser(ruleConfigFileExtension);    <span class="hljs-keyword">if</span> (parser == <span class="hljs-keyword">null</span>) &#123;      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> InvalidRuleConfigException(              <span class="hljs-string">"Rule config file format is not supported: "</span> + ruleConfigFilePath);    &#125;    String configText = <span class="hljs-string">""</span>;    <span class="hljs-comment">//从ruleConfigFilePath文件中读取配置文本到configText中</span>    RuleConfig ruleConfig = parser.parse(configText);    <span class="hljs-keyword">return</span> ruleConfig;  &#125;  <span class="hljs-function"><span class="hljs-keyword">private</span> String <span class="hljs-title">getFileExtension</span><span class="hljs-params">(String filePath)</span> </span>&#123;    <span class="hljs-comment">//...解析文件名获取扩展名，比如rule.json，返回json</span>    <span class="hljs-keyword">return</span> <span class="hljs-string">"json"</span>;  &#125;&#125;<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">RuleConfigParserFactory</span> </span>&#123;  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> IRuleConfigParser <span class="hljs-title">createParser</span><span class="hljs-params">(String configFormat)</span> </span>&#123;    IRuleConfigParser parser = <span class="hljs-keyword">null</span>;    <span class="hljs-keyword">if</span> (<span class="hljs-string">"json"</span>.equalsIgnoreCase(configFormat)) &#123;      parser = <span class="hljs-keyword">new</span> JsonRuleConfigParser();    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">"xml"</span>.equalsIgnoreCase(configFormat)) &#123;      parser = <span class="hljs-keyword">new</span> XmlRuleConfigParser();    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">"yaml"</span>.equalsIgnoreCase(configFormat)) &#123;      parser = <span class="hljs-keyword">new</span> YamlRuleConfigParser();    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">"properties"</span>.equalsIgnoreCase(configFormat)) &#123;      parser = <span class="hljs-keyword">new</span> PropertiesRuleConfigParser();    &#125;    <span class="hljs-keyword">return</span> parser;  &#125;&#125;<span class="hljs-comment">//如果 parser 可以复用，为了节省内存和对象创建的时间，我们可以将 parser 事先创建好缓存起来。</span><span class="hljs-comment">//当调用 createParser() 函数的时候，我们从缓存中取出 parser 对象直接使用。</span><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">RuleConfigParserFactory</span> </span>&#123;  <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Map&lt;String, RuleConfigParser&gt; cachedParsers = <span class="hljs-keyword">new</span> HashMap&lt;&gt;();  <span class="hljs-keyword">static</span> &#123;    cachedParsers.put(<span class="hljs-string">"json"</span>, <span class="hljs-keyword">new</span> JsonRuleConfigParser());    cachedParsers.put(<span class="hljs-string">"xml"</span>, <span class="hljs-keyword">new</span> XmlRuleConfigParser());    cachedParsers.put(<span class="hljs-string">"yaml"</span>, <span class="hljs-keyword">new</span> YamlRuleConfigParser());    cachedParsers.put(<span class="hljs-string">"properties"</span>, <span class="hljs-keyword">new</span> PropertiesRuleConfigParser());  &#125;  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> IRuleConfigParser <span class="hljs-title">createParser</span><span class="hljs-params">(String configFormat)</span> </span>&#123;    <span class="hljs-keyword">if</span> (configFormat == <span class="hljs-keyword">null</span> || configFormat.isEmpty()) &#123;      <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;<span class="hljs-comment">//返回null还是IllegalArgumentException全凭你自己说了算</span>    &#125;    IRuleConfigParser parser = cachedParsers.get(configFormat.toLowerCase());    <span class="hljs-keyword">return</span> parser;  &#125;&#125;</code></pre><ul><li>还有一种情况，尽管我们不需要根据不同的类型创建不同的对象，但是，单个对象本身的创建过程比较复杂，比如前面提到的要组合其他类对象，做各种初始化操作。在这种情况下，我们也可以考虑使用工厂模式，将对象的创建过程封装到工厂类中。</li></ul><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">RuleConfigSource</span> </span>&#123;  <span class="hljs-function"><span class="hljs-keyword">public</span> RuleConfig <span class="hljs-title">load</span><span class="hljs-params">(String ruleConfigFilePath)</span> </span>&#123;    String ruleConfigFileExtension = getFileExtension(ruleConfigFilePath);    IRuleConfigParserFactory parserFactory = RuleConfigParserFactoryMap.getParserFactory(ruleConfigFileExtension);    <span class="hljs-keyword">if</span> (parserFactory == <span class="hljs-keyword">null</span>) &#123;      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> InvalidRuleConfigException(<span class="hljs-string">"Rule config file format is not supported: "</span> + ruleConfigFilePath);    &#125;    IRuleConfigParser parser = parserFactory.createParser();    String configText = <span class="hljs-string">""</span>;    <span class="hljs-comment">//从ruleConfigFilePath文件中读取配置文本到configText中</span>    RuleConfig ruleConfig = parser.parse(configText);    <span class="hljs-keyword">return</span> ruleConfig;  &#125;  <span class="hljs-function"><span class="hljs-keyword">private</span> String <span class="hljs-title">getFileExtension</span><span class="hljs-params">(String filePath)</span> </span>&#123;    <span class="hljs-comment">//...解析文件名获取扩展名，比如rule.json，返回json</span>    <span class="hljs-keyword">return</span> <span class="hljs-string">"json"</span>;  &#125;&#125;<span class="hljs-comment">//因为工厂类只包含方法，不包含成员变量，完全可以复用，</span><span class="hljs-comment">//不需要每次都创建新的工厂类对象，所以，简单工厂模式的第二种实现思路更加合适。</span><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">RuleConfigParserFactoryMap</span> </span>&#123; <span class="hljs-comment">//工厂的工厂</span>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Map&lt;String, IRuleConfigParserFactory&gt; cachedFactories = <span class="hljs-keyword">new</span> HashMap&lt;&gt;();  <span class="hljs-keyword">static</span> &#123;    cachedFactories.put(<span class="hljs-string">"json"</span>, <span class="hljs-keyword">new</span> JsonRuleConfigParserFactory());    cachedFactories.put(<span class="hljs-string">"xml"</span>, <span class="hljs-keyword">new</span> XmlRuleConfigParserFactory());    cachedFactories.put(<span class="hljs-string">"yaml"</span>, <span class="hljs-keyword">new</span> YamlRuleConfigParserFactory());    cachedFactories.put(<span class="hljs-string">"properties"</span>, <span class="hljs-keyword">new</span> PropertiesRuleConfigParserFactory());  &#125;  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> IRuleConfigParserFactory <span class="hljs-title">getParserFactory</span><span class="hljs-params">(String type)</span> </span>&#123;    <span class="hljs-keyword">if</span> (type == <span class="hljs-keyword">null</span> || type.isEmpty()) &#123;      <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;    &#125;    IRuleConfigParserFactory parserFactory = cachedFactories.get(type.toLowerCase());    <span class="hljs-keyword">return</span> parserFactory;  &#125;&#125;</code></pre><p>对于第一种情况，当每个对象的创建逻辑都比较简单的时候，推荐使用简单工厂模式，将多个对象的创建逻辑放到一个工厂类中。当每个对象的创建逻辑都比较复杂的时候，为了避免设计一个过于庞大的简单工厂类，推荐使用工厂方法模式，将创建逻辑拆分得更细，每个对象的创建逻辑独立到各自的工厂类中。同理，对于第二种情况，因为单个对象本身的创建逻辑就比较复杂，所以，建议使用工厂方法模式。</p><p>除了刚刚提到的这几种情况之外，如果创建对象的逻辑并不复杂，那我们就直接通过 <code>new</code> 来创建对象就可以了，不需要使用工厂模式。</p><p>现在，我们上升一个思维层面来看工厂模式，它的作用无外乎下面这四个。这也是判断要不要使用工厂模式的最本质的参考标准。</p><ul><li>封装变化：创建逻辑有可能变化，封装成工厂类之后，创建逻辑的变更对调用者透明。</li><li>代码复用：创建代码抽离到独立的工厂类之后可以复用。</li><li>隔离复杂性：封装复杂的创建逻辑，调用者无需了解如何创建对象。</li><li>控制复杂度：将创建代码抽离出来，让原本的函数或类职责更单一，代码更简洁。</li></ul><p>参考：<a href="https://time.geekbang.org/column/article/197254" target="_blank" rel="noopener">工厂模式（上）：我为什么说没事不要随便用工厂模式创建对象？</a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>设计模式与范式(创建型)</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>设计模式</tag>
+      
+      <tag>工厂模式</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>设计模式之美学习（三十二）</title>
+    <link href="/passages/design-pattern-learn-32/"/>
+    <url>/passages/design-pattern-learn-32/</url>
+    
+    <content type="html"><![CDATA[<p>如何设计实现一个集群环境下的分布式单例模式？</p><a id="more"></a><h2 id="如何理解单例模式的唯一性？"><a href="#如何理解单例模式的唯一性？" class="headerlink" title="如何理解单例模式的唯一性？"></a>如何理解单例模式的唯一性？</h2><p>单例类中对象的唯一性的作用范围是“进程唯一”的。“进程唯一”指的是进程内唯一，进程间不唯一；“线程唯一”指的是线程内唯一，线程间可以不唯一。实际上，“进程唯一”就意味着线程内、线程间都唯一，这也是“进程唯一”和“线程唯一”的区别之处。“集群唯一”指的是进程内唯一、进程间也唯一。</p><h2 id="如何实现线程唯一的单例？"><a href="#如何实现线程唯一的单例？" class="headerlink" title="如何实现线程唯一的单例？"></a>如何实现线程唯一的单例？</h2><p>我们通过一个 <code>HashMap</code> 来存储对象，其中 <code>key</code> 是线程 <code>ID</code>，<code>value</code> 是对象。这样我们就可以做到，不同的线程对应不同的对象，同一个线程只能对应一个对象。实际上，<code>Java</code> 语言本身提供了 <code>ThreadLocal</code> 并发工具类，可以更加轻松地实现线程唯一单例。</p><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">IdGenerator</span> </span>&#123;  <span class="hljs-keyword">private</span> AtomicLong id = <span class="hljs-keyword">new</span> AtomicLong(<span class="hljs-number">0</span>);  <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> ConcurrentHashMap&lt;Long, IdGenerator&gt; instances          = <span class="hljs-keyword">new</span> ConcurrentHashMap&lt;&gt;();  <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">IdGenerator</span><span class="hljs-params">()</span> </span>&#123;&#125;  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> IdGenerator <span class="hljs-title">getInstance</span><span class="hljs-params">()</span> </span>&#123;    Long currentThreadId = Thread.currentThread().getId();    instances.putIfAbsent(currentThreadId, <span class="hljs-keyword">new</span> IdGenerator());    <span class="hljs-keyword">return</span> instances.get(currentThreadId);  &#125;  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">long</span> <span class="hljs-title">getId</span><span class="hljs-params">()</span> </span>&#123;    <span class="hljs-keyword">return</span> id.incrementAndGet();  &#125;&#125;</code></pre><h2 id="如何实现集群环境下的单例？"><a href="#如何实现集群环境下的单例？" class="headerlink" title="如何实现集群环境下的单例？"></a>如何实现集群环境下的单例？</h2><p>我们需要把这个单例对象序列化并存储到外部共享存储区（比如文件）。进程在使用这个单例对象的时候，需要先从外部共享存储区中将它读取到内存，并反序列化成对象，然后再使用，使用完成之后还需要再存储回外部共享存储区。为了保证任何时刻在进程间都只有一份对象存在，一个进程在获取到对象之后，需要对对象加锁，避免其他进程再将其获取。在进程使用完这个对象之后，需要显式地将对象从内存中删除，并且释放对对象的加锁。</p><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">IdGenerator</span> </span>&#123;  <span class="hljs-keyword">private</span> AtomicLong id = <span class="hljs-keyword">new</span> AtomicLong(<span class="hljs-number">0</span>);  <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> IdGenerator instance;  <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> SharedObjectStorage storage = FileSharedObjectStorage(<span class="hljs-comment">/*入参省略，比如文件地址*/</span>);  <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> DistributedLock lock = <span class="hljs-keyword">new</span> DistributedLock();    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">IdGenerator</span><span class="hljs-params">()</span> </span>&#123;&#125;  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">synchronized</span> <span class="hljs-keyword">static</span> IdGenerator <span class="hljs-title">getInstance</span><span class="hljs-params">()</span>     <span class="hljs-title">if</span> <span class="hljs-params">(instance == <span class="hljs-keyword">null</span>)</span> </span>&#123;      lock.lock();      instance = storage.load(IdGenerator.class);    &#125;    <span class="hljs-keyword">return</span> instance;  &#125;    <span class="hljs-function"><span class="hljs-keyword">public</span> synchroinzed <span class="hljs-keyword">void</span> <span class="hljs-title">freeInstance</span><span class="hljs-params">()</span> </span>&#123;    storage.save(<span class="hljs-keyword">this</span>, IdGeneator.class);    instance = <span class="hljs-keyword">null</span>; <span class="hljs-comment">//释放对象</span>    lock.unlock();  &#125;    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">long</span> <span class="hljs-title">getId</span><span class="hljs-params">()</span> </span>&#123;     <span class="hljs-keyword">return</span> id.incrementAndGet();  &#125;&#125;<span class="hljs-comment">// IdGenerator使用举例</span>IdGenerator idGeneator = IdGenerator.getInstance();<span class="hljs-keyword">long</span> id = idGenerator.getId();IdGenerator.freeInstance();</code></pre><h2 id="如何实现一个多例模式？"><a href="#如何实现一个多例模式？" class="headerlink" title="如何实现一个多例模式？"></a>如何实现一个多例模式？</h2><p>“单例”指的是一个类只能创建一个对象。对应地，“多例”指的就是一个类可以创建多个对象，但是个数是有限制的，比如只能创建 <code>3</code> 个对象。多例的实现也比较简单，通过一个 <code>Map</code> 来存储对象类型和对象之间的对应关系，来控制对象的个数。</p><p>参考: <a href="https://time.geekbang.org/column/article/196790" target="_blank" rel="noopener">单例模式（下）：如何设计实现一个集群环境下的分布式单例模式？</a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>设计模式与范式(创建型)</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>设计模式</tag>
+      
+      <tag>单例模式</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>设计模式之美学习（三十一）</title>
+    <link href="/passages/design-pattern-learn-31/"/>
+    <url>/passages/design-pattern-learn-31/</url>
+    
+    <content type="html"><![CDATA[<p>为什么不推荐使用单例模式？</p><a id="more"></a><h2 id="单例存在哪些问题？"><a href="#单例存在哪些问题？" class="headerlink" title="单例存在哪些问题？"></a>单例存在哪些问题？</h2><ul><li><p>单例对 <code>OOP</code> 特性的支持不友好</p></li><li><p>单例会隐藏类之间的依赖关系</p></li><li><p>单例对代码的扩展性不友好</p></li><li><p>单例对代码的可测试性不友好</p></li><li><p>单例不支持有参数的构造函数</p></li></ul><h2 id="单例有什么替代解决方案？"><a href="#单例有什么替代解决方案？" class="headerlink" title="单例有什么替代解决方案？"></a>单例有什么替代解决方案？</h2><p>为了保证全局唯一，除了使用单例，我们还可以用静态方法来实现。不过，静态方法这种实现思路，并不能解决我们之前提到的问题。如果要完全解决这些问题，我们可能要从根上，寻找其他方式来实现全局唯一类了。<br>比如，通过工厂模式、<code>IOC</code> 容器（比如 <code>Spring IOC</code> 容器）来保证，由程序员自己来保证（自己在编写代码的时候自己保证不要创建两个类对象）。</p><p>有人把单例当作反模式，主张杜绝在项目中使用。个人觉得这有点极端。<strong>模式没有对错，关键看你怎么用</strong>。<br>如果单例类并没有后续扩展的需求，并且不依赖外部系统，那设计成单例类就没有太大问题。对于一些全局的类，我们在其他地方 <code>new</code> 的话，还要在类之间传来传去，不如直接做成单例类，使用起来简洁方便。</p><p>参考: <a href="https://time.geekbang.org/column/article/194068" target="_blank" rel="noopener">单例模式（中）：我为什么不推荐使用单例模式？又有何替代方案？</a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>设计模式与范式(创建型)</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>设计模式</tag>
+      
+      <tag>单例模式</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>设计模式之美学习（三十）</title>
     <link href="/passages/design-pattern-learn-30/"/>
     <url>/passages/design-pattern-learn-30/</url>
@@ -21,6 +237,8 @@
     <tags>
       
       <tag>设计模式</tag>
+      
+      <tag>单例模式</tag>
       
     </tags>
     
