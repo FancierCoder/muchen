@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png">
+    <link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <meta name="theme-color" content="#2f4154">
+    <meta name="description" content="沐晨的个人博客,技术博客">
+    <meta name="author" content="Li Duo">
+    <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
+    <title>设计模式之美学习（三十九） - MuChen&#39;s Blog</title>
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+    
+<link rel="stylesheet" href="https://static.muchen.fun/css/custom.css">
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+<script>
+    var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+    // 依次判断 系统暗黑模式 指定时间 缓存 dark
+    if (matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+        if (!(isNight && localStorage.getItem('noDark') === '1')) {
+            document.body.classList.add('dark');
+        }
+    }
+</script>
+<header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+    <div class="container">
+        <a class="navbar-brand"
+           href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a>
+
+        <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="animated-icon"><span></span><span></span><span></span></div>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto text-center">
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/archives/">
+                            <i class="iconfont icon-archive-fill"></i>
+                            归档</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/categories/">
+                            <i class="iconfont icon-category-fill"></i>
+                            分类</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tags/">
+                            <i class="iconfont icon-tags-fill"></i>
+                            标签</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/messageBoard/">
+                            <i class="iconfont icon-speakernotes"></i>
+                            留言</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about/">
+                            <i class="iconfont icon-user-fill"></i>
+                            关于</a>
+                    </li>
+                
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/links/">
+                            <i class="iconfont icon-link-fill"></i>
+                            友链</a>
+                    </li>
+                
+                
+                    <li class="nav-item" id="search-btn">
+                        <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                                    class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+                    </li>
+                
+                <li class="nav-item">
+                    <a id="dark" class="nav-link" onclick="switchDarkMode()">
+                        <i class="iconfont icon-sun"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('https://static.muchen.fun/picture/15.jpg') no-repeat center center;
+                 background-size: cover;">
+        <div class="full-bg-img">
+            <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+                <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+                
+            </span>
+
+                    
+                        
+                            <div class="mt-3 post-meta">
+                                <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                                <time datetime="2020-05-15 20:44">
+                                    2020年5月15日 晚上
+                                </time>
+                            </div>
+                        
+
+                        <div class="mt-1">
+                            
+                                
+                                <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    2.1k 字
+                  </span>
+                            
+
+                            
+                                
+                                <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                                    
+                                    
+                                    31
+                                     分钟
+                  </span>
+                            
+
+                            
+                                <!-- 不蒜子统计文章PV -->
+                                
+                                <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
+                    <i class="iconfont icon-eye" aria-hidden="true"></i>
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>
+                            
+                        </div>
+                    
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    
+        
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：1 小时前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <p>通过剖析Java IO类库源码学习装饰器模式</p>
+<a id="more"></a>
+<p>参考：<a href="https://time.geekbang.org/column/article/204845" target="_blank" rel="noopener">装饰器模式：通过剖析Java IO类库源码学习装饰器模式</a></p>
+<p>装饰器模式的代码结构跟桥接模式非常相似，不过，要解决的问题却大不相同。</p>
+<h2 id="Java-IO-类的“奇怪”用法"><a href="#Java-IO-类的“奇怪”用法" class="headerlink" title="Java IO 类的“奇怪”用法"></a>Java IO 类的“奇怪”用法</h2><p><code>Java IO</code> 类库非常庞大和复杂，有几十个类，负责 <code>IO</code> 数据的读取和写入。如果对 <code>Java IO</code> 类做一下分类，我们可以从下面两个维度将它划分为四类。具体如下所示：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2020/05/15/a0d09990-96af-11ea-a8dc-a9d36e15c1f4.png" srcset="/img/loading.gif" alt="image.png"></p>
+<p>针对不同的读取和写入场景，<code>Java IO</code> 又在这四个父类基础之上，扩展出了很多子类。具体如下所示：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2020/05/15/bc0af7a0-96af-11ea-a8dc-a9d36e15c1f4.png" srcset="/img/loading.gif" alt="image.png"></p>
+<p>初学 <code>Java</code> 的时候，曾经对 <code>Java IO</code> 的一些用法产生过很大疑惑，比如下面这样一段代码。我们打开文件 <code>test.txt</code>，从中读取数据。其中，<code>InputStream</code> 是一个抽象类，<code>FileInputStream</code> 是专门用来读取文件流的子类。<code>BufferedInputStream</code> 是一个支持带缓存功能的数据读取类，可以提高数据读取的效率。</p>
+<pre><code class="hljs java">InputStream in = <span class="hljs-keyword">new</span> FileInputStream(<span class="hljs-string">"/user/test.txt"</span>);
+InputStream bin = <span class="hljs-keyword">new</span> BufferedInputStream(in);
+<span class="hljs-keyword">byte</span>[] data = <span class="hljs-keyword">new</span> <span class="hljs-keyword">byte</span>[<span class="hljs-number">128</span>];
+<span class="hljs-keyword">while</span> (bin.read(data) != -<span class="hljs-number">1</span>) &#123;
+  <span class="hljs-comment">//...</span>
+&#125;</code></pre>
+
+<p>初看上面的代码，我们会觉得 <code>Java IO</code> 的用法比较麻烦，需要先创建一个 <code>FileInputStream</code> 对象，然后再传递给 <code>BufferedInputStream</code> 对象来使用。<code>Java IO</code> 为什么不设计一个继承 <code>FileInputStream</code> 并且支持缓存的 <code>BufferedFileInputStream</code> 类呢？这样我们就可以像下面的代码中这样，直接创建一个 <code>BufferedFileInputStream</code> 类对象，打开文件读取数据，用起来岂不是更加简单？</p>
+<pre><code class="hljs java">InputStream bin = <span class="hljs-keyword">new</span> BufferedFileInputStream(<span class="hljs-string">"/user/test.txt"</span>);
+<span class="hljs-keyword">byte</span>[] data = <span class="hljs-keyword">new</span> <span class="hljs-keyword">byte</span>[<span class="hljs-number">128</span>];
+<span class="hljs-keyword">while</span> (bin.read(data) != -<span class="hljs-number">1</span>) &#123;
+  <span class="hljs-comment">//...</span>
+&#125;</code></pre>
+
+<h2 id="基于继承的设计方案"><a href="#基于继承的设计方案" class="headerlink" title="基于继承的设计方案"></a>基于继承的设计方案</h2><p>如果 <code>InputStream</code> 只有一个子类 <code>FileInputStream</code> 的话，那我们在 <code>FileInputStream</code> 基础之上，再设计一个孙子类 <code>BufferedFileInputStream</code>，也算是可以接受的，毕竟继承结构还算简单。但实际上，继承 <code>InputStream</code> 的子类有很多。我们需要给每一个 <code>InputStream</code> 的子类，再继续派生支持缓存读取的子类。</p>
+<p>除了支持缓存读取之外，如果我们还需要对功能进行其他方面的增强，比如下面的 <code>DataInputStream</code> 类，支持按照基本数据类型（<code>int</code>、<code>boolean</code>、<code>long</code> 等）来读取数据。</p>
+<pre><code class="hljs java">FileInputStream in = <span class="hljs-keyword">new</span> FileInputStream(<span class="hljs-string">"/user/wangzheng/test.txt"</span>);
+DataInputStream din = <span class="hljs-keyword">new</span> DataInputStream(in);
+<span class="hljs-keyword">int</span> data = din.readInt();</code></pre>
+
+<p>在这种情况下，如果我们继续按照继承的方式来实现的话，就需要再继续派生出 <code>DataFileInputStream</code>、<code>DataPipedInputStream</code> 等类。如果我们还需要既支持缓存、又支持按照基本类型读取数据的类，那就要再继续派生出 <code>BufferedDataFileInputStream</code>、<code>BufferedDataPipedInputStream</code> 等 <code>n</code> 多类。这还只是附加了两个增强功能，如果我们需要附加更多的增强功能，那就会导致组合爆炸，类继承结构变得无比复杂，代码既不好扩展，也不好维护。</p>
+<h2 id="基于装饰器模式的设计方案"><a href="#基于装饰器模式的设计方案" class="headerlink" title="基于装饰器模式的设计方案"></a>基于装饰器模式的设计方案</h2><p>“组合优于继承”，可以“使用组合来替代继承”。针对刚刚的继承结构过于复杂的问题，我们可以通过将继承关系改为组合关系来解决。下面的代码展示了 <code>Java IO</code> 的这种设计思路。不过，我对代码做了简化，只抽象出了必要的代码结构，如果你感兴趣的话，可以直接去查看 <code>JDK</code> 源码。</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">InputStream</span> </span>&#123;
+  <span class="hljs-comment">//...</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">read</span><span class="hljs-params">(<span class="hljs-keyword">byte</span> b[])</span> <span class="hljs-keyword">throws</span> IOException </span>&#123;
+    <span class="hljs-keyword">return</span> read(b, <span class="hljs-number">0</span>, b.length);
+  &#125;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">read</span><span class="hljs-params">(<span class="hljs-keyword">byte</span> b[], <span class="hljs-keyword">int</span> off, <span class="hljs-keyword">int</span> len)</span> <span class="hljs-keyword">throws</span> IOException </span>&#123;
+    <span class="hljs-comment">//...</span>
+  &#125;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">long</span> <span class="hljs-title">skip</span><span class="hljs-params">(<span class="hljs-keyword">long</span> n)</span> <span class="hljs-keyword">throws</span> IOException </span>&#123;
+    <span class="hljs-comment">//...</span>
+  &#125;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">available</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> IOException </span>&#123;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+  &#125;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">close</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> IOException </span>&#123;&#125;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">synchronized</span> <span class="hljs-keyword">void</span> <span class="hljs-title">mark</span><span class="hljs-params">(<span class="hljs-keyword">int</span> readlimit)</span> </span>&#123;&#125;
+    
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">synchronized</span> <span class="hljs-keyword">void</span> <span class="hljs-title">reset</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> IOException </span>&#123;
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IOException(<span class="hljs-string">"mark/reset not supported"</span>);
+  &#125;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">markSupported</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+  &#125;
+&#125;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BufferedInputStream</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">InputStream</span> </span>&#123;
+  <span class="hljs-keyword">protected</span> <span class="hljs-keyword">volatile</span> InputStream in;
+
+  <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-title">BufferedInputStream</span><span class="hljs-params">(InputStream in)</span> </span>&#123;
+    <span class="hljs-keyword">this</span>.in = in;
+  &#125;
+  
+  <span class="hljs-comment">//...实现基于缓存的读数据接口...  </span>
+&#125;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DataInputStream</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">InputStream</span> </span>&#123;
+  <span class="hljs-keyword">protected</span> <span class="hljs-keyword">volatile</span> InputStream in;
+
+  <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-title">DataInputStream</span><span class="hljs-params">(InputStream in)</span> </span>&#123;
+    <span class="hljs-keyword">this</span>.in = in;
+  &#125;
+  
+  <span class="hljs-comment">//...实现读取基本类型数据的接口</span>
+&#125;</code></pre>
+
+<p>看了上面的代码，你可能会问，那装饰器模式就是简单的“用组合替代继承”吗？当然不是。从 <code>Java IO</code> 的设计来看，装饰器模式相对于简单的组合关系，还有两个比较特殊的地方。</p>
+<p>第一：<strong>装饰器类和原始类继承同样的父类，这样我们可以对原始类“嵌套”多个装饰器类</strong>。比如，下面这样一段代码，我们对 <code>FileInputStream</code> 嵌套了两个装饰器类：<code>BufferedInputStream</code> 和 <code>DataInputStream</code>，让它既支持缓存读取，又支持按照基本数据类型来读取数据。</p>
+<pre><code class="hljs java">InputStream in = <span class="hljs-keyword">new</span> FileInputStream(<span class="hljs-string">"/user/test.txt"</span>);
+InputStream bin = <span class="hljs-keyword">new</span> BufferedInputStream(in);
+DataInputStream din = <span class="hljs-keyword">new</span> DataInputStream(bin);
+<span class="hljs-keyword">int</span> data = din.readInt();</code></pre>
+
+<p>第二：<strong>装饰器类是对功能的增强，这也是装饰器模式应用场景的一个重要特点</strong>。实际上，符合“组合关系”这种代码结构的设计模式有很多，比如之前讲过的代理模式、桥接模式，还有现在的装饰器模式。尽管它们的代码结构很相似，但是每种设计模式的意图是不同的。就拿比较相似的代理模式和装饰器模式来说吧，代理模式中，代理类附加的是跟原始类无关的功能，而在装饰器模式中，装饰器类附加的是跟原始类相关的增强功能。</p>
+<pre><code class="hljs java"><span class="hljs-comment">// 代理模式的代码结构(下面的接口也可以替换成抽象类)</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">IA</span> </span>&#123;
+  <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">f</span><span class="hljs-params">()</span></span>;
+&#125;
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">A</span> <span class="hljs-title">impelements</span> <span class="hljs-title">IA</span> </span>&#123;
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">f</span><span class="hljs-params">()</span> </span>&#123; <span class="hljs-comment">//... &#125;</span>
+&#125;
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AProxy</span> <span class="hljs-title">impements</span> <span class="hljs-title">IA</span> </span>&#123;
+  <span class="hljs-keyword">private</span> IA a;
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">AProxy</span><span class="hljs-params">(IA a)</span> </span>&#123;
+    <span class="hljs-keyword">this</span>.a = a;
+  &#125;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">f</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-comment">// 新添加的代理逻辑</span>
+    a.f();
+    <span class="hljs-comment">// 新添加的代理逻辑</span>
+  &#125;
+&#125;
+
+<span class="hljs-comment">// 装饰器模式的代码结构(下面的接口也可以替换成抽象类)</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">IA</span> </span>&#123;
+  <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">f</span><span class="hljs-params">()</span></span>;
+&#125;
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">A</span> <span class="hljs-title">impelements</span> <span class="hljs-title">IA</span> </span>&#123;
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">f</span><span class="hljs-params">()</span> </span>&#123; <span class="hljs-comment">//... &#125;</span>
+&#125;
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ADecorator</span> <span class="hljs-title">impements</span> <span class="hljs-title">IA</span> </span>&#123;
+  <span class="hljs-keyword">private</span> IA a;
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ADecorator</span><span class="hljs-params">(IA a)</span> </span>&#123;
+    <span class="hljs-keyword">this</span>.a = a;
+  &#125;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">f</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-comment">// 功能增强代码</span>
+    a.f();
+    <span class="hljs-comment">// 功能增强代码</span>
+  &#125;
+&#125;</code></pre>
+
+<p>实际上，如果去查看 <code>JDK</code> 的源码，你会发现，<code>BufferedInputStream</code>、<code>DataInputStream</code> 并非继承自 <code>InputStream</code>，而是另外一个叫 <code>FilterInputStream</code> 的类。那这又是出于什么样的设计意图，才引入这样一个类呢？</p>
+<p>重新来看一下 <code>BufferedInputStream</code> 类的代码。<code>InputStream</code> 是一个抽象类而非接口，而且它的大部分函数（比如 <code>read()</code>、<code>available()</code>）都有默认实现，按理来说，我们只需要在 <code>BufferedInputStream</code> 类中重新实现那些需要增加缓存功能的函数就可以了，其他函数继承 <code>InputStream</code> 的默认实现。但实际上，这样做是行不通的。</p>
+<p>对于即便是不需要增加缓存功能的函数来说，<code>BufferedInputStream</code> 还是必须把它重新实现一遍，简单包裹对 <code>InputStream</code> 对象的函数调用。具体的代码示例如下所示。如果不重新实现，那 <code>BufferedInputStream</code> 类就无法将最终读取数据的任务，委托给传递进来的 <code>InputStream</code> 对象来完成。这一部分稍微有点不好理解，你自己多思考一下。</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BufferedInputStream</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">InputStream</span> </span>&#123;
+  <span class="hljs-keyword">protected</span> <span class="hljs-keyword">volatile</span> InputStream in;
+
+  <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-title">BufferedInputStream</span><span class="hljs-params">(InputStream in)</span> </span>&#123;
+    <span class="hljs-keyword">this</span>.in = in;
+  &#125;
+  
+  <span class="hljs-comment">// f()函数不需要增强，只是重新调用一下InputStream in对象的f()</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">f</span><span class="hljs-params">()</span> </span>&#123;
+    in.f();
+  &#125;  
+&#125;</code></pre>
+
+<p>实际上，<code>DataInputStream</code> 也存在跟 <code>BufferedInputStream</code> 同样的问题。为了避免代码重复，<code>Java IO</code> 抽象出了一个装饰器父类 <code>FilterInputStream</code>，代码实现如下所示。<code>InputStream</code> 的所有的装饰器类（<code>BufferedInputStream</code>、<code>DataInputStream</code>）都继承自这个装饰器父类。这样，装饰器类只需要实现它需要增强的方法就可以了，其他方法继承装饰器父类的默认实现。</p>
+<h2 id="重点"><a href="#重点" class="headerlink" title="重点"></a>重点</h2><p>装饰器模式主要解决继承关系过于复杂的问题，通过组合来替代继承。它主要的作用是给原始类添加增强功能。这也是判断是否该用装饰器模式的一个重要的依据。除此之外，装饰器模式还有一个特点，那就是可以对原始类嵌套使用多个装饰器。为了满足这个应用场景，在设计的时候，装饰器类需要跟原始类继承相同的抽象类或者接口。</p>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E8%8C%83%E5%BC%8F-%E7%BB%93%E6%9E%84%E5%9E%8B/">设计模式与范式(结构型)</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/">桥接模式</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/passages/design-pattern-learn-38/">
+                        <span class="hidden-mobile">设计模式之美学习（三十八）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+    <div id="vcomments"></div>
+    <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+    <script type="text/javascript">
+        var oldLoadVa = window.onload;
+        window.onload = function () {
+            oldLoadVa && oldLoadVa();
+
+            new Valine({
+                el: "#vcomments",
+                app_id: "O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",
+                app_key: "5Rl3Rhl9zc8BJNvrPcncKWFy",
+                placeholder: "说点什么吧~",
+                path: window.location.pathname,
+                avatar: "retro",
+                meta: ["nick","mail","link"],
+                pageSize: "10",
+                lang: "zh-CN",
+                highlight: true,
+                recordIP: true,
+                serverURLs: "https://lean.muchen.fun",
+            });
+        };
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments
+            powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+    <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+    <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><br><div class="text-center">欢迎关注我的公众号</div>
+    </div>
+  </div>
+
+
+    
+</main>
+
+
+    <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+
+
+
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+                <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mx-3">
+                <div class="md-form mb-5">
+                    <input type="text" id="local-search-input" class="form-control validate">
+                    <label data-error="x"
+                           data-success="v"
+                           for="local-search-input">关键词</label>
+                </div>
+                <div class="list-group" id="local-search-result"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    <div>
+      <span id="timeDate">载入天数...</span>
+      <span id="times">载入时分秒...</span>
+      <script>
+        document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark") ? "🌙" : "☀";
+        var now = new Date();
+
+        function createtime() {
+          var grt = new Date("07/12/2019 00:00:00");//此处修改你的建站时间或者网站上线时间
+          now.setTime(now.getTime() + 250);
+          days = (now - grt) / 1000 / 60 / 60 / 24;
+          dnum = Math.floor(days);
+          hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+          hnum = Math.floor(hours);
+          if (String(hnum).length == 1) {
+            hnum = "0" + hnum;
+          }
+          minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+          mnum = Math.floor(minutes);
+          if (String(mnum).length == 1) {
+            mnum = "0" + mnum;
+          }
+          seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+          snum = Math.round(seconds);
+          if (String(snum).length == 1) {
+            snum = "0" + snum;
+          }
+          document.getElementById("timeDate").innerHTML = "本站已运行&nbsp" + dnum + "&nbsp天";
+          document.getElementById("times").innerHTML = hnum + "&nbsp小时&nbsp" + mnum + "&nbsp分&nbsp" + snum + "&nbsp秒";
+        }
+
+        setInterval("createtime()", 250);
+      </script>
+    </div>
+    <p id="hitokoto">:D 获取中...</p>
+    <script>
+      fetch('https://v1.hitokoto.cn')
+              .then(response => response.json())
+              .then(data => {
+                const hitokoto = document.getElementById('hitokoto')
+                hitokoto.innerText = data.hitokoto + '--「' + data.from + '」'
+              })
+              .catch(console.error)
+    </script>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+    <script  src="/js/lazyload.js" ></script>
+
+
+
+    
+    <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+    <script>
+        $(document).ready(function () {
+            var boardCtn = $('#board-ctn');
+            var boardTop = boardCtn.offset().top;
+
+            tocbot.init({
+                tocSelector: '#tocbot',
+                contentSelector: '.post-content',
+                headingSelector: 'h1,h2,h3,h4,h5,h6',
+                linkClass: 'tocbot-link',
+                activeLinkClass: 'tocbot-active-link',
+                listClass: 'tocbot-list',
+                isCollapsedClass: 'tocbot-is-collapsed',
+                collapsibleClass: 'tocbot-is-collapsible',
+                collapseDepth: 0,
+                scrollSmooth: true,
+                headingsOffset: -boardTop
+            });
+            if ($('.toc-list-item').length > 0) {
+                $('#toc').css('visibility', 'visible');
+            }
+        });
+    </script>
+
+
+
+
+
+    <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+    <script  src="/js/clipboard-use.js" ></script>
+
+
+
+    <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+    
+<script src="https://static.muchen.fun/js/custom.js"></script>
+
+
+
+<!-- Plugins -->
+
+
+    
+        <!-- Baidu Analytics -->
+        <script defer>
+            var _hmt = _hmt || [];
+            (function () {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    
+
+    
+        <!-- Google Analytics -->
+        <script defer>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-144841374-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+    <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+    <script>
+        var typed = new Typed('#subtitle', {
+            strings: [
+                '  ',
+                "设计模式之美学习（三十九）&nbsp;",
+            ],
+            cursorChar: "_",
+            typeSpeed: 70,
+            loop: false,
+        });
+        typed.stop();
+        $(document).ready(function () {
+            $(".typed-cursor").addClass("h2");
+            typed.start();
+        });
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+    <script>
+        anchors.options = {
+            placement: "right",
+            visible: "hover",
+            
+        };
+        var el = "h1,h2,h3,h4,h5,h6".split(",");
+        var res = [];
+        for (item of el) {
+            res.push(".markdown-body > " + item)
+        }
+        anchors.add(res.join(", "))
+    </script>
+
+
+
+    <script  src="/js/local-search.js" ></script>
+    <script>
+        var path = "/local-search.xml";
+        var inputArea = document.querySelector("#local-search-input");
+        inputArea.onclick = function () {
+            searchFunc(path, 'local-search-input', 'local-search-result');
+            this.onclick = null
+        }
+    </script>
+
+
+
+    <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+    <script>
+        $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+            function () {
+                var element = document.createElement('a');
+                $(element).attr('data-fancybox', 'images');
+                $(element).attr('href', $(this).attr('src'));
+                $(this).wrap(element);
+            }
+        );
+    </script>
+
+
+
+
+
+    
+
+    
+        <!-- MathJax -->
+        <script>
+            MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']]
+                },
+                options: {
+                    renderActions: {
+                        findScript: [10, doc => {
+                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                                const display = !!node.type.match(/; *mode=display/);
+                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                                const text = document.createTextNode('');
+                                node.parentNode.replaceChild(text, node);
+                                math.start = {node: text, delim: '', n: 0};
+                                math.end = {node: text, delim: '', n: 0};
+                                doc.math.push(math);
+                            });
+                        }, '', false],
+                        insertedScript: [200, () => {
+                            document.querySelectorAll('mjx-container').forEach(node => {
+                                let target = node.parentNode;
+                                if (target.nodeName.toLowerCase() === 'li') {
+                                    target.parentNode.classList.add('has-jax');
+                                }
+                            });
+                        }, '', false]
+                    }
+                }
+            };
+        </script>
+
+        <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+    
+
+
+
+    
+    
+        <script>
+            !function (e, t, a) {
+                function r() {
+                    for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+                    requestAnimationFrame(r)
+                }
+
+                function n() {
+                    var t = "function" == typeof e.onclick && e.onclick;
+                    e.onclick = function (e) {
+                        t && t(), o(e)
+                    }
+                }
+
+                function o(e) {
+                    var a = t.createElement("div");
+                    a.className = "heart", s.push({
+                        el: a,
+                        x: e.clientX - 5,
+                        y: e.clientY - 5,
+                        scale: 1,
+                        alpha: 1,
+                        color: c()
+                    }), t.body.appendChild(a)
+                }
+
+                function i(e) {
+                    var a = t.createElement("style");
+                    a.type = "text/css";
+                    try {
+                        a.appendChild(t.createTextNode(e))
+                    } catch (t) {
+                        a.styleSheet.cssText = e
+                    }
+                    t.getElementsByTagName("head")[0].appendChild(a)
+                }
+
+                function c() {
+                    return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+                }
+
+                var s = [];
+                e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+                    setTimeout(e, 1e3 / 60)
+                }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+            }(window, document);
+        </script>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
