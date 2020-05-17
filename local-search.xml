@@ -49,7 +49,7 @@
       
       <tag>设计模式</tag>
       
-      <tag>桥接模式</tag>
+      <tag>装饰器模式</tag>
       
     </tags>
     
@@ -2343,9 +2343,9 @@
       
       <tag>算法</tag>
       
-      <tag>时间复杂度</tag>
-      
       <tag>堆</tag>
+      
+      <tag>时间复杂度</tag>
       
     </tags>
     
