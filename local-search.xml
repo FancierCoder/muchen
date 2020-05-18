@@ -4,6 +4,62 @@
   
   
   <entry>
+    <title>设计模式之美学习（四十一）</title>
+    <link href="/passages/design-pattern-learn/41/"/>
+    <url>/passages/design-pattern-learn/41/</url>
+    
+    <content type="html"><![CDATA[<p>如何设计合理的接口粒度以兼顾接口的易用性和通用性？</p><a id="more"></a><blockquote><p>参考：<a href="https://time.geekbang.org/column/article/206409" target="_blank" rel="noopener">门面模式：如何设计合理的接口粒度以兼顾接口的易用性和通用性？</a></p></blockquote><p>如果你平时的工作涉及接口开发，不知道你有没有遇到关于接口粒度的问题呢？</p><p>为了保证接口的可复用性（或者叫通用性），我们需要将接口尽量设计得细粒度一点，职责单一一点。但是，如果接口的粒度过小，在接口的使用者开发一个业务功能时，就会导致需要调用 <code>n</code> 多细粒度的接口才能完成。调用者肯定会抱怨接口不好用。</p><p>相反，如果接口粒度设计得太大，一个接口返回 <code>n</code> 多数据，要做 <code>n</code> 多事情，就会导致接口不够通用、可复用性不好。接口不可复用，那针对不同的调用者的业务需求，我们就需要开发不同的接口来满足，这就会导致系统的接口无限膨胀。</p><p>那如何来解决接口的可复用性（通用性）和易用性之间的矛盾呢？下面就了解下门面模式吧。</p><h2 id="门面模式的原理与实现"><a href="#门面模式的原理与实现" class="headerlink" title="门面模式的原理与实现"></a>门面模式的原理与实现</h2><p>门面模式，也叫外观模式，英文全称是 <code>Facade Design Pattern</code>。在 <code>GoF</code> 的《设计模式》一书中，门面模式是这样定义的：</p><blockquote><p>Provide a unified interface to a set of interfaces in a subsystem. Facade Pattern defines a higher-level interface that makes the subsystem easier to use.</p></blockquote><p>翻译成中文就是：门面模式为子系统提供一组统一的接口，定义一组高层接口让子系统更易用。</p><p>假设有一个系统 <code>A</code>，提供了 <code>a</code>、<code>b</code>、<code>c</code>、<code>d</code> 四个接口。系统 <code>B</code> 完成某个业务功能，需要调用 <code>A</code> 系统的 <code>a</code>、<code>b</code>、<code>d</code> 接口。利用门面模式，我们提供一个包裹 <code>a</code>、<code>b</code>、<code>d</code> 接口调用的门面接口 <code>x</code>，给系统 <code>B</code> 直接使用。</p><p>不知道你会不会有这样的疑问，让系统 <code>B</code> 直接调用 <code>a</code>、<code>b</code>、<code>d</code> 感觉没有太大问题呀，为什么还要提供一个包裹 <code>a</code>、<code>b</code>、<code>d</code> 的接口 <code>x</code> 呢？关于这个问题，我通过一个具体的例子来解释一下。</p><p>假设我们刚刚提到的系统 <code>A</code> 是一个后端服务器，系统 <code>B</code> 是 <code>App</code> 客户端。<code>App</code> 客户端通过后端服务器提供的接口来获取数据。我们知道，<code>App</code> 和服务器之间是通过移动网络通信的，网络通信耗时比较多，为了提高 <code>App</code> 的响应速度，我们要尽量减少 <code>App</code> 与服务器之间的网络通信次数。</p><p>假设，完成某个业务功能（比如显示某个页面信息）需要“依次”调用 <code>a</code>、<code>b</code>、<code>d</code> 三个接口，因自身业务的特点，不支持并发调用这三个接口。</p><p>如果我们现在发现 <code>App</code> 客户端的响应速度比较慢，排查之后发现，是因为过多的接口调用过多的网络通信。针对这种情况，我们就可以利用门面模式，让后端服务器提供一个包裹 <code>a</code>、<code>b</code>、<code>d</code> 三个接口调用的接口 <code>x</code>。<code>App</code> 客户端调用一次接口 <code>x</code>，来获取到所有想要的数据，将网络通信的次数从 <code>3</code> 次减少到 <code>1</code> 次，也就提高了 <code>App</code> 的响应速度。</p><p>这里举的例子只是应用门面模式的其中一个意图，也就是解决性能问题。实际上，不同的应用场景下，使用门面模式的意图也不同。</p><h2 id="门面模式的应用场景举例"><a href="#门面模式的应用场景举例" class="headerlink" title="门面模式的应用场景举例"></a>门面模式的应用场景举例</h2><p>在 <code>GoF</code> 给出的定义中提到，“门面模式让子系统更加易用”，实际上，它除了解决易用性问题之外，还能解决其他很多方面的问题。</p><p>除此之外，门面模式定义中的“子系统（<code>subsystem</code>）”也可以有多种理解方式。它既可以是一个完整的系统，也可以是更细粒度的类或者模块。</p><p><strong>解决易用性问题</strong></p><p>门面模式可以用来封装系统的底层实现，隐藏系统的复杂性，提供一组更加简单易用、更高层的接口。比如，<code>Linux</code> 系统调用函数就可以看作一种“门面”。它是 <code>Linux</code> 操作系统暴露给开发者的一组“特殊”的编程接口，它封装了底层更基础的 <code>Linux</code> 内核调用。再比如，<code>Linux</code> 的 <code>Shell</code> 命令，实际上也可以看作一种门面模式的应用。它继续封装系统调用，提供更加友好、简单的命令，让我们可以直接通过执行命令来跟操作系统交互。</p><p>前面也多次提过，设计原则、思想、模式很多都是相通的，是同一个道理不同角度的表述。实际上，从隐藏实现复杂性，提供更易用接口这个意图来看，门面模式有点类似之前的迪米特法则（最少知识原则）和接口隔离原则：两个有交互的系统，只暴露有限的必要的接口。除此之外，门面模式还有点类似之前提到封装、抽象的设计思想，提供更抽象的接口，封装底层实现细节。</p><p><strong>解决性能问题</strong></p><p>通过将多个接口调用替换为一个门面接口调用，减少网络通信成本，提高 <code>App</code> 客户端的响应速度。讨论一下这样一个问题：从代码实现的角度来看，该如何组织门面接口和非门面接口？</p><p>如果门面接口不多，我们完全可以将它跟非门面接口放到一块，也不需要特殊标记，当作普通接口来用即可。如果门面接口很多，我们可以在已有的接口之上，再重新抽象出一层，专门放置门面接口，从类、包的命名上跟原来的接口层做区分。如果门面接口特别多，并且很多都是跨多个子系统的，我们可以将门面接口放到一个新的子系统中。</p><p><strong>解决分布式事务问题</strong></p><p>在一个金融系统中，有两个业务领域模型，用户和钱包。这两个业务领域模型都对外暴露了一系列接口，比如用户的增删改查接口、钱包的增删改查接口。假设有这样一个业务场景：在用户注册的时候，我们不仅会创建用户（在数据库 <code>User</code> 表中），还会给用户创建一个钱包（在数据库的 <code>Wallet</code> 表中）。</p><p>对于这样一个简单的业务需求，我们可以通过依次调用用户的创建接口和钱包的创建接口来完成。但是，用户注册需要支持事务，也就是说，创建用户和钱包的两个操作，要么都成功，要么都失败，不能一个成功、一个失败。</p><p>要支持两个接口调用在一个事务中执行，是比较难实现的，这涉及分布式事务问题。虽然我们可以通过引入分布式事务框架或者事后补偿的机制来解决，但代码实现都比较复杂。而最简单的解决方案是，利用数据库事务或者 <code>Spring</code> 框架提供的事务（如果是 <code>Java</code> 语言的话），在一个事务中，执行创建用户和创建钱包这两个 <code>SQL</code> 操作。这就要求两个 <code>SQL</code> 操作要在一个接口中完成，所以，我们可以借鉴门面模式的思想，再设计一个包裹这两个操作的新接口，让新接口在一个事务中执行两个 <code>SQL</code> 操作。</p><h2 id="重点"><a href="#重点" class="headerlink" title="重点"></a>重点</h2><p>类、模块、系统之间的“通信”，一般都是通过接口调用来完成的。接口设计的好坏，直接影响到类、模块、系统是否好用。所以，我们要多花点心思在接口设计上。<strong>完成接口设计，就相当于完成了一半的开发任务。只要接口设计得好，那代码就差不到哪里去。</strong></p><p>接口粒度设计得太大，太小都不好。太大会导致接口不可复用，太小会导致接口不易用。在实际的开发中，接口的可复用性和易用性需要“微妙”的权衡。针对这个问题，一个基本的处理原则是，<strong>尽量保持接口的可复用性，但针对特殊情况，允许提供冗余的门面接口，来提供更易用的接口</strong>。</p><p>门面模式除了解决接口易用性问题之外，还可以用它来解决性能问题和分布式事务问题。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>设计模式与范式(结构型)</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>设计模式</tag>
+      
+      <tag>门面模式</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>LEETCODE总结(第189周赛)</title>
+    <link href="/passages/leetcode/contest-189/"/>
+    <url>/passages/leetcode/contest-189/</url>
+    
+    <content type="html"><![CDATA[<p>🏆 第 189 场力扣周赛</p><a id="more"></a><p>题目列表：</p><blockquote><p>3 分 - <a href="https://leetcode-cn.com/problems/number-of-students-doing-homework-at-a-given-time/" target="_blank" rel="noopener">在既定时间做作业的学生人数</a><br>4 分 - <a href="https://leetcode-cn.com/problems/rearrange-words-in-a-sentence/" target="_blank" rel="noopener">重新排列句子中的单词</a><br>5 分 - <a href="https://leetcode-cn.com/problems/people-whose-list-of-favorite-companies-is-not-a-subset-of-another-list/" target="_blank" rel="noopener">收藏清单</a><br>7 分 - <a href="https://leetcode-cn.com/problems/maximum-number-of-darts-inside-of-a-circular-dartboard/" target="_blank" rel="noopener">圆形靶内的最大飞镖数量</a></p></blockquote><h2 id="在既定时间做作业的学生人数"><a href="#在既定时间做作业的学生人数" class="headerlink" title="在既定时间做作业的学生人数"></a><a href="https://leetcode-cn.com/problems/number-of-students-doing-homework-at-a-given-time/" target="_blank" rel="noopener">在既定时间做作业的学生人数</a></h2><p>一道送分题，统计出在时间范围内的人数即可！</p><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">busyStudent</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] startTime, <span class="hljs-keyword">int</span>[] endTime, <span class="hljs-keyword">int</span> queryTime)</span> </span>&#123;    <span class="hljs-keyword">int</span> count = <span class="hljs-number">0</span>;    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; startTime.length; i++) &#123;        <span class="hljs-keyword">if</span> (queryTime &gt;= startTime[i] || queryTime &lt;= endTime[i]) &#123;            count++;        &#125;    &#125;    <span class="hljs-keyword">return</span> count;&#125;</code></pre><h2 id="重新排列句子中的单词"><a href="#重新排列句子中的单词" class="headerlink" title="重新排列句子中的单词"></a><a href="https://leetcode-cn.com/problems/rearrange-words-in-a-sentence/" target="_blank" rel="noopener">重新排列句子中的单词</a></h2><h2 id="收藏清单"><a href="#收藏清单" class="headerlink" title="收藏清单"></a><a href="https://leetcode-cn.com/problems/people-whose-list-of-favorite-companies-is-not-a-subset-of-another-list/" target="_blank" rel="noopener">收藏清单</a></h2><h2 id="圆形靶内的最大飞镖数量"><a href="#圆形靶内的最大飞镖数量" class="headerlink" title="圆形靶内的最大飞镖数量"></a><a href="https://leetcode-cn.com/problems/maximum-number-of-darts-inside-of-a-circular-dartboard/" target="_blank" rel="noopener">圆形靶内的最大飞镖数量</a></h2><p>本次排名：<br><img src="https://static.muchen.fun/picture/weekly/189-rank.png" srcset="/img/loading.gif" alt="189-rank.png"></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>LEETCODE</category>
+      
+      <category>LEETCODE周赛</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>刷题</tag>
+      
+      <tag>周赛</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>设计模式之美学习（四十）</title>
     <link href="/passages/design-pattern-learn/40/"/>
     <url>/passages/design-pattern-learn/40/</url>
