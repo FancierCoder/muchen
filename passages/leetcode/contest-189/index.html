@@ -170,7 +170,7 @@
                                 
                                 <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    157 字
+                    1k 字
                   </span>
                             
 
@@ -180,7 +180,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                                     
                                     
-                                    2
+                                    19
                                      分钟
                   </span>
                             
@@ -217,7 +217,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：1 天前
+                  本文最后更新于：2 天前
                 
               </p>
             
@@ -242,7 +242,135 @@
     <span class="hljs-keyword">return</span> count;
 &#125;</code></pre>
 
-<h2 id="重新排列句子中的单词"><a href="#重新排列句子中的单词" class="headerlink" title="重新排列句子中的单词"></a><a href="https://leetcode-cn.com/problems/rearrange-words-in-a-sentence/" target="_blank" rel="noopener">重新排列句子中的单词</a></h2><h2 id="收藏清单"><a href="#收藏清单" class="headerlink" title="收藏清单"></a><a href="https://leetcode-cn.com/problems/people-whose-list-of-favorite-companies-is-not-a-subset-of-another-list/" target="_blank" rel="noopener">收藏清单</a></h2><h2 id="圆形靶内的最大飞镖数量"><a href="#圆形靶内的最大飞镖数量" class="headerlink" title="圆形靶内的最大飞镖数量"></a><a href="https://leetcode-cn.com/problems/maximum-number-of-darts-inside-of-a-circular-dartboard/" target="_blank" rel="noopener">圆形靶内的最大飞镖数量</a></h2><p>本次排名：<br><img src="https://static.muchen.fun/picture/weekly/189-rank.png" srcset="/img/loading.gif" alt="189-rank.png"></p>
+<h2 id="重新排列句子中的单词"><a href="#重新排列句子中的单词" class="headerlink" title="重新排列句子中的单词"></a><a href="https://leetcode-cn.com/problems/rearrange-words-in-a-sentence/" target="_blank" rel="noopener">重新排列句子中的单词</a></h2><ul>
+<li>先将句子中的单词分割出来</li>
+<li>按单词长短放入到 <code>Map</code> 中，其中 <code>key</code> 为单词长度，<code>value</code> 为相同长度单词的集合</li>
+<li>按单词长度排序 <code>Map</code></li>
+<li>从 <code>Map</code> 中取出，组合成结果句子</li>
+</ul>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">arrangeWords</span><span class="hljs-params">(String text)</span> </span>&#123;
+    <span class="hljs-comment">// 先将句子中的单词分割出来</span>
+    String[] strings = text.split(<span class="hljs-string">" "</span>);
+    HashMap&lt;Integer, List&lt;Integer&gt;&gt; listHashMap = <span class="hljs-keyword">new</span> HashMap&lt;&gt;(text.length());
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; strings.length; i++) &#123;
+        String string = strings[i];
+        <span class="hljs-comment">// 按单词长短放入到 `Map` 中，其中 `key` 为单词长度，`value` 为相同长度单词的集合</span>
+        List&lt;Integer&gt; orDefault = listHashMap.getOrDefault(string.length(), <span class="hljs-keyword">new</span> ArrayList&lt;&gt;());
+        orDefault.add(i);
+        listHashMap.put(string.length(), orDefault);
+    &#125;
+    <span class="hljs-comment">// 按单词长度排序 `Map`</span>
+    TreeMap&lt;Integer, List&lt;Integer&gt;&gt; treeMap = <span class="hljs-keyword">new</span> TreeMap&lt;&gt;(listHashMap);
+    StringBuilder builder = <span class="hljs-keyword">new</span> StringBuilder();
+    <span class="hljs-comment">// 从 `Map` 中取出，组合成结果句子</span>
+    <span class="hljs-keyword">for</span> (Map.Entry&lt;Integer, List&lt;Integer&gt;&gt; entry : treeMap.entrySet()) &#123;
+        Integer key = entry.getKey();
+        <span class="hljs-comment">// System.out.println(key);</span>
+        List&lt;Integer&gt; value = entry.getValue();
+        <span class="hljs-keyword">for</span> (Integer index : value) &#123;
+            String string = strings[index].toLowerCase();
+            builder.append(string).append(<span class="hljs-string">" "</span>);
+        &#125;
+    &#125;
+    <span class="hljs-keyword">char</span> charAt = Character.toUpperCase(builder.charAt(<span class="hljs-number">0</span>));
+    <span class="hljs-keyword">return</span> builder.replace(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, String.valueOf(charAt)).deleteCharAt(builder.length() - <span class="hljs-number">1</span>).toString();
+&#125;</code></pre>
+
+<h2 id="收藏清单"><a href="#收藏清单" class="headerlink" title="收藏清单"></a><a href="https://leetcode-cn.com/problems/people-whose-list-of-favorite-companies-is-not-a-subset-of-another-list/" target="_blank" rel="noopener">收藏清单</a></h2><ul>
+<li>将每个用户的收藏清单按照字母顺序排序 (不排序也可以)</li>
+<li>再利用 <code>containsAll()</code> 函数循环判断是否是子集即可</li>
+</ul>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> List&lt;Integer&gt; <span class="hljs-title">peopleIndexes</span><span class="hljs-params">(List&lt;List&lt;String&gt;&gt; favoriteCompanies)</span> </span>&#123;
+    List&lt;Integer&gt; ret = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+    <span class="hljs-keyword">if</span> (favoriteCompanies.size() == <span class="hljs-number">1</span>) &#123;
+        ret.add(<span class="hljs-number">0</span>);
+        <span class="hljs-keyword">return</span> ret;
+    &#125;
+    Set&lt;Integer&gt; hashSet = <span class="hljs-keyword">new</span> TreeSet&lt;&gt;();
+    <span class="hljs-comment">// 将每个用户的收藏清单按照字母顺序排序 (不排序也可以)</span>
+    favoriteCompanies.forEach(Collections::sort);
+    <span class="hljs-comment">// favoriteCompanies.sort(Comparator.comparingInt(List::size));</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; favoriteCompanies.size(); i++) &#123;
+        List&lt;String&gt; favoriteCompany = favoriteCompanies.get(i);
+        hashSet.add(i);
+        <span class="hljs-comment">// System.out.println(Arrays.toString(favoriteCompany.toArray()));</span>
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; favoriteCompanies.size(); j++) &#123;
+            <span class="hljs-keyword">if</span> (j == i) &#123;
+                <span class="hljs-keyword">continue</span>;
+            &#125;
+            List&lt;String&gt; list = favoriteCompanies.get(j);
+            <span class="hljs-comment">// 再利用 `containsAll()` 函数循环判断是否是子集即可</span>
+            <span class="hljs-comment">// 注意此处若直接用 list.containsAll() 会超时，可以通过查看源码得知 HasnSet 的 containsAll() 时间复杂度更低</span>
+            HashSet&lt;String&gt; stringHashSet = <span class="hljs-keyword">new</span> HashSet&lt;&gt;(list);
+            <span class="hljs-keyword">if</span> (stringHashSet.containsAll(favoriteCompany)) &#123;
+                hashSet.remove(i);
+                <span class="hljs-keyword">break</span>;
+            &#125;
+        &#125;
+    &#125;
+    ret.addAll(hashSet);
+    <span class="hljs-keyword">return</span> ret;
+&#125;</code></pre>
+
+<h2 id="圆形靶内的最大飞镖数量"><a href="#圆形靶内的最大飞镖数量" class="headerlink" title="圆形靶内的最大飞镖数量"></a><a href="https://leetcode-cn.com/problems/maximum-number-of-darts-inside-of-a-circular-dartboard/" target="_blank" rel="noopener">圆形靶内的最大飞镖数量</a></h2><ul>
+<li>将点都构建出来</li>
+<li>对所有点依次两两枚举，确定所有的圆</li>
+<li>分别求出各个圆的圆心</li>
+<li>再枚举所有的点，求出被圆包住的点的个数的最大值</li>
+</ul>
+<pre><code class="hljs java"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Point</span> </span>&#123;
+    <span class="hljs-keyword">double</span> x, y;
+
+    Point(<span class="hljs-keyword">double</span> x, <span class="hljs-keyword">double</span> y) &#123;
+        <span class="hljs-keyword">this</span>.x = x;
+        <span class="hljs-keyword">this</span>.y = y;
+    &#125;
+&#125;
+
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">double</span> eps = <span class="hljs-number">1e-8</span>;
+
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">numPoints</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[][] points, <span class="hljs-keyword">int</span> r)</span> </span>&#123;
+    Point[] pointsArr = <span class="hljs-keyword">new</span> Point[<span class="hljs-number">101</span>];
+    <span class="hljs-comment">// 将点都构建出来</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; points.length; i++) &#123;
+        pointsArr[i] = <span class="hljs-keyword">new</span> Point(points[i][<span class="hljs-number">0</span>], points[i][<span class="hljs-number">1</span>]);
+    &#125;
+    <span class="hljs-keyword">int</span> ans = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; points.length; i++) &#123;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = i + <span class="hljs-number">1</span>; j &lt; points.length; j++) &#123;
+            <span class="hljs-comment">// 对所有点依次两两枚举，确定所有的圆</span>
+            <span class="hljs-keyword">if</span> (dist(pointsArr[i], pointsArr[j]) &gt; <span class="hljs-number">2.0</span> * r) &#123;
+                <span class="hljs-keyword">continue</span>;
+            &#125;
+            <span class="hljs-comment">// 分别求出各个圆的圆心</span>
+            Point center = getCircle(pointsArr[i], pointsArr[j], r);
+            <span class="hljs-keyword">int</span> count = <span class="hljs-number">0</span>;
+            <span class="hljs-comment">// 再枚举所有的点，求出被圆包住的点的个数的最大值</span>
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> k = <span class="hljs-number">0</span>; k &lt; points.length; k++) &#123;
+                <span class="hljs-keyword">if</span> (dist(center, pointsArr[k]) &lt; <span class="hljs-number">1.0</span> * r + eps) &#123;
+                    count++;
+                &#125;
+            &#125;
+            ans = Math.max(ans, count);
+        &#125;
+    &#125;
+    <span class="hljs-keyword">return</span> ans;
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">double</span> <span class="hljs-title">dist</span><span class="hljs-params">(Point p1, Point p2)</span> </span>&#123;
+    <span class="hljs-keyword">return</span> Math.sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">private</span> Point <span class="hljs-title">getCircle</span><span class="hljs-params">(Point p1, Point p2, <span class="hljs-keyword">int</span> r)</span> </span>&#123;
+    Point mid = <span class="hljs-keyword">new</span> Point((p1.x + p2.x) / <span class="hljs-number">2</span>, (p1.y + p2.y) / <span class="hljs-number">2</span>);
+    <span class="hljs-keyword">double</span> angle = Math.atan2(p1.x - p2.x, p2.y - p1.y);
+    <span class="hljs-keyword">double</span> d = Math.sqrt(r * r - Math.pow(dist(p1, mid), <span class="hljs-number">2</span>));
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Point(mid.x + d * Math.cos(angle), mid.y + d * Math.sin(angle));
+&#125;</code></pre>
+
+<p>本次排名：</p>
+<p><img src="https://static.muchen.fun/picture/weekly/189-rank.png" srcset="/img/loading.gif" alt="189-rank.png"></p>
+<p>继续加油！！</p>
 
             </article>
             <hr>

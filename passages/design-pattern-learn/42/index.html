@@ -17,7 +17,7 @@
     <meta name="description" content="沐晨的个人博客,技术博客">
     <meta name="author" content="Li Duo">
     <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
-    <title>设计模式之美学习（四十一） - MuChen&#39;s Blog</title>
+    <title>设计模式之美学习（四十二） - MuChen&#39;s Blog</title>
 
     <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
@@ -159,8 +159,8 @@
                         
                             <div class="mt-3 post-meta">
                                 <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-                                <time datetime="2020-05-18 22:16">
-                                    2020年5月18日 晚上
+                                <time datetime="2020-05-19 21:26">
+                                    2020年5月19日 晚上
                                 </time>
                             </div>
                         
@@ -170,7 +170,7 @@
                                 
                                 <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    2.2k 字
+                    1.7k 字
                   </span>
                             
 
@@ -180,7 +180,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                                     
                                     
-                                    29
+                                    27
                                      分钟
                   </span>
                             
@@ -217,47 +217,223 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：1 天前
+                  本文最后更新于：1 小时前
                 
               </p>
             
             <article class="markdown-body">
-              <p>如何设计合理的接口粒度以兼顾接口的易用性和通用性？</p>
+              <p>如何设计实现支持递归遍历的文件系统目录树结构？</p>
 <a id="more"></a>
+<blockquote>
+<p>参考:<a href="https://time.geekbang.org/column/article/207456" target="_blank" rel="noopener">组合模式：如何设计实现支持递归遍历的文件系统目录树结构？</a></p>
+</blockquote>
+<p>组合模式(<code>Composite Design Pattern</code>)跟面向对象设计中的“组合关系（通过组合来组装两个类）”，完全是两码事。这里的“组合模式”，主要是用来处理树形结构数据。这里的“数据”，你可以简单理解为一组对象集合。</p>
+<p>正因为其应用场景的特殊性，数据必须能表示成树形结构，这也导致了这种模式在实际的项目开发中并不那么常用。但是，一旦数据满足树形结构，应用这种模式就能发挥很大的作用，能让代码变得非常简洁。</p>
+<h2 id="组合模式的原理与实现"><a href="#组合模式的原理与实现" class="headerlink" title="组合模式的原理与实现"></a>组合模式的原理与实现</h2><p>在 <code>GoF</code> 的《设计模式》一书中，组合模式是这样定义的：</p>
+<blockquote>
+<p>Compose objects into tree structure to represent part-whole hierarchies.Composite lets client treat individual objects and compositions of objects uniformly.</p>
+</blockquote>
+<p>翻译成中文就是：将一组对象组织（<code>Compose</code>）成树形结构，以表示一种“部分 - 整体”的层次结构。组合让客户端（在很多设计模式书籍中，“客户端”代指代码的使用者）可以统一单个对象和组合对象的处理逻辑。</p>
+<p>假设有这样一个需求：设计一个类来表示文件系统中的目录，能方便地实现下面这些功能：</p>
+<ul>
+<li><p>动态地添加、删除某个目录下的子目录或文件；</p>
+</li>
+<li><p>统计指定目录下的文件个数；</p>
+</li>
+<li><p>统计指定目录下的文件总大小。</p>
+</li>
+</ul>
+<p>骨架代码如下：</p>
+<p>在下面的代码实现中，把文件和目录统一用 <code>FileSystemNode</code> 类来表示，并且通过 <code>isFile</code> 属性来区分。</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FileSystemNode</span> </span>&#123;
+  <span class="hljs-keyword">private</span> String path;
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> isFile;
+  <span class="hljs-keyword">private</span> List&lt;FileSystemNode&gt; subNodes = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
 
-<blockquote>
-<p>参考：<a href="https://time.geekbang.org/column/article/206409" target="_blank" rel="noopener">门面模式：如何设计合理的接口粒度以兼顾接口的易用性和通用性？</a></p>
-</blockquote>
-<p>如果你平时的工作涉及接口开发，不知道你有没有遇到关于接口粒度的问题呢？</p>
-<p>为了保证接口的可复用性（或者叫通用性），我们需要将接口尽量设计得细粒度一点，职责单一一点。但是，如果接口的粒度过小，在接口的使用者开发一个业务功能时，就会导致需要调用 <code>n</code> 多细粒度的接口才能完成。调用者肯定会抱怨接口不好用。</p>
-<p>相反，如果接口粒度设计得太大，一个接口返回 <code>n</code> 多数据，要做 <code>n</code> 多事情，就会导致接口不够通用、可复用性不好。接口不可复用，那针对不同的调用者的业务需求，我们就需要开发不同的接口来满足，这就会导致系统的接口无限膨胀。</p>
-<p>那如何来解决接口的可复用性（通用性）和易用性之间的矛盾呢？下面就了解下门面模式吧。</p>
-<h2 id="门面模式的原理与实现"><a href="#门面模式的原理与实现" class="headerlink" title="门面模式的原理与实现"></a>门面模式的原理与实现</h2><p>门面模式，也叫外观模式，英文全称是 <code>Facade Design Pattern</code>。在 <code>GoF</code> 的《设计模式》一书中，门面模式是这样定义的：</p>
-<blockquote>
-<p>Provide a unified interface to a set of interfaces in a subsystem. Facade Pattern defines a higher-level interface that makes the subsystem easier to use.</p>
-</blockquote>
-<p>翻译成中文就是：门面模式为子系统提供一组统一的接口，定义一组高层接口让子系统更易用。</p>
-<p>假设有一个系统 <code>A</code>，提供了 <code>a</code>、<code>b</code>、<code>c</code>、<code>d</code> 四个接口。系统 <code>B</code> 完成某个业务功能，需要调用 <code>A</code> 系统的 <code>a</code>、<code>b</code>、<code>d</code> 接口。利用门面模式，我们提供一个包裹 <code>a</code>、<code>b</code>、<code>d</code> 接口调用的门面接口 <code>x</code>，给系统 <code>B</code> 直接使用。</p>
-<p>不知道你会不会有这样的疑问，让系统 <code>B</code> 直接调用 <code>a</code>、<code>b</code>、<code>d</code> 感觉没有太大问题呀，为什么还要提供一个包裹 <code>a</code>、<code>b</code>、<code>d</code> 的接口 <code>x</code> 呢？关于这个问题，我通过一个具体的例子来解释一下。</p>
-<p>假设我们刚刚提到的系统 <code>A</code> 是一个后端服务器，系统 <code>B</code> 是 <code>App</code> 客户端。<code>App</code> 客户端通过后端服务器提供的接口来获取数据。我们知道，<code>App</code> 和服务器之间是通过移动网络通信的，网络通信耗时比较多，为了提高 <code>App</code> 的响应速度，我们要尽量减少 <code>App</code> 与服务器之间的网络通信次数。</p>
-<p>假设，完成某个业务功能（比如显示某个页面信息）需要“依次”调用 <code>a</code>、<code>b</code>、<code>d</code> 三个接口，因自身业务的特点，不支持并发调用这三个接口。</p>
-<p>如果我们现在发现 <code>App</code> 客户端的响应速度比较慢，排查之后发现，是因为过多的接口调用过多的网络通信。针对这种情况，我们就可以利用门面模式，让后端服务器提供一个包裹 <code>a</code>、<code>b</code>、<code>d</code> 三个接口调用的接口 <code>x</code>。<code>App</code> 客户端调用一次接口 <code>x</code>，来获取到所有想要的数据，将网络通信的次数从 <code>3</code> 次减少到 <code>1</code> 次，也就提高了 <code>App</code> 的响应速度。</p>
-<p>这里举的例子只是应用门面模式的其中一个意图，也就是解决性能问题。实际上，不同的应用场景下，使用门面模式的意图也不同。</p>
-<h2 id="门面模式的应用场景举例"><a href="#门面模式的应用场景举例" class="headerlink" title="门面模式的应用场景举例"></a>门面模式的应用场景举例</h2><p>在 <code>GoF</code> 给出的定义中提到，“门面模式让子系统更加易用”，实际上，它除了解决易用性问题之外，还能解决其他很多方面的问题。</p>
-<p>除此之外，门面模式定义中的“子系统（<code>subsystem</code>）”也可以有多种理解方式。它既可以是一个完整的系统，也可以是更细粒度的类或者模块。</p>
-<p><strong>解决易用性问题</strong></p>
-<p>门面模式可以用来封装系统的底层实现，隐藏系统的复杂性，提供一组更加简单易用、更高层的接口。比如，<code>Linux</code> 系统调用函数就可以看作一种“门面”。它是 <code>Linux</code> 操作系统暴露给开发者的一组“特殊”的编程接口，它封装了底层更基础的 <code>Linux</code> 内核调用。再比如，<code>Linux</code> 的 <code>Shell</code> 命令，实际上也可以看作一种门面模式的应用。它继续封装系统调用，提供更加友好、简单的命令，让我们可以直接通过执行命令来跟操作系统交互。</p>
-<p>前面也多次提过，设计原则、思想、模式很多都是相通的，是同一个道理不同角度的表述。实际上，从隐藏实现复杂性，提供更易用接口这个意图来看，门面模式有点类似之前的迪米特法则（最少知识原则）和接口隔离原则：两个有交互的系统，只暴露有限的必要的接口。除此之外，门面模式还有点类似之前提到封装、抽象的设计思想，提供更抽象的接口，封装底层实现细节。</p>
-<p><strong>解决性能问题</strong></p>
-<p>通过将多个接口调用替换为一个门面接口调用，减少网络通信成本，提高 <code>App</code> 客户端的响应速度。讨论一下这样一个问题：从代码实现的角度来看，该如何组织门面接口和非门面接口？</p>
-<p>如果门面接口不多，我们完全可以将它跟非门面接口放到一块，也不需要特殊标记，当作普通接口来用即可。如果门面接口很多，我们可以在已有的接口之上，再重新抽象出一层，专门放置门面接口，从类、包的命名上跟原来的接口层做区分。如果门面接口特别多，并且很多都是跨多个子系统的，我们可以将门面接口放到一个新的子系统中。</p>
-<p><strong>解决分布式事务问题</strong></p>
-<p>在一个金融系统中，有两个业务领域模型，用户和钱包。这两个业务领域模型都对外暴露了一系列接口，比如用户的增删改查接口、钱包的增删改查接口。假设有这样一个业务场景：在用户注册的时候，我们不仅会创建用户（在数据库 <code>User</code> 表中），还会给用户创建一个钱包（在数据库的 <code>Wallet</code> 表中）。</p>
-<p>对于这样一个简单的业务需求，我们可以通过依次调用用户的创建接口和钱包的创建接口来完成。但是，用户注册需要支持事务，也就是说，创建用户和钱包的两个操作，要么都成功，要么都失败，不能一个成功、一个失败。</p>
-<p>要支持两个接口调用在一个事务中执行，是比较难实现的，这涉及分布式事务问题。虽然我们可以通过引入分布式事务框架或者事后补偿的机制来解决，但代码实现都比较复杂。而最简单的解决方案是，利用数据库事务或者 <code>Spring</code> 框架提供的事务（如果是 <code>Java</code> 语言的话），在一个事务中，执行创建用户和创建钱包这两个 <code>SQL</code> 操作。这就要求两个 <code>SQL</code> 操作要在一个接口中完成，所以，我们可以借鉴门面模式的思想，再设计一个包裹这两个操作的新接口，让新接口在一个事务中执行两个 <code>SQL</code> 操作。</p>
-<h2 id="重点"><a href="#重点" class="headerlink" title="重点"></a>重点</h2><p>类、模块、系统之间的“通信”，一般都是通过接口调用来完成的。接口设计的好坏，直接影响到类、模块、系统是否好用。所以，我们要多花点心思在接口设计上。<strong>完成接口设计，就相当于完成了一半的开发任务。只要接口设计得好，那代码就差不到哪里去。</strong></p>
-<p>接口粒度设计得太大，太小都不好。太大会导致接口不可复用，太小会导致接口不易用。在实际的开发中，接口的可复用性和易用性需要“微妙”的权衡。针对这个问题，一个基本的处理原则是，<strong>尽量保持接口的可复用性，但针对特殊情况，允许提供冗余的门面接口，来提供更易用的接口</strong>。</p>
-<p>门面模式除了解决接口易用性问题之外，还可以用它来解决性能问题和分布式事务问题。</p>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">FileSystemNode</span><span class="hljs-params">(String path, <span class="hljs-keyword">boolean</span> isFile)</span> </span>&#123;
+    <span class="hljs-keyword">this</span>.path = path;
+    <span class="hljs-keyword">this</span>.isFile = isFile;
+  &#125;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">countNumOfFiles</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span>...</span>
+  &#125;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">long</span> <span class="hljs-title">countSizeOfFiles</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span>...</span>
+  &#125;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getPath</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-keyword">return</span> path;
+  &#125;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">addSubNode</span><span class="hljs-params">(FileSystemNode fileOrDir)</span> </span>&#123;
+    subNodes.add(fileOrDir);
+  &#125;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">removeSubNode</span><span class="hljs-params">(FileSystemNode fileOrDir)</span> </span>&#123;
+    <span class="hljs-keyword">int</span> size = subNodes.size();
+    <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (; i &lt; size; ++i) &#123;
+      <span class="hljs-keyword">if</span> (subNodes.get(i).getPath().equalsIgnoreCase(fileOrDir.getPath())) &#123;
+        <span class="hljs-keyword">break</span>;
+      &#125;
+    &#125;
+    <span class="hljs-keyword">if</span> (i &lt; size) &#123;
+      subNodes.remove(i);
+    &#125;
+  &#125;
+&#125;</code></pre>
+
+<p>实际上,想要补全其中的 <code>countNumOfFiles()</code> 和 <code>countSizeOfFiles()</code> 这两个函数，并不是件难事，实际上这就是树上的递归遍历算法。对于文件，我们直接返回文件的个数（返回 <code>1</code>）或大小。对于目录，我们遍历目录中每个子目录或者文件，递归计算它们的个数或大小，然后求和，就是这个目录下的文件个数和文件大小。</p>
+<p>代码如下：</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">countNumOfFiles</span><span class="hljs-params">()</span> </span>&#123;
+  <span class="hljs-keyword">if</span> (isFile) &#123;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+  &#125;
+  <span class="hljs-keyword">int</span> numOfFiles = <span class="hljs-number">0</span>;
+  <span class="hljs-keyword">for</span> (FileSystemNode fileOrDir : subNodes) &#123;
+    numOfFiles += fileOrDir.countNumOfFiles();
+  &#125;
+  <span class="hljs-keyword">return</span> numOfFiles;
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">long</span> <span class="hljs-title">countSizeOfFiles</span><span class="hljs-params">()</span> </span>&#123;
+  <span class="hljs-keyword">if</span> (isFile) &#123;
+    File file = <span class="hljs-keyword">new</span> File(path);
+    <span class="hljs-keyword">if</span> (!file.exists()) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">return</span> file.length();
+  &#125;
+  <span class="hljs-keyword">long</span> sizeofFiles = <span class="hljs-number">0</span>;
+  <span class="hljs-keyword">for</span> (FileSystemNode fileOrDir : subNodes) &#123;
+    sizeofFiles += fileOrDir.countSizeOfFiles();
+  &#125;
+  <span class="hljs-keyword">return</span> sizeofFiles;
+&#125;</code></pre>
+
+<p>单纯从功能实现角度来说，上面的代码没有问题，已经实现了我们想要的功能。但是，如果我们开发的是一个大型系统，从扩展性（文件或目录可能会对应不同的操作）、业务建模（文件和目录从业务上是两个概念）、代码的可读性（文件和目录区分对待更加符合人们对业务的认知）的角度来说，我们最好对文件和目录进行区分设计，定义为 <code>File</code> 和 <code>Directory</code> 两个类。</p>
+<p>按照这个设计思路，我们对代码进行重构。重构之后的代码如下所示：</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FileSystemNode</span> </span>&#123;
+  <span class="hljs-keyword">protected</span> String path;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">FileSystemNode</span><span class="hljs-params">(String path)</span> </span>&#123;
+    <span class="hljs-keyword">this</span>.path = path;
+  &#125;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">int</span> <span class="hljs-title">countNumOfFiles</span><span class="hljs-params">()</span></span>;
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">long</span> <span class="hljs-title">countSizeOfFiles</span><span class="hljs-params">()</span></span>;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getPath</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-keyword">return</span> path;
+  &#125;
+&#125;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">File</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">FileSystemNode</span> </span>&#123;
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">File</span><span class="hljs-params">(String path)</span> </span>&#123;
+    <span class="hljs-keyword">super</span>(path);
+  &#125;
+
+  <span class="hljs-meta">@Override</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">countNumOfFiles</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+  &#125;
+
+  <span class="hljs-meta">@Override</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">long</span> <span class="hljs-title">countSizeOfFiles</span><span class="hljs-params">()</span> </span>&#123;
+    java.io.File file = <span class="hljs-keyword">new</span> java.io.File(path);
+    <span class="hljs-keyword">if</span> (!file.exists()) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">return</span> file.length();
+  &#125;
+&#125;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Directory</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">FileSystemNode</span> </span>&#123;
+  <span class="hljs-keyword">private</span> List&lt;FileSystemNode&gt; subNodes = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Directory</span><span class="hljs-params">(String path)</span> </span>&#123;
+    <span class="hljs-keyword">super</span>(path);
+  &#125;
+
+  <span class="hljs-meta">@Override</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">countNumOfFiles</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-keyword">int</span> numOfFiles = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (FileSystemNode fileOrDir : subNodes) &#123;
+      numOfFiles += fileOrDir.countNumOfFiles();
+    &#125;
+    <span class="hljs-keyword">return</span> numOfFiles;
+  &#125;
+
+  <span class="hljs-meta">@Override</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">long</span> <span class="hljs-title">countSizeOfFiles</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-keyword">long</span> sizeofFiles = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (FileSystemNode fileOrDir : subNodes) &#123;
+      sizeofFiles += fileOrDir.countSizeOfFiles();
+    &#125;
+    <span class="hljs-keyword">return</span> sizeofFiles;
+  &#125;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">addSubNode</span><span class="hljs-params">(FileSystemNode fileOrDir)</span> </span>&#123;
+    subNodes.add(fileOrDir);
+  &#125;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">removeSubNode</span><span class="hljs-params">(FileSystemNode fileOrDir)</span> </span>&#123;
+    <span class="hljs-keyword">int</span> size = subNodes.size();
+    <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (; i &lt; size; ++i) &#123;
+      <span class="hljs-keyword">if</span> (subNodes.get(i).getPath().equalsIgnoreCase(fileOrDir.getPath())) &#123;
+        <span class="hljs-keyword">break</span>;
+      &#125;
+    &#125;
+    <span class="hljs-keyword">if</span> (i &lt; size) &#123;
+      subNodes.remove(i);
+    &#125;
+  &#125;
+&#125;</code></pre>
+
+<p>文件和目录类都设计好了，如何用它们来表示一个文件系统中的目录树结构。具体的代码示例如下所示：</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Demo</span> </span>&#123;
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;
+    <span class="hljs-comment">/**
+     * /
+     * /wz/
+     * /wz/a.txt
+     * /wz/b.txt
+     * /wz/movies/
+     * /wz/movies/c.avi
+     * /xzg/
+     * /xzg/docs/
+     * /xzg/docs/d.txt
+     */</span>
+    Directory fileSystemTree = <span class="hljs-keyword">new</span> Directory(<span class="hljs-string">"/"</span>);
+    Directory node_wz = <span class="hljs-keyword">new</span> Directory(<span class="hljs-string">"/wz/"</span>);
+    Directory node_xzg = <span class="hljs-keyword">new</span> Directory(<span class="hljs-string">"/xzg/"</span>);
+    fileSystemTree.addSubNode(node_wz);
+    fileSystemTree.addSubNode(node_xzg);
+
+    File node_wz_a = <span class="hljs-keyword">new</span> File(<span class="hljs-string">"/wz/a.txt"</span>);
+    File node_wz_b = <span class="hljs-keyword">new</span> File(<span class="hljs-string">"/wz/b.txt"</span>);
+    Directory node_wz_movies = <span class="hljs-keyword">new</span> Directory(<span class="hljs-string">"/wz/movies/"</span>);
+    node_wz.addSubNode(node_wz_a);
+    node_wz.addSubNode(node_wz_b);
+    node_wz.addSubNode(node_wz_movies);
+
+    File node_wz_movies_c = <span class="hljs-keyword">new</span> File(<span class="hljs-string">"/wz/movies/c.avi"</span>);
+    node_wz_movies.addSubNode(node_wz_movies_c);
+
+    Directory node_xzg_docs = <span class="hljs-keyword">new</span> Directory(<span class="hljs-string">"/xzg/docs/"</span>);
+    node_xzg.addSubNode(node_xzg_docs);
+
+    File node_xzg_docs_d = <span class="hljs-keyword">new</span> File(<span class="hljs-string">"/xzg/docs/d.txt"</span>);
+    node_xzg_docs.addSubNode(node_xzg_docs_d);
+
+    System.out.println(<span class="hljs-string">"/ files num:"</span> + fileSystemTree.countNumOfFiles());
+    System.out.println(<span class="hljs-string">"/wz/ files num:"</span> + node_wz.countNumOfFiles());
+  &#125;
+&#125;</code></pre>
+
+<p>对照着这个例子，再重新看一下组合模式的定义：“将一组对象（文件和目录）组织成树形结构，以表示一种‘部分 - 整体’的层次结构（目录与子目录的嵌套结构）。组合模式让客户端可以统一单个对象（文件）和组合对象（目录）的处理逻辑（递归遍历）。”</p>
+<p>实际上这种组合模式的设计思路，与其说是一种设计模式，倒不如说是对业务场景的一种数据结构和算法的抽象。其中，数据可以表示成树这种数据结构，业务需求可以通过在树上的递归遍历算法来实现。</p>
+<h2 id="重点"><a href="#重点" class="headerlink" title="重点"></a>重点</h2><p>组合模式的设计思路，与其说是一种设计模式，倒不如说是对业务场景的一种数据结构和算法的抽象。其中，数据可以表示成树这种数据结构，业务需求可以通过在树上的递归遍历算法来实现。</p>
+<p>组合模式，将一组对象组织成树形结构，将单个对象和组合对象都看做树中的节点，以统一处理逻辑，并且它利用树形结构的特点，递归地处理每个子树，依次简化代码实现。使用组合模式的前提在于，你的业务场景必须能够表示成树形结构。所以，组合模式的应用场景也比较局限，它并不是一种很常用的设计模式。</p>
 
             </article>
             <hr>
@@ -277,7 +453,7 @@
                     
                       <a class="hover-with-bg" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
                     
-                      <a class="hover-with-bg" href="/tags/%E9%97%A8%E9%9D%A2%E6%A8%A1%E5%BC%8F/">门面模式</a>
+                      <a class="hover-with-bg" href="/tags/%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F/">组合模式</a>
                     
                   </div>
                 
@@ -290,18 +466,12 @@
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/passages/design-pattern-learn/42/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">设计模式之美学习（四十二）</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </div>
                   <div class="post-next col-6">
                     
                     
-                      <a href="/passages/leetcode/contest-189/">
-                        <span class="hidden-mobile">LEETCODE总结(第189周赛)</span>
+                      <a href="/passages/design-pattern-learn/41/">
+                        <span class="hidden-mobile">设计模式之美学习（四十一）</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -575,7 +745,7 @@
         var typed = new Typed('#subtitle', {
             strings: [
                 '  ',
-                "设计模式之美学习（四十一）&nbsp;",
+                "设计模式之美学习（四十二）&nbsp;",
             ],
             cursorChar: "_",
             typeSpeed: 70,
