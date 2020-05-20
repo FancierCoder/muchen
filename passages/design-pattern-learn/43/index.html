@@ -17,7 +17,7 @@
     <meta name="description" content="沐晨的个人博客,技术博客">
     <meta name="author" content="Li Duo">
     <meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog">
-    <title>设计模式之美学习（三十二） - MuChen&#39;s Blog</title>
+    <title>设计模式之美学习（四十三） - MuChen&#39;s Blog</title>
 
     <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
@@ -159,8 +159,8 @@
                         
                             <div class="mt-3 post-meta">
                                 <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-                                <time datetime="2020-05-07 15:56">
-                                    2020年5月7日 下午
+                                <time datetime="2020-05-20 20:01">
+                                    2020年5月20日 晚上
                                 </time>
                             </div>
                         
@@ -170,7 +170,7 @@
                                 
                                 <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    732 字
+                    2.3k 字
                   </span>
                             
 
@@ -180,7 +180,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                                     
                                     
-                                    11
+                                    32
                                      分钟
                   </span>
                             
@@ -217,70 +217,119 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：13 天前
+                  本文最后更新于：41 分钟前
                 
               </p>
             
             <article class="markdown-body">
-              <p>如何设计实现一个集群环境下的分布式单例模式？</p>
+              <p>如何利用享元模式优化文本编辑器的内存占用？</p>
 <a id="more"></a>
+<blockquote>
+<p>参考：<a href="https://time.geekbang.org/column/article/208572" target="_blank" rel="noopener">享元模式（上）：如何利用享元模式优化文本编辑器的内存占用？</a></p>
+</blockquote>
+<h2 id="享元模式原理与实现"><a href="#享元模式原理与实现" class="headerlink" title="享元模式原理与实现"></a>享元模式原理与实现</h2><p>所谓“享元”，顾名思义就是被共享的单元。享元模式(<code>Flyweight Design Pattern</code>)的意图是复用对象，节省内存，前提是享元对象是不可变对象。</p>
+<p>具体来讲，当一个系统中存在大量重复对象的时候，如果这些重复的对象是不可变对象，我们就可以利用享元模式将对象设计成享元，在内存中只保留一份实例，供多处代码引用。这样可以减少内存中对象的数量，起到节省内存的目的。实际上，不仅仅相同对象可以设计成享元，对于相似对象，我们也可以将这些对象中相同的部分（字段）提取出来，设计成享元，让这些大量相似对象引用这些享元。</p>
+<p>定义中的“不可变对象”指的是，一旦通过构造函数初始化完成之后，它的状态（对象的成员变量或者属性）就不会再被修改了。所以，不可变对象不能暴露任何 <code>set()</code> 等修改内部状态的方法。之所以要求享元是不可变对象，那是因为它会被多处代码共享使用，避免一处代码对享元进行了修改，影响到其他使用它的代码。</p>
+<h2 id="享元模式在文本编辑器中的应用"><a href="#享元模式在文本编辑器中的应用" class="headerlink" title="享元模式在文本编辑器中的应用"></a>享元模式在文本编辑器中的应用</h2><p>为了简化需求背景，我们假设这个文本编辑器只实现了文字编辑功能，不包含图片、表格等复杂的编辑功能。对于简化之后的文本编辑器，我们要在内存中表示一个文本文件，只需要记录文字和格式两部分信息就可以了，其中，格式又包括文字的字体、大小、颜色等信息。</p>
+<p>尽管在实际的文档编写中，我们一般都是按照文本类型（标题、正文……）来设置文字的格式，标题是一种格式，正文是另一种格式等等。但是，从理论上讲，我们可以给文本文件中的每个文字都设置不同的格式。为了实现如此灵活的格式设置，并且代码实现又不过于太复杂，我们把每个文字都当作一个独立的对象来看待，并且在其中包含它的格式信息。具体的代码示例如下所示：</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Character</span> </span>&#123;<span class="hljs-comment">//文字</span>
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">char</span> c;
 
-<h2 id="如何理解单例模式的唯一性？"><a href="#如何理解单例模式的唯一性？" class="headerlink" title="如何理解单例模式的唯一性？"></a>如何理解单例模式的唯一性？</h2><p>单例类中对象的唯一性的作用范围是“进程唯一”的。“进程唯一”指的是进程内唯一，进程间不唯一；“线程唯一”指的是线程内唯一，线程间可以不唯一。实际上，“进程唯一”就意味着线程内、线程间都唯一，这也是“进程唯一”和“线程唯一”的区别之处。“集群唯一”指的是进程内唯一、进程间也唯一。</p>
-<h2 id="如何实现线程唯一的单例？"><a href="#如何实现线程唯一的单例？" class="headerlink" title="如何实现线程唯一的单例？"></a>如何实现线程唯一的单例？</h2><p>我们通过一个 <code>HashMap</code> 来存储对象，其中 <code>key</code> 是线程 <code>ID</code>，<code>value</code> 是对象。这样我们就可以做到，不同的线程对应不同的对象，同一个线程只能对应一个对象。实际上，<code>Java</code> 语言本身提供了 <code>ThreadLocal</code> 并发工具类，可以更加轻松地实现线程唯一单例。</p>
-<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">IdGenerator</span> </span>&#123;
-  <span class="hljs-keyword">private</span> AtomicLong id = <span class="hljs-keyword">new</span> AtomicLong(<span class="hljs-number">0</span>);
+  <span class="hljs-keyword">private</span> Font font;
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> size;
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> colorRGB;
 
-  <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> ConcurrentHashMap&lt;Long, IdGenerator&gt; instances
-          = <span class="hljs-keyword">new</span> ConcurrentHashMap&lt;&gt;();
-
-  <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">IdGenerator</span><span class="hljs-params">()</span> </span>&#123;&#125;
-
-  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> IdGenerator <span class="hljs-title">getInstance</span><span class="hljs-params">()</span> </span>&#123;
-    Long currentThreadId = Thread.currentThread().getId();
-    instances.putIfAbsent(currentThreadId, <span class="hljs-keyword">new</span> IdGenerator());
-    <span class="hljs-keyword">return</span> instances.get(currentThreadId);
-  &#125;
-
-  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">long</span> <span class="hljs-title">getId</span><span class="hljs-params">()</span> </span>&#123;
-    <span class="hljs-keyword">return</span> id.incrementAndGet();
-  &#125;
-&#125;</code></pre>
-
-<h2 id="如何实现集群环境下的单例？"><a href="#如何实现集群环境下的单例？" class="headerlink" title="如何实现集群环境下的单例？"></a>如何实现集群环境下的单例？</h2><p>我们需要把这个单例对象序列化并存储到外部共享存储区（比如文件）。进程在使用这个单例对象的时候，需要先从外部共享存储区中将它读取到内存，并反序列化成对象，然后再使用，使用完成之后还需要再存储回外部共享存储区。为了保证任何时刻在进程间都只有一份对象存在，一个进程在获取到对象之后，需要对对象加锁，避免其他进程再将其获取。在进程使用完这个对象之后，需要显式地将对象从内存中删除，并且释放对对象的加锁。</p>
-<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">IdGenerator</span> </span>&#123;
-  <span class="hljs-keyword">private</span> AtomicLong id = <span class="hljs-keyword">new</span> AtomicLong(<span class="hljs-number">0</span>);
-  <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> IdGenerator instance;
-  <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> SharedObjectStorage storage = FileSharedObjectStorage(<span class="hljs-comment">/*入参省略，比如文件地址*/</span>);
-  <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> DistributedLock lock = <span class="hljs-keyword">new</span> DistributedLock();
-  
-  <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">IdGenerator</span><span class="hljs-params">()</span> </span>&#123;&#125;
-
-  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">synchronized</span> <span class="hljs-keyword">static</span> IdGenerator <span class="hljs-title">getInstance</span><span class="hljs-params">()</span> 
-    <span class="hljs-title">if</span> <span class="hljs-params">(instance == <span class="hljs-keyword">null</span>)</span> </span>&#123;
-      lock.lock();
-      instance = storage.load(IdGenerator.class);
-    &#125;
-    <span class="hljs-keyword">return</span> instance;
-  &#125;
-  
-  <span class="hljs-function"><span class="hljs-keyword">public</span> synchroinzed <span class="hljs-keyword">void</span> <span class="hljs-title">freeInstance</span><span class="hljs-params">()</span> </span>&#123;
-    storage.save(<span class="hljs-keyword">this</span>, IdGeneator.class);
-    instance = <span class="hljs-keyword">null</span>; <span class="hljs-comment">//释放对象</span>
-    lock.unlock();
-  &#125;
-  
-  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">long</span> <span class="hljs-title">getId</span><span class="hljs-params">()</span> </span>&#123; 
-    <span class="hljs-keyword">return</span> id.incrementAndGet();
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Character</span><span class="hljs-params">(<span class="hljs-keyword">char</span> c, Font font, <span class="hljs-keyword">int</span> size, <span class="hljs-keyword">int</span> colorRGB)</span> </span>&#123;
+    <span class="hljs-keyword">this</span>.c = c;
+    <span class="hljs-keyword">this</span>.font = font;
+    <span class="hljs-keyword">this</span>.size = size;
+    <span class="hljs-keyword">this</span>.colorRGB = colorRGB;
   &#125;
 &#125;
 
-<span class="hljs-comment">// IdGenerator使用举例</span>
-IdGenerator idGeneator = IdGenerator.getInstance();
-<span class="hljs-keyword">long</span> id = idGenerator.getId();
-IdGenerator.freeInstance();</code></pre>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Editor</span> </span>&#123;
+  <span class="hljs-keyword">private</span> List&lt;Character&gt; chars = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
 
-<h2 id="如何实现一个多例模式？"><a href="#如何实现一个多例模式？" class="headerlink" title="如何实现一个多例模式？"></a>如何实现一个多例模式？</h2><p>“单例”指的是一个类只能创建一个对象。对应地，“多例”指的就是一个类可以创建多个对象，但是个数是有限制的，比如只能创建 <code>3</code> 个对象。多例的实现也比较简单，通过一个 <code>Map</code> 来存储对象类型和对象之间的对应关系，来控制对象的个数。</p>
-<p>参考: <a href="https://time.geekbang.org/column/article/196790" target="_blank" rel="noopener">单例模式（下）：如何设计实现一个集群环境下的分布式单例模式？</a></p>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">appendCharacter</span><span class="hljs-params">(<span class="hljs-keyword">char</span> c, Font font, <span class="hljs-keyword">int</span> size, <span class="hljs-keyword">int</span> colorRGB)</span> </span>&#123;
+    Character character = <span class="hljs-keyword">new</span> Character(c, font, size, colorRGB);
+    chars.add(character);
+  &#125;
+&#125;</code></pre>
+
+<p>在文本编辑器中，我们每敲一个文字，都会调用 <code>Editor</code> 类中的 <code>appendCharacter()</code> 方法，创建一个新的 <code>Character</code> 对象，保存到 <code>chars</code> 数组中。如果一个文本文件中，有上万、十几万、几十万的文字，那我们就要在内存中存储这么多 <code>Character</code> 对象。那有没有办法可以节省一点内存呢？</p>
+<p>实际上，在一个文本文件中，用到的字体格式不会太多，毕竟不大可能有人把每个文字都设置成不同的格式。所以，对于字体格式，我们可以将它设计成享元，让不同的文字共享使用。按照这个设计思路，我们对上面的代码进行重构。重构后的代码如下所示：</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CharacterStyle</span> </span>&#123;
+  <span class="hljs-keyword">private</span> Font font;
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> size;
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> colorRGB;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">CharacterStyle</span><span class="hljs-params">(Font font, <span class="hljs-keyword">int</span> size, <span class="hljs-keyword">int</span> colorRGB)</span> </span>&#123;
+    <span class="hljs-keyword">this</span>.font = font;
+    <span class="hljs-keyword">this</span>.size = size;
+    <span class="hljs-keyword">this</span>.colorRGB = colorRGB;
+  &#125;
+
+  <span class="hljs-meta">@Override</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">equals</span><span class="hljs-params">(Object o)</span> </span>&#123;
+    CharacterStyle otherStyle = (CharacterStyle) o;
+    <span class="hljs-keyword">return</span> font.equals(otherStyle.font)
+            &amp;&amp; size == otherStyle.size
+            &amp;&amp; colorRGB == otherStyle.colorRGB;
+  &#125;
+&#125;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CharacterStyleFactory</span> </span>&#123;
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> List&lt;CharacterStyle&gt; styles = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> CharacterStyle <span class="hljs-title">getStyle</span><span class="hljs-params">(Font font, <span class="hljs-keyword">int</span> size, <span class="hljs-keyword">int</span> colorRGB)</span> </span>&#123;
+    CharacterStyle newStyle = <span class="hljs-keyword">new</span> CharacterStyle(font, size, colorRGB);
+    <span class="hljs-keyword">for</span> (CharacterStyle style : styles) &#123;
+      <span class="hljs-keyword">if</span> (style.equals(newStyle)) &#123;
+        <span class="hljs-keyword">return</span> style;
+      &#125;
+    &#125;
+    styles.add(newStyle);
+    <span class="hljs-keyword">return</span> newStyle;
+  &#125;
+&#125;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Character</span> </span>&#123;
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">char</span> c;
+  <span class="hljs-keyword">private</span> CharacterStyle style;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Character</span><span class="hljs-params">(<span class="hljs-keyword">char</span> c, CharacterStyle style)</span> </span>&#123;
+    <span class="hljs-keyword">this</span>.c = c;
+    <span class="hljs-keyword">this</span>.style = style;
+  &#125;
+&#125;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Editor</span> </span>&#123;
+  <span class="hljs-keyword">private</span> List&lt;Character&gt; chars = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">appendCharacter</span><span class="hljs-params">(<span class="hljs-keyword">char</span> c, Font font, <span class="hljs-keyword">int</span> size, <span class="hljs-keyword">int</span> colorRGB)</span> </span>&#123;
+    Character character = <span class="hljs-keyword">new</span> Character(c, CharacterStyleFactory.getStyle(font, size, colorRGB));
+    chars.add(character);
+  &#125;
+&#125;</code></pre>
+
+<h2 id="享元模式-vs-单例、缓存、对象池"><a href="#享元模式-vs-单例、缓存、对象池" class="headerlink" title="享元模式 vs 单例、缓存、对象池"></a>享元模式 vs 单例、缓存、对象池</h2><p>在上面多次提到“共享”“缓存”“复用”这些字眼，那它跟单例、缓存、对象池这些概念有什么区别呢？</p>
+<p><strong>享元模式跟单例的区别</strong></p>
+<p>在单例模式中，一个类只能创建一个对象，而在享元模式中，一个类可以创建多个对象，每个对象被多处代码引用共享。实际上，享元模式有点类似于之前讲到的单例的变体：多例。</p>
+<p>前面也多次提到，区别两种设计模式，不能光看代码实现，而是要看设计意图，也就是要解决的问题。尽管从代码实现上来看，享元模式和多例有很多相似之处，但从设计意图上来看，它们是完全不同的。应用享元模式是为了对象复用，节省内存，而应用多例模式是为了限制对象的个数。</p>
+<p><strong>享元模式跟缓存的区别</strong></p>
+<p>在享元模式的实现中，通过工厂类来“缓存”已经创建好的对象。这里的“缓存”实际上是“存储”的意思，跟我们平时所说的“数据库缓存”“<code>CPU</code> 缓存”“<code>MemCache</code> 缓存”是两回事。平时所讲的缓存，主要是为了提高访问效率，而非复用。</p>
+<p><strong>享元模式跟对象池的区别</strong></p>
+<p>对象池、连接池（比如数据库连接池）、线程池等也是为了复用，那它们跟享元模式有什么区别呢？</p>
+<p>你可能对连接池、线程池比较熟悉，对对象池比较陌生，所以，这里我简单解释一下对象池。像 <code>C++</code> 这样的编程语言，内存的管理是由程序员负责的。为了避免频繁地进行对象创建和释放导致内存碎片，我们可以预先申请一片连续的内存空间，也就是这里说的对象池。每次创建对象时，我们从对象池中直接取出一个空闲对象来使用，对象使用完成之后，再放回到对象池中以供后续复用，而非直接释放掉。</p>
+<p>虽然对象池、连接池、线程池、享元模式都是为了复用，但是，如果我们再细致地抠一抠“复用”这个字眼的话，对象池、连接池、线程池等池化技术中的“复用”和享元模式中的“复用”实际上是不同的概念。</p>
+<p>池化技术中的“复用”可以理解为“重复使用”，主要目的是节省时间（比如从数据库池中取一个连接，不需要重新创建）。在任意时刻，每一个对象、连接、线程，并不会被多处使用，而是被一个使用者独占，当使用完成之后，放回到池中，再由其他使用者重复利用。享元模式中的“复用”可以理解为“共享使用”，在整个生命周期中，都是被所有使用者共享的，主要目的是节省空间。</p>
+<h2 id="重点"><a href="#重点" class="headerlink" title="重点"></a>重点</h2><p><strong>享元模式的原理</strong></p>
+<p>所谓“享元”，顾名思义就是被共享的单元。享元模式的意图是复用对象，节省内存，前提是享元对象是不可变对象。具体来讲，当一个系统中存在大量重复对象的时候，我们就可以利用享元模式，将对象设计成享元，在内存中只保留一份实例，供多处代码引用，这样可以减少内存中对象的数量，以起到节省内存的目的。实际上，不仅仅相同对象可以设计成享元，对于相似对象，我们也可以将这些对象中相同的部分（字段），提取出来设计成享元，让这些大量相似对象引用这些享元。</p>
+<p><strong>享元模式的实现</strong></p>
+<p>享元模式的代码实现非常简单，主要是通过工厂模式，在工厂类中，通过一个 <code>Map</code> 或者 <code>List</code> 来缓存已经创建好的享元对象，以达到复用的目的。</p>
+<p><strong>享元模式 VS 单例、缓存、对象池</strong></p>
+<p>前面也多次提到，区别两种设计模式，不能光看代码实现，而是要看设计意图，也就是要解决的问题。这里的区别也不例外。</p>
+<p>可以用简单几句话来概括一下它们之间的区别。应用单例模式是为了保证对象全局唯一。应用享元模式是为了实现对象复用，节省内存。缓存是为了提高访问效率，而非复用。池化技术中的“复用”理解为“重复使用”，主要是为了节省时间。</p>
 
             </article>
             <hr>
@@ -290,7 +339,7 @@ IdGenerator.freeInstance();</code></pre>
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E8%8C%83%E5%BC%8F-%E5%88%9B%E5%BB%BA%E5%9E%8B/">设计模式与范式(创建型)</a>
+                      <a class="hover-with-bg" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E8%8C%83%E5%BC%8F-%E7%BB%93%E6%9E%84%E5%9E%8B/">设计模式与范式(结构型)</a>
                     
                   </div>
                 
@@ -300,7 +349,7 @@ IdGenerator.freeInstance();</code></pre>
                     
                       <a class="hover-with-bg" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
                     
-                      <a class="hover-with-bg" href="/tags/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">单例模式</a>
+                      <a class="hover-with-bg" href="/tags/%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/">享元模式</a>
                     
                   </div>
                 
@@ -313,18 +362,12 @@ IdGenerator.freeInstance();</code></pre>
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/passages/design-pattern-learn-33/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">设计模式之美学习（三十三）</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </div>
                   <div class="post-next col-6">
                     
                     
-                      <a href="/passages/design-pattern-learn-31/">
-                        <span class="hidden-mobile">设计模式之美学习（三十一）</span>
+                      <a href="/passages/design-pattern-learn/42/">
+                        <span class="hidden-mobile">设计模式之美学习（四十二）</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -373,6 +416,14 @@ IdGenerator.freeInstance();</code></pre>
         </div>
       </div>
     </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+    <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+    <div id="tocbot"></div>
+</div>
+
+      </div>
     
   </div>
 </div>
@@ -496,6 +547,31 @@ IdGenerator.freeInstance();</code></pre>
 
 
     
+    <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+    <script>
+        $(document).ready(function () {
+            var boardCtn = $('#board-ctn');
+            var boardTop = boardCtn.offset().top;
+
+            tocbot.init({
+                tocSelector: '#tocbot',
+                contentSelector: '.post-content',
+                headingSelector: 'h1,h2,h3,h4,h5,h6',
+                linkClass: 'tocbot-link',
+                activeLinkClass: 'tocbot-active-link',
+                listClass: 'tocbot-list',
+                isCollapsedClass: 'tocbot-is-collapsed',
+                collapsibleClass: 'tocbot-is-collapsible',
+                collapseDepth: 0,
+                scrollSmooth: true,
+                headingsOffset: -boardTop
+            });
+            if ($('.toc-list-item').length > 0) {
+                $('#toc').css('visibility', 'visible');
+            }
+        });
+    </script>
+
 
 
 
@@ -565,7 +641,7 @@ IdGenerator.freeInstance();</code></pre>
         var typed = new Typed('#subtitle', {
             strings: [
                 '  ',
-                "设计模式之美学习（三十二）&nbsp;",
+                "设计模式之美学习（四十三）&nbsp;",
             ],
             cursorChar: "_",
             typeSpeed: 70,
