@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>设计模式之美学习（四十五）</title>
+    <link href="/passages/design-pattern-learn/45/"/>
+    <url>/passages/design-pattern-learn/45/</url>
+    
+    <content type="html"><![CDATA[<p>详解各种应用场景下观察者模式的不同实现方式</p><a id="more"></a><blockquote><p>参考：<a href="https://time.geekbang.org/column/article/210170" target="_blank" rel="noopener">观察者模式（上）：详解各种应用场景下观察者模式的不同实现方式</a></p></blockquote><p>创建型设计模式主要解决“对象的创建”问题，结构型设计模式主要解决“类或对象的组合或组装”问题，那行为型设计模式主要解决的就是“类或对象之间的交互”问题。</p><p>行为型设计模式比较多，有 <code>11</code> 个，几乎占了 <code>23</code> 种经典设计模式的一半。它们分别是：观察者模式、模板模式、策略模式、职责链模式、状态模式、迭代器模式、访问者模式、备忘录模式、命令模式、解释器模式、中介模式。</p><p>根据应用场景的不同，观察者模式会对应不同的代码实现方式：有同步阻塞的实现方式，也有异步非阻塞的实现方式；有进程内的实现方式，也有跨进程的实现方式。</p><h2 id="原理及应用场景剖析"><a href="#原理及应用场景剖析" class="headerlink" title="原理及应用场景剖析"></a>原理及应用场景剖析</h2><p>观察者模式（<code>Observer Design Pattern</code>）也被称为发布订阅模式（<code>Publish-Subscribe Design Pattern</code>）。在 <code>GoF</code> 的《设计模式》一书中，它的定义是这样的：</p><blockquote><p>Define a one-to-many dependency between objects so that when one object changes state, all its dependents are notified and updated automatically.</p></blockquote><p>一般情况下，被依赖的对象叫作被观察者（<code>Observable</code>），依赖的对象叫作观察者（<code>Observer</code>）。不过，在实际的项目开发中，这两种对象的称呼是比较灵活的，有各种不同的叫法，比如：<code>Subject-Observer、Publisher-Subscriber、Producer-Consumer、EventEmitter-EventListener、Dispatcher-Listener</code>。不管怎么称呼，只要应用场景符合刚刚给出的定义，都可以看作观察者模式。</p><p>观察者模式是一个比较抽象的模式，根据不同的应用场景和需求，有完全不同的实现方式，待会我们会详细地讲到。现在，我们先来看其中最经典的一种实现方式。这也是在讲到这种模式的时候，很多书籍或资料给出的最常见的实现方式。具体的代码如下所示：</p><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Subject</span> </span>&#123;  <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">registerObserver</span><span class="hljs-params">(Observer observer)</span></span>;  <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">removeObserver</span><span class="hljs-params">(Observer observer)</span></span>;  <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">notifyObservers</span><span class="hljs-params">(Message message)</span></span>;&#125;<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Observer</span> </span>&#123;  <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">update</span><span class="hljs-params">(Message message)</span></span>;&#125;<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ConcreteSubject</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Subject</span> </span>&#123;  <span class="hljs-keyword">private</span> List&lt;Observer&gt; observers = <span class="hljs-keyword">new</span> ArrayList&lt;Observer&gt;();  <span class="hljs-meta">@Override</span>  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">registerObserver</span><span class="hljs-params">(Observer observer)</span> </span>&#123;    observers.add(observer);  &#125;  <span class="hljs-meta">@Override</span>  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">removeObserver</span><span class="hljs-params">(Observer observer)</span> </span>&#123;    observers.remove(observer);  &#125;  <span class="hljs-meta">@Override</span>  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">notifyObservers</span><span class="hljs-params">(Message message)</span> </span>&#123;    <span class="hljs-keyword">for</span> (Observer observer : observers) &#123;      observer.update(message);    &#125;  &#125;&#125;<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ConcreteObserverOne</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Observer</span> </span>&#123;  <span class="hljs-meta">@Override</span>  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">update</span><span class="hljs-params">(Message message)</span> </span>&#123;    <span class="hljs-comment">//<span class="hljs-doctag">TODO:</span> 获取消息通知，执行自己的逻辑...</span>    System.out.println(<span class="hljs-string">"ConcreteObserverOne is notified."</span>);  &#125;&#125;<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ConcreteObserverTwo</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Observer</span> </span>&#123;  <span class="hljs-meta">@Override</span>  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">update</span><span class="hljs-params">(Message message)</span> </span>&#123;    <span class="hljs-comment">//<span class="hljs-doctag">TODO:</span> 获取消息通知，执行自己的逻辑...</span>    System.out.println(<span class="hljs-string">"ConcreteObserverTwo is notified."</span>);  &#125;&#125;<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Demo</span> </span>&#123;  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;    ConcreteSubject subject = <span class="hljs-keyword">new</span> ConcreteSubject();    subject.registerObserver(<span class="hljs-keyword">new</span> ConcreteObserverOne());    subject.registerObserver(<span class="hljs-keyword">new</span> ConcreteObserverTwo());    subject.notifyObservers(<span class="hljs-keyword">new</span> Message());  &#125;&#125;</code></pre><p>上面的代码算是观察者模式的“模板代码”，只能反映大体的设计思路。在真实的软件开发中，并不需要照搬上面的模板代码。观察者模式的实现方法各式各样，函数、类的命名等会根据业务场景的不同有很大的差别，比如 <code>register</code> 函数还可以叫作 <code>attach</code>，<code>remove</code> 函数还可以叫作 <code>detach</code> 等等。不过，万变不离其宗，设计思路都是差不多的。</p><p><strong>设计模式要干的事情就是解耦。创建型模式是将创建和使用代码解耦，结构型模式是将不同功能代码解耦，行为型模式是将不同的行为代码解耦，具体到观察者模式，它是将观察者和被观察者代码解耦。</strong>借助设计模式，我们利用更好的代码结构，将一大坨代码拆分成职责更单一的小类，让其满足开闭原则、高内聚松耦合等特性，以此来控制和应对代码的复杂性，提高代码的可扩展性。</p><h2 id="基于不同应用场景的不同实现方式"><a href="#基于不同应用场景的不同实现方式" class="headerlink" title="基于不同应用场景的不同实现方式"></a>基于不同应用场景的不同实现方式</h2><p>观察者模式的应用场景非常广泛，小到代码层面的解耦，大到架构层面的系统解耦，再或者一些产品的设计思路，都有这种模式的影子，比如，邮件订阅、<code>RSS Feeds</code>，本质上都是观察者模式。</p><p>不同的应用场景和需求下，这个模式也有截然不同的实现方式，前面也提到，有同步阻塞的实现方式，也有异步非阻塞的实现方式；有进程内的实现方式，也有跨进程的实现方式。</p><h2 id="重点"><a href="#重点" class="headerlink" title="重点"></a>重点</h2><p>设计模式要干的事情就是解耦，创建型模式是将创建和使用代码解耦，结构型模式是将不同功能代码解耦，行为型模式是将不同的行为代码解耦，具体到观察者模式，它将观察者和被观察者代码解耦。借助设计模式，我们利用更好的代码结构，将一大坨代码拆分成职责更单一的小类，让其满足开闭原则、高内聚低耦合等特性，以此来控制和应对代码的复杂性，提高代码的可扩展性。</p><p>观察者模式的应用场景非常广泛，小到代码层面的解耦，大到架构层面的系统解耦，再或者一些产品的设计思路，都有这种模式的影子，比如，邮件订阅、<code>RSS Feeds</code>，本质上都是观察者模式。不同的应用场景和需求下，这个模式也有截然不同的实现方式，有同步阻塞的实现方式，也有异步非阻塞的实现方式；有进程内的实现方式，也有跨进程的实现方式。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>设计模式与范式(行为型)</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>设计模式</tag>
+      
+      <tag>观察者模式</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>设计模式之美学习（四十四）</title>
     <link href="/passages/design-pattern-learn/44/"/>
     <url>/passages/design-pattern-learn/44/</url>
@@ -1622,9 +1649,9 @@
     
     <tags>
       
-      <tag>栈</tag>
-      
       <tag>队列</tag>
+      
+      <tag>栈</tag>
       
       <tag>递归</tag>
       
