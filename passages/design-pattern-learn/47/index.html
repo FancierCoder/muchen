@@ -1,0 +1,204 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png"><link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,shrink-to-fit=no"><meta http-equiv="x-ua-compatible" content="ie=edge"><meta name="theme-color" content="#2f4154"><meta name="description" content="沐晨的个人博客,技术博客"><meta name="author" content="Li Duo"><meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog"><title>设计模式之美学习（四十七） - MuChen&#39;s Blog</title><link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css"><link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css"><link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css"><link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css"><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="https://static.muchen.fun/css/custom.css"><meta name="generator" content="Hexo 4.2.1"><link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml"></head><body><script>var isNight=22<=(new Date).getHours()||(new Date).getHours()<7;(matchMedia("(prefers-color-scheme: dark)").matches||isNight||"1"===localStorage.getItem("dark"))&&(isNight&&"1"===localStorage.getItem("noDark")||document.body.classList.add("dark"))</script><header style="height:70vh"><nav id="navbar" class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar"><div class="container"><a class="navbar-brand" href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a> <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><div class="animated-icon"><span></span><span></span><span></span></div></button><div class="collapse navbar-collapse" id="navbarSupportedContent"><ul class="navbar-nav ml-auto text-center"><li class="nav-item"><a class="nav-link" href="/archives/"><i class="iconfont icon-archive-fill"></i> 归档</a></li><li class="nav-item"><a class="nav-link" href="/categories/"><i class="iconfont icon-category-fill"></i> 分类</a></li><li class="nav-item"><a class="nav-link" href="/tags/"><i class="iconfont icon-tags-fill"></i> 标签</a></li><li class="nav-item"><a class="nav-link" href="/messageBoard/"><i class="iconfont icon-speakernotes"></i> 留言</a></li><li class="nav-item"><a class="nav-link" href="/about/"><i class="iconfont icon-user-fill"></i> 关于</a></li><li class="nav-item"><a class="nav-link" href="/links/"><i class="iconfont icon-link-fill"></i> 友链</a></li><li class="nav-item" id="search-btn"><a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i class="iconfont icon-search"></i>&nbsp;&nbsp;</a></li><li class="nav-item"><a id="dark" class="nav-link" onclick="switchDarkMode()"><i class="iconfont icon-sun"></i></a></li></ul></div></div></nav><div class="view intro-2" id="background" parallax="true" style="background:url(https://static.muchen.fun/picture/15.jpg) no-repeat center center;background-size:cover"><div class="full-bg-img"><div class="mask flex-center" style="background-color:rgba(0,0,0,.3)"><div class="container text-center white-text fadeInUp"><span class="h2" id="subtitle"></span><div class="mt-3 post-meta"><i class="iconfont icon-date-fill" aria-hidden="true"></i> <time datetime="2020-05-25 21:11">2020年5月25日 晚上</time></div><div class="mt-1"><span class="post-meta mr-2"><i class="iconfont icon-chart"></i> 2.2k 字 </span><span class="post-meta mr-2"><i class="iconfont icon-clock-fill"></i> 37 分钟 </span><span id="busuanzi_container_page_pv" class="post-meta" style="display:none"><i class="iconfont icon-eye" aria-hidden="true"></i> <span id="busuanzi_value_page_pv"></span> 次</span></div></div></div></div></div></header><main><div class="container-fluid"><div class="row"><div class="d-none d-lg-block col-lg-2"></div><div class="col-lg-8 nopadding-md"><div class="container nopadding-md" id="board-ctn"><div class="py-5" id="board"><div class="post-content mx-auto" id="post"><p class="note note-info">本文最后更新于：42 分钟前</p><article class="markdown-body"><p>剖析模板模式在JDK、Servlet、JUnit等中的应用</p><a id="more"></a><blockquote><p>参考：<a href="https://time.geekbang.org/column/article/212049" target="_blank" rel="noopener">模板模式（上）：剖析模板模式在JDK、Servlet、JUnit等中的应用</a></p></blockquote><p>绝大部分设计模式的原理和实现，都非常简单，难的是掌握应用场景，搞清楚能解决什么问题。模板模式也不例外。模板模式主要是用来解决复用和扩展两个问题。</p><h2 id="模板模式的原理与实现"><a href="#模板模式的原理与实现" class="headerlink" title="模板模式的原理与实现"></a>模板模式的原理与实现</h2><p>模板模式，全称是模板方法设计模式，英文是 <code>Template Method Design Pattern</code>。在 <code>GoF</code> 的《设计模式》一书中，它是这么定义的：</p><blockquote><p>Define the skeleton of an algorithm in an operation, deferring some steps to subclasses. Template Method lets subclasses redefine certain steps of an algorithm without changing the algorithm’s structure.</p></blockquote><p>翻译成中文就是：模板方法模式在一个方法中定义一个算法骨架，并将某些步骤推迟到子类中实现。模板方法模式可以让子类在不改变算法整体结构的情况下，重新定义算法中的某些步骤。</p><p>这里的“算法”，我们可以理解为广义上的“业务逻辑”，并不特指数据结构和算法中的“算法”。这里的算法骨架就是“模板”，包含算法骨架的方法就是“模板方法”，这也是模板方法模式名字的由来。</p><h2 id="模板模式作用一：复用"><a href="#模板模式作用一：复用" class="headerlink" title="模板模式作用一：复用"></a>模板模式作用一：复用</h2><p>模板模式把一个算法中不变的流程抽象到父类的模板方法中，将可变的部分留给子类来实现。所有的子类都可以复用父类中模板方法定义的流程代码。</p><p><strong>Java InputStream</strong></p><p><code>InputStream</code> 部分相关代码贴在了下面。在代码中，<code>read()</code> 函数是一个模板方法，定义了读取数据的整个流程，并且暴露了一个可以由子类来定制的抽象方法。不过这个方法也被命名为了 <code>read()</code>，只是参数跟模板方法不同。</p><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">InputStream</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Closeable</span> </span>&#123;
+  <span class="hljs-comment">//...省略其他代码...</span>
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">read</span><span class="hljs-params">(<span class="hljs-keyword">byte</span> b[], <span class="hljs-keyword">int</span> off, <span class="hljs-keyword">int</span> len)</span> <span class="hljs-keyword">throws</span> IOException </span>&#123;
+    <span class="hljs-keyword">if</span> (b == <span class="hljs-keyword">null</span>) &#123;
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> NullPointerException();
+    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (off &lt; <span class="hljs-number">0</span> || len &lt; <span class="hljs-number">0</span> || len &gt; b.length - off) &#123;
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IndexOutOfBoundsException();
+    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (len == <span class="hljs-number">0</span>) &#123;
+      <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    &#125;
+
+    <span class="hljs-keyword">int</span> c = read();
+    <span class="hljs-keyword">if</span> (c == -<span class="hljs-number">1</span>) &#123;
+      <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;
+    &#125;
+    b[off] = (<span class="hljs-keyword">byte</span>)c;
+
+    <span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">try</span> &#123;
+      <span class="hljs-keyword">for</span> (; i &lt; len ; i++) &#123;
+        c = read();
+        <span class="hljs-keyword">if</span> (c == -<span class="hljs-number">1</span>) &#123;
+          <span class="hljs-keyword">break</span>;
+        &#125;
+        b[off + i] = (<span class="hljs-keyword">byte</span>)c;
+      &#125;
+    &#125; <span class="hljs-keyword">catch</span> (IOException ee) &#123;
+    &#125;
+    <span class="hljs-keyword">return</span> i;
+  &#125;
+  
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">int</span> <span class="hljs-title">read</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> IOException</span>;
+&#125;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ByteArrayInputStream</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">InputStream</span> </span>&#123;
+  <span class="hljs-comment">//...省略其他代码...</span>
+  
+  <span class="hljs-meta">@Override</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">synchronized</span> <span class="hljs-keyword">int</span> <span class="hljs-title">read</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-keyword">return</span> (pos &lt; count) ? (buf[pos++] &amp; <span class="hljs-number">0xff</span>) : -<span class="hljs-number">1</span>;
+  &#125;
+&#125;</code></pre><p><strong>Java AbstractList</strong></p><p>在 <code>Java AbstractList</code> 类中，<code>addAll()</code> 函数可以看作模板方法，<code>add()</code> 是子类需要重写的方法，尽管没有声明为 <code>abstract</code> 的，但函数实现直接抛出了 <code>UnsupportedOperationException</code> 异常。前提是，如果子类不重写是不能使用的。</p><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">addAll</span><span class="hljs-params">(<span class="hljs-keyword">int</span> index, Collection&lt;? extends E&gt; c)</span> </span>&#123;
+    rangeCheckForAdd(index);
+    <span class="hljs-keyword">boolean</span> modified = <span class="hljs-keyword">false</span>;
+    <span class="hljs-keyword">for</span> (E e : c) &#123;
+        add(index++, e);
+        modified = <span class="hljs-keyword">true</span>;
+    &#125;
+    <span class="hljs-keyword">return</span> modified;
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">add</span><span class="hljs-params">(<span class="hljs-keyword">int</span> index, E element)</span> </span>&#123;
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> UnsupportedOperationException();
+&#125;</code></pre><p><strong>模板模式作用二：扩展</strong></p><p>模板模式的第二大作用的是扩展。这里所说的扩展，并不是指代码的扩展性，而是指框架的扩展性。基于这个作用，模板模式常用在框架的开发中，让框架用户可以在不修改框架源码的情况下，定制化框架的功能。</p><p><strong>Java Servlet</strong></p><p>对于 <code>Java Web</code> 项目开发来说，常用的开发框架是 <code>SpringMVC</code>。利用它，我们只需要关注业务代码的编写，底层的原理几乎不会涉及。但是，如果我们抛开这些高级框架来开发 <code>Web</code> 项目，必然会用到 <code>Servlet</code>。实际上，使用比较底层的 <code>Servlet</code> 来开发 <code>Web</code> 项目也不难。我们只需要定义一个继承 <code>HttpServlet</code> 的类，并且重写其中的 <code>doGet()</code> 或 <code>doPost()</code> 方法，来分别处理 <code>get</code> 和 <code>post</code> 请求。具体的代码示例如下所示：</p><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HelloServlet</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">HttpServlet</span> </span>&#123;
+  <span class="hljs-meta">@Override</span>
+  <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doGet</span><span class="hljs-params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="hljs-keyword">throws</span> ServletException, IOException </span>&#123;
+    <span class="hljs-keyword">this</span>.doPost(req, resp);
+  &#125;
+  
+  <span class="hljs-meta">@Override</span>
+  <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doPost</span><span class="hljs-params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="hljs-keyword">throws</span> ServletException, IOException </span>&#123;
+    resp.getWriter().write(<span class="hljs-string">"Hello World."</span>);
+  &#125;
+&#125;</code></pre><p>除此之外，我们还需要在配置文件 <code>web.xml</code> 中做如下配置。<code>Tomcat</code>、<code>Jetty</code> 等 <code>Servlet</code> 容器在启动的时候，会自动加载这个配置文件中的 <code>URL</code> 和 <code>Servlet</code> 之间的映射关系。</p><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">servlet</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">servlet-name</span>&gt;</span>HelloServlet<span class="hljs-tag">&lt;/<span class="hljs-name">servlet-name</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">servlet-class</span>&gt;</span>com.cd.HelloServlet<span class="hljs-tag">&lt;/<span class="hljs-name">servlet-class</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">servlet</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">servlet-mapping</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">servlet-name</span>&gt;</span>HelloServlet<span class="hljs-tag">&lt;/<span class="hljs-name">servlet-name</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">url-pattern</span>&gt;</span>/hello<span class="hljs-tag">&lt;/<span class="hljs-name">url-pattern</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">servlet-mapping</span>&gt;</span></code></pre><p>当我们在浏览器中输入网址（比如，<code>http://127.0.0.1:8080/hello</code> ）的时候，<code>Servlet</code> 容器会接收到相应的请求，并且根据 <code>URL</code> 和 <code>Servlet</code> 之间的映射关系，找到相应的 <code>Servlet</code>（<code>HelloServlet</code>），然后执行它的 <code>service()</code> 方法。<code>service()</code> 方法定义在父类 <code>HttpServlet</code> 中，它会调用 <code>doGet()</code> 或 <code>doPost()</code> 方法，然后输出数据（“<code>Hello world</code>”）到网页。</p><p>现在来看，<code>HttpServlet</code> 的 <code>service()</code> 函数长什么样子。</p><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">service</span><span class="hljs-params">(ServletRequest req, ServletResponse res)</span></span>
+<span class="hljs-function">    <span class="hljs-keyword">throws</span> ServletException, IOException</span>
+<span class="hljs-function"></span>&#123;
+    HttpServletRequest  request;
+    HttpServletResponse response;
+    <span class="hljs-keyword">if</span> (!(req <span class="hljs-keyword">instanceof</span> HttpServletRequest &amp;&amp;
+            res <span class="hljs-keyword">instanceof</span> HttpServletResponse)) &#123;
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> ServletException(<span class="hljs-string">"non-HTTP request or response"</span>);
+    &#125;
+    request = (HttpServletRequest) req;
+    response = (HttpServletResponse) res;
+    service(request, response);
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">service</span><span class="hljs-params">(HttpServletRequest req, HttpServletResponse resp)</span></span>
+<span class="hljs-function">    <span class="hljs-keyword">throws</span> ServletException, IOException</span>
+<span class="hljs-function"></span>&#123;
+    String method = req.getMethod();
+    <span class="hljs-keyword">if</span> (method.equals(METHOD_GET)) &#123;
+        <span class="hljs-keyword">long</span> lastModified = getLastModified(req);
+        <span class="hljs-keyword">if</span> (lastModified == -<span class="hljs-number">1</span>) &#123;
+            <span class="hljs-comment">// servlet doesn't support if-modified-since, no reason</span>
+            <span class="hljs-comment">// to go through further expensive logic</span>
+            doGet(req, resp);
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            <span class="hljs-keyword">long</span> ifModifiedSince = req.getDateHeader(HEADER_IFMODSINCE);
+            <span class="hljs-keyword">if</span> (ifModifiedSince &lt; lastModified) &#123;
+                <span class="hljs-comment">// If the servlet mod time is later, call doGet()</span>
+                <span class="hljs-comment">// Round down to the nearest second for a proper compare</span>
+                <span class="hljs-comment">// A ifModifiedSince of -1 will always be less</span>
+                maybeSetLastModified(resp, lastModified);
+                doGet(req, resp);
+            &#125; <span class="hljs-keyword">else</span> &#123;
+                resp.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+            &#125;
+        &#125;
+    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (method.equals(METHOD_HEAD)) &#123;
+        <span class="hljs-keyword">long</span> lastModified = getLastModified(req);
+        maybeSetLastModified(resp, lastModified);
+        doHead(req, resp);
+    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (method.equals(METHOD_POST)) &#123;
+        doPost(req, resp);
+    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (method.equals(METHOD_PUT)) &#123;
+        doPut(req, resp);
+    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (method.equals(METHOD_DELETE)) &#123;
+        doDelete(req, resp);
+    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (method.equals(METHOD_OPTIONS)) &#123;
+        doOptions(req,resp);
+    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (method.equals(METHOD_TRACE)) &#123;
+        doTrace(req,resp);
+    &#125; <span class="hljs-keyword">else</span> &#123;
+        String errMsg = lStrings.getString(<span class="hljs-string">"http.method_not_implemented"</span>);
+        Object[] errArgs = <span class="hljs-keyword">new</span> Object[<span class="hljs-number">1</span>];
+        errArgs[<span class="hljs-number">0</span>] = method;
+        errMsg = MessageFormat.format(errMsg, errArgs);
+        resp.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED, errMsg);
+    &#125;
+&#125;</code></pre><p>从上面的代码中我们可以看出，<code>HttpServlet</code> 的 <code>service()</code> 方法就是一个模板方法，它实现了整个 <code>HTTP</code> 请求的执行流程，<code>doGet()</code>、<code>doPost()</code> 是模板中可以由子类来定制的部分。实际上，这就相当于 <code>Servlet</code> 框架提供了一个扩展点（<code>doGet()</code>、<code>doPost()</code> 方法），让框架用户在不用修改 <code>Servlet</code> 框架源码的情况下，将业务代码通过扩展点镶嵌到框架中执行。</p><p><strong>JUnit TestCase</strong></p><p>跟 <code>Java Servlet</code> 类似，<code>JUnit</code> 框架也通过模板模式提供了一些功能扩展点（<code>setUp()</code>、<code>tearDown()</code> 等），让框架用户可以在这些扩展点上扩展功能。</p><p>在使用 <code>JUnit</code> 测试框架来编写单元测试的时候，我们编写的测试类都要继承框架提供的 <code>TestCase</code> 类。在 <code>TestCase</code> 类中，<code>runBare()</code> 函数是模板方法，它定义了执行测试用例的整体流程：先执行 <code>setUp()</code> 做些准备工作，然后执行 <code>runTest()</code> 运行真正的测试代码，最后执行 <code>tearDown()</code> 做扫尾工作。</p><p><code>TestCase</code> 类的具体代码如下所示。尽管 <code>setUp()</code>、<code>tearDown()</code> 并不是抽象函数，还提供了默认的实现，不强制子类去重新实现，但这部分也是可以在子类中定制的，所以也符合模板模式的定义。</p><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TestCase</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Assert</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Test</span> </span>&#123;
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">runBare</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> Throwable </span>&#123;
+    Throwable exception = <span class="hljs-keyword">null</span>;
+    setUp();
+    <span class="hljs-keyword">try</span> &#123;
+      runTest();
+    &#125; <span class="hljs-keyword">catch</span> (Throwable running) &#123;
+      exception = running;
+    &#125; <span class="hljs-keyword">finally</span> &#123;
+      <span class="hljs-keyword">try</span> &#123;
+        tearDown();
+      &#125; <span class="hljs-keyword">catch</span> (Throwable tearingDown) &#123;
+        <span class="hljs-keyword">if</span> (exception == <span class="hljs-keyword">null</span>) exception = tearingDown;
+      &#125;
+    &#125;
+    <span class="hljs-keyword">if</span> (exception != <span class="hljs-keyword">null</span>) <span class="hljs-keyword">throw</span> exception;
+  &#125;
+  
+  <span class="hljs-comment">/**</span>
+<span class="hljs-comment">  * Sets up the fixture, for example, open a network connection.</span>
+<span class="hljs-comment">  * This method is called before a test is executed.</span>
+<span class="hljs-comment">  */</span>
+  <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setUp</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+  &#125;
+
+  <span class="hljs-comment">/**</span>
+<span class="hljs-comment">  * Tears down the fixture, for example, close a network connection.</span>
+<span class="hljs-comment">  * This method is called after a test is executed.</span>
+<span class="hljs-comment">  */</span>
+  <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">tearDown</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+  &#125;
+&#125;</code></pre><h2 id="重点"><a href="#重点" class="headerlink" title="重点"></a>重点</h2><p>模板方法模式在一个方法中定义一个算法骨架，并将某些步骤推迟到子类中实现。模板方法模式可以让子类在不改变算法整体结构的情况下，重新定义算法中的某些步骤。这里的“算法”，我们可以理解为广义上的“业务逻辑”，并不特指数据结构和算法中的“算法”。这里的算法骨架就是“模板”，包含算法骨架的方法就是“模板方法”，这也是模板方法模式名字的由来。</p><p>在模板模式经典的实现中，模板方法定义为 <code>final</code>，可以避免被子类重写。需要子类重写的方法定义为 <code>abstract</code>，可以强迫子类去实现。不过，在实际项目开发中，模板模式的实现比较灵活，以上两点都不是必须的。</p><p>模板模式有两大作用：复用和扩展。其中，复用指的是，所有的子类可以复用父类中提供的模板方法的代码。扩展指的是，框架通过模板模式提供功能扩展点，让框架用户可以在不修改框架源码的情况下，基于扩展点定制化框架的功能。</p></article><hr><div><div class="post-metas mb-3"><div class="post-meta mr-3"><i class="iconfont icon-category"></i> <a class="hover-with-bg" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E8%8C%83%E5%BC%8F-%E8%A1%8C%E4%B8%BA%E5%9E%8B/">设计模式与范式(行为型)</a></div><div class="post-meta"><i class="iconfont icon-tags"></i> <a class="hover-with-bg" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a> <a class="hover-with-bg" href="/tags/%E6%A8%A1%E6%9D%BF%E6%A8%A1%E5%BC%8F/">模板模式</a></div></div><p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p><div class="post-prevnext row"><div class="post-prev col-6"></div><div class="post-next col-6"><a href="/passages/design-pattern-learn/46/"><span class="hidden-mobile">设计模式之美学习（四十六）</span> <span class="visible-mobile">下一篇</span> <i class="iconfont icon-arrowright"></i></a></div></div></div><div class="comments" id="comments"><div id="vcomments"></div><script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js"></script><script type="text/javascript">var oldLoadVa=window.onload;window.onload=function(){oldLoadVa&&oldLoadVa(),new Valine({el:"#vcomments",app_id:"O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",app_key:"5Rl3Rhl9zc8BJNvrPcncKWFy",placeholder:"说点什么吧~",path:window.location.pathname,avatar:"retro",meta:["nick","mail","link"],pageSize:"10",lang:"zh-CN",highlight:!0,recordIP:!0,serverURLs:"https://lean.muchen.fun"})}</script><noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments powered by Valine.</a></noscript></div></div></div></div></div><div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn"><div id="toc"><p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p><div id="tocbot"></div></div></div></div></div><div class="col-lg-7 mx-auto nopadding-md"><div class="container custom post-content mx-auto"><img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px;height:150px"><br><div class="text-center">欢迎关注我的公众号😘</div></div></div></main><a id="scroll-top-button" href="#" role="button"><i class="iconfont icon-arrowup" aria-hidden="true"></i></a><div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable modal-lg" role="document"><div class="modal-content"><div class="modal-header text-center"><h4 class="modal-title w-100 font-weight-bold">搜索</h4><button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div><div class="modal-body mx-3"><div class="md-form mb-5"><input type="text" id="local-search-input" class="form-control validate"> <label data-error="x" data-success="v" for="local-search-input">关键词</label></div><div class="list-group" id="local-search-result"></div></div></div></div></div><footer class="mt-5"><div class="text-center py-3"><div><a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a></div><div><span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span><script>document.getElementById("dark").innerHTML=document.querySelector("body").classList.contains("dark")?"🌙":"☀";var now=new Date;function createtime(){var n=new Date("07/12/2019 00:00:00");now.setTime(now.getTime()+250),days=(now-n)/1e3/60/60/24,dnum=Math.floor(days),hours=(now-n)/1e3/60/60-24*dnum,hnum=Math.floor(hours),1==String(hnum).length&&(hnum="0"+hnum),minutes=(now-n)/1e3/60-1440*dnum-60*hnum,mnum=Math.floor(minutes),1==String(mnum).length&&(mnum="0"+mnum),seconds=(now-n)/1e3-86400*dnum-3600*hnum-60*mnum,snum=Math.round(seconds),1==String(snum).length&&(snum="0"+snum),document.getElementById("timeDate").innerHTML="本站已运行&nbsp"+dnum+"&nbsp天",document.getElementById("times").innerHTML=hnum+"&nbsp小时&nbsp"+mnum+"&nbsp分&nbsp"+snum+"&nbsp秒"}setInterval("createtime()",250)</script></div><p id="hitokoto">:D 获取中...</p><script>fetch('https://v1.hitokoto.cn')
+              .then(response => response.json())
+              .then(data => {
+                const hitokoto = document.getElementById('hitokoto')
+                hitokoto.innerText = data.hitokoto + '--「' + data.from + '」'
+              })
+              .catch(console.error)</script></div></footer><script src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js"></script><script src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script><script src="/js/main.js"></script><script src="/js/lazyload.js"></script><script src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js"></script><script>$(document).ready(function(){var t=$("#board-ctn").offset().top;tocbot.init({tocSelector:"#tocbot",contentSelector:".post-content",headingSelector:"h1,h2,h3,h4,h5,h6",linkClass:"tocbot-link",activeLinkClass:"tocbot-active-link",listClass:"tocbot-list",isCollapsedClass:"tocbot-is-collapsed",collapsibleClass:"tocbot-is-collapsible",collapseDepth:0,scrollSmooth:!0,headingsOffset:-t}),0<$(".toc-list-item").length&&$("#toc").css("visibility","visible")})</script><script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js"></script><script src="/js/clipboard-use.js"></script><script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://static.muchen.fun/js/custom.js"></script><script defer>var _hmt=_hmt||[];!function(){var e=document.createElement("script");e.src="https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)}()</script><script defer>!function(e,a,t,n,g,c,o){e.GoogleAnalyticsObject="ga",e.ga=e.ga||function(){(e.ga.q=e.ga.q||[]).push(arguments)},e.ga.l=1*new Date,c=a.createElement(t),o=a.getElementsByTagName(t)[0],c.async=1,c.src="https://www.google-analytics.com/analytics.js",o.parentNode.insertBefore(c,o)}(window,document,"script"),ga("create","UA-144841374-1","auto"),ga("send","pageview")</script><script src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js"></script><script>var typed=new Typed("#subtitle",{strings:["  ","设计模式之美学习（四十七）&nbsp;"],cursorChar:"_",typeSpeed:70,loop:!1});typed.stop(),$(document).ready(function(){$(".typed-cursor").addClass("h2"),typed.start()})</script><script src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js"></script><script>anchors.options = {
+            placement: "right",
+            visible: "hover",
+            
+        };
+        var el = "h1,h2,h3,h4,h5,h6".split(",");
+        var res = [];
+        for (item of el) {
+            res.push(".markdown-body > " + item)
+        }
+        anchors.add(res.join(", "))</script><script src="/js/local-search.js"></script><script>var path="/local-search.xml",inputArea=document.querySelector("#local-search-input");inputArea.onclick=function(){searchFunc(path,"local-search-input","local-search-result"),this.onclick=null}</script><script src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js"></script><link rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css"><script>$("#post img:not(.no-zoom img, img[no-zoom]), img[zoom]").each(function(){var t=document.createElement("a");$(t).attr("data-fancybox","images"),$(t).attr("href",$(this).attr("src")),$(this).wrap(t)})</script><script>MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']]
+                },
+                options: {
+                    renderActions: {
+                        findScript: [10, doc => {
+                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                                const display = !!node.type.match(/; *mode=display/);
+                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                                const text = document.createTextNode('');
+                                node.parentNode.replaceChild(text, node);
+                                math.start = {node: text, delim: '', n: 0};
+                                math.end = {node: text, delim: '', n: 0};
+                                doc.math.push(math);
+                            });
+                        }, '', false],
+                        insertedScript: [200, () => {
+                            document.querySelectorAll('mjx-container').forEach(node => {
+                                let target = node.parentNode;
+                                if (target.nodeName.toLowerCase() === 'li') {
+                                    target.parentNode.classList.add('has-jax');
+                                }
+                            });
+                        }, '', false]
+                    }
+                }
+            };</script><script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js"></script><script>!function(e,r,t){var o,n=[];e.requestAnimationFrame=e.requestAnimationFrame||e.webkitRequestAnimationFrame||e.mozRequestAnimationFrame||e.oRequestAnimationFrame||e.msRequestAnimationFrame||function(e){setTimeout(e,1e3/60)},function(t){var a=r.createElement("style");a.type="text/css";try{a.appendChild(r.createTextNode(t))}catch(e){a.styleSheet.cssText=t}r.getElementsByTagName("head")[0].appendChild(a)}(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"),o="function"==typeof e.onclick&&e.onclick,e.onclick=function(e){var t,a;o&&o(),t=e,(a=r.createElement("div")).className="heart",n.push({el:a,x:t.clientX-5,y:t.clientY-5,scale:1,alpha:1,color:"rgb("+~~(255*Math.random())+","+~~(255*Math.random())+","+~~(255*Math.random())+")"}),r.body.appendChild(a)},function e(){for(var t=0;t<n.length;t++)n[t].alpha<=0?(r.body.removeChild(n[t].el),n.splice(t,1)):(n[t].y--,n[t].scale+=.004,n[t].alpha-=.013,n[t].el.style.cssText="left:"+n[t].x+"px;top:"+n[t].y+"px;opacity:"+n[t].alpha+";transform:scale("+n[t].scale+","+n[t].scale+") rotate(45deg);background:"+n[t].color+";z-index:99999");requestAnimationFrame(e)}()}(window,document)</script></body></html>
