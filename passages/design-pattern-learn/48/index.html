@@ -1,0 +1,145 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png"><link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,shrink-to-fit=no"><meta http-equiv="x-ua-compatible" content="ie=edge"><meta name="theme-color" content="#2f4154"><meta name="description" content="沐晨的个人博客,技术博客"><meta name="author" content="Li Duo"><meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog"><title>设计模式之美学习（四十八） - MuChen&#39;s Blog</title><link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css"><link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css"><link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css"><link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css"><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="https://static.muchen.fun/css/custom.css"><meta name="generator" content="Hexo 4.2.1"><link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml"></head><body><script>var isNight=22<=(new Date).getHours()||(new Date).getHours()<7;(matchMedia("(prefers-color-scheme: dark)").matches||isNight||"1"===localStorage.getItem("dark"))&&(isNight&&"1"===localStorage.getItem("noDark")||document.body.classList.add("dark"))</script><header style="height:70vh"><nav id="navbar" class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar"><div class="container"><a class="navbar-brand" href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a> <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><div class="animated-icon"><span></span><span></span><span></span></div></button><div class="collapse navbar-collapse" id="navbarSupportedContent"><ul class="navbar-nav ml-auto text-center"><li class="nav-item"><a class="nav-link" href="/archives/"><i class="iconfont icon-archive-fill"></i> 归档</a></li><li class="nav-item"><a class="nav-link" href="/categories/"><i class="iconfont icon-category-fill"></i> 分类</a></li><li class="nav-item"><a class="nav-link" href="/tags/"><i class="iconfont icon-tags-fill"></i> 标签</a></li><li class="nav-item"><a class="nav-link" href="/messageBoard/"><i class="iconfont icon-speakernotes"></i> 留言</a></li><li class="nav-item"><a class="nav-link" href="/about/"><i class="iconfont icon-user-fill"></i> 关于</a></li><li class="nav-item"><a class="nav-link" href="/links/"><i class="iconfont icon-link-fill"></i> 友链</a></li><li class="nav-item" id="search-btn"><a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i class="iconfont icon-search"></i>&nbsp;&nbsp;</a></li><li class="nav-item"><a id="dark" class="nav-link" onclick="switchDarkMode()"><i class="iconfont icon-sun"></i></a></li></ul></div></div></nav><div class="view intro-2" id="background" parallax="true" style="background:url(https://static.muchen.fun/picture/15.jpg) no-repeat center center;background-size:cover"><div class="full-bg-img"><div class="mask flex-center" style="background-color:rgba(0,0,0,.3)"><div class="container text-center white-text fadeInUp"><span class="h2" id="subtitle"></span><div class="mt-3 post-meta"><i class="iconfont icon-date-fill" aria-hidden="true"></i> <time datetime="2020-05-26 21:31">2020年5月26日 晚上</time></div><div class="mt-1"><span class="post-meta mr-2"><i class="iconfont icon-chart"></i> 2.1k 字 </span><span class="post-meta mr-2"><i class="iconfont icon-clock-fill"></i> 31 分钟 </span><span id="busuanzi_container_page_pv" class="post-meta" style="display:none"><i class="iconfont icon-eye" aria-hidden="true"></i> <span id="busuanzi_value_page_pv"></span> 次</span></div></div></div></div></div></header><main><div class="container-fluid"><div class="row"><div class="d-none d-lg-block col-lg-2"></div><div class="col-lg-8 nopadding-md"><div class="container nopadding-md" id="board-ctn"><div class="py-5" id="board"><div class="post-content mx-auto" id="post"><p class="note note-info">本文最后更新于：1 小时前</p><article class="markdown-body"><p>模板模式与Callback回调函数有何区别和联系？</p><a id="more"></a><blockquote><p>参考：<a href="https://time.geekbang.org/column/article/212802" target="_blank" rel="noopener">模板模式（下）：模板模式与Callback回调函数有何区别和联系？</a></p></blockquote><p>模板模式常用在框架开发中，通过提供功能扩展点，让框架用户在不修改框架源码的情况下，基于扩展点定制化框架的功能。除此之外，模板模式还可以起到代码复用的作用。</p><p>复用和扩展是模板模式的两大作用，实际上，还有另外一个技术概念，也能起到跟模板模式相同的作用，那就是回调（<code>Callback</code>）。</p><h2 id="回调的原理解析"><a href="#回调的原理解析" class="headerlink" title="回调的原理解析"></a>回调的原理解析</h2><p>相对于普通的函数调用来说，回调是一种双向调用关系。<code>A</code> 类事先注册某个函数 <code>F</code> 到 <code>B</code> 类，<code>A</code> 类在调用 <code>B</code> 类的 <code>P</code> 函数的时候，<code>B</code> 类反过来调用 <code>A</code> 类注册给它的 <code>F</code> 函数。这里的 <code>F</code> 函数就是“回调函数”。<code>A</code> 调用 <code>B</code>，<code>B</code> 反过来又调用 <code>A</code>，这种调用机制就叫作“回调”。</p><p><code>A</code> 类如何将回调函数传递给 <code>B</code> 类呢？不同的编程语言，有不同的实现方法。<code>C</code> 语言可以使用函数指针，<code>Java</code> 则需要使用包裹了回调函数的类对象，简称为回调对象。这里用 <code>Java</code> 语言举例说明一下。代码如下所示：</p><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">ICallback</span> </span>&#123;
+  <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">methodToCallback</span><span class="hljs-params">()</span></span>;
+&#125;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BClass</span> </span>&#123;
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">process</span><span class="hljs-params">(ICallback callback)</span> </span>&#123;
+    <span class="hljs-comment">//...</span>
+    callback.methodToCallback();
+    <span class="hljs-comment">//...</span>
+  &#125;
+&#125;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AClass</span> </span>&#123;
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;
+    BClass b = <span class="hljs-keyword">new</span> BClass();
+    b.process(<span class="hljs-keyword">new</span> ICallback() &#123; <span class="hljs-comment">//回调对象</span>
+      <span class="hljs-meta">@Override</span>
+      <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">methodToCallback</span><span class="hljs-params">()</span> </span>&#123;
+        System.out.println(<span class="hljs-string">"Call back me."</span>);
+      &#125;
+    &#125;);
+  &#125;
+&#125;</code></pre><p>从代码实现中，我们可以看出，回调跟模板模式一样，也具有复用和扩展的功能。除了回调函数之外，<code>BClass</code> 类的 <code>process()</code> 函数中的逻辑都可以复用。如果 <code>ICallback</code>、<code>BClass</code> 类是框架代码，<code>AClass</code> 是使用框架的客户端代码，我们可以通过 <code>ICallback</code> 定制 <code>process()</code> 函数，也就是说，框架因此具有了扩展的能力。</p><p>实际上，回调不仅可以应用在代码设计上，在更高层次的架构设计上也比较常用。比如，通过三方支付系统来实现支付功能，用户在发起支付请求之后，一般不会一直阻塞到支付结果返回，而是注册回调接口（类似回调函数，一般是一个回调用的 URL）给三方支付系统，等三方支付系统执行完成之后，将结果通过回调接口返回给用户。</p><p>回调可以分为同步回调和异步回调（或者延迟回调）。同步回调指在函数返回之前执行回调函数；异步回调指的是在函数返回之后执行回调函数。上面的代码实际上是同步回调的实现方式，在 <code>process()</code> 函数返回之前，执行完回调函数 <code>methodToCallback()</code>。而上面支付的例子是异步回调的实现方式，发起支付之后不需要等待回调接口被调用就直接返回。从应用场景上来看，同步回调看起来更像模板模式，异步回调看起来更像观察者模式。</p><h2 id="应用举例一：JdbcTemplate"><a href="#应用举例一：JdbcTemplate" class="headerlink" title="应用举例一：JdbcTemplate"></a>应用举例一：JdbcTemplate</h2><p><code>JdbcTemplate</code> 通过回调的机制，将不变的执行流程抽离出来，放到模板方法 <code>execute()</code> 中，将可变的部分设计成回调 <code>StatementCallback</code>，由用户来定制。<code>query()</code> 函数是对 <code>execute()</code> 函数的二次封装，让接口用起来更加方便。</p><pre><code class="hljs java"><span class="hljs-meta">@Override</span>
+<span class="hljs-keyword">public</span> &lt;T&gt; <span class="hljs-function">List&lt;T&gt; <span class="hljs-title">query</span><span class="hljs-params">(String sql, RowMapper&lt;T&gt; rowMapper)</span> <span class="hljs-keyword">throws</span> DataAccessException </span>&#123;
+ <span class="hljs-keyword">return</span> query(sql, <span class="hljs-keyword">new</span> RowMapperResultSetExtractor&lt;T&gt;(rowMapper));
+&#125;
+
+<span class="hljs-meta">@Override</span>
+<span class="hljs-keyword">public</span> &lt;T&gt; <span class="hljs-function">T <span class="hljs-title">query</span><span class="hljs-params">(<span class="hljs-keyword">final</span> String sql, <span class="hljs-keyword">final</span> ResultSetExtractor&lt;T&gt; rse)</span> <span class="hljs-keyword">throws</span> DataAccessException </span>&#123;
+ Assert.notNull(sql, <span class="hljs-string">"SQL must not be null"</span>);
+ Assert.notNull(rse, <span class="hljs-string">"ResultSetExtractor must not be null"</span>);
+ <span class="hljs-keyword">if</span> (logger.isDebugEnabled()) &#123;
+  logger.debug(<span class="hljs-string">"Executing SQL query ["</span> + sql + <span class="hljs-string">"]"</span>);
+ &#125;
+
+ <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">QueryStatementCallback</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">StatementCallback</span>&lt;<span class="hljs-title">T</span>&gt;, <span class="hljs-title">SqlProvider</span> </span>&#123;
+  <span class="hljs-meta">@Override</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> T <span class="hljs-title">doInStatement</span><span class="hljs-params">(Statement stmt)</span> <span class="hljs-keyword">throws</span> SQLException </span>&#123;
+   ResultSet rs = <span class="hljs-keyword">null</span>;
+   <span class="hljs-keyword">try</span> &#123;
+    rs = stmt.executeQuery(sql);
+    ResultSet rsToUse = rs;
+    <span class="hljs-keyword">if</span> (nativeJdbcExtractor != <span class="hljs-keyword">null</span>) &#123;
+     rsToUse = nativeJdbcExtractor.getNativeResultSet(rs);
+    &#125;
+    <span class="hljs-keyword">return</span> rse.extractData(rsToUse);
+   &#125;
+   <span class="hljs-keyword">finally</span> &#123;
+    JdbcUtils.closeResultSet(rs);
+   &#125;
+  &#125;
+  <span class="hljs-meta">@Override</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getSql</span><span class="hljs-params">()</span> </span>&#123;
+   <span class="hljs-keyword">return</span> sql;
+  &#125;
+ &#125;
+
+ <span class="hljs-keyword">return</span> execute(<span class="hljs-keyword">new</span> QueryStatementCallback());
+&#125;
+
+<span class="hljs-meta">@Override</span>
+<span class="hljs-keyword">public</span> &lt;T&gt; <span class="hljs-function">T <span class="hljs-title">execute</span><span class="hljs-params">(StatementCallback&lt;T&gt; action)</span> <span class="hljs-keyword">throws</span> DataAccessException </span>&#123;
+ Assert.notNull(action, <span class="hljs-string">"Callback object must not be null"</span>);
+
+ Connection con = DataSourceUtils.getConnection(getDataSource());
+ Statement stmt = <span class="hljs-keyword">null</span>;
+ <span class="hljs-keyword">try</span> &#123;
+  Connection conToUse = con;
+  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.nativeJdbcExtractor != <span class="hljs-keyword">null</span> &amp;&amp;
+    <span class="hljs-keyword">this</span>.nativeJdbcExtractor.isNativeConnectionNecessaryForNativeStatements()) &#123;
+   conToUse = <span class="hljs-keyword">this</span>.nativeJdbcExtractor.getNativeConnection(con);
+  &#125;
+  stmt = conToUse.createStatement();
+  applyStatementSettings(stmt);
+  Statement stmtToUse = stmt;
+  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.nativeJdbcExtractor != <span class="hljs-keyword">null</span>) &#123;
+   stmtToUse = <span class="hljs-keyword">this</span>.nativeJdbcExtractor.getNativeStatement(stmt);
+  &#125;
+  T result = action.doInStatement(stmtToUse);
+  handleWarnings(stmt);
+  <span class="hljs-keyword">return</span> result;
+ &#125;
+ <span class="hljs-keyword">catch</span> (SQLException ex) &#123;
+  <span class="hljs-comment">// Release Connection early, to avoid potential connection pool deadlock</span>
+  <span class="hljs-comment">// in the case when the exception translator hasn't been initialized yet.</span>
+  JdbcUtils.closeStatement(stmt);
+  stmt = <span class="hljs-keyword">null</span>;
+  DataSourceUtils.releaseConnection(con, getDataSource());
+  con = <span class="hljs-keyword">null</span>;
+  <span class="hljs-keyword">throw</span> getExceptionTranslator().translate(<span class="hljs-string">"StatementCallback"</span>, getSql(action), ex);
+ &#125;
+ <span class="hljs-keyword">finally</span> &#123;
+  JdbcUtils.closeStatement(stmt);
+  DataSourceUtils.releaseConnection(con, getDataSource());
+ &#125;
+&#125;</code></pre><h2 id="应用举例二：setClickListener-）"><a href="#应用举例二：setClickListener-）" class="headerlink" title="应用举例二：setClickListener(）"></a>应用举例二：setClickListener(）</h2><p>在客户端开发中，经常需要给控件注册事件监听器，比如下面这段代码，就是在 <code>Android</code> 应用开发中，给 <code>Button</code> 控件的点击事件注册监听器。</p><pre><code class="hljs java">Button button = (Button)findViewById(R.id.button);
+button.setOnClickListener(<span class="hljs-keyword">new</span> OnClickListener() &#123;
+  <span class="hljs-meta">@Override</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onClick</span><span class="hljs-params">(View v)</span> </span>&#123;
+    System.out.println(<span class="hljs-string">"I am clicked."</span>);
+  &#125;
+&#125;);</code></pre><p>从代码结构上来看，事件监听器很像回调，即传递一个包含回调函数（<code>onClick()</code>）的对象给另一个函数。从应用场景上来看，它又很像观察者模式，即事先注册观察者（<code>OnClickListener</code>），当用户点击按钮的时候，发送点击事件给观察者，并且执行相应的 <code>onClick()</code> 函数。</p><p>回调分为同步回调和异步回调。这里的回调算是异步回调，我们往 <code>setOnClickListener()</code> 函数中注册好回调函数之后，并不需要等待回调函数执行。这也印证了我们前面讲的，异步回调比较像观察者模式。</p><h2 id="模板模式-VS-回调"><a href="#模板模式-VS-回调" class="headerlink" title="模板模式 VS 回调"></a>模板模式 VS 回调</h2><p>从应用场景上来看，同步回调跟模板模式几乎一致。它们都是在一个大的算法骨架中，自由替换其中的某个步骤，起到代码复用和扩展的目的。而异步回调跟模板模式有较大差别，更像是观察者模式。</p><p>从代码实现上来看，回调和模板模式完全不同。回调基于组合关系来实现，把一个对象传递给另一个对象，是一种对象之间的关系；模板模式基于继承关系来实现，子类重写父类的抽象方法，是一种类之间的关系。</p><p>前面提到，组合优于继承。实际上，这里也不例外。在代码实现上，回调相对于模板模式会更加灵活，主要体现在下面几点。</p><ul><li><p>像 <code>Java</code> 这种只支持单继承的语言，基于模板模式编写的子类，已经继承了一个父类，不再具有继承的能力。</p></li><li><p>回调可以使用匿名类来创建回调对象，可以不用事先定义类；而模板模式针对不同的实现都要定义不同的子类。</p></li><li><p>如果某个类中定义了多个模板方法，每个方法都有对应的抽象方法，那即便我们只用到其中的一个模板方法，子类也必须实现所有的抽象方法。而回调就更加灵活，我们只需要往用到的模板方法中注入回调对象即可。</p></li></ul><h2 id="重点"><a href="#重点" class="headerlink" title="重点"></a>重点</h2><p>回调跟模板模式具有相同的作用：代码复用和扩展。在一些框架、类库、组件等的设计中经常会用到。</p><p>相对于普通的函数调用，回调是一种双向调用关系。<code>A</code> 类事先注册某个函数 <code>F</code> 到 <code>B</code> 类，<code>A</code> 类在调用 <code>B</code> 类的 <code>P</code>函数的时候，<code>B</code> 类反过来调用 <code>A</code> 类注册给它的 <code>F</code>函数。这里的 <code>F</code> 函数就是“回调函数”。<code>A</code> 调用 <code>B</code>，<code>B</code> 反过来又调用 <code>A</code>，这种调用机制就叫作“回调”。</p><p>回调可以细分为同步回调和异步回调。从应用场景上来看，同步回调看起来更像模板模式，异步回调看起来更像观察者模式。回调跟模板模式的区别，更多的是在代码实现上，而非应用场景上。回调基于组合关系来实现，模板模式基于继承关系来实现，回调比模板模式更加灵活。</p></article><hr><div><div class="post-metas mb-3"><div class="post-meta mr-3"><i class="iconfont icon-category"></i> <a class="hover-with-bg" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E8%8C%83%E5%BC%8F-%E8%A1%8C%E4%B8%BA%E5%9E%8B/">设计模式与范式(行为型)</a></div><div class="post-meta"><i class="iconfont icon-tags"></i> <a class="hover-with-bg" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a> <a class="hover-with-bg" href="/tags/%E6%A8%A1%E6%9D%BF%E6%A8%A1%E5%BC%8F/">模板模式</a></div></div><p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p><div class="post-prevnext row"><div class="post-prev col-6"></div><div class="post-next col-6"><a href="/passages/design-pattern-learn/47/"><span class="hidden-mobile">设计模式之美学习（四十七）</span> <span class="visible-mobile">下一篇</span> <i class="iconfont icon-arrowright"></i></a></div></div></div><div class="comments" id="comments"><div id="vcomments"></div><script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js"></script><script type="text/javascript">var oldLoadVa=window.onload;window.onload=function(){oldLoadVa&&oldLoadVa(),new Valine({el:"#vcomments",app_id:"O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",app_key:"5Rl3Rhl9zc8BJNvrPcncKWFy",placeholder:"说点什么吧~",path:window.location.pathname,avatar:"retro",meta:["nick","mail","link"],pageSize:"10",lang:"zh-CN",highlight:!0,recordIP:!0,serverURLs:"https://lean.muchen.fun"})}</script><noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments powered by Valine.</a></noscript></div></div></div></div></div><div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn"><div id="toc"><p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p><div id="tocbot"></div></div></div></div></div><div class="col-lg-7 mx-auto nopadding-md"><div class="container custom post-content mx-auto"><img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px;height:150px"><br><div class="text-center">欢迎关注我的公众号😘</div></div></div></main><a id="scroll-top-button" href="#" role="button"><i class="iconfont icon-arrowup" aria-hidden="true"></i></a><div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable modal-lg" role="document"><div class="modal-content"><div class="modal-header text-center"><h4 class="modal-title w-100 font-weight-bold">搜索</h4><button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div><div class="modal-body mx-3"><div class="md-form mb-5"><input type="text" id="local-search-input" class="form-control validate"> <label data-error="x" data-success="v" for="local-search-input">关键词</label></div><div class="list-group" id="local-search-result"></div></div></div></div></div><footer class="mt-5"><div class="text-center py-3"><div><a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a></div><div><span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span><script>document.getElementById("dark").innerHTML=document.querySelector("body").classList.contains("dark")?"🌙":"☀";var now=new Date;function createtime(){var n=new Date("07/12/2019 00:00:00");now.setTime(now.getTime()+250),days=(now-n)/1e3/60/60/24,dnum=Math.floor(days),hours=(now-n)/1e3/60/60-24*dnum,hnum=Math.floor(hours),1==String(hnum).length&&(hnum="0"+hnum),minutes=(now-n)/1e3/60-1440*dnum-60*hnum,mnum=Math.floor(minutes),1==String(mnum).length&&(mnum="0"+mnum),seconds=(now-n)/1e3-86400*dnum-3600*hnum-60*mnum,snum=Math.round(seconds),1==String(snum).length&&(snum="0"+snum),document.getElementById("timeDate").innerHTML="本站已运行&nbsp"+dnum+"&nbsp天",document.getElementById("times").innerHTML=hnum+"&nbsp小时&nbsp"+mnum+"&nbsp分&nbsp"+snum+"&nbsp秒"}setInterval("createtime()",250)</script></div><p id="hitokoto">:D 获取中...</p><script>fetch('https://v1.hitokoto.cn')
+              .then(response => response.json())
+              .then(data => {
+                const hitokoto = document.getElementById('hitokoto')
+                hitokoto.innerText = data.hitokoto + '--「' + data.from + '」'
+              })
+              .catch(console.error)</script></div></footer><script src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js"></script><script src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script><script src="/js/main.js"></script><script src="/js/lazyload.js"></script><script src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js"></script><script>$(document).ready(function(){var t=$("#board-ctn").offset().top;tocbot.init({tocSelector:"#tocbot",contentSelector:".post-content",headingSelector:"h1,h2,h3,h4,h5,h6",linkClass:"tocbot-link",activeLinkClass:"tocbot-active-link",listClass:"tocbot-list",isCollapsedClass:"tocbot-is-collapsed",collapsibleClass:"tocbot-is-collapsible",collapseDepth:0,scrollSmooth:!0,headingsOffset:-t}),0<$(".toc-list-item").length&&$("#toc").css("visibility","visible")})</script><script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js"></script><script src="/js/clipboard-use.js"></script><script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://static.muchen.fun/js/custom.js"></script><script defer>var _hmt=_hmt||[];!function(){var e=document.createElement("script");e.src="https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)}()</script><script defer>!function(e,a,t,n,g,c,o){e.GoogleAnalyticsObject="ga",e.ga=e.ga||function(){(e.ga.q=e.ga.q||[]).push(arguments)},e.ga.l=1*new Date,c=a.createElement(t),o=a.getElementsByTagName(t)[0],c.async=1,c.src="https://www.google-analytics.com/analytics.js",o.parentNode.insertBefore(c,o)}(window,document,"script"),ga("create","UA-144841374-1","auto"),ga("send","pageview")</script><script src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js"></script><script>var typed=new Typed("#subtitle",{strings:["  ","设计模式之美学习（四十八）&nbsp;"],cursorChar:"_",typeSpeed:70,loop:!1});typed.stop(),$(document).ready(function(){$(".typed-cursor").addClass("h2"),typed.start()})</script><script src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js"></script><script>anchors.options = {
+            placement: "right",
+            visible: "hover",
+            
+        };
+        var el = "h1,h2,h3,h4,h5,h6".split(",");
+        var res = [];
+        for (item of el) {
+            res.push(".markdown-body > " + item)
+        }
+        anchors.add(res.join(", "))</script><script src="/js/local-search.js"></script><script>var path="/local-search.xml",inputArea=document.querySelector("#local-search-input");inputArea.onclick=function(){searchFunc(path,"local-search-input","local-search-result"),this.onclick=null}</script><script src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js"></script><link rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css"><script>$("#post img:not(.no-zoom img, img[no-zoom]), img[zoom]").each(function(){var t=document.createElement("a");$(t).attr("data-fancybox","images"),$(t).attr("href",$(this).attr("src")),$(this).wrap(t)})</script><script>MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']]
+                },
+                options: {
+                    renderActions: {
+                        findScript: [10, doc => {
+                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                                const display = !!node.type.match(/; *mode=display/);
+                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                                const text = document.createTextNode('');
+                                node.parentNode.replaceChild(text, node);
+                                math.start = {node: text, delim: '', n: 0};
+                                math.end = {node: text, delim: '', n: 0};
+                                doc.math.push(math);
+                            });
+                        }, '', false],
+                        insertedScript: [200, () => {
+                            document.querySelectorAll('mjx-container').forEach(node => {
+                                let target = node.parentNode;
+                                if (target.nodeName.toLowerCase() === 'li') {
+                                    target.parentNode.classList.add('has-jax');
+                                }
+                            });
+                        }, '', false]
+                    }
+                }
+            };</script><script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js"></script><script>!function(e,r,t){var o,n=[];e.requestAnimationFrame=e.requestAnimationFrame||e.webkitRequestAnimationFrame||e.mozRequestAnimationFrame||e.oRequestAnimationFrame||e.msRequestAnimationFrame||function(e){setTimeout(e,1e3/60)},function(t){var a=r.createElement("style");a.type="text/css";try{a.appendChild(r.createTextNode(t))}catch(e){a.styleSheet.cssText=t}r.getElementsByTagName("head")[0].appendChild(a)}(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"),o="function"==typeof e.onclick&&e.onclick,e.onclick=function(e){var t,a;o&&o(),t=e,(a=r.createElement("div")).className="heart",n.push({el:a,x:t.clientX-5,y:t.clientY-5,scale:1,alpha:1,color:"rgb("+~~(255*Math.random())+","+~~(255*Math.random())+","+~~(255*Math.random())+")"}),r.body.appendChild(a)},function e(){for(var t=0;t<n.length;t++)n[t].alpha<=0?(r.body.removeChild(n[t].el),n.splice(t,1)):(n[t].y--,n[t].scale+=.004,n[t].alpha-=.013,n[t].el.style.cssText="left:"+n[t].x+"px;top:"+n[t].y+"px;opacity:"+n[t].alpha+";transform:scale("+n[t].scale+","+n[t].scale+") rotate(45deg);background:"+n[t].color+";z-index:99999");requestAnimationFrame(e)}()}(window,document)</script></body></html>
