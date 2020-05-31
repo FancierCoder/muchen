@@ -120,7 +120,7 @@
 &#125;
 
 <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HandlerChain</span> </span>&#123;
-  <span class="hljs-keyword">private</span> List&lt;IHandler&gt; handlers = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> List&lt;IHandler&gt; handlers = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
 
   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">addHandler</span><span class="hljs-params">(IHandler handler)</span> </span>&#123;
     <span class="hljs-keyword">this</span>.handlers.add(handler);
@@ -223,7 +223,7 @@
 <span class="hljs-comment">// PoliticalWordFilter、AdsWordFilter类代码结构与SexyWordFilter类似</span>
 
 <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SensitiveWordFilterChain</span> </span>&#123;
-  <span class="hljs-keyword">private</span> List&lt;SensitiveWordFilter&gt; filters = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> List&lt;SensitiveWordFilter&gt; filters = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
 
   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">addFilter</span><span class="hljs-params">(SensitiveWordFilter filter)</span> </span>&#123;
     <span class="hljs-keyword">this</span>.filters.add(filter);
