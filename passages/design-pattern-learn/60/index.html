@@ -1,0 +1,274 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png"><link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,shrink-to-fit=no"><meta http-equiv="x-ua-compatible" content="ie=edge"><meta name="theme-color" content="#2f4154"><meta name="description" content="沐晨的个人博客,技术博客"><meta name="author" content="Li Duo"><meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog"><title>设计模式之美学习（六十） - MuChen&#39;s Blog</title><link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css"><link rel="stylesheet" href="/lib/hint/hint.min.css"><link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css"><link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css"><link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css"><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="https://static.muchen.fun/css/custom.css"><script src="/js/utils.js"></script><meta name="generator" content="Hexo 4.2.1"><link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml"></head><body><script>var isNight=22<=(new Date).getHours()||(new Date).getHours()<7;(matchMedia("(prefers-color-scheme: dark)").matches||isNight||"1"===localStorage.getItem("dark"))&&(isNight&&"1"===localStorage.getItem("noDark")||document.body.classList.add("dark"))</script><header style="height:70vh"><nav id="navbar" class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar"><div class="container"><a class="navbar-brand" href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a> <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><div class="animated-icon"><span></span><span></span><span></span></div></button><div class="collapse navbar-collapse" id="navbarSupportedContent"><ul class="navbar-nav ml-auto text-center"><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="iconfont icon-books"></i> 索引</a><div class="dropdown-menu" aria-labelledby="navbarDropdown"><a class="dropdown-item" href="/archives/"><i class="iconfont icon-archive-fill"></i> 归档 </a><a class="dropdown-item" href="/categories/"><i class="iconfont icon-category-fill"></i> 分类 </a><a class="dropdown-item" href="/tags/"><i class="iconfont icon-tags-fill"></i> 标签</a></div></li><li class="nav-item"><a class="nav-link" href="/messageBoard/"><i class="iconfont icon-speakernotes"></i> 留言</a></li><li class="nav-item"><a class="nav-link" href="/about/"><i class="iconfont icon-user-fill"></i> 关于</a></li><li class="nav-item"><a class="nav-link" href="/links/"><i class="iconfont icon-link-fill"></i> 友链</a></li><li class="nav-item" id="search-btn"><a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i class="iconfont icon-search"></i>&nbsp;&nbsp;</a></li><li class="nav-item"><a id="dark" class="nav-link" onclick="switchDarkMode()"><i class="iconfont icon-sun"></i></a></li></ul></div></div></nav><div class="view intro-2" id="background" parallax="true" style="background:url(https://static.muchen.fun/picture/15.jpg) no-repeat center center;background-size:cover"><div class="full-bg-img"><div class="mask flex-center" style="background-color:rgba(0,0,0,.3)"><div class="container text-center white-text fadeInUp"><span class="h2" id="subtitle"></span><div class="mt-3 post-meta"><i class="iconfont icon-date-fill" aria-hidden="true"></i> <time datetime="2020-06-21 10:18">2020年6月21日 上午</time></div><div class="mt-1"><span class="post-meta mr-2"><i class="iconfont icon-chart"></i> 2.3k 字 </span><span class="post-meta mr-2"><i class="iconfont icon-clock-fill"></i> 30 分钟 </span><span id="leancloud-post-views-container" class="post-meta" style="display:none"><i class="iconfont icon-eye" aria-hidden="true"></i> <span id="leancloud-post-views"></span> 次</span></div></div></div></div></div></header><main><div class="container-fluid"><div class="row"><div class="d-none d-lg-block col-lg-2"></div><div class="col-lg-8 nopadding-md"><div class="container nopadding-md" id="board-ctn"><div class="py-5" id="board"><div class="post-content mx-auto" id="post"><p class="note note-info">本文最后更新于：4 小时前</p><article class="markdown-body"><p>如何利用命令模式实现一个手游后端架构？</p><a id="more"></a><blockquote><p>参考：<a href="https://time.geekbang.org/column/article/224549" target="_blank" rel="noopener">命令模式：如何利用命令模式实现一个手游后端架构？</a></p></blockquote><p>在学习命令模式的过程中，你可能会遇到的最大的疑惑是，感觉命令模式没啥用，是一种过度设计，有更加简单的设计思路可以替代。所以，今天的重点是这个模式的设计意图，搞清楚到底什么情况下才真正需要使用它。</p><h2 id="命令模式的原理解读"><a href="#命令模式的原理解读" class="headerlink" title="命令模式的原理解读"></a>命令模式的原理解读</h2><p>命令模式的英文翻译是 <code>Command Design Pattern</code>。在 <code>GoF</code> 的《设计模式》一书中，它是这么定义的：</p><blockquote><p>The command pattern encapsulates a request as an object, thereby letting us parameterize other objects with different requests, queue or log requests, and support undoable operations.</p></blockquote><p>翻译成中文就是下面这样:</p><p>命令模式将请求（命令）封装为一个对象，这样可以使用不同的请求参数化其他对象（将不同请求依赖注入到其他对象），并且能够支持请求（命令）的排队执行、记录日志、撤销等（附加控制）功能。</p><p>落实到编码实现，命令模式用的最核心的实现手段，是将函数封装成对象。我们知道，<code>C</code> 语言支持函数指针，可以把函数当作变量传递来传递去。但是，在大部分编程语言中，函数没法作为参数传递给其他函数，也没法赋值给变量。借助命令模式，可以将函数封装成对象。具体来说就是，设计一个包含这个函数的类，实例化一个对象传来传去，这样就可以实现把函数像对象一样使用。从实现的角度来说，它类似回调。</p><p>把函数封装成对象之后，对象就可以存储下来，方便控制执行。所以，命令模式的主要作用和应用场景，是用来控制命令的执行，比如，异步、延迟、排队执行命令、撤销重做命令、存储命令、给命令记录日志等等，这才是命令模式能发挥独一无二作用的地方。</p><h2 id="命令模式的实战"><a href="#命令模式的实战" class="headerlink" title="命令模式的实战"></a>命令模式的实战</h2><p>假设正在开发一个类似《<code>QQ</code> 卡丁车》这样的手游。这种游戏本身的复杂度集中在客户端。后端基本上只负责数据（比如积分、生命值、装备）的更新和查询，所以，后端逻辑相对于客户端来说，要简单很多。</p><p>为了提高性能，会把游戏中玩家的信息保存在内存中。在游戏进行的过程中，只更新内存中的数据，游戏结束之后，再将内存中的数据存档，也就是持久化到数据库中。为了降低实现的难度，一般来说，同一个游戏场景里的玩家，会被分配到同一台服务上。这样，一个玩家拉取同一个游戏场景中的其他玩家的信息，就不需要跨服务器去查找了，实现起来就简单了很多。</p><p>一般来说，游戏客户端和服务器之间的数据交互是比较频繁的，所以，为了节省网络连接建立的开销，客户端和服务器之间一般采用长连接的方式来通信。通信的格式有多种，比如 <code>Protocol Buffer</code>、<code>JSON</code>、<code>XML</code>，甚至可以自定义格式。不管是什么格式，客户端发送给服务器的请求，一般都包括两部分内容：指令和数据。其中，指令我们也可以叫作事件，数据是执行这个指令所需的数据。</p><p>服务器在接收到客户端的请求之后，会解析出指令和数据，并且根据指令的不同，执行不同的处理逻辑。对于这样的一个业务场景，一般有两种架构实现思路。</p><p>常用的一种实现思路是利用多线程。一个线程接收请求，接收到请求之后，启动一个新的线程来处理请求。具体点讲，一般是通过一个主线程来接收客户端发来的请求。每当接收到一个请求之后，就从一个专门用来处理请求的线程池中，捞出一个空闲线程来处理。</p><p>另一种实现思路是在一个线程内轮询接收请求和处理请求。这种处理方式不太常见。尽管它无法利用多线程多核处理的优势，但是对于 <code>IO</code> 密集型的业务来说，它避免了多线程不停切换对性能的损耗，并且克服了多线程编程 <code>Bug</code> 比较难调试的缺点，也算是手游后端服务器开发中比较常见的架构模式了。</p><p>接下来就重点讲一下第二种实现方式。</p><p>整个手游后端服务器轮询获取客户端发来的请求，获取到请求之后，借助命令模式，把请求包含的数据和处理逻辑封装为命令对象，并存储在内存队列中。然后，再从队列中取出一定数量的命令来执行。执行完成之后，再重新开始新的一轮轮询。具体的示例代码如下所示。</p><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Command</span> </span>&#123;
+  <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">execute</span><span class="hljs-params">()</span></span>;
+&#125;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">GotDiamondCommand</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Command</span> </span>&#123;
+  <span class="hljs-comment">// 省略成员变量</span>
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">GotDiamondCommand</span><span class="hljs-params">(<span class="hljs-comment">/*数据*/</span>)</span> </span>&#123;
+    <span class="hljs-comment">//...</span>
+  &#125;
+
+  <span class="hljs-meta">@Override</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">execute</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-comment">// 执行相应的逻辑</span>
+  &#125;
+&#125;
+<span class="hljs-comment">//GotStartCommand/HitObstacleCommand/ArchiveCommand类省略</span>
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">GameApplication</span> </span>&#123;
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> MAX_HANDLED_REQ_COUNT_PER_LOOP = <span class="hljs-number">100</span>;
+  <span class="hljs-keyword">private</span> Queue&lt;Command&gt; queue = <span class="hljs-keyword">new</span> LinkedList&lt;&gt;();
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">mainLoop</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-keyword">while</span> (<span class="hljs-keyword">true</span>) &#123;
+      List&lt;Request&gt; requests = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+      
+      <span class="hljs-comment">//省略从epoll或者select中获取数据，并封装成Request的逻辑，</span>
+      <span class="hljs-comment">//注意设置超时时间，如果很长时间没有接收到请求，就继续下面的逻辑处理。</span>
+      
+      <span class="hljs-keyword">for</span> (Request request : requests) &#123;
+        Event event = request.getEvent();
+        Command command = <span class="hljs-keyword">null</span>;
+        <span class="hljs-keyword">if</span> (event.equals(Event.GOT_DIAMOND)) &#123;
+          command = <span class="hljs-keyword">new</span> GotDiamondCommand(<span class="hljs-comment">/*数据*/</span>);
+        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (event.equals(Event.GOT_STAR)) &#123;
+          command = <span class="hljs-keyword">new</span> GotStartCommand(<span class="hljs-comment">/*数据*/</span>);
+        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (event.equals(Event.HIT_OBSTACLE)) &#123;
+          command = <span class="hljs-keyword">new</span> HitObstacleCommand(<span class="hljs-comment">/*数据*/</span>);
+        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (event.equals(Event.ARCHIVE)) &#123;
+          command = <span class="hljs-keyword">new</span> ArchiveCommand(<span class="hljs-comment">/*数据*/</span>);
+        &#125; <span class="hljs-comment">// ...一堆else if...</span>
+
+        queue.add(command);
+      &#125;
+
+      <span class="hljs-keyword">int</span> handledCount = <span class="hljs-number">0</span>;
+      <span class="hljs-keyword">while</span> (handledCount &lt; MAX_HANDLED_REQ_COUNT_PER_LOOP) &#123;
+        <span class="hljs-keyword">if</span> (queue.isEmpty()) &#123;
+          <span class="hljs-keyword">break</span>;
+        &#125;
+        Command command = queue.poll();
+        command.execute();
+      &#125;
+    &#125;
+  &#125;
+&#125;</code></pre><h2 id="命令模式-VS-策略模式"><a href="#命令模式-VS-策略模式" class="headerlink" title="命令模式 VS 策略模式"></a>命令模式 VS 策略模式</h2><p>每个设计模式都应该由两部分组成：第一部分是应用场景，即这个模式可以解决哪类问题；第二部分是解决方案，即这个模式的设计思路和具体的代码实现。不过，代码实现并不是模式必须包含的。如果你单纯地只关注解决方案这一部分，甚至只关注代码实现，就会产生大部分模式看起来都很相似的错觉。</p><p>实际上，设计模式之间的主要区别还是在于设计意图，也就是应用场景。单纯地看设计思路或者代码实现，有些模式确实很相似，比如策略模式和工厂模式。</p><p>策略模式包含策略的定义、创建和使用三部分，从代码结构上来，它非常像工厂模式。它们的区别在于，策略模式侧重“策略”或“算法”这个特定的应用场景，用来解决根据运行时状态从一组策略中选择不同策略的问题，而工厂模式侧重封装对象的创建过程，这里的对象没有任何业务场景的限定，可以是策略，但也可以是其他东西。从设计意图上来，这两个模式完全是两回事儿。</p><p>你可能会觉得，命令的执行逻辑也可以看作策略，那它是不是就是策略模式了呢？实际上，这两者有一点细微的区别。</p><p>在策略模式中，不同的策略具有相同的目的、不同的实现、互相之间可以替换。比如，<code>BubbleSort</code>、<code>SelectionSort</code> 都是为了实现排序的，只不过一个是用冒泡排序算法来实现的，另一个是用选择排序算法来实现的。而在命令模式中，不同的命令具有不同的目的，对应不同的处理逻辑，并且互相之间不可替换。</p><h2 id="重点"><a href="#重点" class="headerlink" title="重点"></a>重点</h2><p>命令模式在平时工作中并不常用，稍微了解一下就可以。</p><p>落实到编码实现，命令模式用到最核心的实现手段，就是将函数封装成对象。在大部分编程语言中，函数是没法作为参数传递给其他函数的，也没法赋值给变量。借助命令模式，将函数封装成对象，这样就可以实现把函数像对象一样使用。</p><p>命令模式的主要作用和应用场景，是用来控制命令的执行，比如，异步、延迟、排队执行命令、撤销重做命令、存储命令、给命令记录日志等等，这才是命令模式能发挥独一无二作用的地方。</p></article><hr><div><div class="post-metas mb-3"><div class="post-meta mr-3"><i class="iconfont icon-category"></i> <a class="hover-with-bg" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E8%8C%83%E5%BC%8F-%E8%A1%8C%E4%B8%BA%E5%9E%8B/">设计模式与范式(行为型)</a></div><div class="post-meta"><i class="iconfont icon-tags"></i> <a class="hover-with-bg" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a> <a class="hover-with-bg" href="/tags/%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F/">命令模式</a></div></div><p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p><div class="post-prevnext row"><div class="post-prev col-6"></div><div class="post-next col-6"><a href="/passages/design-pattern-learn/59/"><span class="hidden-mobile">设计模式之美学习（五十九）</span> <span class="visible-mobile">下一篇</span> <i class="iconfont icon-arrowright"></i></a></div></div></div><div class="comments" id="comments"><div id="vcomments"></div><script type="text/javascript">function loadValine(){addScript("https://cdn.staticfile.org/valine/1.4.14/Valine.min.js",function(){new Valine({el:"#vcomments",app_id:"O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",app_key:"5Rl3Rhl9zc8BJNvrPcncKWFy",placeholder:"说点什么吧~",path:window.location.pathname,avatar:"retro",meta:["nick","mail","link"],pageSize:"10",lang:"zh-CN",highlight:!0,recordIP:!0,serverURLs:"https://lean.muchen.fun"})})}createObserver(loadValine,"vcomments")</script><noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments powered by Valine.</a></noscript></div></div></div></div></div><div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn"><div id="toc"><p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p><div id="tocbot"></div></div></div></div></div><div class="col-lg-7 mx-auto nopadding-md"><div class="container custom post-content mx-auto"><img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px;height:150px"><br><div class="text-center">欢迎关注我的公众号😘</div></div></div></main><a id="scroll-top-button" href="#" role="button"><i class="iconfont icon-arrowup" aria-hidden="true"></i></a><div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable modal-lg" role="document"><div class="modal-content"><div class="modal-header text-center"><h4 class="modal-title w-100 font-weight-bold">搜索</h4><button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div><div class="modal-body mx-3"><div class="md-form mb-5"><input type="text" id="local-search-input" class="form-control validate"> <label data-error="x" data-success="v" for="local-search-input">关键词</label></div><div class="list-group" id="local-search-result"></div></div></div></div></div><footer class="mt-5"><div class="text-center py-3"><div><a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a></div><div><span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span><script>document.getElementById("dark").innerHTML=document.querySelector("body").classList.contains("dark")?"🌙":"☀";var now=new Date;function createtime(){var n=new Date("07/12/2019 00:00:00");now.setTime(now.getTime()+250),days=(now-n)/1e3/60/60/24,dnum=Math.floor(days),hours=(now-n)/1e3/60/60-24*dnum,hnum=Math.floor(hours),1==String(hnum).length&&(hnum="0"+hnum),minutes=(now-n)/1e3/60-1440*dnum-60*hnum,mnum=Math.floor(minutes),1==String(mnum).length&&(mnum="0"+mnum),seconds=(now-n)/1e3-86400*dnum-3600*hnum-60*mnum,snum=Math.round(seconds),1==String(snum).length&&(snum="0"+snum),document.getElementById("timeDate").innerHTML="本站已运行&nbsp"+dnum+"&nbsp天",document.getElementById("times").innerHTML=hnum+"&nbsp小时&nbsp"+mnum+"&nbsp分&nbsp"+snum+"&nbsp秒"}setInterval("createtime()",250)</script></div><p id="hitokoto">:D 获取中...</p><script>fetch('https://v1.hitokoto.cn')
+                .then(response => response.json())
+                .then(data => {
+                    const hitokoto = document.getElementById('hitokoto')
+                    hitokoto.innerText = data.hitokoto + '--「' + data.from + '」'
+                })
+                .catch(console.error)</script><div class="statistics"><span id="leancloud-site-pv-container" style="display:none">总访问量 <span id="leancloud-site-pv"></span> 次 </span><span id="leancloud-site-uv-container" style="display:none">总访客数 <span id="leancloud-site-uv"></span> 人</span></div></div></footer><script src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js"></script><script src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script><script src="/js/debouncer.js"></script><script src="/js/main.js"></script><script src="/js/lazyload.js"></script><script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js"></script><script src="/js/clipboard-use.js"></script><script defer>(function () {
+        // 查询存储的记录
+        function getRecord(Counter, target) {
+            return new Promise(function (resolve, reject) {
+                Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({target})))
+                    .then(resp => resp.json())
+                    .then(({results, code, error}) => {
+                        if (code === 401) {
+                            throw error;
+                        }
+                        if (results && results.length > 0) {
+                            var record = results[0];
+                            resolve(record);
+                        } else {
+                            Counter('post', '/classes/Counter', {target, time: 0})
+                                .then(resp => resp.json())
+                                .then((record, error) => {
+                                    if (error) {
+                                        throw error;
+                                    }
+                                    resolve(record);
+                                }).catch(error => {
+                                console.error('Failed to create', error);
+                                reject(error);
+                            });
+                        }
+                    }).catch((error) => {
+                    console.error('LeanCloud Counter Error:', error);
+                    reject(error);
+                });
+            })
+        }
+
+        // 发起自增请求
+        function increment(Counter, incrArr) {
+            return new Promise(function (resolve, reject) {
+                Counter('post', '/batch', {
+                    "requests": incrArr
+                }).then((res) => {
+                    res = res.json();
+                    if (res.error) {
+                        throw res.error;
+                    }
+                    resolve(res);
+                }).catch((error) => {
+                    console.error('Failed to save visitor count', error);
+                    reject(error);
+                });
+            });
+        }
+
+        // 构建自增请求体
+        function buildIncrement(objectId) {
+            return {
+                "method": "PUT",
+                "path": `/1.1/classes/Counter/${objectId}`,
+                "body": {
+                    "time": {
+                        '__op': 'Increment',
+                        'amount': 1
+                    }
+                }
+            }
+        }
+
+        // 校验是否为有效的 UV
+        function validUV() {
+            var key = 'LeanCloud_UV_Flag';
+            var flag = localStorage.getItem(key);
+            if (flag) {
+                // 距离标记小于 24 小时则不计为 UV
+                if (new Date().getTime() - parseInt(flag) <= 86400000) {
+                    return false;
+                }
+            }
+            localStorage.setItem(key, new Date().getTime().toString());
+            return true;
+        }
+
+        function addCount(Counter) {
+            var enableIncr = 'true' === 'true' && window.location.hostname !== 'localhost';
+            var getterArr = [];
+            var incrArr = [];
+
+            // 请求 PV 并自增
+            var pvCtn = document.querySelector('#leancloud-site-pv-container');
+            if (pvCtn || enableIncr) {
+                var pvGetter = getRecord(Counter, 'site-pv').then((record) => {
+                    incrArr.push(buildIncrement(record.objectId))
+                    var ele = document.querySelector('#leancloud-site-pv');
+                    if (ele) {
+                        ele.innerText = record.time + 1;
+                        if (pvCtn) {
+                            pvCtn.style.display = 'inline';
+                        }
+                    }
+                });
+                getterArr.push(pvGetter);
+            }
+
+            // 请求 UV 并自增
+            var uvCtn = document.querySelector('#leancloud-site-uv-container');
+            if (uvCtn || enableIncr) {
+                var uvGetter = getRecord(Counter, 'site-uv').then((record) => {
+                    var vuv = validUV();
+                    vuv && incrArr.push(buildIncrement(record.objectId))
+                    var ele = document.querySelector('#leancloud-site-uv');
+                    if (ele) {
+                        ele.innerText = record.time + (vuv ? 1 : 0);
+                        if (uvCtn) {
+                            uvCtn.style.display = 'inline';
+                        }
+                    }
+                });
+                getterArr.push(uvGetter);
+            }
+
+            // 如果是文章，请求文章的浏览数，并自增
+            if ('true' === 'true') {
+                var viewCtn = document.querySelector('#leancloud-post-views-container');
+                if (viewCtn || enableIncr) {
+                    var target = decodeURI('/passages/design-pattern-learn/60/');
+                    var viewGetter = getRecord(Counter, target).then((record) => {
+                        incrArr.push(buildIncrement(record.objectId))
+                        if (viewCtn) {
+                            var ele = document.querySelector('#leancloud-post-views');
+                            if (ele) {
+                                ele.innerText = (record.time || 0) + 1;
+                                viewCtn.style.display = 'inline';
+                            }
+                        }
+                    });
+                    getterArr.push(viewGetter);
+                }
+            }
+
+            // 如果启动计数自增，批量发起自增请求
+            if (enableIncr) {
+                Promise.all(getterArr).then(() => {
+                    incrArr.length > 0 && increment(Counter, incrArr);
+                })
+            }
+        }
+
+        var app_id = 'O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI'
+        var app_key = '5Rl3Rhl9zc8BJNvrPcncKWFy'
+        var server_url = 'https://lean.muchen.fun'
+
+        function fetchData(api_server) {
+            var Counter = (method, url, data) => {
+                return fetch(`${api_server}/1.1${url}`, {
+                    method,
+                    headers: {
+                        'X-LC-Id': app_id,
+                        'X-LC-Key': app_key,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+            };
+
+            addCount(Counter);
+        }
+
+        var api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+        if (api_server) {
+            fetchData(api_server);
+        } else {
+            fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+                .then(resp => resp.json())
+                .then(({api_server}) => {
+                    fetchData('https://' + api_server);
+                });
+        }
+    })();</script><script src="https://static.muchen.fun/js/custom.js"></script><script src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js"></script><script>$(document).ready(function(){var t=$("#board-ctn").offset().top;tocbot.init({tocSelector:"#tocbot",contentSelector:"article.markdown-body",headingSelector:"h1,h2,h3,h4,h5,h6",linkClass:"tocbot-link",activeLinkClass:"tocbot-active-link",listClass:"tocbot-list",isCollapsedClass:"tocbot-is-collapsed",collapsibleClass:"tocbot-is-collapsible",collapseDepth:0,scrollSmooth:!0,headingsOffset:-t}),0<$(".toc-list-item").length&&$("#toc").css("visibility","visible")})</script><script src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js"></script><script>var typed=new Typed("#subtitle",{strings:["  ","设计模式之美学习（六十）&nbsp;"],cursorChar:"_",typeSpeed:70,loop:!1});typed.stop(),$(document).ready(function(){$(".typed-cursor").addClass("h2"),typed.start()})</script><script src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js"></script><script>anchors.options = {
+            placement: "right",
+            visible: "hover",
+            
+        };
+        var el = "h1,h2,h3,h4,h5,h6".split(",");
+        var res = [];
+        for (item of el) {
+            res.push(".markdown-body > " + item)
+        }
+        anchors.add(res.join(", "))</script><script src="/js/local-search.js"></script><script>var path="/local-search.xml",inputArea=document.querySelector("#local-search-input");inputArea.onclick=function(){searchFunc(path,"local-search-input","local-search-result"),this.onclick=null}</script><script src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js"></script><link rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css"><script>$("#post img:not(.no-zoom img, img[no-zoom]), img[zoom]").each(function(){var t=document.createElement("a");$(t).attr("data-fancybox","images"),$(t).attr("href",$(this).attr("src")),$(this).wrap(t)})</script><script>MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']]
+                },
+                options: {
+                    renderActions: {
+                        findScript: [10, doc => {
+                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                                const display = !!node.type.match(/; *mode=display/);
+                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                                const text = document.createTextNode('');
+                                node.parentNode.replaceChild(text, node);
+                                math.start = {node: text, delim: '', n: 0};
+                                math.end = {node: text, delim: '', n: 0};
+                                doc.math.push(math);
+                            });
+                        }, '', false],
+                        insertedScript: [200, () => {
+                            document.querySelectorAll('mjx-container').forEach(node => {
+                                let target = node.parentNode;
+                                if (target.nodeName.toLowerCase() === 'li') {
+                                    target.parentNode.classList.add('has-jax');
+                                }
+                            });
+                        }, '', false]
+                    }
+                }
+            };</script><script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js"></script><script>!function(e,r,t){var o,n=[];e.requestAnimationFrame=e.requestAnimationFrame||e.webkitRequestAnimationFrame||e.mozRequestAnimationFrame||e.oRequestAnimationFrame||e.msRequestAnimationFrame||function(e){setTimeout(e,1e3/60)},function(t){var a=r.createElement("style");a.type="text/css";try{a.appendChild(r.createTextNode(t))}catch(e){a.styleSheet.cssText=t}r.getElementsByTagName("head")[0].appendChild(a)}(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"),o="function"==typeof e.onclick&&e.onclick,e.onclick=function(e){var t,a;o&&o(),t=e,(a=r.createElement("div")).className="heart",n.push({el:a,x:t.clientX-5,y:t.clientY-5,scale:1,alpha:1,color:"rgb("+~~(255*Math.random())+","+~~(255*Math.random())+","+~~(255*Math.random())+")"}),r.body.appendChild(a)},function e(){for(var t=0;t<n.length;t++)n[t].alpha<=0?(r.body.removeChild(n[t].el),n.splice(t,1)):(n[t].y--,n[t].scale+=.004,n[t].alpha-=.013,n[t].el.style.cssText="left:"+n[t].x+"px;top:"+n[t].y+"px;opacity:"+n[t].alpha+";transform:scale("+n[t].scale+","+n[t].scale+") rotate(45deg);background:"+n[t].color+";z-index:99999");requestAnimationFrame(e)}()}(window,document)</script><script defer>var _hmt=_hmt||[];!function(){var e=document.createElement("script");e.src="https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)}()</script><script defer>!function(e,a,t,n,g,c,o){e.GoogleAnalyticsObject="ga",e.ga=e.ga||function(){(e.ga.q=e.ga.q||[]).push(arguments)},e.ga.l=1*new Date,c=a.createElement(t),o=a.getElementsByTagName(t)[0],c.async=1,c.src="https://www.google-analytics.com/analytics.js",o.parentNode.insertBefore(c,o)}(window,document,"script"),ga("create","UA-144841374-1","auto"),ga("send","pageview")</script></body></html>
