@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png"><link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,shrink-to-fit=no"><meta http-equiv="x-ua-compatible" content="ie=edge"><meta name="theme-color" content="#2f4154"><meta name="description" content="沐晨的个人博客,技术博客"><meta name="author" content="Li Duo"><meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog"><title>8.排序（上） - MuChen&#39;s Blog</title><link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css"><link rel="stylesheet" href="/lib/hint/hint.min.css"><link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css"><link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css"><link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css"><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="https://static.muchen.fun/css/custom.css"><script src="/js/utils.js"></script><meta name="generator" content="Hexo 4.2.1"><link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml"></head><body><script>var isNight=22<=(new Date).getHours()||(new Date).getHours()<7;(matchMedia("(prefers-color-scheme: dark)").matches||isNight||"1"===localStorage.getItem("dark"))&&(isNight&&"1"===localStorage.getItem("noDark")||document.body.classList.add("dark"))</script><header style="height:70vh"><nav id="navbar" class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar"><div class="container"><a class="navbar-brand" href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a> <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><div class="animated-icon"><span></span><span></span><span></span></div></button><div class="collapse navbar-collapse" id="navbarSupportedContent"><ul class="navbar-nav ml-auto text-center"><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="iconfont icon-books"></i> 索引</a><div class="dropdown-menu" aria-labelledby="navbarDropdown"><a class="dropdown-item" href="/archives/"><i class="iconfont icon-archive-fill"></i> 归档 </a><a class="dropdown-item" href="/categories/"><i class="iconfont icon-category-fill"></i> 分类 </a><a class="dropdown-item" href="/tags/"><i class="iconfont icon-tags-fill"></i> 标签</a></div></li><li class="nav-item"><a class="nav-link" href="/messageBoard/"><i class="iconfont icon-speakernotes"></i> 留言</a></li><li class="nav-item"><a class="nav-link" href="/about/"><i class="iconfont icon-user-fill"></i> 关于</a></li><li class="nav-item"><a class="nav-link" href="/links/"><i class="iconfont icon-link-fill"></i> 友链</a></li><li class="nav-item" id="search-btn"><a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i class="iconfont icon-search"></i>&nbsp;&nbsp;</a></li><li class="nav-item"><a id="dark" class="nav-link" onclick="switchDarkMode()"><i class="iconfont icon-sun"></i></a></li></ul></div></div></nav><div class="banner intro-2" id="background" parallax="true" style="background:url(https://static.muchen.fun/picture/15.jpg) no-repeat center center;background-size:cover"><div class="full-bg-img"><div class="mask flex-center" style="background-color:rgba(0,0,0,.3)"><div class="container text-center white-text fade-in-up"><span class="h2" id="subtitle"></span><div class="mt-3 post-meta"><i class="iconfont icon-date-fill" aria-hidden="true"></i> <time datetime="2019-07-16 18:13">2019年7月16日 晚上</time></div><div class="mt-1"><span class="post-meta mr-2"><i class="iconfont icon-chart"></i> 5.7k 字 </span><span class="post-meta mr-2"><i class="iconfont icon-clock-fill"></i> 76 分钟 </span><span id="leancloud-post-views-container" class="post-meta" style="display:none"><i class="iconfont icon-eye" aria-hidden="true"></i> <span id="leancloud-post-views"></span> 次</span></div></div></div></div></div></header><main><div class="container-fluid"><div class="row"><div class="d-none d-lg-block col-lg-2"></div><div class="col-lg-8 nopadding-md"><div class="container nopadding-md" id="board-ctn"><div class="py-5" id="board"><div class="post-content mx-auto" id="post"><p class="note note-info">本文最后更新于：1 年前</p><article class="markdown-body"><!-- more --><p>排序对于任何一个程序员来说，可能都不会陌生。你学的第一个算法，可能就是排序。大部分编程语言中，也都提供了排序函数。在平常的项目中，也经常会用到排序。排序非常重要，所以会花多一点时间来详细讲一讲经典的排序算法。</p><p>排序算法太多了，有很多可能连名字都没听说过，比如猴子排序、睡眠排序、面条排序等。只讲众多排序算法中的一小撮，也是最经典的、最常用的：冒泡排序、插入排序、选择排序、归并排序、快速排序、计数排序、基数排序、桶排序。</p><p>带着问题去学习，是最有效的学习方法。先给出一个思考题：<font color="green">插入排序和冒泡排序的时间复杂度相同，都是 $O(n^2)$，在实际的软件开发里，为什么更倾向于使用插入排序算法而不是冒泡排序算法呢？</font></p><h2 id="如何分析一个“排序算法”？"><a href="#如何分析一个“排序算法”？" class="headerlink" title="如何分析一个“排序算法”？"></a>如何分析一个“排序算法”？</h2><p>学习排序算法，除了学习它的算法原理、代码实现之外，更重要的是要学会如何评价、分析一个排序算法。那分析一个排序算法，要从哪几个方面入手呢？</p><h3 id="排序算法的执行效率"><a href="#排序算法的执行效率" class="headerlink" title="排序算法的执行效率"></a>排序算法的执行效率</h3><p>对于排序算法执行效率的分析，一般会从这几个方面来衡量：</p><p><strong>1. 最好情况、最坏情况、平均情况时间复杂度</strong></p><p>在分析排序算法的时间复杂度时，要分别给出最好情况、最坏情况、平均情况下的时间复杂度。除此之外，还要说出最好、最坏时间复杂度对应的要排序的原始数据是什么样的。</p><p>为什么要区分这三种时间复杂度呢？第一，有些排序算法会区分，为了好对比，所以最好都做一下区分。第二，对于要排序的数据，有的接近有序，有的完全无序。有序度不同的数据，对于排序的执行时间肯定是有影响的，要知道排序算法在不同数据下的性能表现。</p><p><strong>2. 时间复杂度的系数、常数 、低阶</strong></p><p>时间复杂度反应的是数据规模 <code>n</code> 很大的时候的一个增长趋势，所以它表示的时候会忽略系数、常数、低阶。但是实际的软件开发中，排序的可能是 <code>10</code> 个、<code>100</code> 个、<code>1000</code> 个这样规模很小的数据，所以，在对同一阶时间复杂度的排序算法性能对比的时候，就要把系数、常数、低阶也考虑进来。</p><p><strong>3. 比较次数和交换（或移动）次数</strong></p><p>基于比较的排序算法的执行过程，会涉及两种操作，一种是元素比较大小，另一种是元素交换或移动。所以，如果在分析排序算法的执行效率的时候，应该把比较次数和交换（或移动）次数也考虑进去。</p><h3 id="排序算法的内存消耗"><a href="#排序算法的内存消耗" class="headerlink" title="排序算法的内存消耗"></a>排序算法的内存消耗</h3><p>前面讲过，算法的内存消耗可以通过空间复杂度来衡量，排序算法也不例外。不过，针对排序算法的空间复杂度，还引入了一个新的概念，<strong>原地排序</strong>（<code>Sorted in place</code>）。原地排序算法，就是特指空间复杂度是 $O(1)$ 的排序算法。下面讲的三种排序算法，都是原地排序算法。</p><h3 id="排序算法的稳定性"><a href="#排序算法的稳定性" class="headerlink" title="排序算法的稳定性"></a>排序算法的稳定性</h3><p>仅仅用执行效率和内存消耗来衡量排序算法的好坏是不够的。针对排序算法，还有一个重要的度量指标，<strong>稳定性</strong>。这个概念是说，如果待排序的序列中存在值相等的元素，经过排序之后，相等元素之间原有的先后顺序不变。</p><p>通过一个例子来解释一下。比如有一组数据 <code>2，9，3，4，8，3</code>，按照大小排序之后就是 <code>2，3，3，4，8，9</code>。</p><p>这组数据里有两个 <code>3</code>。经过某种排序算法排序之后，如果两个 <code>3</code> 的前后顺序没有改变，那就把这种排序算法叫作<strong>稳定的排序算法</strong>；如果前后顺序发生变化，那对应的排序算法就叫作<strong>不稳定的排序算法</strong>。</p><p>你可能要问了，两个 <code>3</code> 哪个在前，哪个在后有什么关系啊，稳不稳定又有什么关系呢？为什么要考察排序算法的稳定性呢？</p><p>很多数据结构和算法课程，在讲排序的时候，都是用整数来举例，但在真正软件开发中，要排序的往往不是单纯的整数，而是一组对象，需要按照对象的某个 <code>key</code> 来排序。</p><p>比如说，现在要给电商交易系统中的“订单”排序。订单有两个属性，一个是下单时间，另一个是订单金额。如果现在有 <code>10</code> 万条订单数据，希望按照金额从小到大对订单数据排序。对于金额相同的订单，希望按照下单时间从早到晚有序。对于这样一个排序需求，怎么来做呢？</p><p>最先想到的方法是：先按照金额对订单数据进行排序，然后，再遍历排序之后的订单数据，对于每个金额相同的小区间再按照下单时间排序。这种排序思路理解起来不难，但是实现起来会很复杂。</p><p>借助稳定排序算法，这个问题可以非常简洁地解决。解决思路是这样的：先按照下单时间给订单排序，注意是按照下单时间，不是金额。排序完成之后，用稳定排序算法，按照订单金额重新排序。两遍排序之后，得到的订单数据就是按照金额从小到大排序，金额相同的订单按照下单时间从早到晚排序的。为什么呢？</p><p><strong>稳定排序算法可以保持金额相同的两个对象，在排序之后的前后顺序不变</strong>。第一次排序之后，所有的订单按照下单时间从早到晚有序了。在第二次排序中，用的是稳定的排序算法，所以经过第二次排序之后，相同金额的订单仍然保持下单时间从早到晚有序。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/a7152310-d39c-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"></p><h2 id="冒泡排序（Bubble-Sort）"><a href="#冒泡排序（Bubble-Sort）" class="headerlink" title="冒泡排序（Bubble Sort）"></a>冒泡排序（Bubble Sort）</h2><p>冒泡排序只会操作相邻的两个数据。每次冒泡操作都会对相邻的两个元素进行比较，看是否满足大小关系要求。如果不满足就让它俩互换。一次冒泡会让至少一个元素移动到它应该在的位置，重复 <code>n</code> 次，就完成了 <code>n</code> 个数据的排序工作。</p><p>用一个例子，看下冒泡排序的整个过程。要对一组数据 <code>4，5，6，3，2，1</code>，从小到到大进行排序。第一次冒泡操作的详细过程就是这样：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/f4e52e50-d39c-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>可以看出，经过一次冒泡操作之后，<code>6</code> 这个元素已经存储在正确的位置上。要想完成所有数据的排序，只要进行 <code>6</code> 次这样的冒泡操作就行了。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/040d2f90-d39d-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>实际上，刚讲的冒泡过程还可以优化。当某次冒泡操作已经没有数据交换时，说明已经达到完全有序，不用再继续执行后续的冒泡操作。这里还有另外一个例子，这里面给 <code>6</code> 个元素排序，只需要 <code>4</code> 次冒泡操作就可以了。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/155e0440-d39d-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>冒泡排序算法的原理比较容易理解，具体的代码贴到下面，你可以结合着代码来看前面讲的原理。</p><pre><code class="hljs java"><span class="hljs-comment">// 冒泡排序，a 表示数组，n 表示数组大小</span>
+<!DOCTYPE html><html lang="zh-CN" data-default-color-scheme="&#34;auto&#34;"><head><meta charset="UTF-8"><link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png"><link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,shrink-to-fit=no"><meta http-equiv="x-ua-compatible" content="ie=edge"><meta name="theme-color" content="#2f4154"><meta name="description" content="沐晨的个人博客,技术博客"><meta name="author" content="Li Duo"><meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog"><title>8.排序（上） - MuChen&#39;s Blog</title><link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css"><link rel="stylesheet" href="/lib/hint/hint.min.css"><link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css"><link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_6peoq002giu.css"><link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css"><link rel="stylesheet" href="/css/main.css"><script src="/js/utils.js"></script><script src="/js/color-schema.js"></script><meta name="generator" content="Hexo 4.2.1"><link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml"></head><body><header style="height:70vh"><nav id="navbar" class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar"><div class="container"><a class="navbar-brand" href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a> <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><div class="animated-icon"><span></span><span></span><span></span></div></button><div class="collapse navbar-collapse" id="navbarSupportedContent"><ul class="navbar-nav ml-auto text-center"><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="iconfont icon-books"></i> 索引</a><div class="dropdown-menu" aria-labelledby="navbarDropdown"><a class="dropdown-item" href="/archives/"><i class="iconfont icon-archive-fill"></i> 归档 </a><a class="dropdown-item" href="/categories/"><i class="iconfont icon-category-fill"></i> 分类 </a><a class="dropdown-item" href="/tags/"><i class="iconfont icon-tags-fill"></i> 标签</a></div></li><li class="nav-item"><a class="nav-link" href="/messageBoard/"><i class="iconfont icon-speakernotes"></i> 留言</a></li><li class="nav-item"><a class="nav-link" href="/about/"><i class="iconfont icon-user-fill"></i> 关于</a></li><li class="nav-item"><a class="nav-link" href="/links/"><i class="iconfont icon-link-fill"></i> 友链</a></li><li class="nav-item" id="search-btn"><a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i class="iconfont icon-search"></i>&nbsp;</a></li><li class="nav-item" id="color-toggle-btn"><a class="nav-link" href="javascript:">&nbsp;<i class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a></li></ul></div></div></nav><div class="banner intro-2" id="background" parallax="true" style="background:url(https://static.muchen.fun/picture/15.jpg) no-repeat center center;background-size:cover"><div class="full-bg-img"><div class="mask flex-center" style="background-color:rgba(0,0,0,.3)"><div class="container page-header text-center fade-in-up"><span class="h2" id="subtitle"></span><div class="mt-3 post-meta"><i class="iconfont icon-date-fill" aria-hidden="true"></i> <time datetime="2019-07-16 18:13" pubdate>2019年7月16日 晚上</time></div><div class="mt-1"><span class="post-meta mr-2"><i class="iconfont icon-chart"></i> 5.7k 字 </span><span class="post-meta mr-2"><i class="iconfont icon-clock-fill"></i> 76 分钟 </span><span id="leancloud-post-views-container" class="post-meta" style="display:none"><i class="iconfont icon-eye" aria-hidden="true"></i> <span id="leancloud-post-views"></span> 次</span></div></div></div></div></div></header><main><div class="container-fluid"><div class="row"><div class="d-none d-lg-block col-lg-2"></div><div class="col-lg-8 nopadding-md"><div class="container nopadding-md" id="board-ctn"><div class="py-5" id="board"><article class="post-content mx-auto" id="post"><h1 style="display:none">8.排序（上）</h1><p class="note note-info">本文最后更新于：1 年前</p><div class="markdown-body" id="post-body"><!-- more --><p>排序对于任何一个程序员来说，可能都不会陌生。你学的第一个算法，可能就是排序。大部分编程语言中，也都提供了排序函数。在平常的项目中，也经常会用到排序。排序非常重要，所以会花多一点时间来详细讲一讲经典的排序算法。</p><p>排序算法太多了，有很多可能连名字都没听说过，比如猴子排序、睡眠排序、面条排序等。只讲众多排序算法中的一小撮，也是最经典的、最常用的：冒泡排序、插入排序、选择排序、归并排序、快速排序、计数排序、基数排序、桶排序。</p><p>带着问题去学习，是最有效的学习方法。先给出一个思考题：<font color="green">插入排序和冒泡排序的时间复杂度相同，都是 $O(n^2)$，在实际的软件开发里，为什么更倾向于使用插入排序算法而不是冒泡排序算法呢？</font></p><h2 id="如何分析一个“排序算法”？"><a href="#如何分析一个“排序算法”？" class="headerlink" title="如何分析一个“排序算法”？"></a>如何分析一个“排序算法”？</h2><p>学习排序算法，除了学习它的算法原理、代码实现之外，更重要的是要学会如何评价、分析一个排序算法。那分析一个排序算法，要从哪几个方面入手呢？</p><h3 id="排序算法的执行效率"><a href="#排序算法的执行效率" class="headerlink" title="排序算法的执行效率"></a>排序算法的执行效率</h3><p>对于排序算法执行效率的分析，一般会从这几个方面来衡量：</p><p><strong>1. 最好情况、最坏情况、平均情况时间复杂度</strong></p><p>在分析排序算法的时间复杂度时，要分别给出最好情况、最坏情况、平均情况下的时间复杂度。除此之外，还要说出最好、最坏时间复杂度对应的要排序的原始数据是什么样的。</p><p>为什么要区分这三种时间复杂度呢？第一，有些排序算法会区分，为了好对比，所以最好都做一下区分。第二，对于要排序的数据，有的接近有序，有的完全无序。有序度不同的数据，对于排序的执行时间肯定是有影响的，要知道排序算法在不同数据下的性能表现。</p><p><strong>2. 时间复杂度的系数、常数 、低阶</strong></p><p>时间复杂度反应的是数据规模 <code>n</code> 很大的时候的一个增长趋势，所以它表示的时候会忽略系数、常数、低阶。但是实际的软件开发中，排序的可能是 <code>10</code> 个、<code>100</code> 个、<code>1000</code> 个这样规模很小的数据，所以，在对同一阶时间复杂度的排序算法性能对比的时候，就要把系数、常数、低阶也考虑进来。</p><p><strong>3. 比较次数和交换（或移动）次数</strong></p><p>基于比较的排序算法的执行过程，会涉及两种操作，一种是元素比较大小，另一种是元素交换或移动。所以，如果在分析排序算法的执行效率的时候，应该把比较次数和交换（或移动）次数也考虑进去。</p><h3 id="排序算法的内存消耗"><a href="#排序算法的内存消耗" class="headerlink" title="排序算法的内存消耗"></a>排序算法的内存消耗</h3><p>前面讲过，算法的内存消耗可以通过空间复杂度来衡量，排序算法也不例外。不过，针对排序算法的空间复杂度，还引入了一个新的概念，<strong>原地排序</strong>（<code>Sorted in place</code>）。原地排序算法，就是特指空间复杂度是 $O(1)$ 的排序算法。下面讲的三种排序算法，都是原地排序算法。</p><h3 id="排序算法的稳定性"><a href="#排序算法的稳定性" class="headerlink" title="排序算法的稳定性"></a>排序算法的稳定性</h3><p>仅仅用执行效率和内存消耗来衡量排序算法的好坏是不够的。针对排序算法，还有一个重要的度量指标，<strong>稳定性</strong>。这个概念是说，如果待排序的序列中存在值相等的元素，经过排序之后，相等元素之间原有的先后顺序不变。</p><p>通过一个例子来解释一下。比如有一组数据 <code>2，9，3，4，8，3</code>，按照大小排序之后就是 <code>2，3，3，4，8，9</code>。</p><p>这组数据里有两个 <code>3</code>。经过某种排序算法排序之后，如果两个 <code>3</code> 的前后顺序没有改变，那就把这种排序算法叫作<strong>稳定的排序算法</strong>；如果前后顺序发生变化，那对应的排序算法就叫作<strong>不稳定的排序算法</strong>。</p><p>你可能要问了，两个 <code>3</code> 哪个在前，哪个在后有什么关系啊，稳不稳定又有什么关系呢？为什么要考察排序算法的稳定性呢？</p><p>很多数据结构和算法课程，在讲排序的时候，都是用整数来举例，但在真正软件开发中，要排序的往往不是单纯的整数，而是一组对象，需要按照对象的某个 <code>key</code> 来排序。</p><p>比如说，现在要给电商交易系统中的“订单”排序。订单有两个属性，一个是下单时间，另一个是订单金额。如果现在有 <code>10</code> 万条订单数据，希望按照金额从小到大对订单数据排序。对于金额相同的订单，希望按照下单时间从早到晚有序。对于这样一个排序需求，怎么来做呢？</p><p>最先想到的方法是：先按照金额对订单数据进行排序，然后，再遍历排序之后的订单数据，对于每个金额相同的小区间再按照下单时间排序。这种排序思路理解起来不难，但是实现起来会很复杂。</p><p>借助稳定排序算法，这个问题可以非常简洁地解决。解决思路是这样的：先按照下单时间给订单排序，注意是按照下单时间，不是金额。排序完成之后，用稳定排序算法，按照订单金额重新排序。两遍排序之后，得到的订单数据就是按照金额从小到大排序，金额相同的订单按照下单时间从早到晚排序的。为什么呢？</p><p><strong>稳定排序算法可以保持金额相同的两个对象，在排序之后的前后顺序不变</strong>。第一次排序之后，所有的订单按照下单时间从早到晚有序了。在第二次排序中，用的是稳定的排序算法，所以经过第二次排序之后，相同金额的订单仍然保持下单时间从早到晚有序。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/a7152310-d39c-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"></p><h2 id="冒泡排序（Bubble-Sort）"><a href="#冒泡排序（Bubble-Sort）" class="headerlink" title="冒泡排序（Bubble Sort）"></a>冒泡排序（Bubble Sort）</h2><p>冒泡排序只会操作相邻的两个数据。每次冒泡操作都会对相邻的两个元素进行比较，看是否满足大小关系要求。如果不满足就让它俩互换。一次冒泡会让至少一个元素移动到它应该在的位置，重复 <code>n</code> 次，就完成了 <code>n</code> 个数据的排序工作。</p><p>用一个例子，看下冒泡排序的整个过程。要对一组数据 <code>4，5，6，3，2，1</code>，从小到到大进行排序。第一次冒泡操作的详细过程就是这样：<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/f4e52e50-d39c-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>可以看出，经过一次冒泡操作之后，<code>6</code> 这个元素已经存储在正确的位置上。要想完成所有数据的排序，只要进行 <code>6</code> 次这样的冒泡操作就行了。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/040d2f90-d39d-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>实际上，刚讲的冒泡过程还可以优化。当某次冒泡操作已经没有数据交换时，说明已经达到完全有序，不用再继续执行后续的冒泡操作。这里还有另外一个例子，这里面给 <code>6</code> 个元素排序，只需要 <code>4</code> 次冒泡操作就可以了。<br><img src="https://muchen-img.oss-cn-hongkong.aliyuncs.com/hexo-client/2019/09/10/155e0440-d39d-11e9-b66f-d76c8c3e613a.png" srcset="/img/loading.gif" alt="image.png"><br>冒泡排序算法的原理比较容易理解，具体的代码贴到下面，你可以结合着代码来看前面讲的原理。</p><pre><code class="hljs java"><span class="hljs-comment">// 冒泡排序，a 表示数组，n 表示数组大小</span>
 <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">bubbleSort</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] a, <span class="hljs-keyword">int</span> n)</span> </span>&#123;
   <span class="hljs-keyword">if</span> (n &lt;= <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span>;
  
@@ -45,222 +45,216 @@
   a[j+<span class="hljs-number">1</span>] = a[j];  <span class="hljs-comment">// 数据移动</span>
 &#125; <span class="hljs-keyword">else</span> &#123;
   <span class="hljs-keyword">break</span>;
-&#125;</code></pre><blockquote><p>把执行一个赋值语句的时间粗略地计为单位时间（<code>unit_time</code>），然后分别用冒泡排序和插入排序对同一个逆序度是 <code>K</code> 的数组进行排序。用冒泡排序，需要 <code>K</code> 次交换操作，每次需要 <code>3</code> 个赋值语句，所以交换操&gt; 作总耗时就是 <code>3*K</code> 单位时间。而插入排序中数据移动操作只需要 <code>K</code> 个单位时间。</p><p>这个只是非常理论的分析，为了实验，针对上面的冒泡排序和插入排序的 <code>Java</code> 代码，写了一个性能对比测试程序，随机生成 <code>10000</code> 个数组，每个数组中包含 <code>200</code> 个数据，然后在机器上分别用冒泡和插入排序算&gt; 法来排序，冒泡排序算法大约 <code>700ms</code> 才能执行完成，而插入排序只需要 <code>100ms</code> 左右就能搞定！</p><p>所以，虽然冒泡排序和插入排序在时间复杂度上是一样的，都是 $O(n^2)$，但是如果希望把性能优化做到极致，那肯定首选插入排序。插入排序的算法思路也有很大的优化空间，只是讲了最基础的一种。如果你对插入排&gt; 序的优化感兴趣，可以自行学习一下希尔排序。</p></blockquote></li><li><p>特定算法是依赖特定的数据结构的。上面的几种排序算法，都是基于数组实现的。如果数据存储在链表中，这三种排序算法还能工作吗？如果能，那相应的时间、空间复杂度又是多少呢？</p></li></ul><p>欢迎留言和我分享。</p></article><hr><div><div class="post-metas mb-3"><div class="post-meta mr-3"><i class="iconfont icon-category"></i> <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/">数据结构与算法(中级)</a></div><div class="post-meta"><i class="iconfont icon-tags"></i> <a class="hover-with-bg" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a> <a class="hover-with-bg" href="/tags/%E7%AE%97%E6%B3%95/">算法</a> <a class="hover-with-bg" href="/tags/%E6%8E%92%E5%BA%8F/">排序</a></div></div><p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p><div class="post-prevnext row"><div class="post-prev col-6"><a href="/passages/9/"><i class="iconfont icon-arrowleft"></i> <span class="hidden-mobile">9.排序（下）</span> <span class="visible-mobile">上一篇</span></a></div><div class="post-next col-6"><a href="/passages/recursion/"><span class="hidden-mobile">递归算法</span> <span class="visible-mobile">下一篇</span> <i class="iconfont icon-arrowright"></i></a></div></div></div><div class="comments" id="comments"><div id="vcomments"></div><script type="text/javascript">function loadValine(){addScript("https://cdn.staticfile.org/valine/1.4.14/Valine.min.js",function(){new Valine({el:"#vcomments",app_id:"O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",app_key:"5Rl3Rhl9zc8BJNvrPcncKWFy",placeholder:"说点什么吧~",path:window.location.pathname,avatar:"retro",meta:["nick","mail","link"],pageSize:"10",lang:"zh-CN",highlight:!0,recordIP:!0,serverURLs:"https://lean.muchen.fun"})})}createObserver(loadValine,"vcomments")</script><noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments powered by Valine.</a></noscript></div></div></div></div></div></div></div><div class="col-lg-7 mx-auto nopadding-md"><div class="container custom post-content mx-auto"><img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px;height:150px"><br><div class="text-center">欢迎关注我的公众号😘</div></div></div></main><a id="scroll-top-button" href="#" role="button"><i class="iconfont icon-arrowup" aria-hidden="true"></i></a><div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable modal-lg" role="document"><div class="modal-content"><div class="modal-header text-center"><h4 class="modal-title w-100 font-weight-bold">搜索</h4><button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div><div class="modal-body mx-3"><div class="md-form mb-5"><input type="text" id="local-search-input" class="form-control validate"> <label data-error="x" data-success="v" for="local-search-input">关键词</label></div><div class="list-group" id="local-search-result"></div></div></div></div></div><footer class="mt-5"><div class="text-center py-3"><div><a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a></div><div><span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span><script>document.getElementById("dark").innerHTML=document.querySelector("body").classList.contains("dark")?"🌙":"☀";var now=new Date;function createtime(){var n=new Date("07/12/2019 00:00:00");now.setTime(now.getTime()+250),days=(now-n)/1e3/60/60/24,dnum=Math.floor(days),hours=(now-n)/1e3/60/60-24*dnum,hnum=Math.floor(hours),1==String(hnum).length&&(hnum="0"+hnum),minutes=(now-n)/1e3/60-1440*dnum-60*hnum,mnum=Math.floor(minutes),1==String(mnum).length&&(mnum="0"+mnum),seconds=(now-n)/1e3-86400*dnum-3600*hnum-60*mnum,snum=Math.round(seconds),1==String(snum).length&&(snum="0"+snum),document.getElementById("timeDate").innerHTML="本站已运行&nbsp"+dnum+"&nbsp天",document.getElementById("times").innerHTML=hnum+"&nbsp小时&nbsp"+mnum+"&nbsp分&nbsp"+snum+"&nbsp秒"}setInterval("createtime()",250)</script></div><p id="hitokoto">:D 获取中...</p><script>fetch('https://v1.hitokoto.cn')
-                .then(response => response.json())
-                .then(data => {
-                    const hitokoto = document.getElementById('hitokoto')
-                    hitokoto.innerText = data.hitokoto + '--「' + data.from + '」'
-                })
-                .catch(console.error)</script><div class="statistics"><span id="leancloud-site-pv-container" style="display:none">总访问量 <span id="leancloud-site-pv"></span> 次 </span><span id="leancloud-site-uv-container" style="display:none">总访客数 <span id="leancloud-site-uv"></span> 人</span></div></div></footer><script src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js"></script><script src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script><script src="/js/debouncer.js"></script><script src="/js/main.js"></script><script src="/js/lazyload.js"></script><script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js"></script><script src="/js/clipboard-use.js"></script><script defer>(function () {
-        // 查询存储的记录
-        function getRecord(Counter, target) {
-            return new Promise(function (resolve, reject) {
-                Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({target})))
-                    .then(resp => resp.json())
-                    .then(({results, code, error}) => {
-                        if (code === 401) {
-                            throw error;
-                        }
-                        if (results && results.length > 0) {
-                            var record = results[0];
-                            resolve(record);
-                        } else {
-                            Counter('post', '/classes/Counter', {target, time: 0})
-                                .then(resp => resp.json())
-                                .then((record, error) => {
-                                    if (error) {
-                                        throw error;
-                                    }
-                                    resolve(record);
-                                }).catch(error => {
-                                console.error('Failed to create', error);
-                                reject(error);
-                            });
-                        }
-                    }).catch((error) => {
-                    console.error('LeanCloud Counter Error:', error);
-                    reject(error);
-                });
-            })
-        }
-
-        // 发起自增请求
-        function increment(Counter, incrArr) {
-            return new Promise(function (resolve, reject) {
-                Counter('post', '/batch', {
-                    "requests": incrArr
-                }).then((res) => {
-                    res = res.json();
-                    if (res.error) {
-                        throw res.error;
-                    }
-                    resolve(res);
-                }).catch((error) => {
-                    console.error('Failed to save visitor count', error);
-                    reject(error);
-                });
-            });
-        }
-
-        // 构建自增请求体
-        function buildIncrement(objectId) {
-            return {
-                "method": "PUT",
-                "path": `/1.1/classes/Counter/${objectId}`,
-                "body": {
-                    "time": {
-                        '__op': 'Increment',
-                        'amount': 1
-                    }
-                }
+&#125;</code></pre><blockquote><p>把执行一个赋值语句的时间粗略地计为单位时间（<code>unit_time</code>），然后分别用冒泡排序和插入排序对同一个逆序度是 <code>K</code> 的数组进行排序。用冒泡排序，需要 <code>K</code> 次交换操作，每次需要 <code>3</code> 个赋值语句，所以交换操&gt; 作总耗时就是 <code>3*K</code> 单位时间。而插入排序中数据移动操作只需要 <code>K</code> 个单位时间。</p><p>这个只是非常理论的分析，为了实验，针对上面的冒泡排序和插入排序的 <code>Java</code> 代码，写了一个性能对比测试程序，随机生成 <code>10000</code> 个数组，每个数组中包含 <code>200</code> 个数据，然后在机器上分别用冒泡和插入排序算&gt; 法来排序，冒泡排序算法大约 <code>700ms</code> 才能执行完成，而插入排序只需要 <code>100ms</code> 左右就能搞定！</p><p>所以，虽然冒泡排序和插入排序在时间复杂度上是一样的，都是 $O(n^2)$，但是如果希望把性能优化做到极致，那肯定首选插入排序。插入排序的算法思路也有很大的优化空间，只是讲了最基础的一种。如果你对插入排&gt; 序的优化感兴趣，可以自行学习一下希尔排序。</p></blockquote></li><li><p>特定算法是依赖特定的数据结构的。上面的几种排序算法，都是基于数组实现的。如果数据存储在链表中，这三种排序算法还能工作吗？如果能，那相应的时间、空间复杂度又是多少呢？</p></li></ul><p>欢迎留言和我分享。</p></div><hr><div><div class="post-metas mb-3"><div class="post-meta mr-3"><i class="iconfont icon-category"></i> <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/">数据结构与算法(中级)</a></div><div class="post-meta"><i class="iconfont icon-tags"></i> <a class="hover-with-bg" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a> <a class="hover-with-bg" href="/tags/%E7%AE%97%E6%B3%95/">算法</a> <a class="hover-with-bg" href="/tags/%E6%8E%92%E5%BA%8F/">排序</a></div></div><p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p><div class="post-prevnext row"><article class="post-prev col-6"><a href="/passages/9/"><i class="iconfont icon-arrowleft"></i> <span class="hidden-mobile">9.排序（下）</span> <span class="visible-mobile">上一篇</span></a></article><article class="post-next col-6"><a href="/passages/recursion/"><span class="hidden-mobile">递归算法</span> <span class="visible-mobile">下一篇</span> <i class="iconfont icon-arrowright"></i></a></article></div></div><article class="comments" id="comments"><div id="vcomments"></div><script type="text/javascript">function loadValine(){addScript("https://cdn.staticfile.org/valine/1.4.14/Valine.min.js",function(){new Valine({el:"#vcomments",app_id:"O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",app_key:"5Rl3Rhl9zc8BJNvrPcncKWFy",placeholder:"说点什么吧~",path:window.location.pathname,avatar:"retro",meta:["nick","mail","link"],pageSize:"10",lang:"zh-CN",highlight:!0,recordIP:!0,serverURLs:"https://lean.muchen.fun"})})}waitElementVisible("vcomments",loadValine)</script><noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments powered by Valine.</a></noscript></article></article></div></div></div></div></div><div class="col-lg-7 mx-auto nopadding-md"><div class="container custom post-content mx-auto"><img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px;height:150px"><br><div class="text-center">欢迎关注我的公众号😘</div></div></div></main><a id="scroll-top-button" href="#" role="button"><i class="iconfont icon-arrowup" aria-hidden="true"></i></a><div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable modal-lg" role="document"><div class="modal-content"><div class="modal-header text-center"><h4 class="modal-title w-100 font-weight-bold">搜索</h4><button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div><div class="modal-body mx-3"><div class="md-form mb-5"><input type="text" id="local-search-input" class="form-control validate"> <label data-error="x" data-success="v" for="local-search-input">关键词</label></div><div class="list-group" id="local-search-result"></div></div></div></div></div><footer class="mt-5"><div class="text-center py-3"><div><a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a></div><div class="statistics"><span id="leancloud-site-pv-container" style="display:none">总访问量 <span id="leancloud-site-pv"></span> 次 </span><span id="leancloud-site-uv-container" style="display:none">总访客数 <span id="leancloud-site-uv"></span> 人</span></div></div></footer><script src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js"></script><script src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script><script src="/js/debouncer.js"></script><script src="/js/main.js"></script><script src="/js/lazyload.js"></script><script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js"></script><script src="/js/clipboard-use.js"></script><script defer>(function () {
+    // 查询存储的记录
+    function getRecord(Counter, target) {
+      return new Promise(function (resolve, reject) {
+        Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({target})))
+          .then(resp => resp.json())
+          .then(({results, code, error}) => {
+            if (code === 401) {
+              throw error;
             }
-        }
-
-        // 校验是否为有效的 UV
-        function validUV() {
-            var key = 'LeanCloud_UV_Flag';
-            var flag = localStorage.getItem(key);
-            if (flag) {
-                // 距离标记小于 24 小时则不计为 UV
-                if (new Date().getTime() - parseInt(flag) <= 86400000) {
-                    return false;
-                }
-            }
-            localStorage.setItem(key, new Date().getTime().toString());
-            return true;
-        }
-
-        function addCount(Counter) {
-            var enableIncr = 'true' === 'true' && window.location.hostname !== 'localhost';
-            var getterArr = [];
-            var incrArr = [];
-
-            // 请求 PV 并自增
-            var pvCtn = document.querySelector('#leancloud-site-pv-container');
-            if (pvCtn || enableIncr) {
-                var pvGetter = getRecord(Counter, 'site-pv').then((record) => {
-                    incrArr.push(buildIncrement(record.objectId))
-                    var ele = document.querySelector('#leancloud-site-pv');
-                    if (ele) {
-                        ele.innerText = record.time + 1;
-                        if (pvCtn) {
-                            pvCtn.style.display = 'inline';
-                        }
-                    }
-                });
-                getterArr.push(pvGetter);
-            }
-
-            // 请求 UV 并自增
-            var uvCtn = document.querySelector('#leancloud-site-uv-container');
-            if (uvCtn || enableIncr) {
-                var uvGetter = getRecord(Counter, 'site-uv').then((record) => {
-                    var vuv = validUV();
-                    vuv && incrArr.push(buildIncrement(record.objectId))
-                    var ele = document.querySelector('#leancloud-site-uv');
-                    if (ele) {
-                        ele.innerText = record.time + (vuv ? 1 : 0);
-                        if (uvCtn) {
-                            uvCtn.style.display = 'inline';
-                        }
-                    }
-                });
-                getterArr.push(uvGetter);
-            }
-
-            // 如果是文章，请求文章的浏览数，并自增
-            if ('true' === 'true') {
-                var viewCtn = document.querySelector('#leancloud-post-views-container');
-                if (viewCtn || enableIncr) {
-                    var target = decodeURI('/passages/8/');
-                    var viewGetter = getRecord(Counter, target).then((record) => {
-                        incrArr.push(buildIncrement(record.objectId))
-                        if (viewCtn) {
-                            var ele = document.querySelector('#leancloud-post-views');
-                            if (ele) {
-                                ele.innerText = (record.time || 0) + 1;
-                                viewCtn.style.display = 'inline';
-                            }
-                        }
-                    });
-                    getterArr.push(viewGetter);
-                }
-            }
-
-            // 如果启动计数自增，批量发起自增请求
-            if (enableIncr) {
-                Promise.all(getterArr).then(() => {
-                    incrArr.length > 0 && increment(Counter, incrArr);
-                })
-            }
-        }
-
-        var app_id = 'O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI'
-        var app_key = '5Rl3Rhl9zc8BJNvrPcncKWFy'
-        var server_url = 'https://lean.muchen.fun'
-
-        function fetchData(api_server) {
-            var Counter = (method, url, data) => {
-                return fetch(`${api_server}/1.1${url}`, {
-                    method,
-                    headers: {
-                        'X-LC-Id': app_id,
-                        'X-LC-Key': app_key,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                });
-            };
-
-            addCount(Counter);
-        }
-
-        var api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
-
-        if (api_server) {
-            fetchData(api_server);
-        } else {
-            fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+            if (results && results.length > 0) {
+              var record = results[0];
+              resolve(record);
+            } else {
+              Counter('post', '/classes/Counter', {target, time: 0})
                 .then(resp => resp.json())
-                .then(({api_server}) => {
-                    fetchData('https://' + api_server);
-                });
+                .then((record, error) => {
+                  if (error) {
+                    throw error;
+                  }
+                  resolve(record);
+                }).catch(error => {
+                console.error('Failed to create', error);
+                reject(error);
+              });
+            }
+          }).catch((error) => {
+          console.error('LeanCloud Counter Error:', error);
+          reject(error);
+        });
+      })
+    }
+
+    // 发起自增请求
+    function increment(Counter, incrArr) {
+      return new Promise(function (resolve, reject) {
+        Counter('post', '/batch', {
+          "requests": incrArr
+        }).then((res) => {
+          res = res.json();
+          if (res.error) {
+            throw res.error;
+          }
+          resolve(res);
+        }).catch((error) => {
+          console.error('Failed to save visitor count', error);
+          reject(error);
+        });
+      });
+    }
+
+    // 构建自增请求体
+    function buildIncrement(objectId) {
+      return {
+        "method": "PUT",
+        "path": `/1.1/classes/Counter/${ objectId }`,
+        "body": {
+          "time": {
+            '__op': 'Increment',
+            'amount': 1
+          }
         }
-    })();</script><script src="https://static.muchen.fun/js/custom.js"></script><script src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js"></script><script>var typed=new Typed("#subtitle",{strings:["  ","8.排序（上）&nbsp;"],cursorChar:"_",typeSpeed:70,loop:!1});typed.stop(),$(document).ready(function(){$(".typed-cursor").addClass("h2"),typed.start()})</script><script src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js"></script><script>anchors.options = {
-            placement: "right",
-            visible: "hover",
-            
-        };
-        var el = "h1,h2,h3,h4,h5,h6".split(",");
-        var res = [];
-        for (item of el) {
-            res.push(".markdown-body > " + item)
+      }
+    }
+
+    // 校验是否为有效的 UV
+    function validUV() {
+      var key = 'LeanCloud_UV_Flag';
+      var flag = localStorage.getItem(key);
+      if (flag) {
+        // 距离标记小于 24 小时则不计为 UV
+        if (new Date().getTime() - parseInt(flag) <= 86400000) {
+          return false;
         }
-        anchors.add(res.join(", "))</script><script src="/js/local-search.js"></script><script>var path="/local-search.xml",inputArea=document.querySelector("#local-search-input");inputArea.onclick=function(){searchFunc(path,"local-search-input","local-search-result"),this.onclick=null}</script><script src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js"></script><link rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css"><script>$("#post img:not(.no-zoom img, img[no-zoom]), img[zoom]").each(function(){var t=document.createElement("a");$(t).attr("data-fancybox","images"),$(t).attr("href",$(this).attr("src")),$(this).wrap(t)})</script><script>MathJax = {
-                tex: {
-                    inlineMath: [['$', '$'], ['\\(', '\\)']]
-                },
-                options: {
-                    renderActions: {
-                        findScript: [10, doc => {
-                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
-                                const display = !!node.type.match(/; *mode=display/);
-                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
-                                const text = document.createTextNode('');
-                                node.parentNode.replaceChild(text, node);
-                                math.start = {node: text, delim: '', n: 0};
-                                math.end = {node: text, delim: '', n: 0};
-                                doc.math.push(math);
-                            });
-                        }, '', false],
-                        insertedScript: [200, () => {
-                            document.querySelectorAll('mjx-container').forEach(node => {
-                                let target = node.parentNode;
-                                if (target.nodeName.toLowerCase() === 'li') {
-                                    target.parentNode.classList.add('has-jax');
-                                }
-                            });
-                        }, '', false]
-                    }
+      }
+      localStorage.setItem(key, new Date().getTime().toString());
+      return true;
+    }
+
+    function addCount(Counter) {
+      var enableIncr = 'true' === 'true' && window.location.hostname !== 'localhost';
+      var getterArr = [];
+      var incrArr = [];
+
+      // 请求 PV 并自增
+      var pvCtn = document.querySelector('#leancloud-site-pv-container');
+      if (pvCtn || enableIncr) {
+        var pvGetter = getRecord(Counter, 'site-pv').then((record) => {
+          incrArr.push(buildIncrement(record.objectId))
+          var ele = document.querySelector('#leancloud-site-pv');
+          if (ele) {
+            ele.innerText = record.time + 1;
+            if (pvCtn) {
+              pvCtn.style.display = 'inline';
+            }
+          }
+        });
+        getterArr.push(pvGetter);
+      }
+
+      // 请求 UV 并自增
+      var uvCtn = document.querySelector('#leancloud-site-uv-container');
+      if (uvCtn || enableIncr) {
+        var uvGetter = getRecord(Counter, 'site-uv').then((record) => {
+          var vuv = validUV();
+          vuv && incrArr.push(buildIncrement(record.objectId))
+          var ele = document.querySelector('#leancloud-site-uv');
+          if (ele) {
+            ele.innerText = record.time + (vuv ? 1 : 0);
+            if (uvCtn) {
+              uvCtn.style.display = 'inline';
+            }
+          }
+        });
+        getterArr.push(uvGetter);
+      }
+
+      // 如果是文章，请求文章的浏览数，并自增
+      if ('true' === 'true') {
+        var viewCtn = document.querySelector('#leancloud-post-views-container');
+        if (viewCtn || enableIncr) {
+          var target = decodeURI('/passages/8/');
+          var viewGetter = getRecord(Counter, target).then((record) => {
+            incrArr.push(buildIncrement(record.objectId))
+            if (viewCtn) {
+              var ele = document.querySelector('#leancloud-post-views');
+              if (ele) {
+                ele.innerText = (record.time || 0) + 1;
+                viewCtn.style.display = 'inline';
+              }
+            }
+          });
+          getterArr.push(viewGetter);
+        }
+      }
+
+      // 如果启动计数自增，批量发起自增请求
+      if (enableIncr) {
+        Promise.all(getterArr).then(() => {
+          incrArr.length > 0 && increment(Counter, incrArr);
+        })
+      }
+    }
+
+    var app_id = 'O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI'
+    var app_key = '5Rl3Rhl9zc8BJNvrPcncKWFy'
+    var server_url = 'https://lean.muchen.fun'
+
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${ api_server }/1.1${ url }`, {
+          method,
+          headers: {
+            'X-LC-Id': app_id,
+            'X-LC-Key': app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+
+      addCount(Counter);
+    }
+
+    var api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${ app_id.slice(0, 8).toLowerCase() }.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(resp => resp.json())
+        .then(({api_server}) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();</script><script src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js"></script><script>var typed=new Typed("#subtitle",{strings:["  ","8.排序（上）&nbsp;"],cursorChar:"_",typeSpeed:70,loop:!1});typed.stop(),$(document).ready(function(){$(".typed-cursor").addClass("h2"),typed.start()})</script><script src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js"></script><script>anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))</script><script src="/js/local-search.js"></script><script>var path="/local-search.xml",inputArea=document.querySelector("#local-search-input");inputArea.onclick=function(){searchFunc(path,"local-search-input","local-search-result"),this.onclick=null}</script><script src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js"></script><link rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css"><script>$("#post img:not(.no-zoom img, img[no-zoom]), img[zoom]").each(function(){var t=document.createElement("a");$(t).attr("data-fancybox","images"),$(t).attr("href",$(this).attr("src")),$(this).wrap(t)})</script><script>MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
                 }
-            };</script><script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js"></script><script>!function(e,r,t){var o,n=[];e.requestAnimationFrame=e.requestAnimationFrame||e.webkitRequestAnimationFrame||e.mozRequestAnimationFrame||e.oRequestAnimationFrame||e.msRequestAnimationFrame||function(e){setTimeout(e,1e3/60)},function(t){var a=r.createElement("style");a.type="text/css";try{a.appendChild(r.createTextNode(t))}catch(e){a.styleSheet.cssText=t}r.getElementsByTagName("head")[0].appendChild(a)}(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"),o="function"==typeof e.onclick&&e.onclick,e.onclick=function(e){var t,a;o&&o(),t=e,(a=r.createElement("div")).className="heart",n.push({el:a,x:t.clientX-5,y:t.clientY-5,scale:1,alpha:1,color:"rgb("+~~(255*Math.random())+","+~~(255*Math.random())+","+~~(255*Math.random())+")"}),r.body.appendChild(a)},function e(){for(var t=0;t<n.length;t++)n[t].alpha<=0?(r.body.removeChild(n[t].el),n.splice(t,1)):(n[t].y--,n[t].scale+=.004,n[t].alpha-=.013,n[t].el.style.cssText="left:"+n[t].x+"px;top:"+n[t].y+"px;opacity:"+n[t].alpha+";transform:scale("+n[t].scale+","+n[t].scale+") rotate(45deg);background:"+n[t].color+";z-index:99999");requestAnimationFrame(e)}()}(window,document)</script><script defer>var _hmt=_hmt||[];!function(){var e=document.createElement("script");e.src="https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)}()</script><script defer>!function(e,a,t,n,g,c,o){e.GoogleAnalyticsObject="ga",e.ga=e.ga||function(){(e.ga.q=e.ga.q||[]).push(arguments)},e.ga.l=1*new Date,c=a.createElement(t),o=a.getElementsByTagName(t)[0],c.async=1,c.src="https://www.google-analytics.com/analytics.js",o.parentNode.insertBefore(c,o)}(window,document,"script"),ga("create","UA-144841374-1","auto"),ga("send","pageview")</script></body></html>
+              });
+            }, '', false]
+          }
+        }
+      };</script><script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js"></script><script>!function(e,r,t){var o,n=[];e.requestAnimationFrame=e.requestAnimationFrame||e.webkitRequestAnimationFrame||e.mozRequestAnimationFrame||e.oRequestAnimationFrame||e.msRequestAnimationFrame||function(e){setTimeout(e,1e3/60)},function(t){var a=r.createElement("style");a.type="text/css";try{a.appendChild(r.createTextNode(t))}catch(e){a.styleSheet.cssText=t}r.getElementsByTagName("head")[0].appendChild(a)}(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"),o="function"==typeof e.onclick&&e.onclick,e.onclick=function(e){var t,a;o&&o(),t=e,(a=r.createElement("div")).className="heart",n.push({el:a,x:t.clientX-5,y:t.clientY-5,scale:1,alpha:1,color:"rgb("+~~(255*Math.random())+","+~~(255*Math.random())+","+~~(255*Math.random())+")"}),r.body.appendChild(a)},function e(){for(var t=0;t<n.length;t++)n[t].alpha<=0?(r.body.removeChild(n[t].el),n.splice(t,1)):(n[t].y--,n[t].scale+=.004,n[t].alpha-=.013,n[t].el.style.cssText="left:"+n[t].x+"px;top:"+n[t].y+"px;opacity:"+n[t].alpha+";transform:scale("+n[t].scale+","+n[t].scale+") rotate(45deg);background:"+n[t].color+";z-index:99999");requestAnimationFrame(e)}()}(window,document)</script><script defer>var _hmt=_hmt||[];!function(){var e=document.createElement("script");e.src="https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)}()</script><script defer>!function(e,a,t,n,g,c,o){e.GoogleAnalyticsObject="ga",e.ga=e.ga||function(){(e.ga.q=e.ga.q||[]).push(arguments)},e.ga.l=1*new Date,c=a.createElement(t),o=a.getElementsByTagName(t)[0],c.async=1,c.src="https://www.google-analytics.com/analytics.js",o.parentNode.insertBefore(c,o)}(window,document,"script"),ga("create","UA-144841374-1","auto"),ga("send","pageview")</script></body></html>

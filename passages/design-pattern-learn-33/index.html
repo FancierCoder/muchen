@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png"><link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,shrink-to-fit=no"><meta http-equiv="x-ua-compatible" content="ie=edge"><meta name="theme-color" content="#2f4154"><meta name="description" content="沐晨的个人博客,技术博客"><meta name="author" content="Li Duo"><meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog"><title>设计模式之美学习（三十三） - MuChen&#39;s Blog</title><link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css"><link rel="stylesheet" href="/lib/hint/hint.min.css"><link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css"><link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css"><link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css"><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="https://static.muchen.fun/css/custom.css"><script src="/js/utils.js"></script><meta name="generator" content="Hexo 4.2.1"><link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml"></head><body><script>var isNight=22<=(new Date).getHours()||(new Date).getHours()<7;(matchMedia("(prefers-color-scheme: dark)").matches||isNight||"1"===localStorage.getItem("dark"))&&(isNight&&"1"===localStorage.getItem("noDark")||document.body.classList.add("dark"))</script><header style="height:70vh"><nav id="navbar" class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar"><div class="container"><a class="navbar-brand" href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a> <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><div class="animated-icon"><span></span><span></span><span></span></div></button><div class="collapse navbar-collapse" id="navbarSupportedContent"><ul class="navbar-nav ml-auto text-center"><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="iconfont icon-books"></i> 索引</a><div class="dropdown-menu" aria-labelledby="navbarDropdown"><a class="dropdown-item" href="/archives/"><i class="iconfont icon-archive-fill"></i> 归档 </a><a class="dropdown-item" href="/categories/"><i class="iconfont icon-category-fill"></i> 分类 </a><a class="dropdown-item" href="/tags/"><i class="iconfont icon-tags-fill"></i> 标签</a></div></li><li class="nav-item"><a class="nav-link" href="/messageBoard/"><i class="iconfont icon-speakernotes"></i> 留言</a></li><li class="nav-item"><a class="nav-link" href="/about/"><i class="iconfont icon-user-fill"></i> 关于</a></li><li class="nav-item"><a class="nav-link" href="/links/"><i class="iconfont icon-link-fill"></i> 友链</a></li><li class="nav-item" id="search-btn"><a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i class="iconfont icon-search"></i>&nbsp;&nbsp;</a></li><li class="nav-item"><a id="dark" class="nav-link" onclick="switchDarkMode()"><i class="iconfont icon-sun"></i></a></li></ul></div></div></nav><div class="banner intro-2" id="background" parallax="true" style="background:url(https://static.muchen.fun/picture/15.jpg) no-repeat center center;background-size:cover"><div class="full-bg-img"><div class="mask flex-center" style="background-color:rgba(0,0,0,.3)"><div class="container text-center white-text fade-in-up"><span class="h2" id="subtitle"></span><div class="mt-3 post-meta"><i class="iconfont icon-date-fill" aria-hidden="true"></i> <time datetime="2020-05-08 18:41">2020年5月8日 晚上</time></div><div class="mt-1"><span class="post-meta mr-2"><i class="iconfont icon-chart"></i> 1.4k 字 </span><span class="post-meta mr-2"><i class="iconfont icon-clock-fill"></i> 21 分钟 </span><span id="leancloud-post-views-container" class="post-meta" style="display:none"><i class="iconfont icon-eye" aria-hidden="true"></i> <span id="leancloud-post-views"></span> 次</span></div></div></div></div></div></header><main><div class="container-fluid"><div class="row"><div class="d-none d-lg-block col-lg-2"></div><div class="col-lg-8 nopadding-md"><div class="container nopadding-md" id="board-ctn"><div class="py-5" id="board"><div class="post-content mx-auto" id="post"><p class="note note-info">本文最后更新于：2 个月前</p><article class="markdown-body"><p>为什么说没事不要随便用工厂模式创建对象？</p><a id="more"></a><p>一般情况下，工厂模式分为三种更加细分的类型：简单工厂、工厂方法和抽象工厂。不过，在 <code>GoF</code> 的《设计模式》一书中，它将简单工厂模式看作是工厂方法模式的一种特例，所以工厂模式只被分成了工厂方法和抽象工厂两类。实际上，前面一种分类方法更加常见。</p><ul><li>什么时候该用工厂模式？相对于直接 <code>new</code> 来创建对象，用工厂模式来创建究竟有什么好处呢？</li></ul><p>三种工厂模式中，简单工厂和工厂方法比较常用，抽象工厂的应用场景比较特殊，所以很少用到。下面重点对前两种工厂模式的应用场景进行总结。</p><p>当创建逻辑比较复杂，是一个“大工程”的时候，我们就考虑使用工厂模式，封装对象的创建过程，将对象的创建和使用相分离。何为创建逻辑比较复杂呢？有下面两种情况。</p><ul><li>第一种情况：类似规则配置解析的例子，代码中存在 <code>if-else</code> 分支判断，动态地根据不同的类型创建不同的对象。针对这种情况，我们就考虑使用工厂模式，将这一大坨 <code>if-else</code> 创建对象的代码抽离出来，放到工厂类中。</li></ul><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">RuleConfigSource</span> </span>&#123;
+<!DOCTYPE html><html lang="zh-CN" data-default-color-scheme="&#34;auto&#34;"><head><meta charset="UTF-8"><link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png"><link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,shrink-to-fit=no"><meta http-equiv="x-ua-compatible" content="ie=edge"><meta name="theme-color" content="#2f4154"><meta name="description" content="沐晨的个人博客,技术博客"><meta name="author" content="Li Duo"><meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog"><title>设计模式之美学习（三十三） - MuChen&#39;s Blog</title><link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css"><link rel="stylesheet" href="/lib/hint/hint.min.css"><link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css"><link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_6peoq002giu.css"><link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css"><link rel="stylesheet" href="/css/main.css"><script src="/js/utils.js"></script><script src="/js/color-schema.js"></script><meta name="generator" content="Hexo 4.2.1"><link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml"></head><body><header style="height:70vh"><nav id="navbar" class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar"><div class="container"><a class="navbar-brand" href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a> <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><div class="animated-icon"><span></span><span></span><span></span></div></button><div class="collapse navbar-collapse" id="navbarSupportedContent"><ul class="navbar-nav ml-auto text-center"><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="iconfont icon-books"></i> 索引</a><div class="dropdown-menu" aria-labelledby="navbarDropdown"><a class="dropdown-item" href="/archives/"><i class="iconfont icon-archive-fill"></i> 归档 </a><a class="dropdown-item" href="/categories/"><i class="iconfont icon-category-fill"></i> 分类 </a><a class="dropdown-item" href="/tags/"><i class="iconfont icon-tags-fill"></i> 标签</a></div></li><li class="nav-item"><a class="nav-link" href="/messageBoard/"><i class="iconfont icon-speakernotes"></i> 留言</a></li><li class="nav-item"><a class="nav-link" href="/about/"><i class="iconfont icon-user-fill"></i> 关于</a></li><li class="nav-item"><a class="nav-link" href="/links/"><i class="iconfont icon-link-fill"></i> 友链</a></li><li class="nav-item" id="search-btn"><a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i class="iconfont icon-search"></i>&nbsp;</a></li><li class="nav-item" id="color-toggle-btn"><a class="nav-link" href="javascript:">&nbsp;<i class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a></li></ul></div></div></nav><div class="banner intro-2" id="background" parallax="true" style="background:url(https://static.muchen.fun/picture/15.jpg) no-repeat center center;background-size:cover"><div class="full-bg-img"><div class="mask flex-center" style="background-color:rgba(0,0,0,.3)"><div class="container page-header text-center fade-in-up"><span class="h2" id="subtitle"></span><div class="mt-3 post-meta"><i class="iconfont icon-date-fill" aria-hidden="true"></i> <time datetime="2020-05-08 18:41" pubdate>2020年5月8日 晚上</time></div><div class="mt-1"><span class="post-meta mr-2"><i class="iconfont icon-chart"></i> 1.4k 字 </span><span class="post-meta mr-2"><i class="iconfont icon-clock-fill"></i> 21 分钟 </span><span id="leancloud-post-views-container" class="post-meta" style="display:none"><i class="iconfont icon-eye" aria-hidden="true"></i> <span id="leancloud-post-views"></span> 次</span></div></div></div></div></div></header><main><div class="container-fluid"><div class="row"><div class="d-none d-lg-block col-lg-2"></div><div class="col-lg-8 nopadding-md"><div class="container nopadding-md" id="board-ctn"><div class="py-5" id="board"><article class="post-content mx-auto" id="post"><h1 style="display:none">设计模式之美学习（三十三）</h1><p class="note note-info">本文最后更新于：2 个月前</p><div class="markdown-body" id="post-body"><p>为什么说没事不要随便用工厂模式创建对象？</p><a id="more"></a><p>一般情况下，工厂模式分为三种更加细分的类型：简单工厂、工厂方法和抽象工厂。不过，在 <code>GoF</code> 的《设计模式》一书中，它将简单工厂模式看作是工厂方法模式的一种特例，所以工厂模式只被分成了工厂方法和抽象工厂两类。实际上，前面一种分类方法更加常见。</p><ul><li>什么时候该用工厂模式？相对于直接 <code>new</code> 来创建对象，用工厂模式来创建究竟有什么好处呢？</li></ul><p>三种工厂模式中，简单工厂和工厂方法比较常用，抽象工厂的应用场景比较特殊，所以很少用到。下面重点对前两种工厂模式的应用场景进行总结。</p><p>当创建逻辑比较复杂，是一个“大工程”的时候，我们就考虑使用工厂模式，封装对象的创建过程，将对象的创建和使用相分离。何为创建逻辑比较复杂呢？有下面两种情况。</p><ul><li>第一种情况：类似规则配置解析的例子，代码中存在 <code>if-else</code> 分支判断，动态地根据不同的类型创建不同的对象。针对这种情况，我们就考虑使用工厂模式，将这一大坨 <code>if-else</code> 创建对象的代码抽离出来，放到工厂类中。</li></ul><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">RuleConfigSource</span> </span>&#123;
   <span class="hljs-function"><span class="hljs-keyword">public</span> RuleConfig <span class="hljs-title">load</span><span class="hljs-params">(String ruleConfigFilePath)</span> </span>&#123;
     String ruleConfigFileExtension = getFileExtension(ruleConfigFilePath);
     IRuleConfigParser parser = RuleConfigParserFactory.createParser(ruleConfigFileExtension);
@@ -95,222 +95,216 @@
     IRuleConfigParserFactory parserFactory = cachedFactories.get(type.toLowerCase());
     <span class="hljs-keyword">return</span> parserFactory;
   &#125;
-&#125;</code></pre><p>对于第一种情况，当每个对象的创建逻辑都比较简单的时候，推荐使用简单工厂模式，将多个对象的创建逻辑放到一个工厂类中。当每个对象的创建逻辑都比较复杂的时候，为了避免设计一个过于庞大的简单工厂类，推荐使用工厂方法模式，将创建逻辑拆分得更细，每个对象的创建逻辑独立到各自的工厂类中。同理，对于第二种情况，因为单个对象本身的创建逻辑就比较复杂，所以，建议使用工厂方法模式。</p><p>除了刚刚提到的这几种情况之外，如果创建对象的逻辑并不复杂，那我们就直接通过 <code>new</code> 来创建对象就可以了，不需要使用工厂模式。</p><p>现在，我们上升一个思维层面来看工厂模式，它的作用无外乎下面这四个。这也是判断要不要使用工厂模式的最本质的参考标准。</p><ul><li>封装变化：创建逻辑有可能变化，封装成工厂类之后，创建逻辑的变更对调用者透明。</li><li>代码复用：创建代码抽离到独立的工厂类之后可以复用。</li><li>隔离复杂性：封装复杂的创建逻辑，调用者无需了解如何创建对象。</li><li>控制复杂度：将创建代码抽离出来，让原本的函数或类职责更单一，代码更简洁。</li></ul><p>参考：<a href="https://time.geekbang.org/column/article/197254" target="_blank" rel="noopener">工厂模式（上）：我为什么说没事不要随便用工厂模式创建对象？</a></p></article><hr><div><div class="post-metas mb-3"><div class="post-meta mr-3"><i class="iconfont icon-category"></i> <a class="hover-with-bg" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E8%8C%83%E5%BC%8F-%E5%88%9B%E5%BB%BA%E5%9E%8B/">设计模式与范式(创建型)</a></div><div class="post-meta"><i class="iconfont icon-tags"></i> <a class="hover-with-bg" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a> <a class="hover-with-bg" href="/tags/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/">工厂模式</a></div></div><p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p><div class="post-prevnext row"><div class="post-prev col-6"><a href="/passages/design-pattern-learn-34/"><i class="iconfont icon-arrowleft"></i> <span class="hidden-mobile">设计模式之美学习（三十四）</span> <span class="visible-mobile">上一篇</span></a></div><div class="post-next col-6"><a href="/passages/design-pattern-learn-32/"><span class="hidden-mobile">设计模式之美学习（三十二）</span> <span class="visible-mobile">下一篇</span> <i class="iconfont icon-arrowright"></i></a></div></div></div><div class="comments" id="comments"><div id="vcomments"></div><script type="text/javascript">function loadValine(){addScript("https://cdn.staticfile.org/valine/1.4.14/Valine.min.js",function(){new Valine({el:"#vcomments",app_id:"O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",app_key:"5Rl3Rhl9zc8BJNvrPcncKWFy",placeholder:"说点什么吧~",path:window.location.pathname,avatar:"retro",meta:["nick","mail","link"],pageSize:"10",lang:"zh-CN",highlight:!0,recordIP:!0,serverURLs:"https://lean.muchen.fun"})})}createObserver(loadValine,"vcomments")</script><noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments powered by Valine.</a></noscript></div></div></div></div></div></div></div><div class="col-lg-7 mx-auto nopadding-md"><div class="container custom post-content mx-auto"><img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px;height:150px"><br><div class="text-center">欢迎关注我的公众号😘</div></div></div></main><a id="scroll-top-button" href="#" role="button"><i class="iconfont icon-arrowup" aria-hidden="true"></i></a><div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable modal-lg" role="document"><div class="modal-content"><div class="modal-header text-center"><h4 class="modal-title w-100 font-weight-bold">搜索</h4><button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div><div class="modal-body mx-3"><div class="md-form mb-5"><input type="text" id="local-search-input" class="form-control validate"> <label data-error="x" data-success="v" for="local-search-input">关键词</label></div><div class="list-group" id="local-search-result"></div></div></div></div></div><footer class="mt-5"><div class="text-center py-3"><div><a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a></div><div><span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span><script>document.getElementById("dark").innerHTML=document.querySelector("body").classList.contains("dark")?"🌙":"☀";var now=new Date;function createtime(){var n=new Date("07/12/2019 00:00:00");now.setTime(now.getTime()+250),days=(now-n)/1e3/60/60/24,dnum=Math.floor(days),hours=(now-n)/1e3/60/60-24*dnum,hnum=Math.floor(hours),1==String(hnum).length&&(hnum="0"+hnum),minutes=(now-n)/1e3/60-1440*dnum-60*hnum,mnum=Math.floor(minutes),1==String(mnum).length&&(mnum="0"+mnum),seconds=(now-n)/1e3-86400*dnum-3600*hnum-60*mnum,snum=Math.round(seconds),1==String(snum).length&&(snum="0"+snum),document.getElementById("timeDate").innerHTML="本站已运行&nbsp"+dnum+"&nbsp天",document.getElementById("times").innerHTML=hnum+"&nbsp小时&nbsp"+mnum+"&nbsp分&nbsp"+snum+"&nbsp秒"}setInterval("createtime()",250)</script></div><p id="hitokoto">:D 获取中...</p><script>fetch('https://v1.hitokoto.cn')
-                .then(response => response.json())
-                .then(data => {
-                    const hitokoto = document.getElementById('hitokoto')
-                    hitokoto.innerText = data.hitokoto + '--「' + data.from + '」'
-                })
-                .catch(console.error)</script><div class="statistics"><span id="leancloud-site-pv-container" style="display:none">总访问量 <span id="leancloud-site-pv"></span> 次 </span><span id="leancloud-site-uv-container" style="display:none">总访客数 <span id="leancloud-site-uv"></span> 人</span></div></div></footer><script src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js"></script><script src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script><script src="/js/debouncer.js"></script><script src="/js/main.js"></script><script src="/js/lazyload.js"></script><script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js"></script><script src="/js/clipboard-use.js"></script><script defer>(function () {
-        // 查询存储的记录
-        function getRecord(Counter, target) {
-            return new Promise(function (resolve, reject) {
-                Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({target})))
-                    .then(resp => resp.json())
-                    .then(({results, code, error}) => {
-                        if (code === 401) {
-                            throw error;
-                        }
-                        if (results && results.length > 0) {
-                            var record = results[0];
-                            resolve(record);
-                        } else {
-                            Counter('post', '/classes/Counter', {target, time: 0})
-                                .then(resp => resp.json())
-                                .then((record, error) => {
-                                    if (error) {
-                                        throw error;
-                                    }
-                                    resolve(record);
-                                }).catch(error => {
-                                console.error('Failed to create', error);
-                                reject(error);
-                            });
-                        }
-                    }).catch((error) => {
-                    console.error('LeanCloud Counter Error:', error);
-                    reject(error);
-                });
-            })
-        }
-
-        // 发起自增请求
-        function increment(Counter, incrArr) {
-            return new Promise(function (resolve, reject) {
-                Counter('post', '/batch', {
-                    "requests": incrArr
-                }).then((res) => {
-                    res = res.json();
-                    if (res.error) {
-                        throw res.error;
-                    }
-                    resolve(res);
-                }).catch((error) => {
-                    console.error('Failed to save visitor count', error);
-                    reject(error);
-                });
-            });
-        }
-
-        // 构建自增请求体
-        function buildIncrement(objectId) {
-            return {
-                "method": "PUT",
-                "path": `/1.1/classes/Counter/${objectId}`,
-                "body": {
-                    "time": {
-                        '__op': 'Increment',
-                        'amount': 1
-                    }
-                }
+&#125;</code></pre><p>对于第一种情况，当每个对象的创建逻辑都比较简单的时候，推荐使用简单工厂模式，将多个对象的创建逻辑放到一个工厂类中。当每个对象的创建逻辑都比较复杂的时候，为了避免设计一个过于庞大的简单工厂类，推荐使用工厂方法模式，将创建逻辑拆分得更细，每个对象的创建逻辑独立到各自的工厂类中。同理，对于第二种情况，因为单个对象本身的创建逻辑就比较复杂，所以，建议使用工厂方法模式。</p><p>除了刚刚提到的这几种情况之外，如果创建对象的逻辑并不复杂，那我们就直接通过 <code>new</code> 来创建对象就可以了，不需要使用工厂模式。</p><p>现在，我们上升一个思维层面来看工厂模式，它的作用无外乎下面这四个。这也是判断要不要使用工厂模式的最本质的参考标准。</p><ul><li>封装变化：创建逻辑有可能变化，封装成工厂类之后，创建逻辑的变更对调用者透明。</li><li>代码复用：创建代码抽离到独立的工厂类之后可以复用。</li><li>隔离复杂性：封装复杂的创建逻辑，调用者无需了解如何创建对象。</li><li>控制复杂度：将创建代码抽离出来，让原本的函数或类职责更单一，代码更简洁。</li></ul><p>参考：<a href="https://time.geekbang.org/column/article/197254" target="_blank" rel="noopener">工厂模式（上）：我为什么说没事不要随便用工厂模式创建对象？</a></p></div><hr><div><div class="post-metas mb-3"><div class="post-meta mr-3"><i class="iconfont icon-category"></i> <a class="hover-with-bg" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E8%8C%83%E5%BC%8F-%E5%88%9B%E5%BB%BA%E5%9E%8B/">设计模式与范式(创建型)</a></div><div class="post-meta"><i class="iconfont icon-tags"></i> <a class="hover-with-bg" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a> <a class="hover-with-bg" href="/tags/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/">工厂模式</a></div></div><p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p><div class="post-prevnext row"><article class="post-prev col-6"><a href="/passages/design-pattern-learn-34/"><i class="iconfont icon-arrowleft"></i> <span class="hidden-mobile">设计模式之美学习（三十四）</span> <span class="visible-mobile">上一篇</span></a></article><article class="post-next col-6"><a href="/passages/design-pattern-learn-32/"><span class="hidden-mobile">设计模式之美学习（三十二）</span> <span class="visible-mobile">下一篇</span> <i class="iconfont icon-arrowright"></i></a></article></div></div><article class="comments" id="comments"><div id="vcomments"></div><script type="text/javascript">function loadValine(){addScript("https://cdn.staticfile.org/valine/1.4.14/Valine.min.js",function(){new Valine({el:"#vcomments",app_id:"O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",app_key:"5Rl3Rhl9zc8BJNvrPcncKWFy",placeholder:"说点什么吧~",path:window.location.pathname,avatar:"retro",meta:["nick","mail","link"],pageSize:"10",lang:"zh-CN",highlight:!0,recordIP:!0,serverURLs:"https://lean.muchen.fun"})})}waitElementVisible("vcomments",loadValine)</script><noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments powered by Valine.</a></noscript></article></article></div></div></div></div></div><div class="col-lg-7 mx-auto nopadding-md"><div class="container custom post-content mx-auto"><img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px;height:150px"><br><div class="text-center">欢迎关注我的公众号😘</div></div></div></main><a id="scroll-top-button" href="#" role="button"><i class="iconfont icon-arrowup" aria-hidden="true"></i></a><div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable modal-lg" role="document"><div class="modal-content"><div class="modal-header text-center"><h4 class="modal-title w-100 font-weight-bold">搜索</h4><button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div><div class="modal-body mx-3"><div class="md-form mb-5"><input type="text" id="local-search-input" class="form-control validate"> <label data-error="x" data-success="v" for="local-search-input">关键词</label></div><div class="list-group" id="local-search-result"></div></div></div></div></div><footer class="mt-5"><div class="text-center py-3"><div><a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a></div><div class="statistics"><span id="leancloud-site-pv-container" style="display:none">总访问量 <span id="leancloud-site-pv"></span> 次 </span><span id="leancloud-site-uv-container" style="display:none">总访客数 <span id="leancloud-site-uv"></span> 人</span></div></div></footer><script src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js"></script><script src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script><script src="/js/debouncer.js"></script><script src="/js/main.js"></script><script src="/js/lazyload.js"></script><script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js"></script><script src="/js/clipboard-use.js"></script><script defer>(function () {
+    // 查询存储的记录
+    function getRecord(Counter, target) {
+      return new Promise(function (resolve, reject) {
+        Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({target})))
+          .then(resp => resp.json())
+          .then(({results, code, error}) => {
+            if (code === 401) {
+              throw error;
             }
-        }
-
-        // 校验是否为有效的 UV
-        function validUV() {
-            var key = 'LeanCloud_UV_Flag';
-            var flag = localStorage.getItem(key);
-            if (flag) {
-                // 距离标记小于 24 小时则不计为 UV
-                if (new Date().getTime() - parseInt(flag) <= 86400000) {
-                    return false;
-                }
-            }
-            localStorage.setItem(key, new Date().getTime().toString());
-            return true;
-        }
-
-        function addCount(Counter) {
-            var enableIncr = 'true' === 'true' && window.location.hostname !== 'localhost';
-            var getterArr = [];
-            var incrArr = [];
-
-            // 请求 PV 并自增
-            var pvCtn = document.querySelector('#leancloud-site-pv-container');
-            if (pvCtn || enableIncr) {
-                var pvGetter = getRecord(Counter, 'site-pv').then((record) => {
-                    incrArr.push(buildIncrement(record.objectId))
-                    var ele = document.querySelector('#leancloud-site-pv');
-                    if (ele) {
-                        ele.innerText = record.time + 1;
-                        if (pvCtn) {
-                            pvCtn.style.display = 'inline';
-                        }
-                    }
-                });
-                getterArr.push(pvGetter);
-            }
-
-            // 请求 UV 并自增
-            var uvCtn = document.querySelector('#leancloud-site-uv-container');
-            if (uvCtn || enableIncr) {
-                var uvGetter = getRecord(Counter, 'site-uv').then((record) => {
-                    var vuv = validUV();
-                    vuv && incrArr.push(buildIncrement(record.objectId))
-                    var ele = document.querySelector('#leancloud-site-uv');
-                    if (ele) {
-                        ele.innerText = record.time + (vuv ? 1 : 0);
-                        if (uvCtn) {
-                            uvCtn.style.display = 'inline';
-                        }
-                    }
-                });
-                getterArr.push(uvGetter);
-            }
-
-            // 如果是文章，请求文章的浏览数，并自增
-            if ('true' === 'true') {
-                var viewCtn = document.querySelector('#leancloud-post-views-container');
-                if (viewCtn || enableIncr) {
-                    var target = decodeURI('/passages/design-pattern-learn-33/');
-                    var viewGetter = getRecord(Counter, target).then((record) => {
-                        incrArr.push(buildIncrement(record.objectId))
-                        if (viewCtn) {
-                            var ele = document.querySelector('#leancloud-post-views');
-                            if (ele) {
-                                ele.innerText = (record.time || 0) + 1;
-                                viewCtn.style.display = 'inline';
-                            }
-                        }
-                    });
-                    getterArr.push(viewGetter);
-                }
-            }
-
-            // 如果启动计数自增，批量发起自增请求
-            if (enableIncr) {
-                Promise.all(getterArr).then(() => {
-                    incrArr.length > 0 && increment(Counter, incrArr);
-                })
-            }
-        }
-
-        var app_id = 'O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI'
-        var app_key = '5Rl3Rhl9zc8BJNvrPcncKWFy'
-        var server_url = 'https://lean.muchen.fun'
-
-        function fetchData(api_server) {
-            var Counter = (method, url, data) => {
-                return fetch(`${api_server}/1.1${url}`, {
-                    method,
-                    headers: {
-                        'X-LC-Id': app_id,
-                        'X-LC-Key': app_key,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                });
-            };
-
-            addCount(Counter);
-        }
-
-        var api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
-
-        if (api_server) {
-            fetchData(api_server);
-        } else {
-            fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+            if (results && results.length > 0) {
+              var record = results[0];
+              resolve(record);
+            } else {
+              Counter('post', '/classes/Counter', {target, time: 0})
                 .then(resp => resp.json())
-                .then(({api_server}) => {
-                    fetchData('https://' + api_server);
-                });
+                .then((record, error) => {
+                  if (error) {
+                    throw error;
+                  }
+                  resolve(record);
+                }).catch(error => {
+                console.error('Failed to create', error);
+                reject(error);
+              });
+            }
+          }).catch((error) => {
+          console.error('LeanCloud Counter Error:', error);
+          reject(error);
+        });
+      })
+    }
+
+    // 发起自增请求
+    function increment(Counter, incrArr) {
+      return new Promise(function (resolve, reject) {
+        Counter('post', '/batch', {
+          "requests": incrArr
+        }).then((res) => {
+          res = res.json();
+          if (res.error) {
+            throw res.error;
+          }
+          resolve(res);
+        }).catch((error) => {
+          console.error('Failed to save visitor count', error);
+          reject(error);
+        });
+      });
+    }
+
+    // 构建自增请求体
+    function buildIncrement(objectId) {
+      return {
+        "method": "PUT",
+        "path": `/1.1/classes/Counter/${ objectId }`,
+        "body": {
+          "time": {
+            '__op': 'Increment',
+            'amount': 1
+          }
         }
-    })();</script><script src="https://static.muchen.fun/js/custom.js"></script><script src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js"></script><script>var typed=new Typed("#subtitle",{strings:["  ","设计模式之美学习（三十三）&nbsp;"],cursorChar:"_",typeSpeed:70,loop:!1});typed.stop(),$(document).ready(function(){$(".typed-cursor").addClass("h2"),typed.start()})</script><script src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js"></script><script>anchors.options = {
-            placement: "right",
-            visible: "hover",
-            
-        };
-        var el = "h1,h2,h3,h4,h5,h6".split(",");
-        var res = [];
-        for (item of el) {
-            res.push(".markdown-body > " + item)
+      }
+    }
+
+    // 校验是否为有效的 UV
+    function validUV() {
+      var key = 'LeanCloud_UV_Flag';
+      var flag = localStorage.getItem(key);
+      if (flag) {
+        // 距离标记小于 24 小时则不计为 UV
+        if (new Date().getTime() - parseInt(flag) <= 86400000) {
+          return false;
         }
-        anchors.add(res.join(", "))</script><script src="/js/local-search.js"></script><script>var path="/local-search.xml",inputArea=document.querySelector("#local-search-input");inputArea.onclick=function(){searchFunc(path,"local-search-input","local-search-result"),this.onclick=null}</script><script src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js"></script><link rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css"><script>$("#post img:not(.no-zoom img, img[no-zoom]), img[zoom]").each(function(){var t=document.createElement("a");$(t).attr("data-fancybox","images"),$(t).attr("href",$(this).attr("src")),$(this).wrap(t)})</script><script>MathJax = {
-                tex: {
-                    inlineMath: [['$', '$'], ['\\(', '\\)']]
-                },
-                options: {
-                    renderActions: {
-                        findScript: [10, doc => {
-                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
-                                const display = !!node.type.match(/; *mode=display/);
-                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
-                                const text = document.createTextNode('');
-                                node.parentNode.replaceChild(text, node);
-                                math.start = {node: text, delim: '', n: 0};
-                                math.end = {node: text, delim: '', n: 0};
-                                doc.math.push(math);
-                            });
-                        }, '', false],
-                        insertedScript: [200, () => {
-                            document.querySelectorAll('mjx-container').forEach(node => {
-                                let target = node.parentNode;
-                                if (target.nodeName.toLowerCase() === 'li') {
-                                    target.parentNode.classList.add('has-jax');
-                                }
-                            });
-                        }, '', false]
-                    }
+      }
+      localStorage.setItem(key, new Date().getTime().toString());
+      return true;
+    }
+
+    function addCount(Counter) {
+      var enableIncr = 'true' === 'true' && window.location.hostname !== 'localhost';
+      var getterArr = [];
+      var incrArr = [];
+
+      // 请求 PV 并自增
+      var pvCtn = document.querySelector('#leancloud-site-pv-container');
+      if (pvCtn || enableIncr) {
+        var pvGetter = getRecord(Counter, 'site-pv').then((record) => {
+          incrArr.push(buildIncrement(record.objectId))
+          var ele = document.querySelector('#leancloud-site-pv');
+          if (ele) {
+            ele.innerText = record.time + 1;
+            if (pvCtn) {
+              pvCtn.style.display = 'inline';
+            }
+          }
+        });
+        getterArr.push(pvGetter);
+      }
+
+      // 请求 UV 并自增
+      var uvCtn = document.querySelector('#leancloud-site-uv-container');
+      if (uvCtn || enableIncr) {
+        var uvGetter = getRecord(Counter, 'site-uv').then((record) => {
+          var vuv = validUV();
+          vuv && incrArr.push(buildIncrement(record.objectId))
+          var ele = document.querySelector('#leancloud-site-uv');
+          if (ele) {
+            ele.innerText = record.time + (vuv ? 1 : 0);
+            if (uvCtn) {
+              uvCtn.style.display = 'inline';
+            }
+          }
+        });
+        getterArr.push(uvGetter);
+      }
+
+      // 如果是文章，请求文章的浏览数，并自增
+      if ('true' === 'true') {
+        var viewCtn = document.querySelector('#leancloud-post-views-container');
+        if (viewCtn || enableIncr) {
+          var target = decodeURI('/passages/design-pattern-learn-33/');
+          var viewGetter = getRecord(Counter, target).then((record) => {
+            incrArr.push(buildIncrement(record.objectId))
+            if (viewCtn) {
+              var ele = document.querySelector('#leancloud-post-views');
+              if (ele) {
+                ele.innerText = (record.time || 0) + 1;
+                viewCtn.style.display = 'inline';
+              }
+            }
+          });
+          getterArr.push(viewGetter);
+        }
+      }
+
+      // 如果启动计数自增，批量发起自增请求
+      if (enableIncr) {
+        Promise.all(getterArr).then(() => {
+          incrArr.length > 0 && increment(Counter, incrArr);
+        })
+      }
+    }
+
+    var app_id = 'O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI'
+    var app_key = '5Rl3Rhl9zc8BJNvrPcncKWFy'
+    var server_url = 'https://lean.muchen.fun'
+
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${ api_server }/1.1${ url }`, {
+          method,
+          headers: {
+            'X-LC-Id': app_id,
+            'X-LC-Key': app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+
+      addCount(Counter);
+    }
+
+    var api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${ app_id.slice(0, 8).toLowerCase() }.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(resp => resp.json())
+        .then(({api_server}) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();</script><script src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js"></script><script>var typed=new Typed("#subtitle",{strings:["  ","设计模式之美学习（三十三）&nbsp;"],cursorChar:"_",typeSpeed:70,loop:!1});typed.stop(),$(document).ready(function(){$(".typed-cursor").addClass("h2"),typed.start()})</script><script src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js"></script><script>anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))</script><script src="/js/local-search.js"></script><script>var path="/local-search.xml",inputArea=document.querySelector("#local-search-input");inputArea.onclick=function(){searchFunc(path,"local-search-input","local-search-result"),this.onclick=null}</script><script src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js"></script><link rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css"><script>$("#post img:not(.no-zoom img, img[no-zoom]), img[zoom]").each(function(){var t=document.createElement("a");$(t).attr("data-fancybox","images"),$(t).attr("href",$(this).attr("src")),$(this).wrap(t)})</script><script>MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
                 }
-            };</script><script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js"></script><script>!function(e,r,t){var o,n=[];e.requestAnimationFrame=e.requestAnimationFrame||e.webkitRequestAnimationFrame||e.mozRequestAnimationFrame||e.oRequestAnimationFrame||e.msRequestAnimationFrame||function(e){setTimeout(e,1e3/60)},function(t){var a=r.createElement("style");a.type="text/css";try{a.appendChild(r.createTextNode(t))}catch(e){a.styleSheet.cssText=t}r.getElementsByTagName("head")[0].appendChild(a)}(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"),o="function"==typeof e.onclick&&e.onclick,e.onclick=function(e){var t,a;o&&o(),t=e,(a=r.createElement("div")).className="heart",n.push({el:a,x:t.clientX-5,y:t.clientY-5,scale:1,alpha:1,color:"rgb("+~~(255*Math.random())+","+~~(255*Math.random())+","+~~(255*Math.random())+")"}),r.body.appendChild(a)},function e(){for(var t=0;t<n.length;t++)n[t].alpha<=0?(r.body.removeChild(n[t].el),n.splice(t,1)):(n[t].y--,n[t].scale+=.004,n[t].alpha-=.013,n[t].el.style.cssText="left:"+n[t].x+"px;top:"+n[t].y+"px;opacity:"+n[t].alpha+";transform:scale("+n[t].scale+","+n[t].scale+") rotate(45deg);background:"+n[t].color+";z-index:99999");requestAnimationFrame(e)}()}(window,document)</script><script defer>var _hmt=_hmt||[];!function(){var e=document.createElement("script");e.src="https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)}()</script><script defer>!function(e,a,t,n,g,c,o){e.GoogleAnalyticsObject="ga",e.ga=e.ga||function(){(e.ga.q=e.ga.q||[]).push(arguments)},e.ga.l=1*new Date,c=a.createElement(t),o=a.getElementsByTagName(t)[0],c.async=1,c.src="https://www.google-analytics.com/analytics.js",o.parentNode.insertBefore(c,o)}(window,document,"script"),ga("create","UA-144841374-1","auto"),ga("send","pageview")</script></body></html>
+              });
+            }, '', false]
+          }
+        }
+      };</script><script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js"></script><script>!function(e,r,t){var o,n=[];e.requestAnimationFrame=e.requestAnimationFrame||e.webkitRequestAnimationFrame||e.mozRequestAnimationFrame||e.oRequestAnimationFrame||e.msRequestAnimationFrame||function(e){setTimeout(e,1e3/60)},function(t){var a=r.createElement("style");a.type="text/css";try{a.appendChild(r.createTextNode(t))}catch(e){a.styleSheet.cssText=t}r.getElementsByTagName("head")[0].appendChild(a)}(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"),o="function"==typeof e.onclick&&e.onclick,e.onclick=function(e){var t,a;o&&o(),t=e,(a=r.createElement("div")).className="heart",n.push({el:a,x:t.clientX-5,y:t.clientY-5,scale:1,alpha:1,color:"rgb("+~~(255*Math.random())+","+~~(255*Math.random())+","+~~(255*Math.random())+")"}),r.body.appendChild(a)},function e(){for(var t=0;t<n.length;t++)n[t].alpha<=0?(r.body.removeChild(n[t].el),n.splice(t,1)):(n[t].y--,n[t].scale+=.004,n[t].alpha-=.013,n[t].el.style.cssText="left:"+n[t].x+"px;top:"+n[t].y+"px;opacity:"+n[t].alpha+";transform:scale("+n[t].scale+","+n[t].scale+") rotate(45deg);background:"+n[t].color+";z-index:99999");requestAnimationFrame(e)}()}(window,document)</script><script defer>var _hmt=_hmt||[];!function(){var e=document.createElement("script");e.src="https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)}()</script><script defer>!function(e,a,t,n,g,c,o){e.GoogleAnalyticsObject="ga",e.ga=e.ga||function(){(e.ga.q=e.ga.q||[]).push(arguments)},e.ga.l=1*new Date,c=a.createElement(t),o=a.getElementsByTagName(t)[0],c.async=1,c.src="https://www.google-analytics.com/analytics.js",o.parentNode.insertBefore(c,o)}(window,document,"script"),ga("create","UA-144841374-1","auto"),ga("send","pageview")</script></body></html>

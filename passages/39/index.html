@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png"><link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,shrink-to-fit=no"><meta http-equiv="x-ua-compatible" content="ie=edge"><meta name="theme-color" content="#2f4154"><meta name="description" content="沐晨的个人博客,技术博客"><meta name="author" content="Li Duo"><meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog"><title>39.动态规划实战 - MuChen&#39;s Blog</title><link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css"><link rel="stylesheet" href="/lib/hint/hint.min.css"><link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css"><link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css"><link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css"><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="https://static.muchen.fun/css/custom.css"><script src="/js/utils.js"></script><meta name="generator" content="Hexo 4.2.1"><link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml"></head><body><script>var isNight=22<=(new Date).getHours()||(new Date).getHours()<7;(matchMedia("(prefers-color-scheme: dark)").matches||isNight||"1"===localStorage.getItem("dark"))&&(isNight&&"1"===localStorage.getItem("noDark")||document.body.classList.add("dark"))</script><header style="height:70vh"><nav id="navbar" class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar"><div class="container"><a class="navbar-brand" href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a> <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><div class="animated-icon"><span></span><span></span><span></span></div></button><div class="collapse navbar-collapse" id="navbarSupportedContent"><ul class="navbar-nav ml-auto text-center"><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="iconfont icon-books"></i> 索引</a><div class="dropdown-menu" aria-labelledby="navbarDropdown"><a class="dropdown-item" href="/archives/"><i class="iconfont icon-archive-fill"></i> 归档 </a><a class="dropdown-item" href="/categories/"><i class="iconfont icon-category-fill"></i> 分类 </a><a class="dropdown-item" href="/tags/"><i class="iconfont icon-tags-fill"></i> 标签</a></div></li><li class="nav-item"><a class="nav-link" href="/messageBoard/"><i class="iconfont icon-speakernotes"></i> 留言</a></li><li class="nav-item"><a class="nav-link" href="/about/"><i class="iconfont icon-user-fill"></i> 关于</a></li><li class="nav-item"><a class="nav-link" href="/links/"><i class="iconfont icon-link-fill"></i> 友链</a></li><li class="nav-item" id="search-btn"><a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i class="iconfont icon-search"></i>&nbsp;&nbsp;</a></li><li class="nav-item"><a id="dark" class="nav-link" onclick="switchDarkMode()"><i class="iconfont icon-sun"></i></a></li></ul></div></div></nav><div class="banner intro-2" id="background" parallax="true" style="background:url(https://static.muchen.fun/picture/15.jpg) no-repeat center center;background-size:cover"><div class="full-bg-img"><div class="mask flex-center" style="background-color:rgba(0,0,0,.3)"><div class="container text-center white-text fade-in-up"><span class="h2" id="subtitle"></span><div class="mt-3 post-meta"><i class="iconfont icon-date-fill" aria-hidden="true"></i> <time datetime="2019-08-15 11:42">2019年8月15日 中午</time></div><div class="mt-1"><span class="post-meta mr-2"><i class="iconfont icon-chart"></i> 4.1k 字 </span><span class="post-meta mr-2"><i class="iconfont icon-clock-fill"></i> 62 分钟 </span><span id="leancloud-post-views-container" class="post-meta" style="display:none"><i class="iconfont icon-eye" aria-hidden="true"></i> <span id="leancloud-post-views"></span> 次</span></div></div></div></div></div></header><main><div class="container-fluid"><div class="row"><div class="d-none d-lg-block col-lg-2"></div><div class="col-lg-8 nopadding-md"><div class="container nopadding-md" id="board-ctn"><div class="py-5" id="board"><div class="post-content mx-auto" id="post"><p class="note note-info">本文最后更新于：1 年前</p><article class="markdown-body"><p>当你在搜索框中，一不小心输错单词时，搜索引擎会非常智能地检测出你的拼写错误，并且用对应的正确单词来进行搜索。作为一名软件开发工程师，你是否想过，这个功能是怎么实现的呢？</p><h2 id="如何量化两个字符串的相似度？"><a href="#如何量化两个字符串的相似度？" class="headerlink" title="如何量化两个字符串的相似度？"></a>如何量化两个字符串的相似度？</h2><p>如何量化两个字符串之间的相似程度呢？有一个非常著名的量化方法，那就是编辑距离（<code>Edit Distance</code>）。</p><p>顾名思义，<strong>编辑距离</strong>指的就是，将一个字符串转化成另一个字符串，需要的最少编辑操作次数（比如增加一个字符、删除一个字符、替换一个字符）。编辑距离越大，说明两个字符串的相似程度越小；相反，编辑距离就越小，说明两个字符串的相似程度越大。对于两个完全相同的字符串来说，编辑距离就是 <code>0</code>。</p><p>根据所包含的编辑操作种类的不同，编辑距离有多种不同的计算方式，比较著名的有<strong>莱文斯坦距离</strong>（<code>Levenshtein distance</code>）和<strong>最长公共子串长度</strong>（<code>Longest common substring length</code>）。其中，莱文斯坦距离允许增加、删除、替换字符这三个编辑操作，最长公共子串长度只允许增加、删除字符这两个编辑操作。</p><p>而且，莱文斯坦距离和最长公共子串长度，从两个截然相反的角度，分析字符串的相似程度。莱文斯坦距离的大小，表示两个字符串差异的大小；而最长公共子串的大小，表示两个字符串相似程度的大小。</p><p>关于这两个计算方法，举个例子给你说明一下。这里面，两个字符串 <code>mitcmu</code> 和 <code>mtacnu</code> 的莱文斯坦距离是 <code>3</code>，最长公共子串长度是 <code>4</code>。如下图所示：<br><img src="./48f6d0eb.jpeg" srcset="/img/loading.gif" alt="image"></p><h2 id="如何编程计算莱文斯坦距离？"><a href="#如何编程计算莱文斯坦距离？" class="headerlink" title="如何编程计算莱文斯坦距离？"></a>如何编程计算莱文斯坦距离？</h2><p>这个问题是求把一个字符串变成另一个字符串，需要的最少编辑次数。整个求解过程，涉及多个决策阶段，需要依次考察一个字符串中的每个字符，跟另一个字符串中的字符是否匹配，匹配的话如何处理，不匹配的话又如何处理。所以，这个问题符合<strong>多阶段决策最优解模型</strong>。</p><p>前面讲了，贪心、回溯、动态规划可以解决的问题，都可以抽象成这样一个模型。要解决这个问题，可以先看一看，用最简单的回溯算法，该如何来解决。</p><p>回溯是一个递归处理的过程。如果 <code>a[i]</code> 与 <code>b[j]</code> 匹配，递归考察 <code>a[i+1]</code> 和 <code>b[j+1]</code>。如果 <code>a[i]</code> 与 <code>b[j]</code> 不匹配，有多种处理方式可选：</p><ul><li><p>可以删除 <code>a[i]</code>，然后递归考察 <code>a[i+1]</code> 和 <code>b[j]</code>；</p></li><li><p>可以删除 <code>b[j]</code>，然后递归考察 <code>a[i]</code> 和 <code>b[j+1]</code>；</p></li><li><p>可以在 <code>a[i]</code> 前面添加一个跟 <code>b[j]</code> 相同的字符，然后递归考察 <code>a[i]</code> 和 <code>b[j+1]</code>;</p></li><li><p>可以在 <code>b[j]</code> 前面添加一个跟 <code>a[i]</code> 相同的字符，然后递归考察 <code>a[i+1]</code> 和 <code>b[j]</code>；</p></li><li><p>可以将 <code>a[i]</code> 替换成 <code>b[j]</code>，或者将 <code>b[j]</code> 替换成 <code>a[i]</code>，然后递归考察 <code>a[i+1]</code> 和 <code>b[j+1]</code>。</p></li></ul><p>将上面的回溯算法的处理思路，翻译成代码，就是下面这个样子：</p><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">char</span>[] a = <span class="hljs-string">"mitcmu"</span>.toCharArray();
+<!DOCTYPE html><html lang="zh-CN" data-default-color-scheme="&#34;auto&#34;"><head><meta charset="UTF-8"><link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png"><link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,shrink-to-fit=no"><meta http-equiv="x-ua-compatible" content="ie=edge"><meta name="theme-color" content="#2f4154"><meta name="description" content="沐晨的个人博客,技术博客"><meta name="author" content="Li Duo"><meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog"><title>39.动态规划实战 - MuChen&#39;s Blog</title><link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css"><link rel="stylesheet" href="/lib/hint/hint.min.css"><link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css"><link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_6peoq002giu.css"><link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css"><link rel="stylesheet" href="/css/main.css"><script src="/js/utils.js"></script><script src="/js/color-schema.js"></script><meta name="generator" content="Hexo 4.2.1"><link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml"></head><body><header style="height:70vh"><nav id="navbar" class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar"><div class="container"><a class="navbar-brand" href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a> <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><div class="animated-icon"><span></span><span></span><span></span></div></button><div class="collapse navbar-collapse" id="navbarSupportedContent"><ul class="navbar-nav ml-auto text-center"><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="iconfont icon-books"></i> 索引</a><div class="dropdown-menu" aria-labelledby="navbarDropdown"><a class="dropdown-item" href="/archives/"><i class="iconfont icon-archive-fill"></i> 归档 </a><a class="dropdown-item" href="/categories/"><i class="iconfont icon-category-fill"></i> 分类 </a><a class="dropdown-item" href="/tags/"><i class="iconfont icon-tags-fill"></i> 标签</a></div></li><li class="nav-item"><a class="nav-link" href="/messageBoard/"><i class="iconfont icon-speakernotes"></i> 留言</a></li><li class="nav-item"><a class="nav-link" href="/about/"><i class="iconfont icon-user-fill"></i> 关于</a></li><li class="nav-item"><a class="nav-link" href="/links/"><i class="iconfont icon-link-fill"></i> 友链</a></li><li class="nav-item" id="search-btn"><a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i class="iconfont icon-search"></i>&nbsp;</a></li><li class="nav-item" id="color-toggle-btn"><a class="nav-link" href="javascript:">&nbsp;<i class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a></li></ul></div></div></nav><div class="banner intro-2" id="background" parallax="true" style="background:url(https://static.muchen.fun/picture/15.jpg) no-repeat center center;background-size:cover"><div class="full-bg-img"><div class="mask flex-center" style="background-color:rgba(0,0,0,.3)"><div class="container page-header text-center fade-in-up"><span class="h2" id="subtitle"></span><div class="mt-3 post-meta"><i class="iconfont icon-date-fill" aria-hidden="true"></i> <time datetime="2019-08-15 11:42" pubdate>2019年8月15日 中午</time></div><div class="mt-1"><span class="post-meta mr-2"><i class="iconfont icon-chart"></i> 4.1k 字 </span><span class="post-meta mr-2"><i class="iconfont icon-clock-fill"></i> 62 分钟 </span><span id="leancloud-post-views-container" class="post-meta" style="display:none"><i class="iconfont icon-eye" aria-hidden="true"></i> <span id="leancloud-post-views"></span> 次</span></div></div></div></div></div></header><main><div class="container-fluid"><div class="row"><div class="d-none d-lg-block col-lg-2"></div><div class="col-lg-8 nopadding-md"><div class="container nopadding-md" id="board-ctn"><div class="py-5" id="board"><article class="post-content mx-auto" id="post"><h1 style="display:none">39.动态规划实战</h1><p class="note note-info">本文最后更新于：1 年前</p><div class="markdown-body" id="post-body"><p>当你在搜索框中，一不小心输错单词时，搜索引擎会非常智能地检测出你的拼写错误，并且用对应的正确单词来进行搜索。作为一名软件开发工程师，你是否想过，这个功能是怎么实现的呢？</p><h2 id="如何量化两个字符串的相似度？"><a href="#如何量化两个字符串的相似度？" class="headerlink" title="如何量化两个字符串的相似度？"></a>如何量化两个字符串的相似度？</h2><p>如何量化两个字符串之间的相似程度呢？有一个非常著名的量化方法，那就是编辑距离（<code>Edit Distance</code>）。</p><p>顾名思义，<strong>编辑距离</strong>指的就是，将一个字符串转化成另一个字符串，需要的最少编辑操作次数（比如增加一个字符、删除一个字符、替换一个字符）。编辑距离越大，说明两个字符串的相似程度越小；相反，编辑距离就越小，说明两个字符串的相似程度越大。对于两个完全相同的字符串来说，编辑距离就是 <code>0</code>。</p><p>根据所包含的编辑操作种类的不同，编辑距离有多种不同的计算方式，比较著名的有<strong>莱文斯坦距离</strong>（<code>Levenshtein distance</code>）和<strong>最长公共子串长度</strong>（<code>Longest common substring length</code>）。其中，莱文斯坦距离允许增加、删除、替换字符这三个编辑操作，最长公共子串长度只允许增加、删除字符这两个编辑操作。</p><p>而且，莱文斯坦距离和最长公共子串长度，从两个截然相反的角度，分析字符串的相似程度。莱文斯坦距离的大小，表示两个字符串差异的大小；而最长公共子串的大小，表示两个字符串相似程度的大小。</p><p>关于这两个计算方法，举个例子给你说明一下。这里面，两个字符串 <code>mitcmu</code> 和 <code>mtacnu</code> 的莱文斯坦距离是 <code>3</code>，最长公共子串长度是 <code>4</code>。如下图所示：<br><img src="./48f6d0eb.jpeg" srcset="/img/loading.gif" alt="image"></p><h2 id="如何编程计算莱文斯坦距离？"><a href="#如何编程计算莱文斯坦距离？" class="headerlink" title="如何编程计算莱文斯坦距离？"></a>如何编程计算莱文斯坦距离？</h2><p>这个问题是求把一个字符串变成另一个字符串，需要的最少编辑次数。整个求解过程，涉及多个决策阶段，需要依次考察一个字符串中的每个字符，跟另一个字符串中的字符是否匹配，匹配的话如何处理，不匹配的话又如何处理。所以，这个问题符合<strong>多阶段决策最优解模型</strong>。</p><p>前面讲了，贪心、回溯、动态规划可以解决的问题，都可以抽象成这样一个模型。要解决这个问题，可以先看一看，用最简单的回溯算法，该如何来解决。</p><p>回溯是一个递归处理的过程。如果 <code>a[i]</code> 与 <code>b[j]</code> 匹配，递归考察 <code>a[i+1]</code> 和 <code>b[j+1]</code>。如果 <code>a[i]</code> 与 <code>b[j]</code> 不匹配，有多种处理方式可选：</p><ul><li><p>可以删除 <code>a[i]</code>，然后递归考察 <code>a[i+1]</code> 和 <code>b[j]</code>；</p></li><li><p>可以删除 <code>b[j]</code>，然后递归考察 <code>a[i]</code> 和 <code>b[j+1]</code>；</p></li><li><p>可以在 <code>a[i]</code> 前面添加一个跟 <code>b[j]</code> 相同的字符，然后递归考察 <code>a[i]</code> 和 <code>b[j+1]</code>;</p></li><li><p>可以在 <code>b[j]</code> 前面添加一个跟 <code>a[i]</code> 相同的字符，然后递归考察 <code>a[i+1]</code> 和 <code>b[j]</code>；</p></li><li><p>可以将 <code>a[i]</code> 替换成 <code>b[j]</code>，或者将 <code>b[j]</code> 替换成 <code>a[i]</code>，然后递归考察 <code>a[i+1]</code> 和 <code>b[j+1]</code>。</p></li></ul><p>将上面的回溯算法的处理思路，翻译成代码，就是下面这个样子：</p><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">char</span>[] a = <span class="hljs-string">"mitcmu"</span>.toCharArray();
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">char</span>[] b = <span class="hljs-string">"mtacnu"</span>.toCharArray();
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> n = <span class="hljs-number">6</span>;
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> m = <span class="hljs-number">6</span>;
@@ -88,222 +88,216 @@ max(max_lcs(i-<span class="hljs-number">1</span>,j-<span class="hljs-number">1</
   <span class="hljs-keyword">if</span> (y &gt; maxv) maxv = y;
   <span class="hljs-keyword">if</span> (z &gt; maxv) maxv = z;
   <span class="hljs-keyword">return</span> maxv;
-&#125;</code></pre><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>动态规划的理论尽管并不复杂，总结起来就是“<strong>一个模型三个特征</strong>”。但是，要想灵活应用并不简单。要想能真正理解、掌握动态规划，只有多练习。</p><p>这三篇中，加上课后思考题，总共有 <code>8</code> 个动态规划问题。这 <code>8</code> 个问题都非常经典。很多动态规划问题其实都可以抽象成这几个问题模型，所以，一定要多看几遍，多思考一下，争取真正搞懂它们。</p><p>只要弄懂了这几个问题，一般的动态规划问题，你应该都可以应付。对于动态规划这个知识点，就算是入门了，再学习更加复杂的就会简单很多。</p><h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ul><li><p>如何实现搜索引擎中的拼写纠错功能？</p><blockquote><p>当用户在搜索框内，输入一个拼写错误的单词时，就拿这个单词跟词库中的单词一一进行比较，计算编辑距离，将编辑距离最小的单词，作为纠正之后的单词，提示给用户。</p><p>这就是拼写纠错最基本的原理。不过，真正用于商用的搜索引擎，拼写纠错功能显然不会就这么简单。一方面，单纯利用编辑距离来纠错，效果并不一定好；另一方面，词库中的数据量可能很大，搜索引擎每天要支持海量的搜索，所以对纠错的性能要求很高。<br>针对纠错效果不好的问题，有很多种优化思路，这里介绍几种。</p><ul><li><p>并不仅仅取出编辑距离最小的那个单词，而是取出编辑距离最小的 <code>TOP 10</code>，然后根据其他参数，决策选择哪个单词作为拼写纠错单词。比如使用搜索热门程度来决定哪个单词作为拼写纠错单词。</p></li><li><p>还可以用多种编辑距离计算方法，比如上面讲到的两种，然后分别编辑距离最小的 <code>TOP 10</code>，然后求交集，用交集的结果，再继续优化处理。</p></li><li><p>还可以通过统计用户的搜索日志，得到最常被拼错的单词列表，以及对应的拼写正确的单词。搜索引擎在拼写纠错的时候，首先在这个最长被拼错单词列表中查找。如果一旦找到，直接返回对应的正确的单词。这样纠错的效果非常好。</p></li><li><p>还有更加高级一点的做法，引入个性化因素。针对每个用户，维护这个用户特有的搜索喜好，也就是常用的搜索关键词。当用户输入错误的单词的时候，首先在这个用户常用的搜索关键词中，计算编辑距离，查找编辑距离最小的单词。</p></li></ul><p>针对纠错性能方面，也有相应的优化方式。这里讲两种分治的优化思路。</p><ul><li><p>如果纠错功能的 <code>TPS</code> 不高，可以部署多台机器，每台机器运行一个独立的纠错功能。当有一个纠错请求的时候，通过负载均衡，分配到其中一台机器，来计算编辑距离，得到纠错单词。</p></li><li><p>如果纠错系统的响应时间太长，也就是，每个纠错请求处理时间过长，可以将纠错的词库，分割到很多台机器。当有一个纠错请求的时候，就将这个拼写错误的单词，同时发送到这多台机器，让多台机器并行处理，分别得到编辑距离最小的单词，然后再比对合并，最终决定出一个最优的纠错单词。</p></li></ul><p>真正的搜索引擎的拼写纠错优化，肯定不止这么简单，但是万变不离其宗。掌握了核心原理，就是掌握了解决问题的方法，剩下就靠你自己的灵活运用和实战操练了。</p></blockquote></li><li><p>有一个数字序列包含 <code>n</code> 个不同的数字，如何求出这个序列中的最长递增子序列长度？比如 <code>2, 9, 3, 6, 5, 1, 7</code> 这样一组数字序列，它的最长递增子序列就是 <code>2, 3, 5, 7</code>，所以最长递增子序列的长度是 <code>4</code>。欢迎留言和我分享。</p></li></ul></article><hr><div><div class="post-metas mb-3"><div class="post-meta mr-3"><i class="iconfont icon-category"></i> <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/">数据结构与算法(中级)</a></div><div class="post-meta"><i class="iconfont icon-tags"></i> <a class="hover-with-bg" href="/tags/%E7%AE%97%E6%B3%95/">算法</a></div></div><p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p><div class="post-prevnext row"><div class="post-prev col-6"><a href="/passages/40/"><i class="iconfont icon-arrowleft"></i> <span class="hidden-mobile">40.拓扑排序</span> <span class="visible-mobile">上一篇</span></a></div><div class="post-next col-6"><a href="/passages/38/"><span class="hidden-mobile">38.动态规划理论</span> <span class="visible-mobile">下一篇</span> <i class="iconfont icon-arrowright"></i></a></div></div></div><div class="comments" id="comments"><div id="vcomments"></div><script type="text/javascript">function loadValine(){addScript("https://cdn.staticfile.org/valine/1.4.14/Valine.min.js",function(){new Valine({el:"#vcomments",app_id:"O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",app_key:"5Rl3Rhl9zc8BJNvrPcncKWFy",placeholder:"说点什么吧~",path:window.location.pathname,avatar:"retro",meta:["nick","mail","link"],pageSize:"10",lang:"zh-CN",highlight:!0,recordIP:!0,serverURLs:"https://lean.muchen.fun"})})}createObserver(loadValine,"vcomments")</script><noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments powered by Valine.</a></noscript></div></div></div></div></div></div></div><div class="col-lg-7 mx-auto nopadding-md"><div class="container custom post-content mx-auto"><img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px;height:150px"><br><div class="text-center">欢迎关注我的公众号😘</div></div></div></main><a id="scroll-top-button" href="#" role="button"><i class="iconfont icon-arrowup" aria-hidden="true"></i></a><div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable modal-lg" role="document"><div class="modal-content"><div class="modal-header text-center"><h4 class="modal-title w-100 font-weight-bold">搜索</h4><button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div><div class="modal-body mx-3"><div class="md-form mb-5"><input type="text" id="local-search-input" class="form-control validate"> <label data-error="x" data-success="v" for="local-search-input">关键词</label></div><div class="list-group" id="local-search-result"></div></div></div></div></div><footer class="mt-5"><div class="text-center py-3"><div><a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a></div><div><span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span><script>document.getElementById("dark").innerHTML=document.querySelector("body").classList.contains("dark")?"🌙":"☀";var now=new Date;function createtime(){var n=new Date("07/12/2019 00:00:00");now.setTime(now.getTime()+250),days=(now-n)/1e3/60/60/24,dnum=Math.floor(days),hours=(now-n)/1e3/60/60-24*dnum,hnum=Math.floor(hours),1==String(hnum).length&&(hnum="0"+hnum),minutes=(now-n)/1e3/60-1440*dnum-60*hnum,mnum=Math.floor(minutes),1==String(mnum).length&&(mnum="0"+mnum),seconds=(now-n)/1e3-86400*dnum-3600*hnum-60*mnum,snum=Math.round(seconds),1==String(snum).length&&(snum="0"+snum),document.getElementById("timeDate").innerHTML="本站已运行&nbsp"+dnum+"&nbsp天",document.getElementById("times").innerHTML=hnum+"&nbsp小时&nbsp"+mnum+"&nbsp分&nbsp"+snum+"&nbsp秒"}setInterval("createtime()",250)</script></div><p id="hitokoto">:D 获取中...</p><script>fetch('https://v1.hitokoto.cn')
-                .then(response => response.json())
-                .then(data => {
-                    const hitokoto = document.getElementById('hitokoto')
-                    hitokoto.innerText = data.hitokoto + '--「' + data.from + '」'
-                })
-                .catch(console.error)</script><div class="statistics"><span id="leancloud-site-pv-container" style="display:none">总访问量 <span id="leancloud-site-pv"></span> 次 </span><span id="leancloud-site-uv-container" style="display:none">总访客数 <span id="leancloud-site-uv"></span> 人</span></div></div></footer><script src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js"></script><script src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script><script src="/js/debouncer.js"></script><script src="/js/main.js"></script><script src="/js/lazyload.js"></script><script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js"></script><script src="/js/clipboard-use.js"></script><script defer>(function () {
-        // 查询存储的记录
-        function getRecord(Counter, target) {
-            return new Promise(function (resolve, reject) {
-                Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({target})))
-                    .then(resp => resp.json())
-                    .then(({results, code, error}) => {
-                        if (code === 401) {
-                            throw error;
-                        }
-                        if (results && results.length > 0) {
-                            var record = results[0];
-                            resolve(record);
-                        } else {
-                            Counter('post', '/classes/Counter', {target, time: 0})
-                                .then(resp => resp.json())
-                                .then((record, error) => {
-                                    if (error) {
-                                        throw error;
-                                    }
-                                    resolve(record);
-                                }).catch(error => {
-                                console.error('Failed to create', error);
-                                reject(error);
-                            });
-                        }
-                    }).catch((error) => {
-                    console.error('LeanCloud Counter Error:', error);
-                    reject(error);
-                });
-            })
-        }
-
-        // 发起自增请求
-        function increment(Counter, incrArr) {
-            return new Promise(function (resolve, reject) {
-                Counter('post', '/batch', {
-                    "requests": incrArr
-                }).then((res) => {
-                    res = res.json();
-                    if (res.error) {
-                        throw res.error;
-                    }
-                    resolve(res);
-                }).catch((error) => {
-                    console.error('Failed to save visitor count', error);
-                    reject(error);
-                });
-            });
-        }
-
-        // 构建自增请求体
-        function buildIncrement(objectId) {
-            return {
-                "method": "PUT",
-                "path": `/1.1/classes/Counter/${objectId}`,
-                "body": {
-                    "time": {
-                        '__op': 'Increment',
-                        'amount': 1
-                    }
-                }
+&#125;</code></pre><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>动态规划的理论尽管并不复杂，总结起来就是“<strong>一个模型三个特征</strong>”。但是，要想灵活应用并不简单。要想能真正理解、掌握动态规划，只有多练习。</p><p>这三篇中，加上课后思考题，总共有 <code>8</code> 个动态规划问题。这 <code>8</code> 个问题都非常经典。很多动态规划问题其实都可以抽象成这几个问题模型，所以，一定要多看几遍，多思考一下，争取真正搞懂它们。</p><p>只要弄懂了这几个问题，一般的动态规划问题，你应该都可以应付。对于动态规划这个知识点，就算是入门了，再学习更加复杂的就会简单很多。</p><h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ul><li><p>如何实现搜索引擎中的拼写纠错功能？</p><blockquote><p>当用户在搜索框内，输入一个拼写错误的单词时，就拿这个单词跟词库中的单词一一进行比较，计算编辑距离，将编辑距离最小的单词，作为纠正之后的单词，提示给用户。</p><p>这就是拼写纠错最基本的原理。不过，真正用于商用的搜索引擎，拼写纠错功能显然不会就这么简单。一方面，单纯利用编辑距离来纠错，效果并不一定好；另一方面，词库中的数据量可能很大，搜索引擎每天要支持海量的搜索，所以对纠错的性能要求很高。<br>针对纠错效果不好的问题，有很多种优化思路，这里介绍几种。</p><ul><li><p>并不仅仅取出编辑距离最小的那个单词，而是取出编辑距离最小的 <code>TOP 10</code>，然后根据其他参数，决策选择哪个单词作为拼写纠错单词。比如使用搜索热门程度来决定哪个单词作为拼写纠错单词。</p></li><li><p>还可以用多种编辑距离计算方法，比如上面讲到的两种，然后分别编辑距离最小的 <code>TOP 10</code>，然后求交集，用交集的结果，再继续优化处理。</p></li><li><p>还可以通过统计用户的搜索日志，得到最常被拼错的单词列表，以及对应的拼写正确的单词。搜索引擎在拼写纠错的时候，首先在这个最长被拼错单词列表中查找。如果一旦找到，直接返回对应的正确的单词。这样纠错的效果非常好。</p></li><li><p>还有更加高级一点的做法，引入个性化因素。针对每个用户，维护这个用户特有的搜索喜好，也就是常用的搜索关键词。当用户输入错误的单词的时候，首先在这个用户常用的搜索关键词中，计算编辑距离，查找编辑距离最小的单词。</p></li></ul><p>针对纠错性能方面，也有相应的优化方式。这里讲两种分治的优化思路。</p><ul><li><p>如果纠错功能的 <code>TPS</code> 不高，可以部署多台机器，每台机器运行一个独立的纠错功能。当有一个纠错请求的时候，通过负载均衡，分配到其中一台机器，来计算编辑距离，得到纠错单词。</p></li><li><p>如果纠错系统的响应时间太长，也就是，每个纠错请求处理时间过长，可以将纠错的词库，分割到很多台机器。当有一个纠错请求的时候，就将这个拼写错误的单词，同时发送到这多台机器，让多台机器并行处理，分别得到编辑距离最小的单词，然后再比对合并，最终决定出一个最优的纠错单词。</p></li></ul><p>真正的搜索引擎的拼写纠错优化，肯定不止这么简单，但是万变不离其宗。掌握了核心原理，就是掌握了解决问题的方法，剩下就靠你自己的灵活运用和实战操练了。</p></blockquote></li><li><p>有一个数字序列包含 <code>n</code> 个不同的数字，如何求出这个序列中的最长递增子序列长度？比如 <code>2, 9, 3, 6, 5, 1, 7</code> 这样一组数字序列，它的最长递增子序列就是 <code>2, 3, 5, 7</code>，所以最长递增子序列的长度是 <code>4</code>。欢迎留言和我分享。</p></li></ul></div><hr><div><div class="post-metas mb-3"><div class="post-meta mr-3"><i class="iconfont icon-category"></i> <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E4%B8%AD%E7%BA%A7/">数据结构与算法(中级)</a></div><div class="post-meta"><i class="iconfont icon-tags"></i> <a class="hover-with-bg" href="/tags/%E7%AE%97%E6%B3%95/">算法</a></div></div><p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p><div class="post-prevnext row"><article class="post-prev col-6"><a href="/passages/40/"><i class="iconfont icon-arrowleft"></i> <span class="hidden-mobile">40.拓扑排序</span> <span class="visible-mobile">上一篇</span></a></article><article class="post-next col-6"><a href="/passages/38/"><span class="hidden-mobile">38.动态规划理论</span> <span class="visible-mobile">下一篇</span> <i class="iconfont icon-arrowright"></i></a></article></div></div><article class="comments" id="comments"><div id="vcomments"></div><script type="text/javascript">function loadValine(){addScript("https://cdn.staticfile.org/valine/1.4.14/Valine.min.js",function(){new Valine({el:"#vcomments",app_id:"O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI",app_key:"5Rl3Rhl9zc8BJNvrPcncKWFy",placeholder:"说点什么吧~",path:window.location.pathname,avatar:"retro",meta:["nick","mail","link"],pageSize:"10",lang:"zh-CN",highlight:!0,recordIP:!0,serverURLs:"https://lean.muchen.fun"})})}waitElementVisible("vcomments",loadValine)</script><noscript>Please enable JavaScript to view the <a href="https://valine.js.org" rel="nofollow noopener">comments powered by Valine.</a></noscript></article></article></div></div></div></div></div><div class="col-lg-7 mx-auto nopadding-md"><div class="container custom post-content mx-auto"><img src="https://static.muchen.fun/images/weixin_mp.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px;height:150px"><br><div class="text-center">欢迎关注我的公众号😘</div></div></div></main><a id="scroll-top-button" href="#" role="button"><i class="iconfont icon-arrowup" aria-hidden="true"></i></a><div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable modal-lg" role="document"><div class="modal-content"><div class="modal-header text-center"><h4 class="modal-title w-100 font-weight-bold">搜索</h4><button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div><div class="modal-body mx-3"><div class="md-form mb-5"><input type="text" id="local-search-input" class="form-control validate"> <label data-error="x" data-success="v" for="local-search-input">关键词</label></div><div class="list-group" id="local-search-result"></div></div></div></div></div><footer class="mt-5"><div class="text-center py-3"><div><a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a></div><div class="statistics"><span id="leancloud-site-pv-container" style="display:none">总访问量 <span id="leancloud-site-pv"></span> 次 </span><span id="leancloud-site-uv-container" style="display:none">总访客数 <span id="leancloud-site-uv"></span> 人</span></div></div></footer><script src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js"></script><script src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script><script src="/js/debouncer.js"></script><script src="/js/main.js"></script><script src="/js/lazyload.js"></script><script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js"></script><script src="/js/clipboard-use.js"></script><script defer>(function () {
+    // 查询存储的记录
+    function getRecord(Counter, target) {
+      return new Promise(function (resolve, reject) {
+        Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({target})))
+          .then(resp => resp.json())
+          .then(({results, code, error}) => {
+            if (code === 401) {
+              throw error;
             }
-        }
-
-        // 校验是否为有效的 UV
-        function validUV() {
-            var key = 'LeanCloud_UV_Flag';
-            var flag = localStorage.getItem(key);
-            if (flag) {
-                // 距离标记小于 24 小时则不计为 UV
-                if (new Date().getTime() - parseInt(flag) <= 86400000) {
-                    return false;
-                }
-            }
-            localStorage.setItem(key, new Date().getTime().toString());
-            return true;
-        }
-
-        function addCount(Counter) {
-            var enableIncr = 'true' === 'true' && window.location.hostname !== 'localhost';
-            var getterArr = [];
-            var incrArr = [];
-
-            // 请求 PV 并自增
-            var pvCtn = document.querySelector('#leancloud-site-pv-container');
-            if (pvCtn || enableIncr) {
-                var pvGetter = getRecord(Counter, 'site-pv').then((record) => {
-                    incrArr.push(buildIncrement(record.objectId))
-                    var ele = document.querySelector('#leancloud-site-pv');
-                    if (ele) {
-                        ele.innerText = record.time + 1;
-                        if (pvCtn) {
-                            pvCtn.style.display = 'inline';
-                        }
-                    }
-                });
-                getterArr.push(pvGetter);
-            }
-
-            // 请求 UV 并自增
-            var uvCtn = document.querySelector('#leancloud-site-uv-container');
-            if (uvCtn || enableIncr) {
-                var uvGetter = getRecord(Counter, 'site-uv').then((record) => {
-                    var vuv = validUV();
-                    vuv && incrArr.push(buildIncrement(record.objectId))
-                    var ele = document.querySelector('#leancloud-site-uv');
-                    if (ele) {
-                        ele.innerText = record.time + (vuv ? 1 : 0);
-                        if (uvCtn) {
-                            uvCtn.style.display = 'inline';
-                        }
-                    }
-                });
-                getterArr.push(uvGetter);
-            }
-
-            // 如果是文章，请求文章的浏览数，并自增
-            if ('true' === 'true') {
-                var viewCtn = document.querySelector('#leancloud-post-views-container');
-                if (viewCtn || enableIncr) {
-                    var target = decodeURI('/passages/39/');
-                    var viewGetter = getRecord(Counter, target).then((record) => {
-                        incrArr.push(buildIncrement(record.objectId))
-                        if (viewCtn) {
-                            var ele = document.querySelector('#leancloud-post-views');
-                            if (ele) {
-                                ele.innerText = (record.time || 0) + 1;
-                                viewCtn.style.display = 'inline';
-                            }
-                        }
-                    });
-                    getterArr.push(viewGetter);
-                }
-            }
-
-            // 如果启动计数自增，批量发起自增请求
-            if (enableIncr) {
-                Promise.all(getterArr).then(() => {
-                    incrArr.length > 0 && increment(Counter, incrArr);
-                })
-            }
-        }
-
-        var app_id = 'O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI'
-        var app_key = '5Rl3Rhl9zc8BJNvrPcncKWFy'
-        var server_url = 'https://lean.muchen.fun'
-
-        function fetchData(api_server) {
-            var Counter = (method, url, data) => {
-                return fetch(`${api_server}/1.1${url}`, {
-                    method,
-                    headers: {
-                        'X-LC-Id': app_id,
-                        'X-LC-Key': app_key,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                });
-            };
-
-            addCount(Counter);
-        }
-
-        var api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
-
-        if (api_server) {
-            fetchData(api_server);
-        } else {
-            fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+            if (results && results.length > 0) {
+              var record = results[0];
+              resolve(record);
+            } else {
+              Counter('post', '/classes/Counter', {target, time: 0})
                 .then(resp => resp.json())
-                .then(({api_server}) => {
-                    fetchData('https://' + api_server);
-                });
+                .then((record, error) => {
+                  if (error) {
+                    throw error;
+                  }
+                  resolve(record);
+                }).catch(error => {
+                console.error('Failed to create', error);
+                reject(error);
+              });
+            }
+          }).catch((error) => {
+          console.error('LeanCloud Counter Error:', error);
+          reject(error);
+        });
+      })
+    }
+
+    // 发起自增请求
+    function increment(Counter, incrArr) {
+      return new Promise(function (resolve, reject) {
+        Counter('post', '/batch', {
+          "requests": incrArr
+        }).then((res) => {
+          res = res.json();
+          if (res.error) {
+            throw res.error;
+          }
+          resolve(res);
+        }).catch((error) => {
+          console.error('Failed to save visitor count', error);
+          reject(error);
+        });
+      });
+    }
+
+    // 构建自增请求体
+    function buildIncrement(objectId) {
+      return {
+        "method": "PUT",
+        "path": `/1.1/classes/Counter/${ objectId }`,
+        "body": {
+          "time": {
+            '__op': 'Increment',
+            'amount': 1
+          }
         }
-    })();</script><script src="https://static.muchen.fun/js/custom.js"></script><script src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js"></script><script>var typed=new Typed("#subtitle",{strings:["  ","39.动态规划实战&nbsp;"],cursorChar:"_",typeSpeed:70,loop:!1});typed.stop(),$(document).ready(function(){$(".typed-cursor").addClass("h2"),typed.start()})</script><script src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js"></script><script>anchors.options = {
-            placement: "right",
-            visible: "hover",
-            
-        };
-        var el = "h1,h2,h3,h4,h5,h6".split(",");
-        var res = [];
-        for (item of el) {
-            res.push(".markdown-body > " + item)
+      }
+    }
+
+    // 校验是否为有效的 UV
+    function validUV() {
+      var key = 'LeanCloud_UV_Flag';
+      var flag = localStorage.getItem(key);
+      if (flag) {
+        // 距离标记小于 24 小时则不计为 UV
+        if (new Date().getTime() - parseInt(flag) <= 86400000) {
+          return false;
         }
-        anchors.add(res.join(", "))</script><script src="/js/local-search.js"></script><script>var path="/local-search.xml",inputArea=document.querySelector("#local-search-input");inputArea.onclick=function(){searchFunc(path,"local-search-input","local-search-result"),this.onclick=null}</script><script src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js"></script><link rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css"><script>$("#post img:not(.no-zoom img, img[no-zoom]), img[zoom]").each(function(){var t=document.createElement("a");$(t).attr("data-fancybox","images"),$(t).attr("href",$(this).attr("src")),$(this).wrap(t)})</script><script>MathJax = {
-                tex: {
-                    inlineMath: [['$', '$'], ['\\(', '\\)']]
-                },
-                options: {
-                    renderActions: {
-                        findScript: [10, doc => {
-                            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
-                                const display = !!node.type.match(/; *mode=display/);
-                                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
-                                const text = document.createTextNode('');
-                                node.parentNode.replaceChild(text, node);
-                                math.start = {node: text, delim: '', n: 0};
-                                math.end = {node: text, delim: '', n: 0};
-                                doc.math.push(math);
-                            });
-                        }, '', false],
-                        insertedScript: [200, () => {
-                            document.querySelectorAll('mjx-container').forEach(node => {
-                                let target = node.parentNode;
-                                if (target.nodeName.toLowerCase() === 'li') {
-                                    target.parentNode.classList.add('has-jax');
-                                }
-                            });
-                        }, '', false]
-                    }
+      }
+      localStorage.setItem(key, new Date().getTime().toString());
+      return true;
+    }
+
+    function addCount(Counter) {
+      var enableIncr = 'true' === 'true' && window.location.hostname !== 'localhost';
+      var getterArr = [];
+      var incrArr = [];
+
+      // 请求 PV 并自增
+      var pvCtn = document.querySelector('#leancloud-site-pv-container');
+      if (pvCtn || enableIncr) {
+        var pvGetter = getRecord(Counter, 'site-pv').then((record) => {
+          incrArr.push(buildIncrement(record.objectId))
+          var ele = document.querySelector('#leancloud-site-pv');
+          if (ele) {
+            ele.innerText = record.time + 1;
+            if (pvCtn) {
+              pvCtn.style.display = 'inline';
+            }
+          }
+        });
+        getterArr.push(pvGetter);
+      }
+
+      // 请求 UV 并自增
+      var uvCtn = document.querySelector('#leancloud-site-uv-container');
+      if (uvCtn || enableIncr) {
+        var uvGetter = getRecord(Counter, 'site-uv').then((record) => {
+          var vuv = validUV();
+          vuv && incrArr.push(buildIncrement(record.objectId))
+          var ele = document.querySelector('#leancloud-site-uv');
+          if (ele) {
+            ele.innerText = record.time + (vuv ? 1 : 0);
+            if (uvCtn) {
+              uvCtn.style.display = 'inline';
+            }
+          }
+        });
+        getterArr.push(uvGetter);
+      }
+
+      // 如果是文章，请求文章的浏览数，并自增
+      if ('true' === 'true') {
+        var viewCtn = document.querySelector('#leancloud-post-views-container');
+        if (viewCtn || enableIncr) {
+          var target = decodeURI('/passages/39/');
+          var viewGetter = getRecord(Counter, target).then((record) => {
+            incrArr.push(buildIncrement(record.objectId))
+            if (viewCtn) {
+              var ele = document.querySelector('#leancloud-post-views');
+              if (ele) {
+                ele.innerText = (record.time || 0) + 1;
+                viewCtn.style.display = 'inline';
+              }
+            }
+          });
+          getterArr.push(viewGetter);
+        }
+      }
+
+      // 如果启动计数自增，批量发起自增请求
+      if (enableIncr) {
+        Promise.all(getterArr).then(() => {
+          incrArr.length > 0 && increment(Counter, incrArr);
+        })
+      }
+    }
+
+    var app_id = 'O8vCwRAgytvziX1uG5WgRn8R-MdYXbMMI'
+    var app_key = '5Rl3Rhl9zc8BJNvrPcncKWFy'
+    var server_url = 'https://lean.muchen.fun'
+
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${ api_server }/1.1${ url }`, {
+          method,
+          headers: {
+            'X-LC-Id': app_id,
+            'X-LC-Key': app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+
+      addCount(Counter);
+    }
+
+    var api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${ app_id.slice(0, 8).toLowerCase() }.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(resp => resp.json())
+        .then(({api_server}) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();</script><script src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js"></script><script>var typed=new Typed("#subtitle",{strings:["  ","39.动态规划实战&nbsp;"],cursorChar:"_",typeSpeed:70,loop:!1});typed.stop(),$(document).ready(function(){$(".typed-cursor").addClass("h2"),typed.start()})</script><script src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js"></script><script>anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))</script><script src="/js/local-search.js"></script><script>var path="/local-search.xml",inputArea=document.querySelector("#local-search-input");inputArea.onclick=function(){searchFunc(path,"local-search-input","local-search-result"),this.onclick=null}</script><script src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js"></script><link rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css"><script>$("#post img:not(.no-zoom img, img[no-zoom]), img[zoom]").each(function(){var t=document.createElement("a");$(t).attr("data-fancybox","images"),$(t).attr("href",$(this).attr("src")),$(this).wrap(t)})</script><script>MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
                 }
-            };</script><script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js"></script><script>!function(e,r,t){var o,n=[];e.requestAnimationFrame=e.requestAnimationFrame||e.webkitRequestAnimationFrame||e.mozRequestAnimationFrame||e.oRequestAnimationFrame||e.msRequestAnimationFrame||function(e){setTimeout(e,1e3/60)},function(t){var a=r.createElement("style");a.type="text/css";try{a.appendChild(r.createTextNode(t))}catch(e){a.styleSheet.cssText=t}r.getElementsByTagName("head")[0].appendChild(a)}(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"),o="function"==typeof e.onclick&&e.onclick,e.onclick=function(e){var t,a;o&&o(),t=e,(a=r.createElement("div")).className="heart",n.push({el:a,x:t.clientX-5,y:t.clientY-5,scale:1,alpha:1,color:"rgb("+~~(255*Math.random())+","+~~(255*Math.random())+","+~~(255*Math.random())+")"}),r.body.appendChild(a)},function e(){for(var t=0;t<n.length;t++)n[t].alpha<=0?(r.body.removeChild(n[t].el),n.splice(t,1)):(n[t].y--,n[t].scale+=.004,n[t].alpha-=.013,n[t].el.style.cssText="left:"+n[t].x+"px;top:"+n[t].y+"px;opacity:"+n[t].alpha+";transform:scale("+n[t].scale+","+n[t].scale+") rotate(45deg);background:"+n[t].color+";z-index:99999");requestAnimationFrame(e)}()}(window,document)</script><script defer>var _hmt=_hmt||[];!function(){var e=document.createElement("script");e.src="https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)}()</script><script defer>!function(e,a,t,n,g,c,o){e.GoogleAnalyticsObject="ga",e.ga=e.ga||function(){(e.ga.q=e.ga.q||[]).push(arguments)},e.ga.l=1*new Date,c=a.createElement(t),o=a.getElementsByTagName(t)[0],c.async=1,c.src="https://www.google-analytics.com/analytics.js",o.parentNode.insertBefore(c,o)}(window,document,"script"),ga("create","UA-144841374-1","auto"),ga("send","pageview")</script></body></html>
+              });
+            }, '', false]
+          }
+        }
+      };</script><script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js"></script><script>!function(e,r,t){var o,n=[];e.requestAnimationFrame=e.requestAnimationFrame||e.webkitRequestAnimationFrame||e.mozRequestAnimationFrame||e.oRequestAnimationFrame||e.msRequestAnimationFrame||function(e){setTimeout(e,1e3/60)},function(t){var a=r.createElement("style");a.type="text/css";try{a.appendChild(r.createTextNode(t))}catch(e){a.styleSheet.cssText=t}r.getElementsByTagName("head")[0].appendChild(a)}(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"),o="function"==typeof e.onclick&&e.onclick,e.onclick=function(e){var t,a;o&&o(),t=e,(a=r.createElement("div")).className="heart",n.push({el:a,x:t.clientX-5,y:t.clientY-5,scale:1,alpha:1,color:"rgb("+~~(255*Math.random())+","+~~(255*Math.random())+","+~~(255*Math.random())+")"}),r.body.appendChild(a)},function e(){for(var t=0;t<n.length;t++)n[t].alpha<=0?(r.body.removeChild(n[t].el),n.splice(t,1)):(n[t].y--,n[t].scale+=.004,n[t].alpha-=.013,n[t].el.style.cssText="left:"+n[t].x+"px;top:"+n[t].y+"px;opacity:"+n[t].alpha+";transform:scale("+n[t].scale+","+n[t].scale+") rotate(45deg);background:"+n[t].color+";z-index:99999");requestAnimationFrame(e)}()}(window,document)</script><script defer>var _hmt=_hmt||[];!function(){var e=document.createElement("script");e.src="https://hm.baidu.com/hm.js?b561ebd1192170893b7c07a8d4b71fc5";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)}()</script><script defer>!function(e,a,t,n,g,c,o){e.GoogleAnalyticsObject="ga",e.ga=e.ga||function(){(e.ga.q=e.ga.q||[]).push(arguments)},e.ga.l=1*new Date,c=a.createElement(t),o=a.getElementsByTagName(t)[0],c.async=1,c.src="https://www.google-analytics.com/analytics.js",o.parentNode.insertBefore(c,o)}(window,document,"script"),ga("create","UA-144841374-1","auto"),ga("send","pageview")</script></body></html>
