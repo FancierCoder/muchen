@@ -1,8 +1,8 @@
-<!DOCTYPE html><html lang="zh-CN" data-default-color-scheme="&#34;auto&#34;"><head><meta charset="UTF-8"><link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png"><link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,shrink-to-fit=no"><meta http-equiv="x-ua-compatible" content="ie=edge"><meta name="theme-color" content="#2f4154"><meta name="description" content="沐晨的个人博客,技术博客"><meta name="author" content="Li Duo"><meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog"><title>设计模式之美学习（六十一） - MuChen&#39;s Blog</title><link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css"><link rel="stylesheet" href="/lib/hint/hint.min.css"><link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css"><link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_6peoq002giu.css"><link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css"><link rel="stylesheet" href="/css/main.css"><script src="/js/utils.js"></script><script src="/js/color-schema.js"></script><meta name="generator" content="Hexo 4.2.1"><link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml"></head><body><header style="height:70vh"><nav id="navbar" class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar"><div class="container"><a class="navbar-brand" href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a> <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><div class="animated-icon"><span></span><span></span><span></span></div></button><div class="collapse navbar-collapse" id="navbarSupportedContent"><ul class="navbar-nav ml-auto text-center"><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="iconfont icon-books"></i> 索引</a><div class="dropdown-menu" aria-labelledby="navbarDropdown"><a class="dropdown-item" href="/archives/"><i class="iconfont icon-archive-fill"></i> 归档 </a><a class="dropdown-item" href="/categories/"><i class="iconfont icon-category-fill"></i> 分类 </a><a class="dropdown-item" href="/tags/"><i class="iconfont icon-tags-fill"></i> 标签</a></div></li><li class="nav-item"><a class="nav-link" href="/messageBoard/"><i class="iconfont icon-speakernotes"></i> 留言</a></li><li class="nav-item"><a class="nav-link" href="/about/"><i class="iconfont icon-user-fill"></i> 关于</a></li><li class="nav-item"><a class="nav-link" href="/links/"><i class="iconfont icon-link-fill"></i> 友链</a></li><li class="nav-item" id="search-btn"><a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i class="iconfont icon-search"></i>&nbsp;</a></li><li class="nav-item" id="color-toggle-btn"><a class="nav-link" href="javascript:">&nbsp;<i class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a></li></ul></div></div></nav><div class="banner intro-2" id="background" parallax="true" style="background:url(https://static.muchen.fun/picture/15.jpg) no-repeat center center;background-size:cover"><div class="full-bg-img"><div class="mask flex-center" style="background-color:rgba(0,0,0,.3)"><div class="container page-header text-center fade-in-up"><span class="h2" id="subtitle"></span><div class="mt-3 post-meta"><i class="iconfont icon-date-fill" aria-hidden="true"></i> <time datetime="2020-06-27 14:48" pubdate>2020年6月27日 下午</time></div><div class="mt-1"><span class="post-meta mr-2"><i class="iconfont icon-chart"></i> 3.1k 字 </span><span class="post-meta mr-2"><i class="iconfont icon-clock-fill"></i> 51 分钟 </span><span id="leancloud-post-views-container" class="post-meta" style="display:none"><i class="iconfont icon-eye" aria-hidden="true"></i> <span id="leancloud-post-views"></span> 次</span></div></div></div></div></div></header><main><div class="container-fluid"><div class="row"><div class="d-none d-lg-block col-lg-2"></div><div class="col-lg-8 nopadding-md"><div class="container nopadding-md" id="board-ctn"><div class="py-5" id="board"><article class="post-content mx-auto" id="post"><h1 style="display:none">设计模式之美学习（六十一）</h1><p class="note note-info">本文最后更新于：24 天前</p><div class="markdown-body" id="post-body"><p>如何设计实现一个自定义接口告警规则功能？</p><a id="more"></a><blockquote><p>参考：<a href="https://time.geekbang.org/column/article/225904" target="_blank" rel="noopener">解释器模式：如何设计实现一个自定义接口告警规则功能？</a></p></blockquote><p>解释器模式用来描述如何构建一个简单的“语言”解释器。比起命令模式，解释器模式更加小众，只在一些特定的领域会被用到，比如编译器、规则引擎、正则表达式。所以，解释器模式不是学习的重点，稍微了解一下就可以了。</p><h2 id="解释器模式的原理和实现"><a href="#解释器模式的原理和实现" class="headerlink" title="解释器模式的原理和实现"></a>解释器模式的原理和实现</h2><p>解释器模式的英文翻译是 <code>Interpreter Design Pattern</code>。在 <code>GoF</code> 的《设计模式》一书中，它是这样定义的：</p><blockquote><p>Interpreter pattern is used to defines a grammatical representation for a language and provides an interpreter to deal with this grammar.</p></blockquote><p>翻译成中文就是：解释器模式为某个语言定义它的语法（或者叫文法）表示，并定义一个解释器用来处理这个语法。</p><p>这里的“语言”不仅仅指我们平时说的中、英、日、法等各种语言。从广义上来讲，只要是能承载信息的载体，都可以称之为“语言”，比如，古代的结绳记事、盲文、哑语、摩斯密码等。</p><p>要想了解“语言”表达的信息，就必须定义相应的语法规则。这样，书写者就可以根据语法规则来书写“句子”（专业点的叫法应该是“表达式”），阅读者根据语法规则来阅读“句子”，这样才能做到信息的正确传递。而解释器模式，其实就是用来实现根据语法规则解读“句子”的解释器。</p><p>理解这个概念，可以类比中英文翻译。我们知道，把英文翻译成中文是有一定规则的。这个规则就是定义中的“语法”。开发一个类似 <code>Google Translate</code> 这样的翻译器，这个翻译器能够根据语法规则，将输入的中文翻译成英文。这里的翻译器就是解释器模式定义中的“解释器”。</p><p>刚刚翻译器这个例子比较贴近生活，再举个更加贴近编程的例子。</p><p>假设定义了一个新的加减乘除计算“语言”，语法规则如下：</p><ul><li>运算符只包含加、减、乘、除，并且没有优先级的概念；</li><li>表达式（也就是前面提到的“句子”）中，先书写数字，后书写运算符，空格隔开；</li><li>按照先后顺序，取出两个数字和一个运算符计算结果，结果重新放入数字的最头部位置，循环上述过程，直到只剩下一个数字，这个数字就是表达式最终的计算结果。</li></ul><p>比如“<code>8 3 2 4 - + *</code>”这样一个表达式，按照上面的语法规则来处理，取出数字“<code>8 3</code>”和“<code>-</code>”运算符，计算得到 <code>5</code>，于是表达式就变成了“<code>5 2 4 + *</code>”。然后，我们再取出“<code>5 2</code>”和“<code>+</code>”运算符，计算得到 <code>7</code>，表达式就变成了“<code>7 4 *</code>”。最后取出“<code>7 4</code>”和“<code>*</code>”运算符，最终得到的结果就是 <code>28</code>。</p><p>将它用代码实现出来，如下所示。代码非常简单，用户按照上面的规则书写表达式，传递给 <code>interpret()</code> 函数，就可以得到最终的计算结果。</p><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ExpressionInterpreter</span> </span>&#123;
+<!DOCTYPE html><html lang="zh-CN" data-default-color-scheme="&#34;auto&#34;"><head><meta charset="UTF-8"><link rel="apple-touch-icon" sizes="76x76" href="https://static.muchen.fun/images/touch-icon.png"><link rel="icon" type="image/png" href="https://static.muchen.fun/images/favicon.ico"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,shrink-to-fit=no"><meta http-equiv="x-ua-compatible" content="ie=edge"><meta name="theme-color" content="#2f4154"><meta name="description" content="沐晨的个人博客,技术博客"><meta name="author" content="Li Duo"><meta name="keywords" content="个人博客,个人见解,Java,Spring,IT,程序员,编程,技术,SpringBoot,JavaScript,分享,博客,Blog"><title>设计模式之美学习（六十一） - MuChen&#39;s Blog</title><link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css"><link rel="stylesheet" href="/lib/hint/hint.min.css"><link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css"><link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_6peoq002giu.css"><link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css"><link rel="stylesheet" href="/css/main.css"><script src="/js/utils.js"></script><script src="/js/color-schema.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml"></head><body><header style="height:70vh"><nav id="navbar" class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar"><div class="container"><a class="navbar-brand" href="/">&nbsp;<strong>沐晨</strong>&nbsp;</a> <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><div class="animated-icon"><span></span><span></span><span></span></div></button><div class="collapse navbar-collapse" id="navbarSupportedContent"><ul class="navbar-nav ml-auto text-center"><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="iconfont icon-books"></i> 索引</a><div class="dropdown-menu" aria-labelledby="navbarDropdown"><a class="dropdown-item" href="/archives/"><i class="iconfont icon-archive-fill"></i> 归档 </a><a class="dropdown-item" href="/categories/"><i class="iconfont icon-category-fill"></i> 分类 </a><a class="dropdown-item" href="/tags/"><i class="iconfont icon-tags-fill"></i> 标签</a></div></li><li class="nav-item"><a class="nav-link" href="/messageBoard/"><i class="iconfont icon-speakernotes"></i> 留言</a></li><li class="nav-item"><a class="nav-link" href="/about/"><i class="iconfont icon-user-fill"></i> 关于</a></li><li class="nav-item"><a class="nav-link" href="/links/"><i class="iconfont icon-link-fill"></i> 友链</a></li><li class="nav-item" id="search-btn"><a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i class="iconfont icon-search"></i>&nbsp;</a></li><li class="nav-item" id="color-toggle-btn"><a class="nav-link" href="javascript:">&nbsp;<i class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a></li></ul></div></div></nav><div class="banner intro-2" id="background" parallax="true" style="background:url(https://static.muchen.fun/picture/15.jpg) no-repeat center center;background-size:cover"><div class="full-bg-img"><div class="mask flex-center" style="background-color:rgba(0,0,0,.3)"><div class="container page-header text-center fade-in-up"><span class="h2" id="subtitle"></span><div class="mt-3 post-meta"><i class="iconfont icon-date-fill" aria-hidden="true"></i> <time datetime="2020-06-27 14:48" pubdate>2020年6月27日 下午</time></div><div class="mt-1"><span class="post-meta mr-2"><i class="iconfont icon-chart"></i> 3.2k 字 </span><span class="post-meta mr-2"><i class="iconfont icon-clock-fill"></i> 53 分钟 </span><span id="leancloud-post-views-container" class="post-meta" style="display:none"><i class="iconfont icon-eye" aria-hidden="true"></i> <span id="leancloud-post-views"></span> 次</span></div></div></div></div></div></header><main><div class="container-fluid"><div class="row"><div class="d-none d-lg-block col-lg-2"></div><div class="col-lg-8 nopadding-md"><div class="container nopadding-md" id="board-ctn"><div class="py-5" id="board"><article class="post-content mx-auto" id="post"><h1 style="display:none">设计模式之美学习（六十一）</h1><p class="note note-info">本文最后更新于：2 个月前</p><div class="markdown-body" id="post-body"><p>如何设计实现一个自定义接口告警规则功能？</p><a id="more"></a><blockquote><p>参考：<a target="_blank" rel="noopener" href="https://time.geekbang.org/column/article/225904">解释器模式：如何设计实现一个自定义接口告警规则功能？</a></p></blockquote><p>解释器模式用来描述如何构建一个简单的“语言”解释器。比起命令模式，解释器模式更加小众，只在一些特定的领域会被用到，比如编译器、规则引擎、正则表达式。所以，解释器模式不是学习的重点，稍微了解一下就可以了。</p><h2 id="解释器模式的原理和实现"><a href="#解释器模式的原理和实现" class="headerlink" title="解释器模式的原理和实现"></a>解释器模式的原理和实现</h2><p>解释器模式的英文翻译是 <code>Interpreter Design Pattern</code>。在 <code>GoF</code> 的《设计模式》一书中，它是这样定义的：</p><blockquote><p>Interpreter pattern is used to defines a grammatical representation for a language and provides an interpreter to deal with this grammar.</p></blockquote><p>翻译成中文就是：解释器模式为某个语言定义它的语法（或者叫文法）表示，并定义一个解释器用来处理这个语法。</p><p>这里的“语言”不仅仅指我们平时说的中、英、日、法等各种语言。从广义上来讲，只要是能承载信息的载体，都可以称之为“语言”，比如，古代的结绳记事、盲文、哑语、摩斯密码等。</p><p>要想了解“语言”表达的信息，就必须定义相应的语法规则。这样，书写者就可以根据语法规则来书写“句子”（专业点的叫法应该是“表达式”），阅读者根据语法规则来阅读“句子”，这样才能做到信息的正确传递。而解释器模式，其实就是用来实现根据语法规则解读“句子”的解释器。</p><p>理解这个概念，可以类比中英文翻译。我们知道，把英文翻译成中文是有一定规则的。这个规则就是定义中的“语法”。开发一个类似 <code>Google Translate</code> 这样的翻译器，这个翻译器能够根据语法规则，将输入的中文翻译成英文。这里的翻译器就是解释器模式定义中的“解释器”。</p><p>刚刚翻译器这个例子比较贴近生活，再举个更加贴近编程的例子。</p><p>假设定义了一个新的加减乘除计算“语言”，语法规则如下：</p><ul><li>运算符只包含加、减、乘、除，并且没有优先级的概念；</li><li>表达式（也就是前面提到的“句子”）中，先书写数字，后书写运算符，空格隔开；</li><li>按照先后顺序，取出两个数字和一个运算符计算结果，结果重新放入数字的最头部位置，循环上述过程，直到只剩下一个数字，这个数字就是表达式最终的计算结果。</li></ul><p>比如“<code>8 3 2 4 - + *</code>”这样一个表达式，按照上面的语法规则来处理，取出数字“<code>8 3</code>”和“<code>-</code>”运算符，计算得到 <code>5</code>，于是表达式就变成了“<code>5 2 4 + *</code>”。然后，我们再取出“<code>5 2</code>”和“<code>+</code>”运算符，计算得到 <code>7</code>，表达式就变成了“<code>7 4 *</code>”。最后取出“<code>7 4</code>”和“<code>*</code>”运算符，最终得到的结果就是 <code>28</code>。</p><p>将它用代码实现出来，如下所示。代码非常简单，用户按照上面的规则书写表达式，传递给 <code>interpret()</code> 函数，就可以得到最终的计算结果。</p><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ExpressionInterpreter</span> </span>&#123;
   <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Deque&lt;Long&gt; numbers = <span class="hljs-keyword">new</span> LinkedList&lt;&gt;();
 
   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">long</span> <span class="hljs-title">interpret</span><span class="hljs-params">(String expression)</span> </span>&#123;
-    String[] elements = expression.split(<span class="hljs-string">" "</span>);
+    String[] elements = expression.split(<span class="hljs-string">&quot; &quot;</span>);
     <span class="hljs-keyword">int</span> length = elements.length;
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; (length+<span class="hljs-number">1</span>)/<span class="hljs-number">2</span>; ++i) &#123;
       numbers.addLast(Long.parseLong(elements[i]));
@@ -10,29 +10,29 @@
 
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = (length+<span class="hljs-number">1</span>)/<span class="hljs-number">2</span>; i &lt; length; ++i) &#123;
       String operator = elements[i];
-      <span class="hljs-keyword">boolean</span> isValid = <span class="hljs-string">"+"</span>.equals(operator) || <span class="hljs-string">"-"</span>.equals(operator)
-              || <span class="hljs-string">"*"</span>.equals(operator) || <span class="hljs-string">"/"</span>.equals(operator);
+      <span class="hljs-keyword">boolean</span> isValid = <span class="hljs-string">&quot;+&quot;</span>.equals(operator) || <span class="hljs-string">&quot;-&quot;</span>.equals(operator)
+              || <span class="hljs-string">&quot;*&quot;</span>.equals(operator) || <span class="hljs-string">&quot;/&quot;</span>.equals(operator);
       <span class="hljs-keyword">if</span> (!isValid) &#123;
-        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">"Expression is invalid: "</span> + expression);
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">&quot;Expression is invalid: &quot;</span> + expression);
       &#125;
 
       <span class="hljs-keyword">long</span> number1 = numbers.pollFirst();
       <span class="hljs-keyword">long</span> number2 = numbers.pollFirst();
       <span class="hljs-keyword">long</span> result = <span class="hljs-number">0</span>;
-      <span class="hljs-keyword">if</span> (operator.equals(<span class="hljs-string">"+"</span>)) &#123;
+      <span class="hljs-keyword">if</span> (operator.equals(<span class="hljs-string">&quot;+&quot;</span>)) &#123;
         result = number1 + number2;
-      &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (operator.equals(<span class="hljs-string">"-"</span>)) &#123;
+      &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (operator.equals(<span class="hljs-string">&quot;-&quot;</span>)) &#123;
         result = number1 - number2;
-      &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (operator.equals(<span class="hljs-string">"*"</span>)) &#123;
+      &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (operator.equals(<span class="hljs-string">&quot;*&quot;</span>)) &#123;
         result = number1 * number2;
-      &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (operator.equals(<span class="hljs-string">"/"</span>)) &#123;
+      &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (operator.equals(<span class="hljs-string">&quot;/&quot;</span>)) &#123;
         result = number1 / number2;
       &#125;
       numbers.addFirst(result);
     &#125;
 
     <span class="hljs-keyword">if</span> (numbers.size() != <span class="hljs-number">1</span>) &#123;
-      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">"Expression is invalid: "</span> + expression);
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">&quot;Expression is invalid: &quot;</span> + expression);
     &#125;
 
     <span class="hljs-keyword">return</span> numbers.pop();
@@ -78,7 +78,7 @@
   <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Deque&lt;Expression&gt; numbers = <span class="hljs-keyword">new</span> LinkedList&lt;&gt;();
 
   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">long</span> <span class="hljs-title">interpret</span><span class="hljs-params">(String expression)</span> </span>&#123;
-    String[] elements = expression.split(<span class="hljs-string">" "</span>);
+    String[] elements = expression.split(<span class="hljs-string">&quot; &quot;</span>);
     <span class="hljs-keyword">int</span> length = elements.length;
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; (length+<span class="hljs-number">1</span>)/<span class="hljs-number">2</span>; ++i) &#123;
       numbers.addLast(<span class="hljs-keyword">new</span> NumberExpression(elements[i]));
@@ -86,22 +86,22 @@
 
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = (length+<span class="hljs-number">1</span>)/<span class="hljs-number">2</span>; i &lt; length; ++i) &#123;
       String operator = elements[i];
-      <span class="hljs-keyword">boolean</span> isValid = <span class="hljs-string">"+"</span>.equals(operator) || <span class="hljs-string">"-"</span>.equals(operator)
-              || <span class="hljs-string">"*"</span>.equals(operator) || <span class="hljs-string">"/"</span>.equals(operator);
+      <span class="hljs-keyword">boolean</span> isValid = <span class="hljs-string">&quot;+&quot;</span>.equals(operator) || <span class="hljs-string">&quot;-&quot;</span>.equals(operator)
+              || <span class="hljs-string">&quot;*&quot;</span>.equals(operator) || <span class="hljs-string">&quot;/&quot;</span>.equals(operator);
       <span class="hljs-keyword">if</span> (!isValid) &#123;
-        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">"Expression is invalid: "</span> + expression);
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">&quot;Expression is invalid: &quot;</span> + expression);
       &#125;
 
       Expression exp1 = numbers.pollFirst();
       Expression exp2 = numbers.pollFirst();
       Expression combinedExp = <span class="hljs-keyword">null</span>;
-      <span class="hljs-keyword">if</span> (operator.equals(<span class="hljs-string">"+"</span>)) &#123;
+      <span class="hljs-keyword">if</span> (operator.equals(<span class="hljs-string">&quot;+&quot;</span>)) &#123;
         combinedExp = <span class="hljs-keyword">new</span> AdditionExpression(exp1, exp2);
-      &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (operator.equals(<span class="hljs-string">"-"</span>)) &#123;
+      &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (operator.equals(<span class="hljs-string">&quot;-&quot;</span>)) &#123;
         combinedExp = <span class="hljs-keyword">new</span> SubstractionExpression(exp1, exp2);
-      &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (operator.equals(<span class="hljs-string">"*"</span>)) &#123;
+      &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (operator.equals(<span class="hljs-string">&quot;*&quot;</span>)) &#123;
         combinedExp = <span class="hljs-keyword">new</span> MultiplicationExpression(exp1, exp2);
-      &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (operator.equals(<span class="hljs-string">"/"</span>)) &#123;
+      &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (operator.equals(<span class="hljs-string">&quot;/&quot;</span>)) &#123;
         combinedExp = <span class="hljs-keyword">new</span> DivisionExpression(exp1, exp2);
       &#125;
       <span class="hljs-keyword">long</span> result = combinedExp.interpret();
@@ -109,14 +109,14 @@
     &#125;
 
     <span class="hljs-keyword">if</span> (numbers.size() != <span class="hljs-number">1</span>) &#123;
-      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">"Expression is invalid: "</span> + expression);
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">&quot;Expression is invalid: &quot;</span> + expression);
     &#125;
 
     <span class="hljs-keyword">return</span> numbers.pop().interpret();
   &#125;
-&#125;</code></pre><h2 id="解释器模式实战举例"><a href="#解释器模式实战举例" class="headerlink" title="解释器模式实战举例"></a>解释器模式实战举例</h2><p>如何实现一个自定义接口告警规则功能？</p><p>在我们平时的项目开发中，监控系统非常重要，它可以时刻监控业务系统的运行情况，及时将异常报告给开发者。比如，如果每分钟接口出错数超过 <code>100</code>，监控系统就通过短信、微信、邮件等方式发送告警给开发者。</p><p>一般来讲，监控系统支持开发者自定义告警规则，比如可以用下面这样一个表达式，来表示一个告警规则，它表达的意思是：每分钟 <code>API</code> 总出错数超过 <code>100</code> 或者每分钟 <code>API</code> 总调用数超过 <code>10000</code> 就触发告警。</p><pre><code class="hljs shell">api_error_per_minute &gt; 100 || api_count_per_minute &gt; 10000</code></pre><p>在监控系统中，告警模块只负责根据统计数据和告警规则，判断是否触发告警。至于每分钟 <code>API</code> 接口出错数、每分钟接口调用数等统计数据的计算，是由其他模块来负责的。其他模块将统计数据放到一个 <code>Map</code> 中（数据的格式如下所示），发送给告警模块。接下来，我们只关注告警模块。</p><pre><code class="hljs java">Map&lt;String, Long&gt; apiStat = <span class="hljs-keyword">new</span> HashMap&lt;&gt;();
-apiStat.put(<span class="hljs-string">"api_error_per_minute"</span>, <span class="hljs-number">103</span>);
-apiStat.put(<span class="hljs-string">"api_count_per_minute"</span>, <span class="hljs-number">987</span>);</code></pre><p>为了简化讲解和代码实现，假设自定义的告警规则只包含“<code>||、&amp;&amp;、&gt;、&lt;、==</code>”这五个运算符，其中，“<code>&gt;、&lt;、==</code>”运算符的优先级高于“<code>||、&amp;&amp;</code>”运算符，“<code>&amp;&amp;</code>”运算符优先级高于“<code>||</code>”。在表达式中，任意元素之间需要通过空格来分隔。除此之外，用户可以自定义要监控的 <code>key</code>，比如前面的 <code>api_error_per_minute</code>、<code>api_count_per_minute</code>。</p><p>那如何实现上面的需求呢？写了一个骨架代码，如下所示，其中的核心的实现没有给出，你可以试着去补全一下。</p><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AlertRuleInterpreter</span> </span>&#123;
+&#125;</code></pre><h2 id="解释器模式实战举例"><a href="#解释器模式实战举例" class="headerlink" title="解释器模式实战举例"></a>解释器模式实战举例</h2><p>如何实现一个自定义接口告警规则功能？</p><p>在我们平时的项目开发中，监控系统非常重要，它可以时刻监控业务系统的运行情况，及时将异常报告给开发者。比如，如果每分钟接口出错数超过 <code>100</code>，监控系统就通过短信、微信、邮件等方式发送告警给开发者。</p><p>一般来讲，监控系统支持开发者自定义告警规则，比如可以用下面这样一个表达式，来表示一个告警规则，它表达的意思是：每分钟 <code>API</code> 总出错数超过 <code>100</code> 或者每分钟 <code>API</code> 总调用数超过 <code>10000</code> 就触发告警。</p><pre><div class="caption"><span>script</span></div><code class="hljs shell">api_error_per_minute &gt; 100 || api_count_per_minute &gt; 10000</code></pre><p>在监控系统中，告警模块只负责根据统计数据和告警规则，判断是否触发告警。至于每分钟 <code>API</code> 接口出错数、每分钟接口调用数等统计数据的计算，是由其他模块来负责的。其他模块将统计数据放到一个 <code>Map</code> 中（数据的格式如下所示），发送给告警模块。接下来，我们只关注告警模块。</p><pre><code class="hljs java">Map&lt;String, Long&gt; apiStat = <span class="hljs-keyword">new</span> HashMap&lt;&gt;();
+apiStat.put(<span class="hljs-string">&quot;api_error_per_minute&quot;</span>, <span class="hljs-number">103</span>);
+apiStat.put(<span class="hljs-string">&quot;api_count_per_minute&quot;</span>, <span class="hljs-number">987</span>);</code></pre><p>为了简化讲解和代码实现，假设自定义的告警规则只包含“<code>||、&amp;&amp;、&gt;、&lt;、==</code>”这五个运算符，其中，“<code>&gt;、&lt;、==</code>”运算符的优先级高于“<code>||、&amp;&amp;</code>”运算符，“<code>&amp;&amp;</code>”运算符优先级高于“<code>||</code>”。在表达式中，任意元素之间需要通过空格来分隔。除此之外，用户可以自定义要监控的 <code>key</code>，比如前面的 <code>api_error_per_minute</code>、<code>api_count_per_minute</code>。</p><p>那如何实现上面的需求呢？写了一个骨架代码，如下所示，其中的核心的实现没有给出，你可以试着去补全一下。</p><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AlertRuleInterpreter</span> </span>&#123;
 
   <span class="hljs-comment">// key1 &gt; 100 &amp;&amp; key2 &lt; 1000 || key3 == 200</span>
   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">AlertRuleInterpreter</span><span class="hljs-params">(String ruleExpression)</span> </span>&#123;
@@ -124,8 +124,8 @@ apiStat.put(<span class="hljs-string">"api_count_per_minute"</span>, <span class
   &#125;
 
   <span class="hljs-comment">//&lt;String, Long&gt; apiStat = new HashMap&lt;&gt;();</span>
-  <span class="hljs-comment">//apiStat.put("key1", 103);</span>
-  <span class="hljs-comment">//apiStat.put("key2", 987);</span>
+  <span class="hljs-comment">//apiStat.put(&quot;key1&quot;, 103);</span>
+  <span class="hljs-comment">//apiStat.put(&quot;key2&quot;, 987);</span>
   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">interpret</span><span class="hljs-params">(Map&lt;String, Long&gt; stats)</span> </span>&#123;
     <span class="hljs-comment">//<span class="hljs-doctag">TODO:</span>由你来完善</span>
   &#125;
@@ -134,12 +134,12 @@ apiStat.put(<span class="hljs-string">"api_count_per_minute"</span>, <span class
 
 <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DemoTest</span> </span>&#123;
   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;
-    String rule = <span class="hljs-string">"key1 &gt; 100 &amp;&amp; key2 &lt; 30 || key3 &lt; 100 || key4 == 88"</span>;
+    String rule = <span class="hljs-string">&quot;key1 &gt; 100 &amp;&amp; key2 &lt; 30 || key3 &lt; 100 || key4 == 88&quot;</span>;
     AlertRuleInterpreter interpreter = <span class="hljs-keyword">new</span> AlertRuleInterpreter(rule);
     Map&lt;String, Long&gt; stats = <span class="hljs-keyword">new</span> HashMap&lt;&gt;();
-    stats.put(<span class="hljs-string">"key1"</span>, <span class="hljs-number">101l</span>);
-    stats.put(<span class="hljs-string">"key3"</span>, <span class="hljs-number">121l</span>);
-    stats.put(<span class="hljs-string">"key4"</span>, <span class="hljs-number">88l</span>);
+    stats.put(<span class="hljs-string">&quot;key1&quot;</span>, <span class="hljs-number">101l</span>);
+    stats.put(<span class="hljs-string">&quot;key3&quot;</span>, <span class="hljs-number">121l</span>);
+    stats.put(<span class="hljs-string">&quot;key4&quot;</span>, <span class="hljs-number">88l</span>);
     <span class="hljs-keyword">boolean</span> alert = interpreter.interpret(stats);
     System.out.println(alert);
   &#125;
@@ -152,9 +152,9 @@ apiStat.put(<span class="hljs-string">"api_count_per_minute"</span>, <span class
   <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">long</span> value;
 
   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">GreaterExpression</span><span class="hljs-params">(String strExpression)</span> </span>&#123;
-    String[] elements = strExpression.trim().split(<span class="hljs-string">"\\s+"</span>);
-    <span class="hljs-keyword">if</span> (elements.length != <span class="hljs-number">3</span> || !elements[<span class="hljs-number">1</span>].trim().equals(<span class="hljs-string">"&gt;"</span>)) &#123;
-      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">"Expression is invalid: "</span> + strExpression);
+    String[] elements = strExpression.trim().split(<span class="hljs-string">&quot;\\s+&quot;</span>);
+    <span class="hljs-keyword">if</span> (elements.length != <span class="hljs-number">3</span> || !elements[<span class="hljs-number">1</span>].trim().equals(<span class="hljs-string">&quot;&gt;&quot;</span>)) &#123;
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">&quot;Expression is invalid: &quot;</span> + strExpression);
     &#125;
     <span class="hljs-keyword">this</span>.key = elements[<span class="hljs-number">0</span>].trim();
     <span class="hljs-keyword">this</span>.value = Long.parseLong(elements[<span class="hljs-number">2</span>].trim());
@@ -181,16 +181,16 @@ apiStat.put(<span class="hljs-string">"api_count_per_minute"</span>, <span class
   <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> List&lt;Expression&gt; expressions = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
 
   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">AndExpression</span><span class="hljs-params">(String strAndExpression)</span> </span>&#123;
-    String[] strExpressions = strAndExpression.split(<span class="hljs-string">"&amp;&amp;"</span>);
+    String[] strExpressions = strAndExpression.split(<span class="hljs-string">&quot;&amp;&amp;&quot;</span>);
     <span class="hljs-keyword">for</span> (String strExpr : strExpressions) &#123;
-      <span class="hljs-keyword">if</span> (strExpr.contains(<span class="hljs-string">"&gt;"</span>)) &#123;
+      <span class="hljs-keyword">if</span> (strExpr.contains(<span class="hljs-string">&quot;&gt;&quot;</span>)) &#123;
         expressions.add(<span class="hljs-keyword">new</span> GreaterExpression(strExpr));
-      &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (strExpr.contains(<span class="hljs-string">"&lt;"</span>)) &#123;
+      &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (strExpr.contains(<span class="hljs-string">&quot;&lt;&quot;</span>)) &#123;
         expressions.add(<span class="hljs-keyword">new</span> LessExpression(strExpr));
-      &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (strExpr.contains(<span class="hljs-string">"=="</span>)) &#123;
+      &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (strExpr.contains(<span class="hljs-string">&quot;==&quot;</span>)) &#123;
         expressions.add(<span class="hljs-keyword">new</span> EqualExpression(strExpr));
       &#125; <span class="hljs-keyword">else</span> &#123;
-        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">"Expression is invalid: "</span> + strAndExpression);
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">&quot;Expression is invalid: &quot;</span> + strAndExpression);
       &#125;
     &#125;
   &#125;
@@ -215,7 +215,7 @@ apiStat.put(<span class="hljs-string">"api_count_per_minute"</span>, <span class
   <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> List&lt;Expression&gt; expressions = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
 
   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">OrExpression</span><span class="hljs-params">(String strOrExpression)</span> </span>&#123;
-    String[] andExpressions = strOrExpression.split(<span class="hljs-string">"\\|\\|"</span>);
+    String[] andExpressions = strOrExpression.split(<span class="hljs-string">&quot;\\|\\|&quot;</span>);
     <span class="hljs-keyword">for</span> (String andExpr : andExpressions) &#123;
       expressions.add(<span class="hljs-keyword">new</span> AndExpression(andExpr));
     &#125;
